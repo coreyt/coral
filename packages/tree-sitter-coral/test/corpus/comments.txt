@@ -1,0 +1,51 @@
+==================
+Single line comment
+==================
+// This is a comment
+---
+(source_file
+  (comment))
+
+==================
+Comment before node
+==================
+// Web application
+service "Web App"
+---
+(source_file
+  (comment)
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Comment after node
+==================
+service "Web App"
+// Database layer
+database "DB"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string))
+  (comment)
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Inline comment placement
+==================
+service "API"
+// Connection
+api -> db
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string))
+  (comment)
+  (edge_declaration
+    (identifier)
+    (identifier)))

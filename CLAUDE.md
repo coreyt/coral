@@ -1,160 +1,218 @@
 # Coral - Agent Development Guidelines
 
-This document configures how AI agents work in this repository.
+## Quick Start
 
-## Project Context
+> Say **"continue"** or **"what's next?"** to proceed with implementation.
+>
+> Claude will read PROGRESS.md to determine the current step and continue from there.
 
-Coral is part of a larger ecosystem managed under `graph-ir-tools`:
-- **coral** - Symbiotic diagramming toolchain (this repo)
-- **graph-ir** - Graph Intermediate Representation specification
-- **graph-ir-tools** - Shared tooling, skills, and consolidation coordination
+---
 
-See `/home/coreyt/projects/graph-ir-tools/CONSOLIDATION-PLAN.md` for cross-project architecture.
+## Phase Assignment
 
-## Development Mode
+| Attribute | Value |
+|-----------|-------|
+| **Phase** | 2 (Diagramming), later Phase 4 (Integration) |
+| **Role** | Symbiotic diagramming toolchain |
+| **Authority** | See `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools |
 
-### Implementation Mode (Default)
+Coral bridges text DSLs and visual editors:
+- Parse Coral DSL, Mermaid, DOT formats
+- Render visual diagrams with ELK + React Flow
+- Bidirectional sync between text and visual
 
-When working on implementation:
+---
 
-1. **Follow the documentation** - Specifications in `dev/` define what to build:
-   - `dev/ARCHITECTURE.md` - Technical design and component specs
-   - `dev/DOMAIN.md` - Graph theory and algorithmic foundations
-   - `dev/claude-specs/` - Agent and skill specifications
+## Prerequisites
 
-2. **Test-Driven Development (TDD)** - Always:
-   - Write tests first (or simultaneously with implementation)
-   - Ensure tests pass before considering work complete
-   - Run existing tests before and after changes
-   - Add test fixtures for new functionality
+Before starting Phase 2 work, verify Phase 1 is complete:
 
-3. **Verify against documentation** - Implementation should match specs. If specs are unclear or seem wrong, raise the concern before deviating.
+```
+Phase 1 Checklist (ask user if unsure):
+- [ ] @graph-ir-tools/core is published/available
+- [ ] MCP server (validate_ir, generate_ir, layout_ir) is functional
+- [ ] tree-sitter-assistant agent is available
+```
 
-### Experimentation Mode
+If Phase 1 is not complete, say: "Phase 2 depends on Phase 1 completion. Is Phase 1 complete?"
 
-When explicitly in "experimentation mode":
-- Exploration and prototyping without strict TDD
-- Results should be documented for potential specification updates
-- Mark experimental code clearly (comments, branch names, file locations)
-- Experimentation outputs may inform future specs
+---
 
-**Default is Implementation Mode** unless explicitly told otherwise.
+## Running npm/node Commands
 
-## Documentation-First Development
+This project uses nvm for Node.js version management. To run npm or node commands:
 
-Documentation types and their purposes:
+```bash
+# Set PATH to include Node.js LTS (v20)
+export PATH="/home/coreyt/.nvm/versions/node/v20.20.0/bin:/usr/bin:$PATH"
 
-| Type | Location | Purpose |
-|------|----------|---------|
-| Needs & Acceptance Criteria | `dev/` specs | What the feature must do |
-| Architecture | `dev/ARCHITECTURE.md` | How components fit together |
-| Requirements | Individual specs | Detailed implementation requirements |
-| Designs | `dev/claude-specs/` | Agent/skill interface definitions |
+# Then run commands normally
+npm install
+npm test
+npx vitest run
+```
 
-**Before implementing**, ensure relevant documentation exists. If not:
-1. Ask if documentation should be created first
-2. Or clarify if this is experimentation mode
+Always include `/usr/bin` in PATH to ensure standard utilities (head, cat, etc.) are available.
 
-## Test-Driven Development Workflow
+---
+
+## Implementation Steps (Phase 2)
+
+Complete these steps in order. Check [PROGRESS.md](./PROGRESS.md) for current status.
+
+| Step | Component | Depends On | Produces |
+|------|-----------|------------|----------|
+| 1 | Coral Grammar | Phase 1: `tree-sitter-assistant` | Tree-sitter grammar |
+| 2 | Coral Parser | Grammar | DSL → IR parsing |
+| 3 | Format Importers | Phase 1: IR Schema | Mermaid/DOT → IR |
+| 4 | Coral Printer | Parser, Importers | IR → DSL printing |
+| 5 | Visual Editor | Printer | React Flow components |
+| 6 | ELK Integration | Phase 1: `layout_ir` | Visual layout |
+| 7 | MCP Server | Steps 2-6 | `@coral/mcp` |
+| 8 | `elk-tuning` agent | ELK Integration | Visual tuning help |
+| 9 | Skills | MCP Server | `/coral`, `/coral-*` |
+| 10 | Agents | Skills, MCP | `diagram-generation`, `format-migration` |
+
+**Parallel opportunities**: Steps 3, 5, 6 can progress in parallel after Step 2. Steps 8, 9, 10 can run in parallel after Step 7.
+
+---
+
+## Phase 1 Dependencies to Consume
+
+| From graph-ir-tools | Used For |
+|---------------------|----------|
+| `@graph-ir-tools/core` | IR validation, types |
+| `layout_ir` MCP tool | Compute node positions |
+| `tree-sitter-assistant` | Grammar development |
+| `layout-debugger` | Debug algorithm issues |
+
+---
+
+## Progress Tracking
+
+After completing each step:
+1. Update [PROGRESS.md](./PROGRESS.md) to mark the step complete
+2. Add any notes about decisions or blockers
+3. Update the "Last Updated" date
+
+If PROGRESS.md doesn't exist, create it from the template.
+
+---
+
+## Acceptance Criteria (Phase 2)
+
+| Criterion | How to Validate |
+|-----------|-----------------|
+| Coral DSL Parser Works | Coral DSL text → valid Graph-IR |
+| Coral DSL Printer Works | Graph-IR → valid Coral DSL text |
+| Mermaid Import Works | Mermaid syntax → Graph-IR |
+| DOT Import Works | Graphviz DOT → Graph-IR |
+| Visual Rendering Works | Graph-IR → interactive React Flow diagram |
+| Bidirectional Sync Works | Changes in text ↔ changes in visual |
+| Format Conversion Works | Mermaid/DOT → Coral DSL |
+| MCP Server Functional | All tools callable via MCP |
+
+---
+
+## Skills (Coral-Specific)
+
+| Skill | Purpose |
+|-------|---------|
+| `/coral` | Generate diagrams from natural language |
+| `/coral-convert` | Convert between diagram formats |
+| `/coral-explain` | Explain diagrams in natural language |
+| `/coral-validate` | Validate Coral DSL (DSL-specific) |
+| `/coral-scaffold` | Generate Coral component boilerplate |
+
+**Note**: `/coral-validate` and `/coral-scaffold` are Coral-specific because they require Coral's grammar, semantic rules, and templates.
+
+---
+
+## Agents (Coral-Specific)
+
+| Agent | Purpose |
+|-------|---------|
+| `diagram-generation` | Complex iterative diagram creation |
+| `format-migration` | Batch Mermaid/DOT → Coral conversion |
+| `elk-tuning` | Visual output aesthetics (distinct from `layout-debugger`) |
+
+**NOT in Phase 2**:
+- `code-to-diagram` - Requires Armada (Phase 3), deferred to Phase 4
+
+---
+
+## Development Principles
+
+### 1. Documentation-First
+
+Read specifications before implementing:
+- `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools
+- `dev/claude-specs/` for Coral-specific specs
+
+### 2. Test-Driven Development (TDD)
 
 ```
 1. Read the specification
-2. Write failing test(s) that verify the spec
-3. Implement minimum code to pass tests
-4. Refactor while keeping tests green
-5. Verify roundtrip behavior where applicable (Text → IR → Text)
+2. Write failing test(s)
+3. Implement minimum code to pass
+4. Refactor while green
+5. Update PROGRESS.md
 ```
 
-### Test Categories
+### 3. Roundtrip Testing
 
-- **Unit tests** - Individual function behavior
-- **Integration tests** - Component interactions
-- **Roundtrip tests** - DSL ↔ IR fidelity (critical for Coral)
-- **Grammar tests** - Tree-sitter parse correctness
+Critical for Coral: DSL → IR → DSL must produce equivalent output.
 
-## Improvement Tracking
+---
 
-Keep tech debt light. When you notice opportunities for improvement, document them:
-
-### Categories to Track
-
-1. **Agent/Skill Improvements** - Better prompts, missing capabilities, edge cases
-2. **Test Fixtures** - Missing test cases, better coverage opportunities
-3. **Architectural Improvements** - Refactoring opportunities, pattern violations
-4. **Documentation Gaps** - Unclear specs, missing examples, stale content
-5. **Cross-Project Opportunities** - Shared code that could move to `graph-ir-tools`
-
-### How to Track
-
-Add improvement notes to `dev/IMPROVEMENTS.md` (create if needed) with:
-```markdown
-## [Category] Brief description
-- **Context**: Where this was noticed
-- **Suggestion**: What could be improved
-- **Priority**: Low/Medium/High
-- **Date**: When noticed
-```
-
-## Collaboration Principles
-
-1. **Be helpful to each other** - Agents working on related areas should:
-   - Leave clear commit messages
-   - Update relevant documentation
-   - Note dependencies or blockers discovered
-
-2. **Communicate blockers** - If implementation is blocked by:
-   - Missing specs → Ask for clarification
-   - Cross-repo dependency → Note in IMPROVEMENTS.md
-   - Unclear requirements → Request spec update
-
-3. **Preserve context** - When completing work:
-   - Summarize what was done
-   - Note what remains
-   - Flag any concerns discovered
-
-## Quick Reference
-
-### Before Starting Work
-- [ ] Identify relevant specs in `dev/`
-- [ ] Check for existing tests
-- [ ] Understand cross-project dependencies
-- [ ] Confirm implementation vs experimentation mode
-
-### During Work
-- [ ] Write tests first (TDD)
-- [ ] Follow specs precisely
-- [ ] Note improvements discovered
-- [ ] Keep commits atomic and well-described
-
-### After Completing Work
-- [ ] All tests pass
-- [ ] Documentation updated if needed
-- [ ] Improvements logged
-- [ ] Clear summary provided
-
-## Package Structure
+## Directory Structure
 
 ```
 coral/
 ├── packages/
-│   ├── ir/         # @coral/ir - Graph-IR types & Zod validation
-│   ├── language/   # @coral/language - Tree-sitter grammar + Bridge
-│   └── viz/        # @coral/viz - React Flow + ELK components
-├── apps/
-│   └── playground/ # Web application
-├── dev/            # Documentation and specifications
-│   ├── ARCHITECTURE.md
-│   ├── DOMAIN.md
-│   ├── claude-specs/
-│   │   ├── agents/
-│   │   └── skills/
-│   └── IMPROVEMENTS.md  # Track opportunities
-└── CLAUDE.md       # This file
+│   ├── ir/                       # @coral/ir
+│   ├── language/                 # @coral/language
+│   │   └── src/
+│   │       ├── parser/           # Step 2
+│   │       ├── printer/          # Step 4
+│   │       ├── formats/          # Step 3
+│   │       └── skills/           # Step 9
+│   ├── viz/                      # @coral/viz
+│   │   └── src/
+│   │       ├── editor/           # Step 5
+│   │       └── layout/           # Step 6
+│   └── mcp-server/               # Step 7
+├── agents/
+│   ├── diagram-generation/       # Step 10
+│   ├── format-migration/         # Step 10
+│   └── elk-tuning/               # Step 8
+├── dev/
+│   └── claude-specs/             # Specifications
+├── PROGRESS.md                   # Progress tracking
+└── CLAUDE.md                     # This file
 ```
+
+---
+
+## Phase 4: Integration (Future)
+
+After Phase 3 (Armada) completes, Coral gains:
+- Armada MCP client
+- `coral_from_codebase` tool
+- `/coral --from=codebase` skill
+
+This enables the code-to-diagram workflow. See ECOSYSTEM-DEVELOPMENT-PLAN.md for details.
+
+---
 
 ## Related Repositories
 
-| Repo | Path | Purpose |
-|------|------|---------|
-| graph-ir-tools | `/home/coreyt/projects/graph-ir-tools` | Shared tooling, consolidation |
-| coral specs | `/home/coreyt/projects/graph-ir-tools/specs/coral` | Cross-project spec copies |
+| Repo | Purpose | Phase |
+|------|---------|-------|
+| graph-ir-tools | Shared tooling, authority docs | 1 |
+| graph-ir | IR specification | 1 |
+| armada | Code understanding (needed for Phase 4) | 3 |
+
+---
+
+*This document configures how AI agents work in this repository. For the master plan, see ECOSYSTEM-DEVELOPMENT-PLAN.md in graph-ir-tools.*

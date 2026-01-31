@@ -1,0 +1,97 @@
+==================
+Simple edge
+==================
+api -> database
+---
+(source_file
+  (edge_declaration
+    (identifier)
+    (identifier)))
+
+==================
+Edge with relation type
+==================
+api -> database [data_flow]
+---
+(source_file
+  (edge_declaration
+    (identifier)
+    (identifier)
+    (edge_attributes
+      (identifier))))
+
+==================
+Edge with labeled relation
+==================
+api -> stripe [http_request]
+---
+(source_file
+  (edge_declaration
+    (identifier)
+    (identifier)
+    (edge_attributes
+      (identifier))))
+
+==================
+Edge with label attribute
+==================
+api -> queue [event, label = "OrderCreated"]
+---
+(source_file
+  (edge_declaration
+    (identifier)
+    (identifier)
+    (edge_attributes
+      (identifier)
+      (attribute
+        (identifier)
+        (string)))))
+
+==================
+Multiple edges
+==================
+frontend -> api
+api -> database
+api -> cache
+---
+(source_file
+  (edge_declaration
+    (identifier)
+    (identifier))
+  (edge_declaration
+    (identifier)
+    (identifier))
+  (edge_declaration
+    (identifier)
+    (identifier)))
+
+==================
+Nodes and edges
+==================
+service "Frontend"
+service "API"
+database "DB"
+
+frontend -> api [http_request]
+api -> db [data_flow]
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string))
+  (node_declaration
+    (node_type)
+    (string))
+  (node_declaration
+    (node_type)
+    (string))
+  (edge_declaration
+    (identifier)
+    (identifier)
+    (edge_attributes
+      (identifier)))
+  (edge_declaration
+    (identifier)
+    (identifier)
+    (edge_attributes
+      (identifier))))

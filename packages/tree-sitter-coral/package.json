@@ -1,0 +1,59 @@
+{
+  "name": "tree-sitter-coral",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for Coral DSL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anthropics/coral"
+  },
+  "license": "MIT",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "parser",
+    "coral",
+    "diagram",
+    "dsl"
+  ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
+  ],
+  "dependencies": {
+    "node-addon-api": "^7.1.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.0",
+    "prebuildify": "^6.0.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp rebuild",
+    "generate": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "parse": "tree-sitter parse"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.coral",
+      "injection-regex": "^coral$",
+      "file-types": [
+        "coral"
+      ],
+      "highlights": "queries/highlights.scm"
+    }
+  ]
+}

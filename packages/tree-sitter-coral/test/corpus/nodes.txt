@@ -1,0 +1,155 @@
+==================
+Simple service node
+==================
+service "Web App"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Database node
+==================
+database "PostgreSQL"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Multiple nodes
+==================
+service "API"
+database "DB"
+external_api "Stripe"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string))
+  (node_declaration
+    (node_type)
+    (string))
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Actor node
+==================
+actor "User"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Module node
+==================
+module "Auth Handler"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Group node
+==================
+group "Backend Services"
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)))
+
+==================
+Node with body
+==================
+service "Payment Service" {
+}
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)
+    (node_body)))
+
+==================
+Node with children
+==================
+service "Payment Service" {
+  module "Validation"
+  module "Processing"
+}
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)
+    (node_body
+      (node_declaration
+        (node_type)
+        (string))
+      (node_declaration
+        (node_type)
+        (string)))))
+
+==================
+Nested groups
+==================
+group "Frontend" {
+  service "Web App"
+  service "Mobile App"
+}
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)
+    (node_body
+      (node_declaration
+        (node_type)
+        (string))
+      (node_declaration
+        (node_type)
+        (string)))))
+
+==================
+Node with property
+==================
+service "API" {
+  description: "Main API gateway"
+}
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)
+    (node_body
+      (property
+        (identifier)
+        (string)))))
+
+==================
+Node with multiple properties
+==================
+service "API" {
+  description: "Main API"
+  technology: "Node.js"
+}
+---
+(source_file
+  (node_declaration
+    (node_type)
+    (string)
+    (node_body
+      (property
+        (identifier)
+        (string))
+      (property
+        (identifier)
+        (string)))))
