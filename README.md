@@ -104,35 +104,67 @@ coral/
 
 ### Prerequisites
 
-- Node.js v20+
-- pnpm (`npm install -g pnpm`)
+- **Node.js v20 LTS** (Iron) — managed via [nvm](https://github.com/nvm-sh/nvm)
+- **npm** (included with Node.js)
+
+### Node.js Setup
+
+This project uses nvm with an `.nvmrc` file to ensure consistent Node.js versions:
+
+```bash
+# Install nvm (if not already installed)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+
+# Restart terminal, then install and use the project's Node version
+nvm install    # Installs version from .nvmrc (lts/iron = Node 20.x)
+nvm use        # Activates it
+
+# Verify
+node --version  # Should show v20.x.x
+npm --version   # Should show v10.x.x
+```
+
+**Tip:** Add `nvm use` to your shell profile or use [nvm's auto-switching](https://github.com/nvm-sh/nvm#deeper-shell-integration) to automatically load the correct version when entering this directory.
 
 ### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/coral.git
+git clone https://github.com/coreyt/coral.git
 cd coral
 
-# Install dependencies
-pnpm install
+# Load correct Node version
+nvm use
 
-# Build all packages
-pnpm build
+# Install dependencies for a specific package
+cd packages/language && npm install
+cd packages/viz && npm install
 ```
 
-### Development
+### Running Tests
 
 ```bash
-# Start the playground app
-pnpm dev --filter playground
+# Language package (parser, printer, format importers)
+cd packages/language
+npx vitest run    # 89 tests
 
-# Run tests
-pnpm test
-
-# Lint all packages
-pnpm lint
+# Viz package (converter, ELK layout)
+cd packages/viz
+npx vitest run    # 27 tests
 ```
+
+### Visual Editor Demo
+
+See the visual editor in action:
+
+```bash
+cd packages/viz-demo
+npm install
+npm run dev
+# Open http://localhost:5173
+```
+
+This renders a sample flowchart using the full pipeline: Graph-IR → ELK Layout → React Flow.
 
 ## Documentation
 

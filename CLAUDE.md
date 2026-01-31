@@ -40,11 +40,11 @@ If Phase 1 is not complete, say: "Phase 2 depends on Phase 1 completion. Is Phas
 
 ## Running npm/node Commands
 
-This project uses nvm for Node.js version management. To run npm or node commands:
+This project uses nvm for Node.js version management. An `.nvmrc` file pins the version.
 
 ```bash
-# Set PATH to include Node.js LTS (v20)
-export PATH="/home/coreyt/.nvm/versions/node/v20.20.0/bin:/usr/bin:$PATH"
+# Load the project's Node version
+nvm use
 
 # Then run commands normally
 npm install
@@ -52,7 +52,7 @@ npm test
 npx vitest run
 ```
 
-Always include `/usr/bin` in PATH to ensure standard utilities (head, cat, etc.) are available.
+If `nvm use` doesn't work automatically, run `nvm use lts/iron` (Node 20.x).
 
 ---
 

@@ -81,12 +81,14 @@ Phase 2 is complete. All 10 implementation steps are done:
 - Steps 5-6: Visual Editor, ELK Integration (viz package)
 - Step 7: MCP Server with 6 tools
 - Steps 8-10: Agents (3) and Skills (5)
+- Bonus: `packages/viz-demo/` for running the visual editor locally
 
 **Ready for Phase 4** (Integration) when Phase 3 (Armada) completes.
 
 To run tests:
 ```bash
-export PATH="/home/coreyt/.nvm/versions/node/v20.20.0/bin:/usr/bin:$PATH"
+# Load Node.js (reads .nvmrc)
+nvm use
 
 # Language package tests
 cd packages/language && npx vitest run
@@ -94,8 +96,8 @@ cd packages/language && npx vitest run
 # Viz package tests
 cd packages/viz && npx vitest run
 
-# Build MCP server
-cd packages/mcp-server && ./node_modules/.bin/tsc
+# Run visual editor demo
+cd packages/viz-demo && npm run dev
 ```
 
 ---
