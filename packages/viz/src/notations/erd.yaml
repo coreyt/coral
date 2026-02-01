@@ -1,0 +1,105 @@
+# ERD Notation (Chen Notation)
+id: erd
+name: Entity-Relationship Diagram
+description: Entity-Relationship Diagram using Chen notation
+version: "1.0.0"
+
+symbols:
+  - erd-entity
+  - erd-relationship
+  - erd-attribute
+  - erd-cardinality
+  - erd-isa
+
+edgeStyles:
+  relationship:
+    name: Relationship Line
+    targetArrow: none
+    sourceArrow: none
+    lineStyle: solid
+    stroke: "#424242"
+    strokeWidth: 1.5
+  attribute:
+    name: Attribute Line
+    targetArrow: none
+    sourceArrow: none
+    lineStyle: solid
+    stroke: "#90a4ae"
+    strokeWidth: 1
+  inheritance:
+    name: Inheritance Line
+    targetArrow: none
+    sourceArrow: none
+    lineStyle: solid
+    stroke: "#c2185b"
+    strokeWidth: 1.5
+
+defaultEdgeStyle: relationship
+
+connectionRules:
+  # Entity connects to relationships
+  - from: erd-entity
+    to:
+      - erd-relationship
+    edgeStyle: relationship
+    constraints:
+      cardinalityLabel: true
+
+  # Entity connects to attributes
+  - from: erd-entity
+    to:
+      - erd-attribute
+    edgeStyle: attribute
+
+  # Relationship connects to entities
+  - from: erd-relationship
+    to:
+      - erd-entity
+    edgeStyle: relationship
+    constraints:
+      minConnections: 2
+      cardinalityLabel: true
+
+  # Attributes can have sub-attributes (composite)
+  - from: erd-attribute
+    fromVariant: composite
+    to:
+      - erd-attribute
+    edgeStyle: attribute
+
+  # ISA connects parent to children
+  - from: erd-isa
+    to:
+      - erd-entity
+    edgeStyle: inheritance
+
+  # Entity connects to ISA (as parent)
+  - from: erd-entity
+    to:
+      - erd-isa
+    edgeStyle: inheritance
+    constraints:
+      maxOutgoing: 1
+
+validation:
+  rules:
+    - id: entity-has-key
+      description: Entities should have at least one primary key attribute
+      symbol: erd-entity
+      requiresAttribute:
+        variant: primary-key
+        min: 1
+    - id: relationship-binary
+      description: Relationships typically connect 2 entities (can be more for n-ary)
+      symbol: erd-relationship
+      minConnections: 2
+    - id: weak-entity-identifying
+      description: Weak entities require an identifying relationship
+      symbol: erd-entity
+      variant: weak
+      requiresRelationship:
+        variant: identifying
+    - id: attributes-connected
+      description: Attributes must be connected to an entity or relationship
+      symbol: erd-attribute
+      mustBeConnected: true

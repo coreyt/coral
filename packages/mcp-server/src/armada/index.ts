@@ -27,3 +27,13 @@ export {
   transformTraceToIR,
   type TransformOptions,
 } from "./transformer.js";
+
+export {
+  IncrementalWatcher,
+  createIncrementalWatcher,
+  checkForUpdates,
+  type IncrementalWatcherConfig,
+  type IncrementalUpdateResult,
+  type FileChangeEvent,
+  type UpdateCallback,
+} from "./incremental.js";

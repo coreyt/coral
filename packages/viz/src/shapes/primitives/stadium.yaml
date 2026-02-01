@@ -1,0 +1,22 @@
+# Stadium - Pill/capsule shape (terminal/start-end)
+id: stadium
+name: Stadium
+type: path
+viewBox: "0 0 120 40"
+# Rectangle with semicircular ends
+path: "M 20,0 L 100,0 A 20,20 0 0 1 100,40 L 20,40 A 20,20 0 0 1 20,0 Z"
+defaultSize:
+  width: 120
+  height: 40
+parameters:
+  endRadius:
+    type: number
+    default: 20
+    min: 15
+    max: 30
+    description: Radius of the semicircular ends
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

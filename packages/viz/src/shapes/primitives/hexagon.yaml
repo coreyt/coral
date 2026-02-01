@@ -1,0 +1,24 @@
+# Hexagon - Six-sided polygon
+id: hexagon
+name: Hexagon
+type: polygon
+viewBox: "0 0 100 86"
+# Regular hexagon with flat top
+path: "M 25,0 L 75,0 L 100,43 L 75,86 L 25,86 L 0,43 Z"
+defaultSize:
+  width: 100
+  height: 86
+parameters:
+  orientation:
+    type: enum
+    default: flat
+    options: [flat, pointy]
+    description: Flat-top or pointy-top orientation
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }
+  # Hexagons can have 6 anchors
+  - { side: NORTH_EAST, position: 0.5 }
+  - { side: NORTH_WEST, position: 0.5 }

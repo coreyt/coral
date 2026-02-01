@@ -1,0 +1,28 @@
+# Actor - Stick figure (UML actor)
+id: actor
+name: Actor
+type: compound
+viewBox: "0 0 60 100"
+# Stick figure: head circle, body line, arms, legs
+path: |
+  M 30,20
+  A 10,10 0 1 1 30,0
+  A 10,10 0 1 1 30,20
+  M 30,20
+  L 30,60
+  M 10,35
+  L 50,35
+  M 30,60
+  L 10,100
+  M 30,60
+  L 50,100
+defaultSize:
+  width: 60
+  height: 100
+strokeOnly: true
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.25 }
+  - { side: SOUTH, position: 0.75 }
+  - { side: EAST, position: 0.35 }
+  - { side: WEST, position: 0.35 }

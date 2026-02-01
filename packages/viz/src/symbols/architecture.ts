@@ -1,0 +1,150 @@
+/**
+ * Architecture Symbols (System/Infrastructure diagrams)
+ */
+
+import type { SymbolLibrary } from '../types';
+
+export const architectureSymbols: SymbolLibrary = {
+  id: 'architecture',
+  name: 'Architecture Symbols',
+  version: '1.0.0',
+  description: 'Symbols for system architecture and infrastructure diagrams',
+  symbols: [
+    {
+      id: 'arch-service',
+      name: 'Service',
+      description: 'A microservice, application, or service component',
+      shape: 'rectangle',
+      tags: ['service', 'application', 'component'],
+      variants: {
+        web: { name: 'Web Service', icon: 'globe', defaults: { fill: '#e3f2fd' } },
+        api: { name: 'API Service', icon: 'api', defaults: { fill: '#f3e5f5' } },
+        worker: { name: 'Worker Service', icon: 'cog', defaults: { fill: '#fff8e1' } },
+        gateway: { name: 'API Gateway', icon: 'shield', defaults: { fill: '#e8f5e9' } },
+      },
+      defaults: { fill: '#e3f2fd', stroke: '#1976d2', strokeWidth: 2, cornerRadius: 8 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+        { id: 'data', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'arch-database',
+      name: 'Database',
+      description: 'A database or data store',
+      shape: 'cylinder',
+      tags: ['database', 'storage', 'data'],
+      variants: {
+        sql: { name: 'SQL Database', defaults: { fill: '#e8f5e9' } },
+        nosql: { name: 'NoSQL Database', defaults: { fill: '#fff3e0' } },
+        cache: { name: 'Cache', defaults: { fill: '#fce4ec' } },
+        search: { name: 'Search Engine', defaults: { fill: '#f3e5f5' } },
+      },
+      defaults: { fill: '#e8f5e9', stroke: '#388e3c', strokeWidth: 2 },
+      ports: [{ id: 'query', anchor: 'NORTH', direction: 'in' }],
+    },
+    {
+      id: 'arch-queue',
+      name: 'Message Queue',
+      description: 'A message queue or event bus',
+      shape: 'parallelogram',
+      tags: ['queue', 'messaging', 'events'],
+      variants: {
+        queue: { name: 'Queue', defaults: { fill: '#fff8e1' } },
+        topic: { name: 'Topic/Pub-Sub', defaults: { fill: '#f3e5f5' } },
+        stream: { name: 'Stream', defaults: { fill: '#e1f5fe' } },
+      },
+      defaults: { fill: '#fff8e1', stroke: '#f9a825', strokeWidth: 2 },
+      ports: [
+        { id: 'publish', anchor: 'WEST', direction: 'in' },
+        { id: 'subscribe', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'arch-external-api',
+      name: 'External API',
+      description: 'An external service or third-party API',
+      shape: 'cloud',
+      tags: ['external', 'api', 'third-party'],
+      defaults: { fill: '#fce4ec', stroke: '#c2185b', strokeWidth: 2 },
+      ports: [{ id: 'call', anchor: 'SOUTH', direction: 'in' }],
+    },
+    {
+      id: 'arch-actor',
+      name: 'Actor',
+      description: 'A user, system, or external actor',
+      shape: 'actor',
+      tags: ['actor', 'user', 'external'],
+      variants: {
+        user: { name: 'User', defaults: { stroke: '#1976d2' } },
+        system: { name: 'External System', defaults: { stroke: '#7b1fa2' } },
+        admin: { name: 'Administrator', defaults: { stroke: '#d32f2f' } },
+      },
+      defaults: { stroke: '#424242', strokeWidth: 2 },
+      ports: [{ id: 'interact', anchor: 'EAST', direction: 'out' }],
+    },
+    {
+      id: 'arch-load-balancer',
+      name: 'Load Balancer',
+      description: 'A load balancer or traffic distributor',
+      shape: 'hexagon',
+      tags: ['infrastructure', 'load-balancer', 'network'],
+      defaults: { fill: '#e0f7fa', stroke: '#00838f', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out1', anchor: 'EAST', direction: 'out' },
+        { id: 'out2', anchor: 'SOUTH', direction: 'out' },
+        { id: 'out3', anchor: 'NORTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'arch-container',
+      name: 'Container',
+      description: 'A logical grouping (VPC, cluster, namespace)',
+      shape: 'rectangle',
+      tags: ['container', 'group', 'boundary'],
+      isContainer: true,
+      variants: {
+        vpc: { name: 'VPC', defaults: { stroke: '#ff9800', strokeDasharray: '10,5' } },
+        cluster: { name: 'Cluster', defaults: { stroke: '#9c27b0', strokeDasharray: '5,5' } },
+        namespace: { name: 'Namespace', defaults: { stroke: '#607d8b', strokeDasharray: '3,3' } },
+      },
+      defaults: { fill: '#fafafa', stroke: '#9e9e9e', strokeWidth: 2, strokeDasharray: '10,5', width: 300, height: 200 },
+      ports: [],
+    },
+    {
+      id: 'arch-cdn',
+      name: 'CDN',
+      description: 'Content Delivery Network or edge service',
+      shape: 'cloud',
+      tags: ['cdn', 'edge', 'network'],
+      defaults: { fill: '#e8eaf6', stroke: '#3f51b5', strokeWidth: 1.5 },
+      ports: [
+        { id: 'origin', anchor: 'SOUTH', direction: 'out' },
+        { id: 'edge', anchor: 'NORTH', direction: 'in' },
+      ],
+    },
+    {
+      id: 'arch-storage',
+      name: 'Storage',
+      description: 'Object storage or file system',
+      shape: 'cylinder',
+      tags: ['storage', 'files', 'objects'],
+      defaults: { fill: '#eceff1', stroke: '#546e7a', strokeWidth: 2 },
+      ports: [{ id: 'access', anchor: 'NORTH', direction: 'inout' }],
+    },
+    {
+      id: 'arch-function',
+      name: 'Serverless Function',
+      description: 'A serverless/lambda function',
+      shape: 'hexagon',
+      tags: ['serverless', 'function', 'lambda'],
+      defaults: { fill: '#fff8e1', stroke: '#ff8f00', strokeWidth: 2, width: 80, height: 70 },
+      ports: [
+        { id: 'trigger', anchor: 'WEST', direction: 'in' },
+        { id: 'output', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+  ],
+};

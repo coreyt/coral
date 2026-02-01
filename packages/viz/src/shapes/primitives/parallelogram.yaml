@@ -1,0 +1,21 @@
+# Parallelogram - Skewed rectangle for I/O operations
+id: parallelogram
+name: Parallelogram
+type: polygon
+viewBox: "0 0 120 60"
+path: "M 20,0 L 120,0 L 100,60 L 0,60 Z"
+defaultSize:
+  width: 120
+  height: 60
+parameters:
+  skew:
+    type: number
+    default: 20
+    min: 10
+    max: 30
+    description: Horizontal skew amount in pixels
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

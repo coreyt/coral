@@ -1,0 +1,29 @@
+# Cylinder - 3D database/storage shape
+id: cylinder
+name: Cylinder
+type: compound
+viewBox: "0 0 100 80"
+# Top ellipse, sides, bottom ellipse
+path: |
+  M 0,15
+  A 50,15 0 1 1 100,15
+  L 100,65
+  A 50,15 0 1 1 0,65
+  L 0,15
+  M 0,15
+  A 50,15 0 1 0 100,15
+defaultSize:
+  width: 100
+  height: 80
+parameters:
+  capHeight:
+    type: number
+    default: 15
+    min: 10
+    max: 25
+    description: Height of the elliptical caps
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

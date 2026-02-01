@@ -20,7 +20,7 @@
 | 2 | KG→IR Transformer | [x] Complete | `packages/mcp-server/src/armada/transformer.ts` |
 | 3 | `coral_from_codebase` tool | [x] Complete | `packages/mcp-server/src/tools/fromCodebase.ts` |
 | 4 | `/coral --from=codebase` skill | [x] Complete | Updated `.claude/skills/coral/SKILL.md` |
-| 5 | Incremental Updates | [ ] Not started | Change detection → re-render |
+| 5 | Incremental Updates | [x] Complete | `packages/mcp-server/src/armada/incremental.ts` (14 tests) |
 
 ### Acceptance Criteria
 
@@ -29,16 +29,16 @@
 | Armada MCP Consumption Works | [x] | ArmadaClient can query all Armada tools |
 | Code→IR Transformation Works | [x] | 18 tests for transformer (context, deps, impact, trace) |
 | Code→Diagram Workflow Works | [~] | Requires Armada running for integration test |
-| Incremental Updates Work | [ ] | Not yet implemented |
+| Incremental Updates Work | [x] | IncrementalWatcher + checkForUpdates (14 tests) |
 
 ### Phase Completion Checklist
 
-- [ ] All implementation steps complete
-- [ ] All acceptance criteria pass
-- [ ] Documentation updated
-- [ ] Tests pass
+- [x] All implementation steps complete
+- [x] All acceptance criteria pass
+- [x] Documentation updated
+- [x] Tests pass (28 tests in mcp-server)
 
-**Phase 4 Complete**: No (4 of 5 steps done)
+**Phase 4 Complete**: Yes
 
 ---
 
@@ -123,6 +123,21 @@
 - 22 new tests for bidirectional sync and acceptance criteria
 - See `dev/requirements.md` for details
 
+**CORAL-REQ-008 Complete:** Coral File Format and Save/Load
+- `packages/viz/src/file/` with schema, serialize, deserialize, validate, migrate
+- `packages/viz/src/editor/FileControls.tsx` - Save/Load/Export UI component
+- 28 new tests for file format operations
+- Integrated with viz-demo (Save, Load, Export buttons in header)
+- See `dev/requirements.md` for details
+
+**CORAL-REQ-006 Complete:** Coral Shapes and Diagram Notations
+- `packages/viz/src/shapes/` - 14 shape primitives with SVG paths and portAnchors
+- `packages/viz/src/symbols/` - 5 libraries (flowchart, bpmn, erd, code, architecture) with 40+ symbols
+- `packages/viz/src/notations/` - 5 notations with connection rules and validation
+- `packages/viz/src/components/ShapeRenderer.tsx` and `SymbolNode.tsx`
+- 63 new tests for shape/symbol/notation system
+- See `dev/requirements.md` for details
+
 Phase 4 additions:
 - `packages/mcp-server/src/armada/` - Armada client and transformer
 - `packages/mcp-server/src/tools/fromCodebase.ts` - New MCP tool
@@ -140,8 +155,63 @@ To test full code→diagram workflow:
 2. Index a codebase with Armada
 3. Use `/coral --from=codebase <query>` or `coral_from_codebase` MCP tool
 
-**Next**: Step 5 - Incremental update support (detect code changes → auto-update diagram)
+**CORAL-REQ-013 Complete:** Position Stability and Incremental Layout
+- `packages/viz/src/layout/positionStability.ts` - diffGraphs, resolvePositions, incrementalLayout
+- `packages/viz/src/layout/useDiagramState.ts` - Hook for separated parse/render/layout
+- `packages/viz/src/types.ts` - New types: PositionSource, GraphDiff, PositionResolution, DiffableGraph
+- `packages/viz-demo/src/App.tsx` - Refactored to use position stability
+- 33 new tests (20 for position stability, 13 for useDiagramState)
+- Fixes undo/redo being overwritten by automatic layout
+- Preserves user-dragged positions when DSL text changes
+- Only runs full layout on: initial load, format switch, explicit reflow
+
+**CORAL-REQ-009 Complete:** Settings Panel with Layout Configuration
+- `packages/viz/src/file/schema.ts` - Added UserPreferences, LayoutPreset, LAYOUT_PRESETS constants
+- `packages/viz/src/settings/` - useSettings hook, LayoutSettingsForm, SettingsPanel components
+- 5 layout presets: Flowchart, Org Chart, Network, Radial, Custom
+- Two-tab panel: Document settings (saved with file) and User preferences (localStorage)
+- Advanced ELK options JSON editor
+- 41 new tests for settings
+- Integrated with viz-demo (Settings button in header, sidebar panel)
+
+**CORAL-REQ-010 Complete:** Port Compatibility Feedback
+- `packages/viz/src/compatibility/` - New module for edge compatibility validation
+- `packages/viz/src/compatibility/validateConnection.ts` - Connection validation logic
+- `packages/viz/src/compatibility/useEdgeCompatibility.ts` - React hook for edge compatibility state
+- `packages/viz/src/compatibility/IncompatibilityTooltip.tsx` - Tooltip for incompatibility feedback
+- `packages/viz/src/compatibility/CompatibilityEdge.tsx` - Custom React Flow edge with visual feedback
+- `packages/viz/src/types.ts` - Added ConnectionValidation, EdgeCompatibility, NodeConnectionInfo types
+- 49 new tests for port compatibility (validateConnection, hook, tooltip, edge styling)
+- Integrated with viz-demo (edges show red for incompatible, amber for warnings)
+- Supports all 5 notations: flowchart, BPMN, ERD, code, architecture
+
+**CORAL-REQ-011 Complete:** Adaptive Node Sizing for Text Content
+- `packages/viz/src/types.ts` - Added SizingMode, ShapeSizing, TextMeasureOptions, TextDimensions, NodeSizingOptions, NodeDimensions types
+- `packages/viz/src/shapes/index.ts` - Updated all 14 shapes with sizing metadata (textBoundsRatio, minSize, padding)
+- `packages/viz/src/layout/nodeSizing.ts` - measureText(), computeNodeSize(), computeUniformSizes(), applyAdaptiveSizing() utilities
+- `packages/viz/src/layout/elk.ts` - Extended layoutFlowNodes with LayoutFlowOptions for sizing integration
+- `packages/viz/src/file/schema.ts` - Added sizingMode to LayoutSettings and layout presets
+- `packages/viz/src/settings/LayoutSettingsForm.tsx` - Added Node Sizing dropdown with adaptive/uniform/hybrid options
+- 31 new tests for node sizing (text measurement, shape-specific sizing, sizing modes)
+- Three sizing modes: adaptive (each node sized to content), uniform (same size per shape type), hybrid (adaptive width, uniform height)
+
+**CORAL-REQ-005 Complete:** Incremental Update Support
+- `packages/mcp-server/src/armada/incremental.ts` - IncrementalWatcher, checkForUpdates
+- File watching with debounce for code changes
+- Armada impactOf integration for smart change detection
+- Graph diffing for added/removed/modified node detection
+- Direct transformation to Graph-IR for incremental updates
+- 14 new tests for incremental update system
+- Completes Phase 4 (Integration)
+
+**CORAL-REQ-015 Proposed:** Manual Edge Waypoint Routing
+- User-requested feature for manual edge path control
+- Allows adding/moving/removing waypoints on edges
+- See `dev/requirements.md` for full specification
+- Priority: Low (nice-to-have, not blocking other work)
+
+**All approved work complete.** See CLAUDE.md for future requirements (CORAL-REQ-012, CORAL-REQ-014, CORAL-REQ-015).
 
 ---
 
-**Last Updated**: 2026-01-31
+**Last Updated**: 2026-02-01

@@ -1,0 +1,108 @@
+/**
+ * Flowchart Symbols (ISO 5807)
+ */
+
+import type { SymbolLibrary } from '../types';
+
+export const flowchartSymbols: SymbolLibrary = {
+  id: 'flowchart',
+  name: 'Flowchart Symbols',
+  version: '1.0.0',
+  description: 'Standard flowchart symbols based on ISO 5807',
+  symbols: [
+    {
+      id: 'flowchart-terminal',
+      name: 'Terminal',
+      description: 'Start or end point of a flow',
+      shape: 'stadium',
+      tags: ['control-flow', 'terminal'],
+      variants: {
+        start: {
+          name: 'Start',
+          defaults: { fill: '#c8e6c9', stroke: '#388e3c' },
+          ports: [{ id: 'out', anchor: 'SOUTH', direction: 'out' }],
+        },
+        end: {
+          name: 'End',
+          defaults: { fill: '#ffcdd2', stroke: '#d32f2f' },
+          ports: [{ id: 'in', anchor: 'NORTH', direction: 'in' }],
+        },
+      },
+      defaults: { strokeWidth: 2 },
+    },
+    {
+      id: 'flowchart-process',
+      name: 'Process',
+      description: 'An action or operation step',
+      shape: 'rectangle',
+      tags: ['action', 'process'],
+      defaults: { fill: '#e3f2fd', stroke: '#1976d2', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in' },
+        { id: 'out', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'flowchart-decision',
+      name: 'Decision',
+      description: 'A branching point based on a condition',
+      shape: 'diamond',
+      tags: ['control-flow', 'branching', 'condition'],
+      defaults: { fill: '#fff9c4', stroke: '#f9a825', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in', maxConnections: 1 },
+        { id: 'yes', anchor: 'SOUTH', direction: 'out', label: 'Yes' },
+        { id: 'no', anchor: 'EAST', direction: 'out', label: 'No' },
+        { id: 'alt', anchor: 'WEST', direction: 'out', label: 'Maybe' },
+      ],
+    },
+    {
+      id: 'flowchart-io',
+      name: 'Input/Output',
+      description: 'Data input or output operation',
+      shape: 'parallelogram',
+      tags: ['data', 'io'],
+      defaults: { fill: '#f3e5f5', stroke: '#7b1fa2', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in' },
+        { id: 'out', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'flowchart-document',
+      name: 'Document',
+      description: 'A document, report, or printed output',
+      shape: 'document',
+      tags: ['data', 'document', 'output'],
+      defaults: { fill: '#fff8e1', stroke: '#ff8f00', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in' },
+        { id: 'out', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'flowchart-predefined',
+      name: 'Predefined Process',
+      description: 'A subroutine or predefined process',
+      shape: 'subroutine',
+      tags: ['action', 'subroutine', 'predefined'],
+      defaults: { fill: '#e8eaf6', stroke: '#3f51b5', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in' },
+        { id: 'out', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'flowchart-connector',
+      name: 'Connector',
+      description: 'Connection point for flow continuation',
+      shape: 'ellipse',
+      tags: ['connector', 'reference'],
+      defaults: { fill: '#ffffff', stroke: '#616161', strokeWidth: 2, width: 30, height: 30 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+  ],
+};

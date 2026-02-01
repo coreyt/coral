@@ -156,8 +156,33 @@ See `graph-ir-tools/ecosystem/requirements/README.md` for full process.
 | `/coral-explain` | Explain diagrams in natural language |
 | `/coral-validate` | Validate Coral DSL (DSL-specific) |
 | `/coral-scaffold` | Generate Coral component boilerplate |
+| `modern-ui-architect` | Enforce Coral Design Standard for UI/UX |
 
 **Note**: `/coral-validate` and `/coral-scaffold` are Coral-specific because they require Coral's grammar, semantic rules, and templates.
+
+### UI/UX Guidance: modern-ui-architect
+
+The `modern-ui-architect` skill (`.claude/skills/modern-ui-architect/`) enforces the **Coral Design Standard** for viz-demo UI work. Use it when:
+- Designing new UI layouts or components
+- Refactoring existing UI
+- Auditing UI for consistency
+
+**Key principles enforced:**
+- Three-pane layout: Rail (left) | Stage (center) | Inspector (right)
+- Contextual Inspector: Document settings by default, node settings when selected
+- Compact density (Material Design 3)
+- Command Palette (`Cmd+K`) over menu bars
+- Segmented controls for 2-4 options
+
+**Preserved decisions** (DO NOT change):
+- Explicit Save/Load buttons (user controls persistence)
+- Explicit Reflow button (user controls when layout runs)
+- Undo/Redo for layout changes
+- Position stability (user-dragged positions persist)
+
+**Reference files:**
+- `references/coral_design_standard.md` — Full design system spec
+- `assets/ui_auditor_persona.md` — Persona for UI critique
 
 ---
 
@@ -253,57 +278,138 @@ This enables the code-to-diagram workflow. See PROGRESS.md for current status.
 
 ---
 
-## Pending Work
+## Recently Completed
+
+### CORAL-REQ-007: Diagram Reflow with Undo/Redo ✓
+
+**Status**: Complete
+
+Implemented layout history and controls for viz-demo:
+- `useLayoutHistory` hook (`packages/viz/src/layout/useLayoutHistory.ts`)
+- `LayoutControls` component (`packages/viz/src/editor/LayoutControls.tsx`)
+- Keyboard shortcuts: Ctrl+Shift+L (reflow), Ctrl+Z (undo), Ctrl+Shift+Z (redo)
+- Integrated with viz-demo App.tsx
+
+---
+
+## Approved Work Queue
+
+The following requirements are approved and ready for implementation. Graph-ir-tools has reviewed and approved. GitHub issues are created.
+
+### Implementation Order
+
+```
+1. CORAL-REQ-006 (Shapes/Notations)  ← Ready, unblocks CORAL-REQ-010
+2. CORAL-REQ-008 (File Format)       ← Ready, independent
+3. CORAL-REQ-009 (Settings Panel)    ← Depends on CORAL-REQ-008
+4. CORAL-REQ-010 (Port Compatibility) ← Depends on CORAL-REQ-006
+5. CORAL-REQ-005 (Incremental Updates) ← Phase 4, lower priority
+```
 
 ### CORAL-REQ-006: Shape Geometries and Diagram Symbol Libraries
 
 **GitHub Issue**: https://github.com/coreyt/coral/issues/2
 **Traces To**: SYS-REQ-003 (Symbol/Notation Architecture)
-**Status**: Proposed
-
-#### What to Do
+**Status**: Proposed (Ready to implement)
+**Priority**: High (unblocks CORAL-REQ-010)
 
 Coral owns all visual/diagram-related content for the symbol/notation architecture:
 
 1. Define shape geometries (SVG definitions for rectangle, diamond, cylinder, etc.)
 2. Define diagram symbol libraries (flowchart, BPMN, ERD, UML symbols)
-3. Define notation rules (valid symbols and connections per diagram type)
+3. Define notation rules with **port compatibility** (valid symbols and connections per diagram type)
 4. Provide visual mappings for Armada's code symbols
 
-#### Files to Create
+**Key addition**: Notation rules must include port semantics for CORAL-REQ-010.
 
-| File | Content |
-|------|---------|
-| `shapes/*.yaml` | SVG geometry definitions |
-| `symbols/flowchart.yaml` | Flowchart symbols |
-| `symbols/bpmn.yaml` | BPMN symbols |
-| `symbols/erd.yaml` | ERD symbols |
-| `symbols/code.yaml` | Visual mappings for Armada symbols |
-| `notations/flowchart.yaml` | Flowchart connection rules |
-| `notations/bpmn.yaml` | BPMN connection rules |
-| `notations/erd.yaml` | ERD connection rules |
-
-#### Reference Information
-
-| Document | Location |
-|----------|----------|
+| Reference | Location |
+|-----------|----------|
 | Infrastructure spec | `graph-ir-tools/specs/symbol-notation-infrastructure.md` |
 | Coral symbols draft | `graph-ir-tools/drafts/coral-symbols-spec.md` |
-| Component requirement | `graph-ir-tools/drafts/coral-req-006.md` |
-| System requirement | `graph-ir-tools/ecosystem/requirements/system-requirements.md` (SYS-REQ-003) |
+| Component requirement | `dev/requirements.md` (CORAL-REQ-006) |
 
-#### Dependency
+---
 
-Requires `TOOLS-REQ-001` (graph-ir-tools infrastructure) to be complete first for:
-- `SymbolRegistry` class to load symbol definitions
-- `NotationRegistry` class to load notation rules
+### CORAL-REQ-008: Coral File Format and Save/Load
 
-#### After Completion
+**GitHub Issue**: https://github.com/coreyt/coral/issues/4
+**Traces To**: SYS-REQ-005 (Document Persistence and File Format)
+**Status**: Proposed (Ready to implement)
+**Priority**: High
 
-1. Add requirement to `dev/requirements.md`:
-   - Copy from `graph-ir-tools/drafts/coral-req-006.md`
-2. Update requirement status to Complete
-3. Close GitHub issue
+Implement a versioned file format for Coral diagrams:
+
+```typescript
+interface CoralDocument {
+  schemaVersion: "1.0.0";
+  metadata: { name, description, tags, version, created, modified };
+  content: { format: "dsl" | "graph-ir", dslType?, text?, graphIR? };
+  settings: { notation, layout: { algorithm, direction, spacing, elkOptions } };
+  viewState?: { zoom, pan, selectedNodes };
+  nodePositions?: Record<string, { x, y }>;
+}
+```
+
+**Implementation steps**: 7 steps in `dev/requirements.md`
+
+---
+
+### CORAL-REQ-009: Settings Panel with Layout Configuration
+
+**GitHub Issue**: https://github.com/coreyt/coral/issues/5
+**Traces To**: SYS-REQ-006 (Settings Architecture)
+**Status**: Proposed
+**Priority**: Medium
+**Depends On**: CORAL-REQ-008 (for file integration)
+
+Two-tier settings architecture:
+- **Document Settings**: Saved with file (notation, ELK options)
+- **User Preferences**: Saved to localStorage (theme, defaults)
+
+Key ELK options to expose: algorithm, direction, spacing, edge routing.
+
+**Implementation steps**: 9 steps in `dev/requirements.md`
+
+---
+
+### CORAL-REQ-010: Port Compatibility Feedback
+
+**GitHub Issue**: https://github.com/coreyt/coral/issues/6
+**Traces To**: SYS-REQ-004 (Visual Editor UX)
+**Status**: Proposed
+**Priority**: Medium
+**Depends On**: CORAL-REQ-006 (needs notation port rules)
+
+Visual feedback for notation-aware port compatibility:
+- Incompatible edges → Warning color (orange/amber)
+- Hover tooltip → Explains incompatibility
+- Drag feedback → Green (compatible) / Yellow (incompatible) anchors
+
+**Implementation steps**: 9 steps in `dev/requirements.md`
+
+---
+
+### CORAL-REQ-005: Incremental Updates
+
+**GitHub Issue**: https://github.com/coreyt/coral/issues/3
+**Traces To**: SYS-REQ-002 (Code-to-Diagram Workflow)
+**Status**: Proposed
+**Priority**: Medium (Phase 4 Step 5)
+
+Detect code changes and update diagrams without full regeneration.
+
+---
+
+## Starting Implementation
+
+After `/compact`, say **"continue"** to begin implementation.
+
+The agent will:
+1. Read `dev/requirements.md` for requirement details
+2. Start with CORAL-REQ-006 or CORAL-REQ-008 (both are ready, independent)
+3. Follow TDD: write tests first
+4. Update PROGRESS.md as steps complete
+5. Close GitHub issues when requirements are done
 
 ---
 

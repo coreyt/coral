@@ -6,7 +6,9 @@
 
 import ELK from 'elkjs/lib/elk.bundled.js';
 import type { ElkNode, ElkExtendedEdge, LayoutOptions as ElkLayoutOptions } from 'elkjs';
-import type { GraphIR, GraphNode, GraphEdge, LayoutOptions, CoralNode, CoralEdge } from '../types.js';
+import type { GraphIR, GraphNode, GraphEdge, LayoutOptions, CoralNode, CoralEdge, SizingMode } from '../types.js';
+import { applyAdaptiveSizing } from './nodeSizing.js';
+import { symbolRegistry } from '../symbols/index.js';
 
 const elk = new ELK();
 
@@ -164,27 +166,81 @@ export async function layoutGraph(graph: GraphIR): Promise<GraphIR> {
 }
 
 /**
+ * Extended layout options including sizing (CORAL-REQ-011)
+ */
+export interface LayoutFlowOptions extends LayoutOptions {
+  /** Node sizing mode */
+  sizingMode?: SizingMode;
+  /** Font size for text measurement */
+  fontSize?: number;
+  /** Font family for text measurement */
+  fontFamily?: string;
+}
+
+/**
+ * Get shape ID from node data
+ */
+function getShapeIdFromNode(node: CoralNode): string {
+  // Check symbolId first
+  const symbolId = node.data.symbolId;
+  if (symbolId) {
+    const symbol = symbolRegistry.get(symbolId);
+    if (symbol) {
+      return symbol.shape;
+    }
+  }
+
+  // Fallback mapping from node types to shapes
+  const typeToShape: Record<string, string> = {
+    service: 'rectangle',
+    database: 'cylinder',
+    external_api: 'cloud',
+    actor: 'actor',
+    module: 'rectangle',
+    group: 'rectangle',
+    process: 'rectangle',
+    decision: 'diamond',
+    terminal: 'stadium',
+    io: 'parallelogram',
+    document: 'document',
+  };
+
+  return typeToShape[node.data.nodeType] || 'rectangle';
+}
+
+/**
  * Layout React Flow nodes using ELK
  *
  * This is a convenience function for use directly with React Flow state.
  *
  * @param nodes - React Flow nodes
  * @param edges - React Flow edges
- * @param options - Layout options
+ * @param options - Layout options (including sizing mode)
  * @returns Nodes with positions updated
  */
 export async function layoutFlowNodes(
   nodes: CoralNode[],
   edges: CoralEdge[],
-  options?: LayoutOptions
+  options?: LayoutFlowOptions
 ): Promise<CoralNode[]> {
+  // Apply adaptive sizing if enabled (CORAL-REQ-011)
+  let sizedNodes = nodes;
+  if (options?.sizingMode) {
+    sizedNodes = applyAdaptiveSizing(nodes, {
+      sizingMode: options.sizingMode,
+      getShapeId: getShapeIdFromNode,
+      fontSize: options.fontSize,
+      fontFamily: options.fontFamily,
+    });
+  }
+
   // Build ELK graph from React Flow nodes
-  const nodeMap = new Map(nodes.map((n) => [n.id, n]));
+  const nodeMap = new Map(sizedNodes.map((n) => [n.id, n]));
   const rootNodes: ElkNode[] = [];
   const childMap = new Map<string, ElkNode[]>();
 
   // First pass: create ELK nodes and group children
-  for (const node of nodes) {
+  for (const node of sizedNodes) {
     const elkNode: ElkNode = {
       id: node.id,
       width: node.measured?.width || node.width || DEFAULT_NODE_WIDTH,
@@ -245,8 +301,8 @@ export async function layoutFlowNodes(
 
   collectPositions(layoutedGraph.children || []);
 
-  // Apply positions to React Flow nodes
-  return nodes.map((node) => {
+  // Apply positions to React Flow nodes (use sizedNodes to preserve computed dimensions)
+  return sizedNodes.map((node) => {
     const pos = positionMap.get(node.id);
     if (pos) {
       return {

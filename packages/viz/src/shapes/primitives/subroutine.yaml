@@ -1,0 +1,25 @@
+# Subroutine - Double-bordered rectangle (predefined process)
+id: subroutine
+name: Subroutine
+type: compound
+viewBox: "0 0 100 60"
+# Outer rectangle with inner vertical lines
+path: |
+  M 0,0 L 100,0 L 100,60 L 0,60 Z
+  M 10,0 L 10,60
+  M 90,0 L 90,60
+defaultSize:
+  width: 100
+  height: 60
+parameters:
+  borderWidth:
+    type: number
+    default: 10
+    min: 5
+    max: 15
+    description: Width of the side borders
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

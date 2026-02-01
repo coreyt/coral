@@ -1,0 +1,110 @@
+/**
+ * Code Symbols (Visual mappings for Armada code analysis)
+ */
+
+import type { SymbolLibrary } from '../types';
+
+export const codeSymbols: SymbolLibrary = {
+  id: 'code',
+  name: 'Code Symbols',
+  version: '1.0.0',
+  description: 'Visual representations for code elements from Armada analysis',
+  symbols: [
+    {
+      id: 'code-function',
+      name: 'Function',
+      description: 'A function or method',
+      shape: 'rectangle',
+      tags: ['code', 'function', 'method', 'callable'],
+      variants: {
+        async: { name: 'Async Function', defaults: { strokeDasharray: '8,4' } },
+        generator: { name: 'Generator Function', defaults: { fill: '#fff8e1' } },
+        constructor: { name: 'Constructor', defaults: { fill: '#e8eaf6' } },
+      },
+      defaults: { fill: '#e1f5fe', stroke: '#0288d1', strokeWidth: 2, cornerRadius: 4 },
+      ports: [
+        { id: 'calls', anchor: 'SOUTH', direction: 'out' },
+        { id: 'calledBy', anchor: 'NORTH', direction: 'in' },
+        { id: 'uses', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'code-class',
+      name: 'Class',
+      description: 'A class or type definition',
+      shape: 'rectangle',
+      tags: ['code', 'class', 'type', 'oop'],
+      variants: {
+        abstract: { name: 'Abstract Class', defaults: { strokeDasharray: '5,3', fontStyle: 'italic' } },
+        interface: { name: 'Interface', defaults: { fill: '#e8f5e9', stroke: '#43a047' } },
+      },
+      defaults: { fill: '#f3e5f5', stroke: '#8e24aa', strokeWidth: 2 },
+      ports: [
+        { id: 'extends', anchor: 'NORTH', direction: 'out' },
+        { id: 'extendedBy', anchor: 'SOUTH', direction: 'in' },
+        { id: 'implements', anchor: 'EAST', direction: 'out' },
+        { id: 'uses', anchor: 'WEST', direction: 'inout' },
+      ],
+    },
+    {
+      id: 'code-module',
+      name: 'Module',
+      description: 'A module, file, or package',
+      shape: 'rectangle',
+      tags: ['code', 'module', 'file', 'package'],
+      defaults: { fill: '#e8f5e9', stroke: '#388e3c', strokeWidth: 2, strokeDasharray: '10,5' },
+      ports: [
+        { id: 'imports', anchor: 'WEST', direction: 'in' },
+        { id: 'exports', anchor: 'EAST', direction: 'out' },
+        { id: 'contains', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'code-variable',
+      name: 'Variable',
+      description: 'A variable, field, or property',
+      shape: 'ellipse',
+      tags: ['code', 'variable', 'field', 'property'],
+      variants: {
+        constant: { name: 'Constant', defaults: { stroke: '#d84315' } },
+        static: { name: 'Static Field', defaults: { textDecoration: 'underline' } },
+      },
+      defaults: { fill: '#fff3e0', stroke: '#ef6c00', strokeWidth: 1.5, width: 80, height: 36 },
+      ports: [
+        { id: 'owner', anchor: 'WEST', direction: 'out' },
+        { id: 'usedBy', anchor: 'EAST', direction: 'in' },
+      ],
+    },
+    {
+      id: 'code-type',
+      name: 'Type',
+      description: 'A type annotation or interface',
+      shape: 'hexagon',
+      tags: ['code', 'type', 'interface'],
+      defaults: { fill: '#eceff1', stroke: '#546e7a', strokeWidth: 1.5 },
+      ports: [
+        { id: 'implements', anchor: 'WEST', direction: 'in' },
+        { id: 'uses', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'code-namespace',
+      name: 'Namespace',
+      description: 'A namespace or package container',
+      shape: 'rectangle',
+      tags: ['code', 'namespace', 'package', 'container'],
+      isContainer: true,
+      defaults: { fill: '#fafafa', stroke: '#9e9e9e', strokeWidth: 1, strokeDasharray: '5,5', width: 200, height: 150 },
+      ports: [],
+    },
+    {
+      id: 'code-external',
+      name: 'External Dependency',
+      description: 'An external library or package',
+      shape: 'cloud',
+      tags: ['code', 'external', 'dependency', 'library'],
+      defaults: { fill: '#fce4ec', stroke: '#ad1457', strokeWidth: 1.5 },
+      ports: [{ id: 'importedBy', anchor: 'SOUTH', direction: 'in' }],
+    },
+  ],
+};

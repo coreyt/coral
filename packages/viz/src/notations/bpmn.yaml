@@ -1,0 +1,176 @@
+# BPMN Notation (Business Process Model and Notation 2.0)
+id: bpmn
+name: BPMN
+description: Business Process Model and Notation 2.0
+version: "1.0.0"
+
+symbols:
+  # Events
+  - bpmn-start-event
+  - bpmn-end-event
+  - bpmn-intermediate-event
+  # Activities
+  - bpmn-task
+  - bpmn-subprocess
+  # Gateways
+  - bpmn-gateway-exclusive
+  - bpmn-gateway-parallel
+  - bpmn-gateway-inclusive
+  - bpmn-gateway-event
+  # Data
+  - bpmn-data-object
+  - bpmn-data-store
+  # Containers
+  - bpmn-pool
+  - bpmn-lane
+
+edgeStyles:
+  sequence:
+    name: Sequence Flow
+    targetArrow: arrow
+    lineStyle: solid
+    stroke: "#424242"
+    strokeWidth: 1.5
+  message:
+    name: Message Flow
+    targetArrow: arrow
+    lineStyle: dashed
+    stroke: "#424242"
+    strokeWidth: 1.5
+  association:
+    name: Association
+    targetArrow: none
+    lineStyle: dotted
+    stroke: "#9e9e9e"
+    strokeWidth: 1
+
+defaultEdgeStyle: sequence
+
+connectionRules:
+  # Start Event - only outgoing sequence flows
+  - from: bpmn-start-event
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+      - bpmn-gateway-event
+      - bpmn-intermediate-event
+    edgeStyle: sequence
+    constraints:
+      maxOutgoing: 1
+      maxIncoming: 0
+
+  # End Event - only incoming
+  - from: bpmn-end-event
+    to: []
+    constraints:
+      maxOutgoing: 0
+
+  # Task - sequence flow in/out
+  - from: bpmn-task
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-end-event
+      - bpmn-intermediate-event
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+    edgeStyle: sequence
+    constraints:
+      maxOutgoing: 1
+
+  # Subprocess
+  - from: bpmn-subprocess
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-end-event
+      - bpmn-intermediate-event
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+    edgeStyle: sequence
+    constraints:
+      maxOutgoing: 1
+
+  # Exclusive Gateway - multiple outs
+  - from: bpmn-gateway-exclusive
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-end-event
+      - bpmn-intermediate-event
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+    edgeStyle: sequence
+    constraints:
+      minOutgoing: 2
+
+  # Parallel Gateway - all paths execute
+  - from: bpmn-gateway-parallel
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-end-event
+      - bpmn-intermediate-event
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+    edgeStyle: sequence
+    constraints:
+      minOutgoing: 2
+
+  # Inclusive Gateway
+  - from: bpmn-gateway-inclusive
+    to:
+      - bpmn-task
+      - bpmn-subprocess
+      - bpmn-end-event
+      - bpmn-intermediate-event
+      - bpmn-gateway-exclusive
+      - bpmn-gateway-parallel
+      - bpmn-gateway-inclusive
+    edgeStyle: sequence
+    constraints:
+      minOutgoing: 2
+
+  # Data associations (bidirectional)
+  - from: bpmn-task
+    to:
+      - bpmn-data-object
+      - bpmn-data-store
+    edgeStyle: association
+
+  - from: bpmn-data-object
+    to:
+      - bpmn-task
+    edgeStyle: association
+
+  - from: bpmn-data-store
+    to:
+      - bpmn-task
+    edgeStyle: association
+
+validation:
+  entryPoints:
+    - symbol: bpmn-start-event
+      min: 1
+  exitPoints:
+    - symbol: bpmn-end-event
+      min: 1
+  rules:
+    - id: no-orphan-activities
+      description: All activities must be connected to the flow
+      symbols: [bpmn-task, bpmn-subprocess]
+      mustBeConnected: true
+    - id: gateway-balance
+      description: Parallel gateways should have matching join
+      symbol: bpmn-gateway-parallel
+      requiresMatchingJoin: true
+    - id: pools-contain-flows
+      description: Sequence flows cannot cross pool boundaries
+      crossPoolFlowType: message
