@@ -253,4 +253,58 @@ This enables the code-to-diagram workflow. See PROGRESS.md for current status.
 
 ---
 
+## Pending Work
+
+### CORAL-REQ-006: Shape Geometries and Diagram Symbol Libraries
+
+**GitHub Issue**: https://github.com/coreyt/coral/issues/2
+**Traces To**: SYS-REQ-003 (Symbol/Notation Architecture)
+**Status**: Proposed
+
+#### What to Do
+
+Coral owns all visual/diagram-related content for the symbol/notation architecture:
+
+1. Define shape geometries (SVG definitions for rectangle, diamond, cylinder, etc.)
+2. Define diagram symbol libraries (flowchart, BPMN, ERD, UML symbols)
+3. Define notation rules (valid symbols and connections per diagram type)
+4. Provide visual mappings for Armada's code symbols
+
+#### Files to Create
+
+| File | Content |
+|------|---------|
+| `shapes/*.yaml` | SVG geometry definitions |
+| `symbols/flowchart.yaml` | Flowchart symbols |
+| `symbols/bpmn.yaml` | BPMN symbols |
+| `symbols/erd.yaml` | ERD symbols |
+| `symbols/code.yaml` | Visual mappings for Armada symbols |
+| `notations/flowchart.yaml` | Flowchart connection rules |
+| `notations/bpmn.yaml` | BPMN connection rules |
+| `notations/erd.yaml` | ERD connection rules |
+
+#### Reference Information
+
+| Document | Location |
+|----------|----------|
+| Infrastructure spec | `graph-ir-tools/specs/symbol-notation-infrastructure.md` |
+| Coral symbols draft | `graph-ir-tools/drafts/coral-symbols-spec.md` |
+| Component requirement | `graph-ir-tools/drafts/coral-req-006.md` |
+| System requirement | `graph-ir-tools/ecosystem/requirements/system-requirements.md` (SYS-REQ-003) |
+
+#### Dependency
+
+Requires `TOOLS-REQ-001` (graph-ir-tools infrastructure) to be complete first for:
+- `SymbolRegistry` class to load symbol definitions
+- `NotationRegistry` class to load notation rules
+
+#### After Completion
+
+1. Add requirement to `dev/requirements.md`:
+   - Copy from `graph-ir-tools/drafts/coral-req-006.md`
+2. Update requirement status to Complete
+3. Close GitHub issue
+
+---
+
 *This document configures how AI agents work in this repository. For the master plan, see ECOSYSTEM-DEVELOPMENT-PLAN.md in graph-ir-tools.*
