@@ -49,6 +49,41 @@ group "G"
       const result = parseCoralDSL('service "My Cool Service"');
       expect(result.nodes[0].id).toBe('my_cool_service');
     });
+
+    it('should trim trailing underscores from IDs (punctuation at end)', () => {
+      const result = parseCoralDSL('module "Is JSON correct?"');
+      expect(result.nodes[0].id).toBe('is_json_correct');
+    });
+
+    it('should trim leading underscores from IDs (punctuation at start)', () => {
+      const result = parseCoralDSL('service "...Loading"');
+      expect(result.nodes[0].id).toBe('loading');
+    });
+
+    it('should trim both leading and trailing underscores', () => {
+      const result = parseCoralDSL('service "???What now???"');
+      expect(result.nodes[0].id).toBe('what_now');
+    });
+
+    it('should handle multiple consecutive special characters', () => {
+      const result = parseCoralDSL('service "Hello --- World!!!"');
+      expect(result.nodes[0].id).toBe('hello_world');
+    });
+
+    it('should handle labels with only special characters at boundaries', () => {
+      const result = parseCoralDSL('module "Someone sent link?"');
+      expect(result.nodes[0].id).toBe('someone_sent_link');
+    });
+
+    it('should handle exclamation marks', () => {
+      const result = parseCoralDSL('service "Error occurred!"');
+      expect(result.nodes[0].id).toBe('error_occurred');
+    });
+
+    it('should handle periods at end', () => {
+      const result = parseCoralDSL('service "Process data."');
+      expect(result.nodes[0].id).toBe('process_data');
+    });
   });
 
   describe('edge parsing', () => {

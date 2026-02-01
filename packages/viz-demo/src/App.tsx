@@ -220,19 +220,15 @@ function LineNumbers({ count }: { count: number }) {
 export default function App() {
   const [dslType, setDslType] = useState<DSLType>('mermaid');
   const [dsl, setDsl] = useState(sampleMermaidDSL);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [loading, setLoading] = useState(true);
   const [parseErrors, setParseErrors] = useState<Array<{ line: number; message: string }>>([]);
   const [debugInfo, setDebugInfo] = useState('');
+  // Track if this is a format switch to bypass debounce
+  const [formatSwitchPending, setFormatSwitchPending] = useState(false);
 
-  // Switch DSL type
-  const handleDslTypeChange = useCallback((newType: DSLType) => {
-    setDslType(newType);
-    setDsl(newType === 'coral' ? sampleCoralDSL : sampleMermaidDSL);
-  }, []);
-
-  // Parse DSL and layout
+  // Parse DSL and layout - defined first so it can be used by handleDslTypeChange
   const updateDiagram = useCallback(async (text: string, type: DSLType) => {
     setLoading(true);
 
@@ -253,18 +249,40 @@ export default function App() {
     setLoading(false);
   }, [setNodes, setEdges]);
 
+  // Switch DSL type - clear diagram immediately and trigger fresh parse
+  const handleDslTypeChange = useCallback((newType: DSLType) => {
+    // Clear the diagram immediately to avoid stale state
+    setNodes([]);
+    setEdges([]);
+    setDslType(newType);
+    setDsl(newType === 'coral' ? sampleCoralDSL : sampleMermaidDSL);
+    // Mark that we need an immediate update (bypass debounce)
+    setFormatSwitchPending(true);
+  }, [setNodes, setEdges]);
+
+  // Handle format switch immediately (no debounce)
+  useEffect(() => {
+    if (formatSwitchPending) {
+      setFormatSwitchPending(false);
+      updateDiagram(dsl, dslType);
+    }
+  }, [formatSwitchPending, dsl, dslType, updateDiagram]);
+
   // Initial load
   useEffect(() => {
     updateDiagram(dsl, dslType);
   }, []);
 
-  // Debounced update on DSL change
+  // Debounced update on DSL text change (not format switch)
   useEffect(() => {
+    // Skip debounced update if this was triggered by a format switch
+    if (formatSwitchPending) return;
+
     const timeout = setTimeout(() => {
       updateDiagram(dsl, dslType);
     }, 300);
     return () => clearTimeout(timeout);
-  }, [dsl, dslType, updateDiagram]);
+  }, [dsl, dslType, updateDiagram, formatSwitchPending]);
 
   const lineCount = useMemo(() => dsl.split('\n').length, [dsl]);
 

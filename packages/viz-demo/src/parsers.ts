@@ -51,7 +51,8 @@ export function parseCoralDSL(text: string): ParseResult {
     const nodeMatch = line.match(/^(service|database|module|external_api|actor|group)\s+"([^"]+)"(?:\s*\{)?$/);
     if (nodeMatch) {
       const [, type, label] = nodeMatch;
-      const id = label.toLowerCase().replace(/[^a-z0-9]+/g, '_');
+      // Generate ID from label: lowercase, replace non-alphanumeric with _, trim leading/trailing _
+      const id = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
       nodes.push({ id, type, label });
       continue;
     }
