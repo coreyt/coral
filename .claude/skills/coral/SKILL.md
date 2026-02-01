@@ -5,17 +5,20 @@ description: Generate Coral diagrams from natural language descriptions of syste
 
 # /coral
 
-Generate Coral diagrams from natural language descriptions.
+Generate Coral diagrams from natural language descriptions or from codebase analysis.
 
 ## Usage
 
 ```
 /coral <description>
+/coral --from=codebase <query>
 ```
 
 ## Behavior
 
-When invoked:
+### Standard Mode (Natural Language)
+
+When invoked without flags:
 
 1. **Parse the description** to identify:
    - Entities (services, databases, external APIs, actors)
@@ -44,6 +47,37 @@ When invoked:
 4. **Generate IDs** from labels (snake_case, unique)
 
 5. **Output Coral DSL** with node declarations, edge declarations, and comments
+
+### Codebase Mode (`--from=codebase`)
+
+When invoked with `--from=codebase`:
+
+1. **Query Armada** to analyze actual code structure:
+   - Uses semantic search on indexed codebase
+   - Extracts real classes, functions, modules
+   - Captures actual call graphs and dependencies
+
+2. **Choose analysis type** based on query:
+   | Query Pattern | Analysis Type |
+   |---------------|---------------|
+   | "authentication flow", "how does X work" | `context` (semantic search) |
+   | "dependencies of X", "what uses Y" | `dependencies` |
+   | "impact of changing X", "blast radius" | `impact` |
+   | "path from X to Y", "how does X call Y" | `trace` |
+
+3. **Transform results** to Graph-IR and then to Coral DSL
+
+4. **Group nodes** by module/file for clarity
+
+### Additional Flags for Codebase Mode
+
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--type=<type>` | Force analysis type: `context`, `dependencies`, `impact`, `trace` | auto |
+| `--scope=<path>` | Limit search to specific directory/module | all |
+| `--direction=<dir>` | For dependencies: `upstream`, `downstream`, `both` | both |
+| `--group-by=<how>` | Group nodes: `file`, `module`, `language`, `none` | module |
+| `--max-nodes=<n>` | Maximum nodes to include | 50 |
 
 ## Output Format
 
@@ -110,13 +144,46 @@ validation -> fraud_detection
 fraud_detection -> stripe_integration
 ```
 
+## Codebase Examples
+
+### Authentication Flow
+```
+/coral --from=codebase authentication flow
+```
+Output: Diagram showing auth-related classes, functions, and their relationships
+
+### Module Dependencies
+```
+/coral --from=codebase --type=dependencies --scope=src/api dependencies of UserService
+```
+Output: Upstream and downstream dependencies of the UserService class
+
+### Impact Analysis
+```
+/coral --from=codebase --type=impact impact of changing src/auth/session.py
+```
+Output: Blast radius diagram showing all affected components
+
+### Call Trace
+```
+/coral --from=codebase --type=trace path from handleRequest to saveToDatabase
+```
+Output: Call path diagram from handler to persistence
+
 ## Iterative Refinement
 
 The skill supports follow-up modifications. After generating a diagram, you can request changes like "add a cache" or "add Redis for sessions".
 
 ## Notes
 
+### Standard Mode
 - Default node type is `service` when unclear
 - Default relation is `dependency` when unclear
 - Preserves user's terminology in labels
 - IDs are auto-generated from labels
+
+### Codebase Mode
+- Requires Armada MCP server to be running with indexed codebase
+- Node types reflect actual code (class, function, module)
+- Edges reflect actual relationships (imports, calls, inherits)
+- Results limited to `--max-nodes` to keep diagrams readable

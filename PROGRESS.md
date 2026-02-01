@@ -2,9 +2,49 @@
 
 > **Authority**: See `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools for full context.
 
-## Phase 2: Diagramming
+## Phase 4: Integration
 
 **Status**: In Progress
+
+### Prerequisites
+
+- [x] Phase 2 complete (verified 2026-01-31)
+- [x] Phase 3 complete (Armada - verified 2026-01-31 in ../armada/PROGRESS.md)
+- [x] Armada MCP Server available with tools: `get_context`, `find_dependencies`, `impact_of`, `search`, `trace_calls`
+
+### Implementation Steps
+
+| Step | Component | Status | Notes |
+|------|-----------|--------|-------|
+| 1 | Armada MCP Client | [x] Complete | `packages/mcp-server/src/armada/client.ts` |
+| 2 | KG→IR Transformer | [x] Complete | `packages/mcp-server/src/armada/transformer.ts` |
+| 3 | `coral_from_codebase` tool | [x] Complete | `packages/mcp-server/src/tools/fromCodebase.ts` |
+| 4 | `/coral --from=codebase` skill | [x] Complete | Updated `.claude/skills/coral/SKILL.md` |
+| 5 | Incremental Updates | [ ] Not started | Change detection → re-render |
+
+### Acceptance Criteria
+
+| Criterion | Status | Validation |
+|-----------|--------|------------|
+| Armada MCP Consumption Works | [x] | ArmadaClient can query all Armada tools |
+| Code→IR Transformation Works | [x] | 18 tests for transformer (context, deps, impact, trace) |
+| Code→Diagram Workflow Works | [~] | Requires Armada running for integration test |
+| Incremental Updates Work | [ ] | Not yet implemented |
+
+### Phase Completion Checklist
+
+- [ ] All implementation steps complete
+- [ ] All acceptance criteria pass
+- [ ] Documentation updated
+- [ ] Tests pass
+
+**Phase 4 Complete**: No (4 of 5 steps done)
+
+---
+
+## Phase 2: Diagramming
+
+**Status**: Complete
 
 ### Prerequisites
 
@@ -22,7 +62,7 @@
 | 4 | Coral Printer | [x] Complete | IR → DSL in `packages/language/src/printer/` |
 | 5 | Visual Editor | [x] Complete | React Flow in `packages/viz/src/editor/` (17 tests passing) |
 | 6 | ELK Integration | [x] Complete | ELK layout in `packages/viz/src/layout/` (10 tests passing) |
-| 7 | MCP Server | [x] Complete | `packages/mcp-server/` with 6 tools |
+| 7 | MCP Server | [x] Complete | `packages/mcp-server/` with 7 tools (incl. Phase 4 addition) |
 | 8 | `elk-tuning` agent | [x] Complete | `agents/elk-tuning.md` |
 | 9 | Skills | [x] Complete | 5 skills in `.claude/skills/` |
 | 10 | Agents | [x] Complete | 3 agents in `agents/` |
@@ -76,29 +116,26 @@
 
 ### Context for Next Session
 
-Phase 2 is complete. All 10 implementation steps are done:
-- Steps 1-4: Grammar, Parser, Format Importers, Printer (language package)
-- Steps 5-6: Visual Editor, ELK Integration (viz package)
-- Step 7: MCP Server with 6 tools
-- Steps 8-10: Agents (3) and Skills (5)
-- Bonus: `packages/viz-demo/` for running the visual editor locally
+**Phase 4 in progress.** Steps 1-4 complete, Step 5 (Incremental Updates) remaining.
 
-**Ready for Phase 4** (Integration) when Phase 3 (Armada) completes.
+Phase 4 additions:
+- `packages/mcp-server/src/armada/` - Armada client and transformer
+- `packages/mcp-server/src/tools/fromCodebase.ts` - New MCP tool
+- `packages/mcp-server/test/armada.test.ts` - 18 transformer tests
+- Updated `/coral` skill with `--from=codebase` flag
 
-To run tests:
+To test Phase 4:
 ```bash
-# Load Node.js (reads .nvmrc)
 nvm use
-
-# Language package tests
-cd packages/language && npx vitest run
-
-# Viz package tests
-cd packages/viz && npx vitest run
-
-# Run visual editor demo
-cd packages/viz-demo && npm run dev
+cd packages/mcp-server && npx vitest run
 ```
+
+To test full code→diagram workflow:
+1. Start Armada: `cd ../armada && docker-compose up -d`
+2. Index a codebase with Armada
+3. Use `/coral --from=codebase <query>` or `coral_from_codebase` MCP tool
+
+**Next**: Step 5 - Incremental update support (detect code changes → auto-update diagram)
 
 ---
 

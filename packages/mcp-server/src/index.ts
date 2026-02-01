@@ -19,6 +19,7 @@ import { convertTool, handleConvert } from "./tools/convert.js";
 import { explainTool, handleExplain } from "./tools/explain.js";
 import { layoutTool, handleLayout } from "./tools/layout.js";
 import { renderTool, handleRender } from "./tools/render.js";
+import { fromCodebaseTool, handleFromCodebase } from "./tools/fromCodebase.js";
 
 const server = new Server(
   {
@@ -35,7 +36,15 @@ const server = new Server(
 // List available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
-    tools: [generateTool, validateTool, convertTool, layoutTool, renderTool, explainTool],
+    tools: [
+      generateTool,
+      validateTool,
+      convertTool,
+      layoutTool,
+      renderTool,
+      explainTool,
+      fromCodebaseTool,
+    ],
   };
 });
 
@@ -62,6 +71,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "coral_render":
         return await handleRender(args);
+
+      case "coral_from_codebase":
+        return await handleFromCodebase(args);
 
       default:
         return {

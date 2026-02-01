@@ -12,7 +12,7 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Phase** | 2 (Diagramming), later Phase 4 (Integration) |
+| **Phase** | 2 (Diagramming) complete, Phase 4 (Integration) in progress |
 | **Role** | Symbiotic diagramming toolchain |
 | **Authority** | See `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools |
 
@@ -40,19 +40,22 @@ If Phase 1 is not complete, say: "Phase 2 depends on Phase 1 completion. Is Phas
 
 ## Running npm/node Commands
 
-This project uses nvm for Node.js version management. An `.nvmrc` file pins the version.
+This project uses nvm for Node.js version management. An `.nvmrc` file pins the version to `lts/iron` (Node 20.x).
 
 ```bash
-# Load the project's Node version
+# Load nvm (required in non-interactive shells or scripts)
+source ~/.nvm/nvm.sh
+
+# Then load the project's Node version
 nvm use
 
-# Then run commands normally
+# Run commands normally
 npm install
 npm test
 npx vitest run
 ```
 
-If `nvm use` doesn't work automatically, run `nvm use lts/iron` (Node 20.x).
+**Note**: In interactive terminals with nvm configured in `.bashrc`/`.zshrc`, you can skip the `source` command and just run `nvm use` directly.
 
 ---
 
@@ -194,14 +197,15 @@ coral/
 
 ---
 
-## Phase 4: Integration (Future)
+## Phase 4: Integration (In Progress)
 
-After Phase 3 (Armada) completes, Coral gains:
-- Armada MCP client
-- `coral_from_codebase` tool
-- `/coral --from=codebase` skill
+Phase 3 (Armada) is complete. Coral now has:
+- Armada MCP client (`packages/mcp-server/src/armada/client.ts`)
+- KG→IR transformer (`packages/mcp-server/src/armada/transformer.ts`)
+- `coral_from_codebase` MCP tool (`packages/mcp-server/src/tools/fromCodebase.ts`)
+- `/coral --from=codebase` skill (updated `.claude/skills/coral/SKILL.md`)
 
-This enables the code-to-diagram workflow. See ECOSYSTEM-DEVELOPMENT-PLAN.md for details.
+This enables the code-to-diagram workflow. See PROGRESS.md for current status.
 
 ---
 
