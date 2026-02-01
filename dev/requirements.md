@@ -150,18 +150,99 @@ Phase 4 Step 5 (Not started)
 
 #### Description
 
-Define shape geometries, diagram symbols (flowchart, BPMN, ERD), and notations for Coral visual rendering.
+Define shape geometries, diagram symbols (flowchart, BPMN, ERD), and notations for Coral visual rendering using the three-layer architecture.
+
+#### Three-Layer Architecture
+
+| Layer | Storage | Defines | Key Properties |
+|-------|---------|---------|----------------|
+| **Shape** | YAML + SVG paths | Pure geometry | `path`, `viewBox`, `portAnchors`, `defaultSize` |
+| **Symbol** | YAML | Shape + meaning | `ports`, `variants`, `defaults`, `tags`, `notations` |
+| **Notation** | YAML | Grammar rules | `symbols`, `connectionRules`, `validation` |
+
+#### Port Model
+
+- **Shapes** define `portAnchors` — geometric positions where connections CAN attach
+- **Symbols** define `ports` — which anchors ARE used and their semantic meaning
+
+```yaml
+# Shape: geometry only
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+
+# Symbol: semantics
+ports:
+  - { id: in, anchor: NORTH, direction: in, maxConnections: 1 }
+  - { id: out, anchor: SOUTH, direction: out }
+```
+
+This enables same shape with different port semantics (rectangle as process vs state).
+
+#### Implementation Location
+
+```
+packages/viz/
+├── shapes/
+│   ├── primitives/           # YAML with SVG geometry
+│   │   ├── rectangle.yaml
+│   │   ├── diamond.yaml
+│   │   ├── cylinder.yaml
+│   │   └── ...
+│   ├── assets/               # External SVG/PNG (logos, icons)
+│   └── index.ts              # Loads YAML → ShapeRegistry
+├── symbols/
+│   ├── flowchart.yaml
+│   ├── bpmn.yaml
+│   ├── erd.yaml
+│   ├── code.yaml             # Visuals for Armada code symbols
+│   └── index.ts              # Loads YAML → SymbolRegistry
+├── notations/
+│   ├── flowchart.yaml
+│   ├── bpmn.yaml
+│   ├── erd.yaml
+│   └── index.ts              # Loads YAML → NotationRegistry
+└── rendering/
+    ├── ShapeRenderer.tsx     # YAML geometry → React/SVG
+    └── SymbolRenderer.tsx    # Symbol + shape → React Flow node
+```
 
 #### Acceptance Criteria
 
-- [ ] Shape geometries defined (rectangle, diamond, cylinder, etc.)
-- [ ] Flowchart symbols defined
-- [ ] ERD symbols defined
-- [ ] Notation validation rules implemented
+- [ ] Shape geometries defined: rectangle, diamond, ellipse, cylinder, parallelogram, hexagon, document, stadium, actor (14 shapes)
+- [ ] Shapes include `portAnchors` for connection points
+- [ ] Flowchart symbols defined: terminal, process, decision, io, document, connector (7 symbols)
+- [ ] Flowchart notation defined with connection rules
+- [ ] BPMN symbols defined: start-event, end-event, task, gateway variants
+- [ ] ERD symbols defined: entity, relationship, attribute
+- [ ] Code symbols defined for Armada integration (function, class, module)
+- [ ] Symbol variants work (e.g., terminal start vs end)
+- [ ] Notation validation enforces connection rules
+- [ ] Rendering uses symbol registry (not hardcoded shapes)
+- [ ] Tests for shape loading, symbol resolution, notation validation
 
 #### PROGRESS.md Steps
 
-TBD - waiting for SYS-REQ-003 infrastructure in graph-ir-tools
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | Create `shapes/primitives/` with 14 base shapes (YAML + SVG paths) | Not started |
+| 2 | Create `shapes/index.ts` to load shapes into registry | Not started |
+| 3 | Create `symbols/flowchart.yaml` with 7 flowchart symbols | Not started |
+| 4 | Create `notations/flowchart.yaml` with connection rules | Not started |
+| 5 | Create `symbols/bpmn.yaml` and `notations/bpmn.yaml` | Not started |
+| 6 | Create `symbols/erd.yaml` and `notations/erd.yaml` | Not started |
+| 7 | Create `symbols/code.yaml` for Armada visual mappings | Not started |
+| 8 | Create `ShapeRenderer.tsx` (YAML → SVG) | Not started |
+| 9 | Create `SymbolRenderer.tsx` (symbol → React Flow node) | Not started |
+| 10 | Update editor to use symbol registry | Not started |
+| 11 | Add notation validation to editor | Not started |
+| 12 | Tests (shape loading, symbol resolution, notation validation) | Not started |
+
+#### Design References
+
+- See `graph-ir-tools/drafts/coral-symbols-spec.md` for detailed YAML examples
+- See `graph-ir-tools/drafts/coral-req-006.md` for original requirement draft
+- Infrastructure types in `@graph-ir-tools/core` (ShapeDefinition, SymbolDefinition, NotationDefinition)
 
 ---
 
