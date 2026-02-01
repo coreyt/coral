@@ -141,6 +141,81 @@ Phase 4 Step 5 (Not started)
 
 ---
 
+### CORAL-REQ-006: Coral Shapes and Diagram Notations
+
+**Traces To**: SYS-REQ-003 (Symbol/Notation Architecture)
+**Status**: Proposed
+**Priority**: High
+**Created**: 2026-01-31
+
+#### Description
+
+Define shape geometries, diagram symbols (flowchart, BPMN, ERD), and notations for Coral visual rendering.
+
+#### Acceptance Criteria
+
+- [ ] Shape geometries defined (rectangle, diamond, cylinder, etc.)
+- [ ] Flowchart symbols defined
+- [ ] ERD symbols defined
+- [ ] Notation validation rules implemented
+
+#### PROGRESS.md Steps
+
+TBD - waiting for SYS-REQ-003 infrastructure in graph-ir-tools
+
+---
+
+### CORAL-REQ-007: Diagram Reflow with Undo
+
+**Traces To**: SYS-REQ-004 (Visual Editor UX)
+**Status**: Proposed
+**Priority**: Medium
+**Created**: 2026-01-31
+
+#### Description
+
+Allow users to re-apply automatic layout (reflow) to a diagram and revert to previous node positions if the result is unsatisfactory.
+
+#### User Story
+
+As a user editing a diagram, I want to:
+1. Click a "Reflow" button to re-run automatic layout (ELK)
+2. See the diagram reorganize with the new layout
+3. Click "Undo" to restore previous node positions if I prefer the old layout
+4. Optionally redo the reflow if I change my mind
+
+#### Implementation Location
+
+```
+packages/viz/src/
+├── layout/
+│   └── useLayoutHistory.ts    # Undo/redo stack for node positions
+└── editor/
+    └── LayoutControls.tsx     # Reflow button, undo/redo buttons
+```
+
+#### Acceptance Criteria
+
+- [ ] "Reflow" button triggers ELK layout on current nodes
+- [ ] Previous node positions are saved before reflow
+- [ ] "Undo" button restores previous positions
+- [ ] "Redo" button re-applies the reflow
+- [ ] Visual feedback during reflow (loading indicator)
+- [ ] Keyboard shortcuts: Ctrl+Shift+L (reflow), Ctrl+Z (undo), Ctrl+Shift+Z (redo)
+- [ ] History stack limited to reasonable depth (e.g., 10 states)
+
+#### PROGRESS.md Steps
+
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | useLayoutHistory hook | Not started |
+| 2 | LayoutControls component | Not started |
+| 3 | Integration with SplitEditor | Not started |
+| 4 | Keyboard shortcuts | Not started |
+| 5 | Tests | Not started |
+
+---
+
 ## Requirement Index
 
 | ID | Title | Traces To | Status |
@@ -150,6 +225,8 @@ Phase 4 Step 5 (Not started)
 | CORAL-REQ-003 | KG→IR Transformer | SYS-REQ-002 | Complete |
 | CORAL-REQ-004 | coral_from_codebase Tool | SYS-REQ-002 | Complete |
 | CORAL-REQ-005 | Incremental Updates | SYS-REQ-002 | Proposed |
+| CORAL-REQ-006 | Coral Shapes and Notations | SYS-REQ-003 | Proposed |
+| CORAL-REQ-007 | Diagram Reflow with Undo | SYS-REQ-004 | Proposed |
 
 ---
 
