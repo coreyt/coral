@@ -5,6 +5,26 @@
 // Main Editor
 export { CoralEditor, useGraphIR, type CoralEditorProps } from './editor/index.js';
 
+// Text Editor
+export {
+  TextEditor,
+  SplitEditor,
+  useBidirectionalSync,
+  type TextEditorProps,
+  type SplitEditorProps,
+  type SyntaxLanguage,
+  type SplitLayout,
+  type PrimaryPane,
+  type SyncState,
+  type SyncActions,
+  type SyncOptions,
+  type ParseFunction,
+  type PrintFunction,
+  type ParseResult,
+  type ParseError,
+  type ChangeSource,
+} from './text-editor/index.js';
+
 // Converters
 export {
   convertGraphToFlow,

@@ -90,7 +90,7 @@
 - [x] All implementation steps complete
 - [x] All acceptance criteria pass
 - [x] Documentation updated
-- [x] Tests pass (89 language tests, 27 viz tests)
+- [x] Tests pass (89 language tests, 49 viz tests)
 
 **Phase 2 Complete**: Yes
 
@@ -117,6 +117,11 @@
 ### Context for Next Session
 
 **Phase 4 in progress.** Steps 1-4 complete, Step 5 (Incremental Updates) remaining.
+
+**CORAL-REQ-001 Complete:** Text Editor Components
+- `packages/viz/src/text-editor/` with TextEditor, SplitEditor, useBidirectionalSync
+- 22 new tests for bidirectional sync and acceptance criteria
+- See `dev/requirements.md` for details
 
 Phase 4 additions:
 - `packages/mcp-server/src/armada/` - Armada client and transformer

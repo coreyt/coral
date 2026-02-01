@@ -102,6 +102,36 @@ If PROGRESS.md doesn't exist, create it from the template.
 
 ---
 
+## Requirements Management
+
+Requirements are tracked at two levels:
+
+### System Requirements (Ecosystem-Level)
+
+Located in `graph-ir-tools/ecosystem/requirements/`:
+- `SYS-REQ-XXX` — Define what the ecosystem needs
+- Traceability matrix links to component requirements
+
+### Component Requirements (This Repo)
+
+Located in `dev/requirements.md`:
+- `CORAL-REQ-XXX` — Define Coral-specific implementations
+- Must trace to a `SYS-REQ-XXX`
+- Implementation steps go in PROGRESS.md with requirement ID
+
+### When Implementing a Requirement
+
+1. Check `dev/requirements.md` for the requirement details
+2. Note the `SYS-REQ-XXX` it traces to
+3. Add implementation steps to PROGRESS.md with the `CORAL-REQ-XXX` ID
+4. Update requirement status when complete
+
+### Process
+
+See `graph-ir-tools/ecosystem/requirements/README.md` for full process.
+
+---
+
 ## Acceptance Criteria (Phase 2)
 
 | Criterion | How to Validate |
@@ -152,15 +182,19 @@ Read specifications before implementing:
 - `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools
 - `dev/claude-specs/` for Coral-specific specs
 
-### 2. Test-Driven Development (TDD)
+### 2. Test-Driven Development (TDD) — MANDATORY
+
+**All new feature work MUST use TDD.** No exceptions.
 
 ```
-1. Read the specification
-2. Write failing test(s)
+1. Read the specification/requirement
+2. Write failing test(s) FIRST
 3. Implement minimum code to pass
-4. Refactor while green
+4. Refactor while tests remain green
 5. Update PROGRESS.md
 ```
+
+**Do not merge or mark complete any implementation without tests written before the code.**
 
 ### 3. Roundtrip Testing
 

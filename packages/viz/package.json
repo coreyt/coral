@@ -17,6 +17,10 @@
     "./layout": {
       "types": "./dist/layout/index.d.ts",
       "import": "./dist/layout/index.js"
+    },
+    "./text-editor": {
+      "types": "./dist/text-editor/index.d.ts",
+      "import": "./dist/text-editor/index.js"
     }
   },
   "files": [
