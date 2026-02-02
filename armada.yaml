@@ -1,0 +1,98 @@
+# Armada Project Configuration for Coral
+# This file tells Armada how to index the Coral codebase.
+
+project:
+  name: "Coral"
+  description: "Diagram visualization toolkit with DSL support"
+
+sources:
+  - path: "packages/viz-demo"
+    language: typescript
+    label: "viz-demo"
+    scip_index: "index.scip"
+
+  - path: "packages/viz"
+    language: typescript
+    label: "viz"
+    scip_index: "index.scip"
+
+  - path: "packages/language"
+    language: typescript
+    label: "language"
+    scip_index: "index.scip"
+
+  - path: "packages/mcp-server"
+    language: typescript
+    label: "mcp-server"
+    scip_index: "index.scip"
+
+documentation:
+  - path: "docs/**/*.md"
+  - path: "README.md"
+  - path: "CLAUDE.md"
+  - path: "PROGRESS.md"
+  - path: "dev/**/*.md"
+  - path: ".claude/skills/**/*.md"
+
+work_items:
+  provider: github
+  github:
+    repo: "coreyt/coral"
+
+indexing:
+  exclude:
+    - "**/node_modules/**"
+    - "**/dist/**"
+    - "**/*.d.ts"
+    - "**/coverage/**"
+    - "**/build/**"
+
+  test_patterns:
+    - "**/*.test.ts"
+    - "**/*.test.tsx"
+    - "**/test/**"
+    - "**/__tests__/**"
+
+# Feature Attribution configuration
+entry_points:
+  frameworks:
+    - react
+    - nextjs
+
+features:
+  # Core parsing functions
+  parseCoralDSL:
+    label: "DSL Parsing"
+    description: "Core DSL parser for Coral diagram format"
+    file: "packages/viz/src/parsers.ts"
+
+  parseMermaidDSL:
+    label: "Mermaid Import"
+    description: "Parser for Mermaid diagram format"
+
+  printCoralDSL:
+    label: "DSL Export"
+    description: "Serialize diagram to Coral DSL format"
+
+  # Layout functions
+  layoutNodes:
+    label: "Auto Layout"
+    description: "Automatic node positioning using ELK"
+
+  incrementalLayout:
+    label: "Incremental Layout"
+    description: "Position stability during edits"
+
+  # State management
+  useDiagramState:
+    label: "Diagram State"
+    description: "React hook for diagram state management"
+
+  useBidirectionalSync:
+    label: "Text-Visual Sync"
+    description: "Bidirectional sync between text editor and visual diagram"
+
+  # Recovery
+  useAutoRecovery:
+    label: "Auto Recovery"
+    description: "Automatic save and recovery for unsaved changes"
