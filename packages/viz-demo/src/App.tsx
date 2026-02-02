@@ -11,7 +11,6 @@ import {
   useReactFlow,
   reconnectEdge,
   type Connection,
-  type EdgeReconnectChange,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import ELK from 'elkjs/lib/elk.bundled.js';
@@ -20,9 +19,11 @@ import ELK from 'elkjs/lib/elk.bundled.js';
 
 import { parseCoralDSL, parseMermaidDSL, type GraphNode, type GraphEdge } from './parsers';
 import { printCoralDSL, type GraphIR } from './printer';
-import { useAutoRecovery, type RecoveryData } from './useAutoRecovery';
+import { useAutoRecovery } from './useAutoRecovery';
 import { RecoveryBanner, UnsavedIndicator } from './RecoveryBanner';
 import { useThemeColors, getEdgeStyles } from './theme';
+import { useArmadaConnection } from './useArmadaConnection';
+import { ArmadaConnectionDialog, ArmadaStatusBar } from './ArmadaConnection';
 import { SymbolNode, type SymbolNodeData } from '@coral/viz';
 import {
   shapeRegistry,
@@ -32,7 +33,6 @@ import {
   FileControls,
   serialize,
   deserialize,
-  diffGraphs,
   resolvePositions,
   incrementalLayout,
   // Settings (CORAL-REQ-009)
@@ -146,12 +146,25 @@ function mapToSymbolId(nodeType: string, notation: NotationType): string {
       group: 'erd-entity',
     },
     code: {
+      // Generic types (for backward compatibility)
       service: 'code-function',
       database: 'code-module',
-      module: 'code-class',
       external_api: 'code-interface',
       actor: 'code-package',
       group: 'code-module',
+      // Armada code types
+      function: 'code-function',
+      method: 'code-function',
+      class: 'code-class',
+      interface: 'code-type',
+      module: 'code-module',
+      external_module: 'code-external',
+      type_alias: 'code-type',
+      variable: 'code-variable',
+      constant: 'code-variable',
+      property: 'code-variable',
+      struct: 'code-class',
+      namespace: 'code-namespace',
     },
   };
 
@@ -517,6 +530,8 @@ export default function App() {
   const [inspectorCollapsed, setInspectorCollapsed] = useState(false);
   // Selected node for properties tab
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  // Armada connection dialog visibility
+  const [showArmadaDialog, setShowArmadaDialog] = useState(false);
 
   // Store last parsed graph for reflow (so we can re-layout without re-parsing)
   const lastParsedRef = useRef<{ nodes: GraphNode[]; edges: GraphEdge[] }>({ nodes: [], edges: [] });
@@ -591,7 +606,7 @@ export default function App() {
   }, [nodes]);
 
   // Edge compatibility hook (CORAL-REQ-010)
-  const { edgeCompatibility, getEdgeStatus, getEdgeValidation } = useEdgeCompatibility({
+  const { getEdgeStatus, getEdgeValidation } = useEdgeCompatibility({
     notationId: notation,
     nodeInfo: nodeConnectionInfo,
     existingEdges: edges.map((e) => ({
@@ -1160,6 +1175,37 @@ export default function App() {
     }
   }, [notation, setNodes, setEdges]);
 
+  // Armada connection hook (CORAL-REQ-017)
+  const armada = useArmadaConnection({
+    onDocumentLoad: (doc) => {
+      handleLoadDocument(doc);
+      // Switch to code notation for Armada diagrams
+      if (doc.settings?.notation === 'code') {
+        setNotation('code');
+      }
+      // Close dialog on successful load
+      setShowArmadaDialog(false);
+    },
+  });
+
+  // Dialog theme colors (derived from main theme)
+  const dialogTheme = useMemo(() => ({
+    dialogBg: theme.inspectorBg,
+    dialogBorder: theme.inspectorBorder,
+    dialogText: theme.inspectorText,
+    inputBg: theme.editorBg,
+    inputBorder: theme.controlBorder,
+    inputText: theme.editorText,
+    buttonBg: theme.controlBgActive,
+    buttonText: theme.controlText,
+    buttonHoverBg: theme.controlBgHover,
+    errorBg: theme.errorBg,
+    errorText: theme.errorText,
+    successBg: theme.successBg,
+    successText: theme.successText,
+    mutedText: theme.controlTextMuted,
+  }), [theme]);
+
   // Handle format switch immediately (no debounce)
   useEffect(() => {
     if (formatSwitchPending) {
@@ -1348,6 +1394,48 @@ export default function App() {
             onLoad={handleLoadDocument}
             showExport={true}
           />
+          {/* Armada Connection Button (CORAL-REQ-017) */}
+          {armada.isConnected ? (
+            <button
+              onClick={() => armada.disconnect()}
+              title={`Connected to ${armada.config.serverUrl}`}
+              style={{
+                padding: '6px 12px',
+                fontSize: '12px',
+                borderRadius: '4px',
+                border: `1px solid ${theme.successText}`,
+                background: theme.successBg,
+                color: theme.successText,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <span style={{ color: '#22c55e' }}>●</span>
+              Armada
+            </button>
+          ) : (
+            <button
+              onClick={() => setShowArmadaDialog(true)}
+              title="Connect to Armada server"
+              style={{
+                padding: '6px 12px',
+                fontSize: '12px',
+                borderRadius: '4px',
+                border: `1px solid ${theme.controlBorder}`,
+                background: theme.controlBg,
+                color: theme.controlText,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              <span style={{ fontSize: '14px' }}>⚓</span>
+              Armada
+            </button>
+          )}
         </div>
 
         {/* Inspector Toggle */}
@@ -1371,6 +1459,22 @@ export default function App() {
           <span style={{ fontSize: '14px' }}>☰</span>
         </button>
       </header>
+
+      {/* Armada Status Bar - shown when connected (CORAL-REQ-017) */}
+      {armada.isConnected && (
+        <ArmadaStatusBar
+          isConnected={armada.isConnected}
+          serverUrl={armada.config.serverUrl}
+          mode={armada.config.mode}
+          stats={armada.stats}
+          isLoading={armada.isLoading}
+          onModeChange={armada.setModeAndFetch}
+          onRefresh={armada.refresh}
+          onDisconnect={armada.disconnect}
+          availableModes={armada.availableModes}
+          theme={dialogTheme}
+        />
+      )}
 
       {/* Three-Pane Layout: Stage (Editor + Canvas) | Inspector */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
@@ -1663,6 +1767,18 @@ export default function App() {
           </aside>
         )}
       </div>
+
+      {/* Armada Connection Dialog (CORAL-REQ-017) */}
+      <ArmadaConnectionDialog
+        isOpen={showArmadaDialog}
+        onClose={() => setShowArmadaDialog(false)}
+        config={armada.config}
+        onConnect={armada.connect}
+        isConnecting={armada.isConnecting}
+        error={armada.error}
+        availableModes={armada.availableModes}
+        theme={dialogTheme}
+      />
     </div>
   );
 }

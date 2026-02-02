@@ -212,6 +212,28 @@ To test full code→diagram workflow:
 
 **All approved work complete.** See CLAUDE.md for future requirements (CORAL-REQ-012, CORAL-REQ-014, CORAL-REQ-015).
 
+**Phase 4 Enhancement (2026-02-01):** Armada Code Type Symbol Mapping
+- Extended `mapToSymbolId` in viz-demo to recognize Armada's specific code node types
+- New mappings: function, method, class, interface, module, external_module, type_alias, variable, constant, property, struct, namespace
+- Maps to existing code symbols from CORAL-REQ-006 (code-function, code-class, code-module, code-type, code-variable, code-namespace, code-external)
+- Generated example: `viz-demo-arch.coral.json` - architecture diagram of viz-demo itself
+- This completes the visual integration for Phase 4's code-to-diagram workflow
+
+**CORAL-REQ-017 Complete:** Armada HTTP Datasource for viz-demo
+- `packages/viz-demo/src/useArmadaConnection.ts` - React hook for HTTP API connection management
+- `packages/viz-demo/src/ArmadaConnection.tsx` - Connection dialog and status bar components
+- `packages/viz-demo/src/App.tsx` - Integrated Armada button, dialog, and status bar
+- `packages/viz-demo/test/armadaConnection.test.ts` - 11 tests for hook functionality
+- Features:
+  - Connect to Armada HTTP API at any URL (default: localhost:8765)
+  - Mode selection: call-graph, dependency-graph, inheritance-tree, impact-graph, full-graph
+  - Connection persistence via localStorage
+  - Refresh graph data without reconnecting
+  - Real-time stats display (node/edge counts)
+  - Status bar with mode switcher when connected
+  - Error handling with user-friendly messages
+- Part of SYS-REQ-007 (Remote Datasource Integration) Phase 1
+
 ---
 
 **Last Updated**: 2026-02-01

@@ -4,6 +4,15 @@
 
 Unlike traditional tools that force you to choose between a text editor (Mermaid, Graphviz) or a GUI (Lucidchart, draw.io), Coral treats both as **equal interfaces** to the same underlying data structure. Edit the text, see the diagram update. Drag a node, see the code change.
 
+```coral
+service "API Gateway"
+database "PostgreSQL"
+external_api "Stripe"
+
+api_gateway -> postgresql [data_flow]
+api_gateway -> stripe [http_request]
+```
+
 ## Why Coral?
 
 | Tool Type | Strengths | Weaknesses |
@@ -167,6 +176,13 @@ npm run dev
 This renders a sample flowchart using the full pipeline: Graph-IR → ELK Layout → React Flow.
 
 ## Documentation
+
+### User Documentation
+
+- **[Getting Started](docs/getting-started.md)** — Installation and your first diagram
+- **[User Guide](docs/user-guide.md)** — Complete reference for the visual editor
+
+### Developer Documentation
 
 - **[Architecture](dev/ARCHITECTURE.md)** — Detailed system design, components, and integration patterns
 - **[Domain Knowledge](dev/DOMAIN.md)** — Graph theory, diagramming concepts, and algorithmic foundations

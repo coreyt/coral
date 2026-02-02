@@ -1434,6 +1434,116 @@ A: Each tab session overwrites the same localStorage key. This is intentional - 
 
 ---
 
+### CORAL-REQ-017: Armada HTTP Datasource for viz-demo
+
+**Traces To**: SYS-REQ-007 (Remote Datasource Integration)
+**Status**: Complete
+**Priority**: Medium
+**Created**: 2026-02-01
+**Completed**: 2026-02-01
+**Depends On**: ARMADA-REQ-002 (HTTP Visualization API)
+
+#### Description
+
+Add Armada's HTTP REST API as a third datasource in viz-demo, alongside text input and file load. This enables viz-demo to serve as:
+1. A reference implementation showing how the ecosystem supports MCP servers as diagram datasources
+2. An interface for evaluating Armada fitness (indexers, tokenizers, chunkers, database retrieval)
+
+#### Architecture
+
+```
+viz-demo datasources:
+┌─────────────┬─────────────┬──────────────────┐
+│ Text Input  │ File Load   │ Armada HTTP API  │
+│ (DSL paste) │ (.coral.json│ (localhost:8765) │
+└──────┬──────┴──────┬──────┴────────┬─────────┘
+       │             │               │
+       └─────────────┼───────────────┘
+                     ▼
+             ┌───────────────┐
+             │ CoralDocument │
+             │   (unified)   │
+             └───────┬───────┘
+                     ▼
+             ┌───────────────┐
+             │  React Flow   │
+             │   Renderer    │
+             └───────────────┘
+```
+
+#### Armada HTTP API (Provided by ARMADA-REQ-002)
+
+| Endpoint | Purpose |
+|----------|---------|
+| `GET /health` | Health check |
+| `GET /api/graph?mode=<mode>&format=<json\|dsl>` | Get CoralDocument or DSL |
+| `GET /api/modes` | List available graph modes |
+| `GET /api/stats` | Node/edge counts |
+
+Graph modes: `call-graph`, `dependency-graph`, `inheritance-tree`, `impact-graph`, `full-graph`
+
+#### Implementation Location
+
+```
+packages/viz-demo/src/
+├── components/
+│   ├── ArmadaConnectionDialog.tsx   # Server URL + mode selection
+│   ├── ArmadaStatusBar.tsx          # Connection status, stats
+│   └── ArmadaDatasource.tsx         # Fetch logic, error handling
+├── hooks/
+│   └── useArmadaConnection.ts       # Connection state, API calls
+└── App.tsx                          # Integration with existing datasources
+```
+
+#### User Flow
+
+1. User clicks "Connect to Armada" button
+2. Connection dialog appears:
+   - Server URL (default: `http://localhost:8765`)
+   - Graph mode dropdown (call-graph, dependency-graph, etc.)
+3. viz-demo calls `GET /api/graph?mode=<selected>&format=json`
+4. Armada returns CoralDocument JSON
+5. viz-demo renders diagram (same path as file load)
+6. Status bar shows connection state and stats from `/api/stats`
+7. "Refresh" button re-fetches current mode
+
+#### Acceptance Criteria
+
+- [ ] Connection dialog with URL input and mode selector
+- [ ] Successful connection loads and renders CoralDocument
+- [ ] Mode switcher changes graph visualization
+- [ ] Stats display shows node/edge counts
+- [ ] Error handling for connection failures, timeouts
+- [ ] Refresh button re-fetches current mode
+- [ ] Connection state persists in localStorage (reconnect on reload)
+- [ ] Works alongside existing text input and file load datasources
+- [ ] Tests for connection logic and error states
+
+#### PROGRESS.md Steps
+
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | Create useArmadaConnection hook | Not started |
+| 2 | Create ArmadaConnectionDialog component | Not started |
+| 3 | Create ArmadaStatusBar component | Not started |
+| 4 | Integrate with App.tsx datasource switching | Not started |
+| 5 | Add error handling and retry logic | Not started |
+| 6 | Add connection persistence to localStorage | Not started |
+| 7 | Tests | Not started |
+
+#### Design Decisions
+
+**Q: Why HTTP API instead of MCP directly?**
+A: MCP is designed for stdio (CLI tools), not browser environments. Armada's HTTP API (`/api/graph`) returns CoralDocument directly, which integrates cleanly with viz-demo's existing file load path. The MCP server remains the primary interface for Claude Code integration.
+
+**Q: Should this replace the hardcoded "Armada" button?**
+A: Yes. The current button shows static sample data. This requirement replaces it with live Armada connection.
+
+**Q: How does this relate to CORAL-REQ-002 (Armada MCP Client)?**
+A: CORAL-REQ-002 is for the MCP server package (`@coral/mcp-server`) to call Armada's MCP tools. This requirement (CORAL-REQ-017) is for viz-demo (browser) to call Armada's HTTP API. Different integration points, same ecosystem.
+
+---
+
 ## Requirement Index
 
 | ID | Title | Traces To | Status |
@@ -1454,7 +1564,8 @@ A: Each tab session overwrites the same localStorage key. This is intentional - 
 | CORAL-REQ-014 | DSL Position Annotations | SYS-REQ-001 | Future |
 | CORAL-REQ-015 | Manual Edge Waypoint Routing | SYS-REQ-004 | Proposed |
 | CORAL-REQ-016 | Auto-Recovery and Session Persistence | SYS-REQ-005 | Complete |
+| CORAL-REQ-017 | Armada HTTP Datasource for viz-demo | SYS-REQ-007 | Complete |
 
 ---
 
-**Last Updated**: 2026-02-01 (Added CORAL-REQ-016 - Auto-Recovery and Session Persistence)
+**Last Updated**: 2026-02-01 (Added CORAL-REQ-017 - Armada HTTP Datasource for viz-demo)

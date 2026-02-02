@@ -182,7 +182,7 @@ export interface LayoutFlowOptions extends LayoutOptions {
  */
 function getShapeIdFromNode(node: CoralNode): string {
   // Check symbolId first
-  const symbolId = node.data.symbolId;
+  const symbolId = node.data.symbolId as string | undefined;
   if (symbolId) {
     const symbol = symbolRegistry.get(symbolId);
     if (symbol) {

@@ -79,7 +79,7 @@ function extractNodeInfo(node: CoralNode): NodeConnectionInfo {
   const data = node.data;
   return {
     id: node.id,
-    symbolId: data.symbolId || data.nodeType,
+    symbolId: (data.symbolId as string | undefined) || data.nodeType || 'unknown',
     variant: data.properties?.variant as string | undefined,
   };
 }

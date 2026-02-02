@@ -12,6 +12,7 @@ import {
   getBezierPath,
   getSmoothStepPath,
   type EdgeProps,
+  type Edge,
 } from '@xyflow/react';
 import { IncompatibilityTooltip } from './IncompatibilityTooltip';
 import type { EdgeCompatibilityStatus, ConnectionValidation } from '../types';
@@ -77,7 +78,7 @@ export interface CompatibilityEdgeData {
 /**
  * Props for the CompatibilityEdge component
  */
-export interface CompatibilityEdgeProps extends EdgeProps<CompatibilityEdgeData> {
+export interface CompatibilityEdgeProps extends EdgeProps<Edge<CompatibilityEdgeData>> {
   /** Path type for the edge */
   pathType?: 'bezier' | 'smoothstep';
 }
