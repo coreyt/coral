@@ -1544,6 +1544,59 @@ A: CORAL-REQ-002 is for the MCP server package (`@coral/mcp-server`) to call Arm
 
 ---
 
+### CORAL-REQ-018: Filter UI and Legend for Armada Datasource
+
+**Traces To**: SYS-REQ-007 (Remote Datasource Integration) - Phase 2
+**Status**: Proposed
+**Priority**: Medium
+**Created**: 2026-02-02
+**Depends On**: CORAL-REQ-017 (Armada HTTP Datasource), ARMADA-REQ-003 (Enhanced Filtering)
+
+#### Description
+
+Extend the Armada datasource integration with filtering capabilities and a legend for node/edge types. This enables users to narrow large codebase visualizations to specific files, node types, or traversal depths.
+
+#### Features
+
+1. **Filter Panel**
+   - File filter (dropdown from `/api/files`)
+   - Node type filter (checkboxes from `/api/schema`)
+   - Depth limit slider
+   - Apply/Reset buttons
+
+2. **Legend**
+   - Node type → color/shape mapping
+   - Edge type → line style mapping
+   - Click to toggle visibility
+
+3. **Filter Persistence**
+   - Remember last filter settings in localStorage
+   - Apply filters on reconnect
+
+#### Acceptance Criteria
+
+- [ ] Filter panel shows file list from Armada `/api/files`
+- [ ] Filter panel shows node types from Armada `/api/schema`
+- [ ] Depth limit slider (1-10)
+- [ ] Filters passed to `/api/graph` as query parameters
+- [ ] Legend displays all node/edge types in current visualization
+- [ ] Legend click toggles type visibility
+- [ ] Filter settings persist to localStorage
+- [ ] Tests for filter logic
+
+#### PROGRESS.md Steps
+
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | Create FilterPanel component | Not started |
+| 2 | Integrate with Armada schema endpoint | Not started |
+| 3 | Create Legend component | Not started |
+| 4 | Add visibility toggle logic | Not started |
+| 5 | Add filter persistence | Not started |
+| 6 | Tests | Not started |
+
+---
+
 ## Requirement Index
 
 | ID | Title | Traces To | Status |
@@ -1565,7 +1618,8 @@ A: CORAL-REQ-002 is for the MCP server package (`@coral/mcp-server`) to call Arm
 | CORAL-REQ-015 | Manual Edge Waypoint Routing | SYS-REQ-004 | Proposed |
 | CORAL-REQ-016 | Auto-Recovery and Session Persistence | SYS-REQ-005 | Complete |
 | CORAL-REQ-017 | Armada HTTP Datasource for viz-demo | SYS-REQ-007 | Complete |
+| CORAL-REQ-018 | Filter UI and Legend for Armada | SYS-REQ-007 | Proposed |
 
 ---
 
-**Last Updated**: 2026-02-01 (Added CORAL-REQ-017 - Armada HTTP Datasource for viz-demo)
+**Last Updated**: 2026-02-02 (Added CORAL-REQ-018 - Filter UI and Legend)
