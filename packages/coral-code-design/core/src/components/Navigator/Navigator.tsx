@@ -27,6 +27,12 @@ export interface NavigatorProps {
 
   /** Called when orphaned annotations is clicked */
   onOrphanedClick?: () => void;
+
+  /** Called when a directory is expanded (for lazy loading) */
+  onDirectoryExpand?: (path: string) => Promise<void>;
+
+  /** Called when a directory is collapsed */
+  onDirectoryCollapse?: (path: string) => void;
 }
 
 export interface FileTreeNode {
@@ -36,6 +42,7 @@ export interface FileTreeNode {
   type: 'file' | 'directory';
   children?: FileTreeNode[];
   expanded?: boolean;
+  loading?: boolean;
 }
 
 export interface SymbolOutlineNode {
@@ -56,6 +63,8 @@ export function Navigator({
   onFileSelect,
   onSymbolSelect,
   onOrphanedClick,
+  onDirectoryExpand,
+  onDirectoryCollapse,
 }: NavigatorProps) {
   const [activeSection, setActiveSection] = useState<NavigatorSection>('files');
 
@@ -101,6 +110,8 @@ export function Navigator({
           <FileTreeView
             nodes={fileTree}
             onSelect={onFileSelect}
+            onDirectoryExpand={onDirectoryExpand}
+            onDirectoryCollapse={onDirectoryCollapse}
           />
         )}
 
@@ -179,10 +190,12 @@ function SectionTab({ label, isActive, onClick, hasWarning }: SectionTabProps) {
 interface FileTreeViewProps {
   nodes: FileTreeNode[];
   onSelect?: (path: string) => void;
+  onDirectoryExpand?: (path: string) => Promise<void>;
+  onDirectoryCollapse?: (path: string) => void;
   depth?: number;
 }
 
-function FileTreeView({ nodes, onSelect, depth = 0 }: FileTreeViewProps) {
+function FileTreeView({ nodes, onSelect, onDirectoryExpand, onDirectoryCollapse, depth = 0 }: FileTreeViewProps) {
   return (
     <div>
       {nodes.map(node => (
@@ -190,6 +203,8 @@ function FileTreeView({ nodes, onSelect, depth = 0 }: FileTreeViewProps) {
           key={node.id}
           node={node}
           onSelect={onSelect}
+          onDirectoryExpand={onDirectoryExpand}
+          onDirectoryCollapse={onDirectoryCollapse}
           depth={depth}
         />
       ))}
@@ -205,12 +220,30 @@ function FileTreeView({ nodes, onSelect, depth = 0 }: FileTreeViewProps) {
 interface FileTreeItemProps {
   node: FileTreeNode;
   onSelect?: (path: string) => void;
+  onDirectoryExpand?: (path: string) => Promise<void>;
+  onDirectoryCollapse?: (path: string) => void;
   depth: number;
 }
 
-function FileTreeItem({ node, onSelect, depth }: FileTreeItemProps) {
-  const [expanded, setExpanded] = useState(node.expanded ?? false);
-  const icon = node.type === 'directory' ? (expanded ? '📂' : '📁') : '📄';
+function FileTreeItem({ node, onSelect, onDirectoryExpand, onDirectoryCollapse, depth }: FileTreeItemProps) {
+  // Use expanded state from node props (controlled by useFileTree)
+  const expanded = node.expanded ?? false;
+  const loading = node.loading ?? false;
+  const icon = node.type === 'directory'
+    ? (loading ? '⏳' : (expanded ? '📂' : '📁'))
+    : '📄';
+
+  const handleClick = () => {
+    if (node.type === 'directory') {
+      if (expanded) {
+        onDirectoryCollapse?.(node.path);
+      } else {
+        onDirectoryExpand?.(node.path);
+      }
+    } else {
+      onSelect?.(node.path);
+    }
+  };
 
   return (
     <div>
@@ -222,19 +255,27 @@ function FileTreeItem({ node, onSelect, depth }: FileTreeItemProps) {
           paddingLeft: `${depth * 16 + 4}px`,
           cursor: 'pointer',
         }}
-        onClick={() => {
-          if (node.type === 'directory') {
-            setExpanded(!expanded);
-          } else {
-            onSelect?.(node.path);
-          }
-        }}
+        onClick={handleClick}
       >
         <span style={{ marginRight: '4px' }}>{icon}</span>
         <span>{node.name}</span>
+        {loading && (
+          <span
+            data-testid={`directory-loading-${node.path}`}
+            style={{ marginLeft: '4px', fontSize: '10px', color: 'var(--text-muted, #666)' }}
+          >
+            Loading...
+          </span>
+        )}
       </div>
       {expanded && node.children && (
-        <FileTreeView nodes={node.children} onSelect={onSelect} depth={depth + 1} />
+        <FileTreeView
+          nodes={node.children}
+          onSelect={onSelect}
+          onDirectoryExpand={onDirectoryExpand}
+          onDirectoryCollapse={onDirectoryCollapse}
+          depth={depth + 1}
+        />
       )}
     </div>
   );

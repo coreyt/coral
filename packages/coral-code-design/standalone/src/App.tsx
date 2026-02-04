@@ -335,6 +335,8 @@ function AppContent() {
               // Find symbol in diagram and select
               console.log('Symbol selected:', symbolId);
             }}
+            onDirectoryExpand={expandDirectory}
+            onDirectoryCollapse={collapseDirectory}
           />
         }
         inspector={

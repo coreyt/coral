@@ -189,18 +189,18 @@ fetchSymbols(scope, {
 | 5. CLI Integration | [#23](https://github.com/coreyt/armada/issues/23) | ✅ Complete |
 | 6. FILE_VERSION Edge Tracking | [#24](https://github.com/coreyt/armada/issues/24) | ✅ Complete |
 | 7. BranchProjection Resolver | [#25](https://github.com/coreyt/armada/issues/25) | ✅ Complete |
-| 8. MCP Tools with include_branches | [#26](https://github.com/coreyt/armada/issues/26) | 🔶 **In Progress** |
+| 8. MCP Tools with include_branches | [#26](https://github.com/coreyt/armada/issues/26) | ✅ Complete |
 
 ### coral-code-design Frontend
 
 | Component | Status |
 |-----------|--------|
-| BranchSelector UI | ❌ Not started (blocked by Armada #26) |
+| BranchSelector UI | ❌ Not started |
 | ArmadaProvider includeBranches | ❌ Not started |
 | BranchBadge on nodes | ❌ Not started |
 | ConflictIndicator | ❌ Not started |
 
-**Next Step**: Once Armada #26 is complete, coral-code-design can implement the UI.
+**Next Step**: Armada #26 is complete. coral-code-design can now implement the UI (#13).
 
 ---
 
