@@ -131,7 +131,9 @@ function createAdapter(rootHandle: FileSystemDirectoryHandle): FileSystemAdapter
       }
 
       const entries: string[] = [];
-      for await (const [name] of dirHandle.entries()) {
+      for await (const entry of dirHandle.values()) {
+        // Append trailing slash for directories (useFileTree expects this)
+        const name = entry.kind === 'directory' ? `${entry.name}/` : entry.name;
         entries.push(name);
       }
       return entries;

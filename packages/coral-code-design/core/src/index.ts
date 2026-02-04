@@ -31,8 +31,15 @@ export {
 // Hooks
 export {
   useDiagramData,
+  useFileTree,
+  useSymbolOutline,
   type UseDiagramDataOptions,
   type UseDiagramDataResult,
+  type UseFileTreeOptions,
+  type UseFileTreeResult,
+  type ExtendedFileTreeNode,
+  type UseSymbolOutlineOptions,
+  type UseSymbolOutlineResult,
 } from './hooks';
 
 // Providers

@@ -20,6 +20,8 @@ import {
   useDiagramData,
   useWorkspace,
   useArmada,
+  useFileTree,
+  useSymbolOutline,
   type DiagramReference,
   type InspectorNodeData,
   type SearchResult,
@@ -107,6 +109,18 @@ function AppContent() {
   const [codeLoading, setCodeLoading] = useState(false);
   const [codeError, setCodeError] = useState<string | null>(null);
   const [inspectorTab, setInspectorTab] = useState<'properties' | 'code'>('properties');
+
+  // File tree from workspace
+  const {
+    tree: fileTree,
+    expandDirectory,
+    collapseDirectory,
+  } = useFileTree(fileSystemAdapter);
+
+  // Symbol outline for selected file
+  const { symbols } = useSymbolOutline({
+    scope: selectedNode?.file,
+  });
 
   // Handle Armada connect
   const handleArmadaConnect = useCallback(async (config: ArmadaConnectionConfig) => {
@@ -304,9 +318,23 @@ function AppContent() {
         navigator={
           <Navigator
             workspacePath={workspace?.rootPath}
-            fileTree={[]}
-            symbols={[]}
+            fileTree={fileTree}
+            symbols={symbols}
             orphanedCount={workspace?.annotations.orphaned.length ?? 0}
+            onFileSelect={(path) => {
+              // Load file content for code preview
+              setSelectedNode({
+                symbolId: path,
+                name: path.split('/').pop() || path,
+                type: 'file',
+                file: path,
+              });
+              setInspectorTab('code');
+            }}
+            onSymbolSelect={(symbolId) => {
+              // Find symbol in diagram and select
+              console.log('Symbol selected:', symbolId);
+            }}
           />
         }
         inspector={
