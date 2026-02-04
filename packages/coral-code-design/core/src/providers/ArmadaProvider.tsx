@@ -8,6 +8,7 @@ import {
   createContext,
   useContext,
   useCallback,
+  useState,
   useEffect,
   type ReactNode,
 } from 'react';
@@ -19,6 +20,18 @@ import type {
   ScopeConfig,
   CoralDocument,
 } from '../types';
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const DEFAULT_MODES: GraphMode[] = [
+  'call-graph',
+  'dependency-graph',
+  'inheritance-tree',
+  'impact-graph',
+  'full-graph',
+];
 
 // ============================================================================
 // Armada Stats
@@ -39,6 +52,14 @@ export interface ArmadaContextValue {
   isConnecting: boolean;
   connectionError: string | null;
   stats: ArmadaStats | null;
+
+  // Mode state
+  currentMode: GraphMode | null;
+  availableModes: GraphMode[];
+  setMode: (mode: GraphMode) => void;
+
+  // Refresh state
+  isRefreshing: boolean;
 
   // Connection operations
   connect: (config: ArmadaConnectionConfig) => Promise<void>;
@@ -76,6 +97,8 @@ export function useArmada(): ArmadaContextValue {
 export interface ArmadaProviderProps {
   children: ReactNode;
   initialConfig?: ArmadaConnectionConfig;
+  /** Called when the graph mode changes */
+  onModeChange?: (mode: GraphMode) => void;
 }
 
 // ============================================================================
@@ -98,13 +121,22 @@ const queryClient = new QueryClient({
 function ArmadaProviderInner({
   children,
   initialConfig,
+  onModeChange,
 }: ArmadaProviderProps) {
   const client = useQueryClient();
+
+  // Mode state
+  const [currentMode, setCurrentMode] = useState<GraphMode | null>(
+    initialConfig?.mode ?? null
+  );
+  const [availableModes, setAvailableModes] = useState<GraphMode[]>(DEFAULT_MODES);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Connection state
   const {
     data: connectionState,
     refetch: checkConnection,
+    isFetching: isCheckingConnection,
   } = useQuery({
     queryKey: ['armada', 'connection'],
     queryFn: async () => {
@@ -126,8 +158,28 @@ function ArmadaProviderInner({
     enabled: !!initialConfig,
   });
 
+  // Fetch available modes when connected
+  useQuery({
+    queryKey: ['armada', 'modes'],
+    queryFn: async () => {
+      if (!connectionState?.config) return DEFAULT_MODES;
+
+      try {
+        const response = await fetch(`${connectionState.config.serverUrl}/api/modes`);
+        if (!response.ok) return DEFAULT_MODES;
+
+        const modes = await response.json();
+        setAvailableModes(modes as GraphMode[]);
+        return modes as GraphMode[];
+      } catch {
+        return DEFAULT_MODES;
+      }
+    },
+    enabled: connectionState?.connected ?? false,
+  });
+
   // Stats query
-  const { data: stats } = useQuery({
+  const { data: stats, isFetching: isFetchingStats } = useQuery({
     queryKey: ['armada', 'stats'],
     queryFn: async () => {
       if (!connectionState?.config) throw new Error('Not connected');
@@ -151,10 +203,19 @@ function ArmadaProviderInner({
 
       return config;
     },
-    onSuccess: () => {
+    onSuccess: (config) => {
+      setCurrentMode(config.mode);
       client.invalidateQueries({ queryKey: ['armada'] });
     },
   });
+
+  // Set mode with callback notification
+  const setMode = useCallback((mode: GraphMode) => {
+    setCurrentMode(mode);
+    onModeChange?.(mode);
+    // Invalidate diagram-related queries when mode changes
+    client.invalidateQueries({ queryKey: ['armada', 'diagram'] });
+  }, [client, onModeChange]);
 
   // Fetch diagram
   const fetchDiagram = useCallback(async (
@@ -166,7 +227,7 @@ function ArmadaProviderInner({
       throw new Error('Not connected to Armada');
     }
 
-    const graphMode = mode ?? diagramTypeToGraphMode(type);
+    const graphMode = mode ?? currentMode ?? diagramTypeToGraphMode(type);
     const url = new URL(`${connectionState.config.serverUrl}/api/graph`);
     url.searchParams.set('mode', graphMode);
     url.searchParams.set('format', 'json');
@@ -179,7 +240,7 @@ function ArmadaProviderInner({
     if (!response.ok) throw new Error('Failed to fetch diagram');
 
     return response.json();
-  }, [connectionState]);
+  }, [connectionState, currentMode]);
 
   // Connect
   const connect = useCallback(async (config: ArmadaConnectionConfig) => {
@@ -188,6 +249,7 @@ function ArmadaProviderInner({
 
   // Disconnect
   const disconnect = useCallback(() => {
+    setCurrentMode(null);
     client.setQueryData(['armada', 'connection'], {
       connected: false,
       config: null,
@@ -196,14 +258,28 @@ function ArmadaProviderInner({
 
   // Refresh
   const refresh = useCallback(async () => {
-    await client.invalidateQueries({ queryKey: ['armada'] });
+    setIsRefreshing(true);
+    try {
+      await client.invalidateQueries({ queryKey: ['armada'] });
+    } finally {
+      setIsRefreshing(false);
+    }
   }, [client]);
+
+  // Update isRefreshing based on query states
+  useEffect(() => {
+    setIsRefreshing(isCheckingConnection || isFetchingStats);
+  }, [isCheckingConnection, isFetchingStats]);
 
   const value: ArmadaContextValue = {
     isConnected: connectionState?.connected ?? false,
     isConnecting: connectMutation.isPending,
     connectionError: connectMutation.error?.message ?? null,
     stats: stats ?? null,
+    currentMode,
+    availableModes,
+    setMode,
+    isRefreshing,
     connect,
     disconnect,
     fetchDiagram,
