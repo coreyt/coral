@@ -20,14 +20,44 @@ import {
   convertGraphToFlow,
   layoutFlowNodes,
   SymbolNode,
-  codeSymbols,
+  getNotation,
   type SymbolNodeData,
 } from '@coral/viz';
-import type { GraphIR, InspectorNodeData } from '../../types';
+import type { GraphIR, InspectorNodeData, DiagramType, NotationType } from '../../types';
 
 // Node types for React Flow
 const nodeTypes = {
   symbol: SymbolNode,
+};
+
+/**
+ * Map diagram types to their default notations
+ */
+const DIAGRAM_TYPE_TO_NOTATION: Record<DiagramType, NotationType> = {
+  'codebase-overview': 'architecture',
+  'module-graph': 'architecture',
+  'component-detail': 'code',
+  'call-graph': 'code',
+  'dependency-graph': 'code',
+  'inheritance-tree': 'code',
+  'data-flow': 'flowchart',
+  'impact-analysis': 'code',
+  'custom': 'code',
+};
+
+/**
+ * Map diagram types to their preferred layout directions
+ */
+const DIAGRAM_TYPE_TO_DIRECTION: Record<DiagramType, 'DOWN' | 'UP' | 'LEFT' | 'RIGHT'> = {
+  'codebase-overview': 'DOWN',
+  'module-graph': 'DOWN',
+  'component-detail': 'DOWN',
+  'call-graph': 'RIGHT',
+  'dependency-graph': 'DOWN',
+  'inheritance-tree': 'DOWN',
+  'data-flow': 'RIGHT',
+  'impact-analysis': 'RIGHT',
+  'custom': 'DOWN',
 };
 
 export interface DiagramRendererProps {
@@ -42,6 +72,18 @@ export interface DiagramRendererProps {
 
   /** Called when a node is selected */
   onNodeSelect?: (nodeData: InspectorNodeData | null) => void;
+
+  /** Called when a node is double-clicked (for navigation) */
+  onNodeDoubleClick?: (nodeData: InspectorNodeData) => void;
+
+  /** The type of diagram being rendered */
+  diagramType?: DiagramType;
+
+  /** Notation to use for rendering (overrides diagram type default) */
+  notation?: NotationType;
+
+  /** Called when the effective notation changes */
+  onNotationChange?: (notation: NotationType) => void;
 
   /** Show mini-map */
   showMiniMap?: boolean;
@@ -75,6 +117,10 @@ export function DiagramRenderer({
   isLoading,
   error,
   onNodeSelect,
+  onNodeDoubleClick,
+  diagramType = 'module-graph',
+  notation: notationProp,
+  onNotationChange,
   showMiniMap = true,
   showControls = true,
   showBackground = true,
@@ -82,6 +128,23 @@ export function DiagramRenderer({
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isLayouting, setIsLayouting] = useState(false);
+
+  // Determine effective notation
+  const effectiveNotation = useMemo(() => {
+    return notationProp || DIAGRAM_TYPE_TO_NOTATION[diagramType] || 'code';
+  }, [notationProp, diagramType]);
+
+  // Get layout direction based on diagram type
+  const layoutDirection = useMemo(() => {
+    return DIAGRAM_TYPE_TO_DIRECTION[diagramType] || 'DOWN';
+  }, [diagramType]);
+
+  // Notify parent of notation changes and load notation definition
+  useEffect(() => {
+    // Load notation to validate it exists
+    getNotation(effectiveNotation);
+    onNotationChange?.(effectiveNotation);
+  }, [effectiveNotation, onNotationChange]);
 
   // Convert GraphIR to React Flow nodes/edges and apply layout
   useEffect(() => {
@@ -103,8 +166,10 @@ export function DiagramRenderer({
           type: 'symbol',
         }));
 
-        // Apply ELK layout - returns array of nodes directly
-        const laidOutNodes = await layoutFlowNodes(typedNodes, flowEdges);
+        // Apply ELK layout with diagram-type-specific options
+        const laidOutNodes = await layoutFlowNodes(typedNodes, flowEdges, {
+          direction: layoutDirection,
+        });
 
         setNodes(laidOutNodes as Node[]);
         setEdges(flowEdges as Edge[]);
@@ -116,7 +181,7 @@ export function DiagramRenderer({
     };
 
     layoutGraph();
-  }, [graphIR, setNodes, setEdges]);
+  }, [graphIR, layoutDirection, setNodes, setEdges]);
 
   // Handle selection changes
   const handleSelectionChange = useCallback(
@@ -129,6 +194,16 @@ export function DiagramRenderer({
       }
     },
     [onNodeSelect]
+  );
+
+  // Handle node double-click for navigation
+  const handleNodeDoubleClick = useCallback(
+    (_event: React.MouseEvent | null, node: Node<SymbolNodeData>) => {
+      if (onNodeDoubleClick) {
+        onNodeDoubleClick(toInspectorNodeData(node));
+      }
+    },
+    [onNodeDoubleClick]
   );
 
   // Loading state
@@ -203,6 +278,7 @@ export function DiagramRenderer({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onSelectionChange={handleSelectionChange}
+        onNodeDoubleClick={handleNodeDoubleClick}
         nodeTypes={nodeTypes}
         fitView
         fitViewOptions={{ padding: 0.2 }}

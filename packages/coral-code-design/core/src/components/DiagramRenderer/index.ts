@@ -2,4 +2,7 @@
  * DiagramRenderer exports
  */
 
-export { DiagramRenderer, type DiagramRendererProps } from './DiagramRenderer';
+export {
+  DiagramRenderer,
+  type DiagramRendererProps,
+} from './DiagramRenderer';
