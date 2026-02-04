@@ -46,6 +46,19 @@ export interface ArmadaStats {
 // Context
 // ============================================================================
 
+/**
+ * Symbol node from Armada knowledge graph
+ */
+export interface ArmadaSymbol {
+  id: string;
+  name: string;
+  type: string;
+  file: string;
+  startLine: number;
+  endLine: number;
+  parent?: string;
+}
+
 export interface ArmadaContextValue {
   // Connection state
   isConnected: boolean;
@@ -71,6 +84,9 @@ export interface ArmadaContextValue {
     scope?: ScopeConfig,
     mode?: GraphMode
   ) => Promise<CoralDocument>;
+
+  // Symbol fetching
+  fetchSymbols: (scope: string) => Promise<ArmadaSymbol[]>;
 
   // Refresh
   refresh: () => Promise<void>;
@@ -242,6 +258,21 @@ function ArmadaProviderInner({
     return response.json();
   }, [connectionState, currentMode]);
 
+  // Fetch symbols for a scope (file or directory)
+  const fetchSymbols = useCallback(async (scope: string): Promise<ArmadaSymbol[]> => {
+    if (!connectionState?.config) {
+      throw new Error('Not connected to Armada');
+    }
+
+    const url = new URL(`${connectionState.config.serverUrl}/api/symbols`);
+    url.searchParams.set('scope', scope);
+
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error('Failed to fetch symbols');
+
+    return response.json();
+  }, [connectionState]);
+
   // Connect
   const connect = useCallback(async (config: ArmadaConnectionConfig) => {
     await connectMutation.mutateAsync(config);
@@ -283,6 +314,7 @@ function ArmadaProviderInner({
     connect,
     disconnect,
     fetchDiagram,
+    fetchSymbols,
     refresh,
   };
 

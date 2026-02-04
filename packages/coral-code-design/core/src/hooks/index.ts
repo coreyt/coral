@@ -14,3 +14,9 @@ export {
   type UseFileTreeResult,
   type ExtendedFileTreeNode,
 } from './useFileTree';
+
+export {
+  useSymbolOutline,
+  type UseSymbolOutlineOptions,
+  type UseSymbolOutlineResult,
+} from './useSymbolOutline';
