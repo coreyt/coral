@@ -21,7 +21,7 @@ export interface NavigationContextValue {
   /**
    * Check if navigation is supported for a request
    */
-  canNavigate: (request: NavigationRequest): boolean;
+  canNavigate: (request: NavigationRequest) => boolean;
 
   /**
    * Open a file in the code preview pane (internal)

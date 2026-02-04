@@ -12,6 +12,9 @@ export {
   Navigator,
   Inspector,
   SearchPalette,
+  ArmadaConnectionDialog,
+  DiagramRenderer,
+  CodePreview,
   type WorkspaceLayoutProps,
   type DiagramViewProps,
   type NavigatorProps,
@@ -20,7 +23,17 @@ export {
   type InspectorProps,
   type SearchPaletteProps,
   type SearchResult,
+  type ArmadaConnectionDialogProps,
+  type DiagramRendererProps,
+  type CodePreviewProps,
 } from './components';
+
+// Hooks
+export {
+  useDiagramData,
+  type UseDiagramDataOptions,
+  type UseDiagramDataResult,
+} from './hooks';
 
 // Providers
 export {

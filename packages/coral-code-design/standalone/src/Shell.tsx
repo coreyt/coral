@@ -6,40 +6,43 @@
 
 import { useState, useCallback, type ReactNode } from 'react';
 import { useWorkspace, useArmada } from '@coral-code-design/core';
+import { useFileSystemContext, useArmadaDialogContext } from './App';
 
 export interface ShellProps {
   children: ReactNode;
 }
 
 export function Shell({ children }: ShellProps) {
-  const { workspace, openWorkspace } = useWorkspace();
-  const { connect, disconnect, isConnected } = useArmada();
+  const { workspace, openWorkspace, closeWorkspace } = useWorkspace();
+  const { disconnect, isConnected } = useArmada();
+  const { isSupported, pickDirectory } = useFileSystemContext();
+  const { openDialog: openArmadaDialog } = useArmadaDialogContext();
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   // Handle opening a workspace
   const handleOpenWorkspace = useCallback(async () => {
-    // Use File System Access API
-    if ('showDirectoryPicker' in window) {
-      try {
-        const dirHandle = await (window as any).showDirectoryPicker();
-        // For now, just use the name - full path access would require more setup
-        await openWorkspace(dirHandle.name);
-      } catch (e) {
-        // User cancelled or error
-        console.error('Failed to open workspace:', e);
-      }
-    } else {
-      alert('File System Access API not supported in this browser');
+    if (!isSupported) {
+      alert('File System Access API not supported in this browser. Please use Chrome or Edge.');
+      return;
     }
-  }, [openWorkspace]);
 
-  // Handle Armada connection
-  const handleConnect = useCallback(async () => {
-    const url = prompt('Armada server URL:', 'http://localhost:8765');
-    if (url) {
-      await connect({ serverUrl: url, mode: 'call-graph' });
+    const name = await pickDirectory();
+    if (name) {
+      // The adapter is automatically updated via context
+      await openWorkspace(name);
     }
-  }, [connect]);
+  }, [isSupported, pickDirectory, openWorkspace]);
+
+  // Handle closing workspace
+  const handleCloseWorkspace = useCallback(() => {
+    closeWorkspace();
+  }, [closeWorkspace]);
+
+  // Handle Armada connection - open dialog
+  const handleConnect = useCallback(() => {
+    openArmadaDialog();
+    setMenuOpen(null);
+  }, [openArmadaDialog]);
 
   return (
     <div
@@ -74,7 +77,7 @@ export function Shell({ children }: ShellProps) {
           onToggle={() => setMenuOpen(menuOpen === 'file' ? null : 'file')}
         >
           <MenuItem label="Open Workspace..." shortcut="Cmd+O" onClick={handleOpenWorkspace} />
-          <MenuItem label="Close Workspace" onClick={() => {}} disabled={!workspace} />
+          <MenuItem label="Close Workspace" onClick={handleCloseWorkspace} disabled={!workspace} />
           <MenuDivider />
           <MenuItem label="Save Layout" shortcut="Cmd+S" onClick={() => {}} disabled={!workspace} />
           <MenuItem label="Export..." onClick={() => {}} disabled={!workspace} />

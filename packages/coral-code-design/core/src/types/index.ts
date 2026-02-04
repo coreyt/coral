@@ -3,14 +3,21 @@
  */
 
 // Re-export types from @coral/viz that we use
-export type {
-  GraphIR,
-  GraphNode,
-  GraphEdge,
-  Position,
-  LayoutOptions,
-  CoralDocument,
+import type {
+  GraphIR as VizGraphIR,
+  GraphNode as VizGraphNode,
+  GraphEdge as VizGraphEdge,
+  Position as VizPosition,
+  LayoutOptions as VizLayoutOptions,
+  CoralDocument as VizCoralDocument,
 } from '@coral/viz';
+
+export type GraphIR = VizGraphIR;
+export type GraphNode = VizGraphNode;
+export type GraphEdge = VizGraphEdge;
+export type Position = VizPosition;
+export type LayoutOptions = VizLayoutOptions;
+export type CoralDocument = VizCoralDocument;
 
 // ============================================================================
 // Symbol IDs (Armada)
