@@ -1,0 +1,9 @@
+/**
+ * Component exports
+ */
+
+export { WorkspaceLayout, type WorkspaceLayoutProps } from './Workspace';
+export { DiagramView, type DiagramViewProps } from './DiagramView';
+export { Navigator, type NavigatorProps, type FileTreeNode, type SymbolOutlineNode } from './Navigator';
+export { Inspector, type InspectorProps } from './Inspector';
+export { SearchPalette, type SearchPaletteProps, type SearchResult } from './SearchPalette';

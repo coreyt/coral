@@ -5,7 +5,28 @@
 
 ---
 
-## Requirements
+## Applications
+
+### coral-code-design
+
+**Status**: Proposed
+**Requirements Document**: [coral-code-design-requirements.md](./coral-code-design-requirements.md)
+
+A dedicated application for software architecture visualization and codebase exploration. Purpose-built for developers who need to understand and document code structure, with deep Armada integration and VS Code compatibility.
+
+Key features:
+- Workspace-based (open a codebase, not a file)
+- Multi-diagram views (tabs, splits, linked selection)
+- C4-inspired abstraction levels (codebase → module → component → code)
+- Bidirectional code navigation (diagram ↔ source)
+- Annotation layer for documentation
+- Designed for future VS Code extension
+
+See full requirements: [coral-code-design-requirements.md](./coral-code-design-requirements.md)
+
+---
+
+## Component Requirements
 
 ### CORAL-REQ-001: Text Editor Components
 

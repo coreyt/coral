@@ -1,0 +1,71 @@
+/* CSS Custom Properties for theming */
+:root {
+  /* Colors */
+  --bg-color: #ffffff;
+  --text-color: #1a1a1a;
+  --text-muted: #666666;
+  --border-color: #e0e0e0;
+  --accent-color: #0066cc;
+  --warning-color: #f59e0b;
+  --error-color: #dc2626;
+  --success-color: #22c55e;
+
+  /* Surfaces */
+  --header-bg: #f5f5f5;
+  --tab-bar-bg: #f5f5f5;
+  --tab-active-bg: #ffffff;
+  --section-header-bg: #fafafa;
+  --code-bg: #f5f5f5;
+  --selected-bg: #e8f0fe;
+  --palette-bg: #ffffff;
+  --footer-bg: #f5f5f5;
+  --button-bg: #ffffff;
+  --tag-bg: #e0e0e0;
+}
+
+/* Dark theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --text-muted: #999999;
+    --border-color: #333333;
+    --accent-color: #4a9eff;
+
+    --header-bg: #252525;
+    --tab-bar-bg: #252525;
+    --tab-active-bg: #1a1a1a;
+    --section-header-bg: #222222;
+    --code-bg: #252525;
+    --selected-bg: #2a3a4a;
+    --palette-bg: #252525;
+    --footer-bg: #222222;
+    --button-bg: #333333;
+    --tag-bg: #444444;
+  }
+}
+
+/* Global styles */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+button {
+  font-family: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+kbd {
+  padding: 2px 6px;
+  background: var(--code-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 11px;
+}

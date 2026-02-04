@@ -1,0 +1,66 @@
+{
+  "name": "@coral-code-design/vscode",
+  "displayName": "Coral Code Design",
+  "description": "Software architecture visualization for VS Code",
+  "version": "0.1.0",
+  "private": true,
+  "publisher": "coral",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:coral.openDiagram",
+    "onView:coral.explorer"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "coral.openDiagram",
+        "title": "Open Diagram",
+        "category": "Coral"
+      },
+      {
+        "command": "coral.revealInDiagram",
+        "title": "Reveal in Diagram",
+        "category": "Coral"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "coral",
+          "title": "Coral Code Design",
+          "icon": "resources/coral-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "coral": [
+        {
+          "type": "webview",
+          "id": "coral.diagramView",
+          "name": "Diagram"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "eslint src"
+  },
+  "dependencies": {
+    "@coral-code-design/core": "file:../core"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
