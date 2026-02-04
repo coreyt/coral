@@ -178,17 +178,39 @@ fetchSymbols(scope, {
 
 ## Current Status
 
+### Armada Backend (coreyt/armada)
+
+| Phase | Issue | Status |
+|-------|-------|--------|
+| 1. BranchConfig | [#19](https://github.com/coreyt/armada/issues/19) | ✅ Complete |
+| 2. Branch/Tag Discovery | [#20](https://github.com/coreyt/armada/issues/20) | ✅ Complete |
+| 3. Branch/Tag Node Creation | [#21](https://github.com/coreyt/armada/issues/21) | ✅ Complete |
+| 4. Multi-branch Commit Indexing | [#22](https://github.com/coreyt/armada/issues/22) | ✅ Complete |
+| 5. CLI Integration | [#23](https://github.com/coreyt/armada/issues/23) | ✅ Complete |
+| 6. FILE_VERSION Edge Tracking | [#24](https://github.com/coreyt/armada/issues/24) | ✅ Complete |
+| 7. BranchProjection Resolver | [#25](https://github.com/coreyt/armada/issues/25) | ✅ Complete |
+| 8. MCP Tools with include_branches | [#26](https://github.com/coreyt/armada/issues/26) | 🔶 **In Progress** |
+
+### coral-code-design Frontend
+
 | Component | Status |
 |-----------|--------|
-| Armada: Branch indexing | ❌ Not started |
-| Armada: Projection resolver | ❌ Not started |
-| Armada: MCP parameters | ❌ Not started |
-| coral-code-design: UI | ❌ Blocked by Armada |
+| BranchSelector UI | ❌ Not started (blocked by Armada #26) |
+| ArmadaProvider includeBranches | ❌ Not started |
+| BranchBadge on nodes | ❌ Not started |
+| ConflictIndicator | ❌ Not started |
+
+**Next Step**: Once Armada #26 is complete, coral-code-design can implement the UI.
 
 ---
 
 ## References
 
+### Coral
 - GitHub Issue: https://github.com/coreyt/coral/issues/13
-- Armada indexer: `armada/cartographer/armada/indexers/git.py`
-- coral-code-design ArmadaProvider: `packages/coral-code-design/core/src/providers/ArmadaProvider.tsx`
+- ArmadaProvider: `packages/coral-code-design/core/src/providers/ArmadaProvider.tsx`
+
+### Armada
+- Multi-Branch Issues: https://github.com/coreyt/armada/issues?q=Multi-Branch
+- Git Indexer: `cartographer/armada/indexers/git.py`
+- MCP Server: `cartographer/armada/mcp/server.py`
