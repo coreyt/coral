@@ -236,4 +236,68 @@ To test full code→diagram workflow:
 
 ---
 
-**Last Updated**: 2026-02-01
+---
+
+## coral-code-design: Phase 1 (Foundation)
+
+**Status**: Complete
+
+**Deliverable**: "Open workspace, view module graph, click to see code"
+
+### GitHub Issues
+
+| Issue | Description | Status |
+|-------|-------------|--------|
+| #8 | DiagramRenderer: notation/direction mapping, double-click | ✅ Complete |
+| #9 | ArmadaProvider: mode switching, refresh, caching | ✅ Complete |
+| #10 | useFileTree: workspace file tree with lazy loading | ✅ Complete |
+| #11 | useSymbolOutline: hierarchical symbol tree from Armada | ✅ Complete |
+
+### Implementation
+
+| Component | File | Features |
+|-----------|------|----------|
+| DiagramRenderer | `core/src/components/DiagramRenderer/` | GraphIR rendering, notation mapping, layout direction per diagram type |
+| ArmadaProvider | `core/src/providers/ArmadaProvider.tsx` | Connection management, mode switching, TanStack Query caching |
+| useFileTree | `core/src/hooks/useFileTree.ts` | Lazy loading, expand/collapse, filtering, highlighting |
+| useSymbolOutline | `core/src/hooks/useSymbolOutline.ts` | Armada symbol queries, hierarchical tree building |
+| CodePreview | `core/src/components/CodePreview/` | Line numbers, highlighting, scroll-to-line |
+| ArmadaConnectionDialog | `core/src/components/ArmadaDialog/` | Server URL, mode selection, connection status |
+| useFileSystem | `standalone/src/providers/useFileSystem.ts` | File System Access API integration |
+
+### Integration (Standalone App)
+
+- ✅ File tree populates Navigator from workspace directory
+- ✅ Symbol outline shows symbols for selected file
+- ✅ Code preview loads and highlights file content
+- ✅ Diagram renders with correct notation per diagram type
+- ✅ Armada connection dialog accessible from Shell menu
+- ✅ Status bar shows connection state and stats
+
+### Tests
+
+- 75 tests passing in core package
+- Test files: useDiagramData, DiagramRenderer, CodePreview, ArmadaProvider, ArmadaConnectionDialog, useFileTree, useSymbolOutline
+
+### Commits
+
+```
+abd838e Integrate useFileTree and useSymbolOutline into standalone App
+7b2fe9f Implement useSymbolOutline hook for Armada symbols (#11)
+360d8c5 Implement useFileTree hook for workspace file tree (#10)
+fa989c5 Complete Armada HTTP features for #9
+ce85a92 Complete DiagramRenderer features for #8
+bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
+61cae34 Scaffold coral-code-design package structure
+```
+
+### Future Enhancements (Phase 2)
+
+- Directory lazy loading triggered from Navigator (currently local state)
+- Symbol click → select in diagram
+- Search palette → Armada queries
+- Branch projection UI (when Armada supports it)
+
+---
+
+**Last Updated**: 2026-02-04

@@ -12,7 +12,7 @@
 
 | Attribute | Value |
 |-----------|-------|
-| **Phase** | 2 (Diagramming) complete, Phase 4 (Integration) in progress |
+| **Phase** | 2 (Diagramming) complete, Phase 4 (Integration) complete, coral-code-design Phase 1 complete |
 | **Role** | Symbiotic diagramming toolchain |
 | **Authority** | See `ECOSYSTEM-DEVELOPMENT-PLAN.md` in graph-ir-tools |
 
@@ -20,6 +20,7 @@ Coral bridges text DSLs and visual editors:
 - Parse Coral DSL, Mermaid, DOT formats
 - Render visual diagrams with ELK + React Flow
 - Bidirectional sync between text and visual
+- **coral-code-design**: Standalone IDE for architecture visualization
 
 ---
 
@@ -235,19 +236,29 @@ coral/
 │   ├── ir/                       # @coral/ir
 │   ├── language/                 # @coral/language
 │   │   └── src/
-│   │       ├── parser/           # Step 2
-│   │       ├── printer/          # Step 4
-│   │       ├── formats/          # Step 3
-│   │       └── skills/           # Step 9
+│   │       ├── parser/           # DSL parsing
+│   │       ├── printer/          # IR → DSL
+│   │       └── formats/          # Mermaid/DOT importers
 │   ├── viz/                      # @coral/viz
 │   │   └── src/
-│   │       ├── editor/           # Step 5
-│   │       └── layout/           # Step 6
-│   └── mcp-server/               # Step 7
+│   │       ├── editor/           # React Flow components
+│   │       ├── layout/           # ELK integration
+│   │       ├── shapes/           # Shape primitives
+│   │       ├── symbols/          # Symbol libraries
+│   │       └── notations/        # Notation rules
+│   ├── viz-demo/                 # Demo app for @coral/viz
+│   ├── mcp-server/               # MCP tools
+│   │   └── src/
+│   │       ├── tools/            # coral_* tools
+│   │       └── armada/           # Armada integration
+│   └── coral-code-design/        # Standalone IDE
+│       ├── core/                 # Shared React components
+│       ├── standalone/           # Browser app
+│       └── vscode/               # VS Code extension (future)
 ├── agents/
-│   ├── diagram-generation/       # Step 10
-│   ├── format-migration/         # Step 10
-│   └── elk-tuning/               # Step 8
+│   ├── diagram-generation/
+│   ├── format-migration/
+│   └── elk-tuning/
 ├── dev/
 │   └── claude-specs/             # Specifications
 ├── PROGRESS.md                   # Progress tracking
@@ -256,15 +267,83 @@ coral/
 
 ---
 
-## Phase 4: Integration (In Progress)
+## Phase 4: Integration (Complete)
 
 Phase 3 (Armada) is complete. Coral now has:
 - Armada MCP client (`packages/mcp-server/src/armada/client.ts`)
 - KG→IR transformer (`packages/mcp-server/src/armada/transformer.ts`)
 - `coral_from_codebase` MCP tool (`packages/mcp-server/src/tools/fromCodebase.ts`)
 - `/coral --from=codebase` skill (updated `.claude/skills/coral/SKILL.md`)
+- Incremental updates (`packages/mcp-server/src/armada/incremental.ts`)
 
-This enables the code-to-diagram workflow. See PROGRESS.md for current status.
+This enables the code-to-diagram workflow. See PROGRESS.md for details.
+
+---
+
+## coral-code-design: Standalone IDE
+
+**Phase 1 (Foundation)**: Complete
+
+A standalone web application for software architecture visualization, built on `@coral/viz`.
+
+### Package Structure
+
+```
+packages/coral-code-design/
+├── core/                    # @coral-code-design/core - shared components
+│   ├── src/
+│   │   ├── components/      # DiagramRenderer, Navigator, Inspector, CodePreview
+│   │   ├── hooks/           # useDiagramData, useFileTree, useSymbolOutline
+│   │   ├── providers/       # WorkspaceProvider, ArmadaProvider, NavigationProvider
+│   │   ├── state/           # Zustand stores
+│   │   └── types/           # TypeScript types
+│   └── test/                # 75+ tests
+├── standalone/              # Browser-based app (File System Access API)
+│   └── src/
+│       ├── App.tsx          # Main application
+│       ├── Shell.tsx        # Menu bar and layout
+│       └── providers/       # useFileSystem
+└── vscode/                  # VS Code extension (future)
+```
+
+### Key Components
+
+| Component | Purpose |
+|-----------|---------|
+| `DiagramRenderer` | Renders GraphIR with notation-aware symbols |
+| `useFileTree` | Lazy-loading file tree from FileSystemAdapter |
+| `useSymbolOutline` | Hierarchical symbol tree from Armada |
+| `ArmadaProvider` | Connection management with TanStack Query |
+| `CodePreview` | Source code display with line highlighting |
+
+### Armada Integration
+
+coral-code-design connects to Armada HTTP API for:
+- Module graphs, call graphs, inheritance trees
+- Symbol queries for outline view
+- Future: Branch projections (when Armada supports it)
+
+### Running the Standalone App
+
+```bash
+cd packages/coral-code-design/standalone
+npm run dev
+# Open http://localhost:5173
+```
+
+### Testing
+
+```bash
+cd packages/coral-code-design/core
+npm test
+```
+
+### Phase 2 (Future)
+
+- Directory lazy loading via Navigator callbacks
+- Symbol click → diagram selection
+- Search palette with Armada queries
+- Branch projection UI (depends on Armada feature)
 
 ---
 
