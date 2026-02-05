@@ -50,3 +50,11 @@ export {
   type UseLiveDiagramOptions,
   type UseLiveDiagramResult,
 } from './useLiveDiagram';
+
+export {
+  useDiagramNavigation,
+  type DiagramType,
+  type DiagramScope,
+  type UseDiagramNavigationOptions,
+  type UseDiagramNavigationResult,
+} from './useDiagramNavigation';

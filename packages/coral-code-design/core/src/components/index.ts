@@ -21,3 +21,5 @@ export { FilterPanel, type FilterPanelProps } from './FilterPanel';
 export { RefreshControl, type RefreshControlProps } from './RefreshControl';
 export { StaleIndicator, type StaleIndicatorProps } from './StaleIndicator';
 export { DiffOverlay, type DiffOverlayProps, type DiagramDiff } from './DiffOverlay';
+export { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs';
+export { DiagramTypeSelector, type DiagramTypeSelectorProps } from './DiagramTypeSelector';
