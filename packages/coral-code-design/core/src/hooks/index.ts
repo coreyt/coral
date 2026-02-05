@@ -25,3 +25,9 @@ export {
   useAnnotations,
   type UseAnnotationsResult,
 } from './useAnnotations';
+
+export {
+  useExport,
+  type ExportFormat,
+  type UseExportResult,
+} from './useExport';
