@@ -28,3 +28,12 @@ export {
   type NavigationContextValue,
   type PreviewState,
 } from './NavigationProvider';
+
+export {
+  ThemeProvider,
+  useTheme,
+  type ThemeProviderProps,
+  type ThemeContextValue,
+  type Theme,
+  type ResolvedTheme,
+} from './ThemeProvider';

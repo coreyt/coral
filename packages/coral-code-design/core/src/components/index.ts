@@ -11,3 +11,4 @@ export { ArmadaConnectionDialog, type ArmadaConnectionDialogProps } from './Arma
 export { DiagramRenderer, type DiagramRendererProps } from './DiagramRenderer';
 export { CodePreview, type CodePreviewProps } from './CodePreview';
 export { BranchSelector, type BranchSelectorProps } from './BranchSelector';
+export { ThemeToggle, type ThemeToggleProps } from './ThemeToggle';

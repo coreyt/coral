@@ -1,0 +1,206 @@
+/**
+ * Theme CSS Variables
+ *
+ * Issue #21: CCD-REQ-010 Theming and Accessibility
+ */
+
+/* ============================================================================
+   Light Theme (Default)
+   ============================================================================ */
+
+:root,
+.theme-light {
+  /* Background colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #e8e8e8;
+  --bg-hover: rgba(0, 0, 0, 0.04);
+  --bg-selected: rgba(37, 99, 235, 0.08);
+
+  /* Text colors */
+  --text-color: #1f2937;
+  --text-muted: #6b7280;
+  --text-disabled: #9ca3af;
+
+  /* Border colors */
+  --border-color: #e5e7eb;
+  --border-focus: #2563eb;
+
+  /* Primary colors */
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-text: #ffffff;
+
+  /* Status colors */
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+  --info-color: #3b82f6;
+
+  /* Component-specific */
+  --dialog-bg: #ffffff;
+  --dialog-border: #e5e7eb;
+  --input-bg: #ffffff;
+  --input-border: #d1d5db;
+  --input-text: #1f2937;
+  --button-primary-bg: #2563eb;
+  --button-primary-text: #ffffff;
+  --button-disabled-bg: #e5e7eb;
+  --highlight-bg: #eff6ff;
+  --error-bg: #fef2f2;
+  --error-text: #dc2626;
+
+  /* Diagram colors */
+  --node-bg: #ffffff;
+  --node-border: #d1d5db;
+  --node-selected-border: #2563eb;
+  --edge-color: #9ca3af;
+  --edge-selected-color: #2563eb;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================================================
+   Dark Theme
+   ============================================================================ */
+
+.theme-dark {
+  /* Background colors */
+  --bg-primary: #1f2937;
+  --bg-secondary: #111827;
+  --bg-tertiary: #374151;
+  --bg-hover: rgba(255, 255, 255, 0.04);
+  --bg-selected: rgba(96, 165, 250, 0.15);
+
+  /* Text colors */
+  --text-color: #f9fafb;
+  --text-muted: #9ca3af;
+  --text-disabled: #6b7280;
+
+  /* Border colors */
+  --border-color: #374151;
+  --border-focus: #60a5fa;
+
+  /* Primary colors */
+  --primary-color: #60a5fa;
+  --primary-hover: #3b82f6;
+  --primary-text: #1f2937;
+
+  /* Status colors */
+  --success-color: #4ade80;
+  --warning-color: #fbbf24;
+  --error-color: #f87171;
+  --info-color: #60a5fa;
+
+  /* Component-specific */
+  --dialog-bg: #1f2937;
+  --dialog-border: #374151;
+  --input-bg: #374151;
+  --input-border: #4b5563;
+  --input-text: #f9fafb;
+  --button-primary-bg: #3b82f6;
+  --button-primary-text: #ffffff;
+  --button-disabled-bg: #4b5563;
+  --highlight-bg: rgba(59, 130, 246, 0.2);
+  --error-bg: rgba(239, 68, 68, 0.2);
+  --error-text: #f87171;
+
+  /* Diagram colors */
+  --node-bg: #374151;
+  --node-border: #4b5563;
+  --node-selected-border: #60a5fa;
+  --edge-color: #6b7280;
+  --edge-selected-color: #60a5fa;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================================================
+   High Contrast Theme
+   ============================================================================ */
+
+.theme-high-contrast {
+  /* Background colors */
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-tertiary: #1a1a1a;
+  --bg-hover: rgba(255, 255, 255, 0.1);
+  --bg-selected: rgba(255, 255, 0, 0.2);
+
+  /* Text colors */
+  --text-color: #ffffff;
+  --text-muted: #e0e0e0;
+  --text-disabled: #808080;
+
+  /* Border colors */
+  --border-color: #ffffff;
+  --border-focus: #ffff00;
+
+  /* Primary colors */
+  --primary-color: #ffff00;
+  --primary-hover: #ffff66;
+  --primary-text: #000000;
+
+  /* Status colors */
+  --success-color: #00ff00;
+  --warning-color: #ffaa00;
+  --error-color: #ff0000;
+  --info-color: #00ffff;
+
+  /* Component-specific */
+  --dialog-bg: #000000;
+  --dialog-border: #ffffff;
+  --input-bg: #000000;
+  --input-border: #ffffff;
+  --input-text: #ffffff;
+  --button-primary-bg: #ffff00;
+  --button-primary-text: #000000;
+  --button-disabled-bg: #404040;
+  --highlight-bg: rgba(255, 255, 0, 0.2);
+  --error-bg: rgba(255, 0, 0, 0.3);
+  --error-text: #ff6666;
+
+  /* Diagram colors */
+  --node-bg: #000000;
+  --node-border: #ffffff;
+  --node-selected-border: #ffff00;
+  --edge-color: #ffffff;
+  --edge-selected-color: #ffff00;
+
+  /* Shadows - none in high contrast */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+}
+
+/* ============================================================================
+   Utility Classes
+   ============================================================================ */
+
+/* Focus visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Skip link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary-color);
+  color: var(--primary-text);
+  padding: 8px 16px;
+  z-index: 10000;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
