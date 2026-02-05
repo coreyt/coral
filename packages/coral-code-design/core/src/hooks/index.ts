@@ -36,3 +36,10 @@ export {
   useMultiDiagram,
   type UseMultiDiagramResult,
 } from './useMultiDiagram';
+
+export {
+  useFilteredDiagram,
+  type FilterConfig,
+  type FilterPreset,
+  type UseFilteredDiagramResult,
+} from './useFilteredDiagram';

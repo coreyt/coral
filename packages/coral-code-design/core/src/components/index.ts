@@ -17,3 +17,4 @@ export { ExportDialog, type ExportDialogProps } from './ExportDialog';
 export { AnnotationPanel, type AnnotationPanelProps, type SelectedNode } from './AnnotationPanel';
 export { DiagramTabs, type DiagramTabsProps } from './DiagramTabs';
 export { SplitPane, type SplitPaneProps } from './SplitPane';
+export { FilterPanel, type FilterPanelProps } from './FilterPanel';
