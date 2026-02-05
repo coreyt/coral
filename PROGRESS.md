@@ -308,6 +308,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | #15 | Symbol click selects diagram node | ✅ Complete |
 | #16 | Search palette with Armada queries | ✅ Complete |
 | #17 | Workspace configuration persistence | ✅ Complete |
+| #18 | Branch selection UI | ✅ Complete |
 
 ### Implementation
 
@@ -318,6 +319,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | Programmatic node selection | 9c15151 | selectedSymbolId prop on DiagramRenderer |
 | Search functionality | 0c62a13 | ArmadaProvider.search() method |
 | Workspace persistence | 72a9905 | Save/load workspace config, layouts, annotations to .coral-code-design/ |
+| Branch selection UI | 6ed5d92 | BranchSelector component, fetchBranches, ArmadaDialog integration |
 
 ### Branch Projection
 
@@ -327,8 +329,8 @@ See: `dev/specs/armada-branch-projection.md`
 
 ### Tests
 
-- 109+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
-- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog, workspacePersistence
+- 122+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
+- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog, workspacePersistence, BranchSelector
 
 ---
 
