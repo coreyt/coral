@@ -25,3 +25,4 @@ export { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs';
 export { DiagramTypeSelector, type DiagramTypeSelectorProps } from './DiagramTypeSelector';
 export { SearchDialog, type SearchDialogProps } from './SearchDialog';
 export { SearchResults, type SearchResultsProps } from './SearchResults';
+export { ImageExportDialog, type ImageExportDialogProps } from './ImageExportDialog';

@@ -65,3 +65,10 @@ export {
   type UseSearchOptions,
   type UseSearchResult,
 } from './useSearch';
+
+export {
+  useImageExport,
+  type ImageFormat,
+  type ImageExportOptions,
+  type UseImageExportResult,
+} from './useImageExport';
