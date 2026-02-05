@@ -317,4 +317,159 @@ describe('ArmadaProvider', () => {
       // This is implicitly tested by the caching behavior
     });
   });
+
+  // ============================================================================
+  // Issue #16: Search functionality
+  // ============================================================================
+
+  describe('search functionality', () => {
+    it('should expose search function', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.search).toBeDefined();
+        expect(typeof contextRef?.search).toBe('function');
+      });
+    });
+
+    it('should call search API with query', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      // Add search endpoint response
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/search')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              results: [
+                {
+                  id: 'symbol1',
+                  name: 'MyClass',
+                  type: 'class',
+                  file: 'src/MyClass.ts',
+                  startLine: 1,
+                  endLine: 50,
+                },
+              ],
+            }),
+          });
+        }
+        // Default responses
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph', 'dependency-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Perform search
+      const results = await contextRef!.search('MyClass');
+
+      // Should have called the search API
+      const searchCalls = mockFetch.mock.calls.filter(
+        (call) => call[0].includes('/api/search')
+      );
+      expect(searchCalls.length).toBeGreaterThan(0);
+      expect(searchCalls[0][0]).toContain('query=MyClass');
+
+      // Should return results
+      expect(results).toHaveLength(1);
+      expect(results[0].name).toBe('MyClass');
+    });
+
+    it('should handle empty search results', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      // Add search endpoint response with empty results
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/search')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ results: [] }),
+          });
+        }
+        // Default responses
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph', 'dependency-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Perform search with no results
+      const results = await contextRef!.search('nonexistent');
+
+      // Should return empty array
+      expect(results).toEqual([]);
+    });
+  });
 });

@@ -16,6 +16,7 @@ export {
   type ArmadaProviderProps,
   type ArmadaContextValue,
   type ArmadaStats,
+  type ArmadaSearchResult,
 } from './ArmadaProvider';
 
 export {

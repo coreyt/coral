@@ -59,6 +59,18 @@ export interface ArmadaSymbol {
   parent?: string;
 }
 
+/**
+ * Search result from Armada
+ */
+export interface ArmadaSearchResult {
+  id: string;
+  name: string;
+  type: string;
+  file: string;
+  startLine: number;
+  endLine: number;
+}
+
 export interface ArmadaContextValue {
   // Connection state
   isConnected: boolean;
@@ -87,6 +99,9 @@ export interface ArmadaContextValue {
 
   // Symbol fetching
   fetchSymbols: (scope: string) => Promise<ArmadaSymbol[]>;
+
+  // Search
+  search: (query: string) => Promise<ArmadaSearchResult[]>;
 
   // Refresh
   refresh: () => Promise<void>;
@@ -273,6 +288,22 @@ function ArmadaProviderInner({
     return response.json();
   }, [connectionState]);
 
+  // Search for symbols
+  const search = useCallback(async (query: string): Promise<ArmadaSearchResult[]> => {
+    if (!connectionState?.config) {
+      throw new Error('Not connected to Armada');
+    }
+
+    const url = new URL(`${connectionState.config.serverUrl}/api/search`);
+    url.searchParams.set('query', query);
+
+    const response = await fetch(url.toString());
+    if (!response.ok) throw new Error('Failed to search');
+
+    const data = await response.json();
+    return data.results ?? [];
+  }, [connectionState]);
+
   // Connect
   const connect = useCallback(async (config: ArmadaConnectionConfig) => {
     await connectMutation.mutateAsync(config);
@@ -315,6 +346,7 @@ function ArmadaProviderInner({
     disconnect,
     fetchDiagram,
     fetchSymbols,
+    search,
     refresh,
   };
 

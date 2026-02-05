@@ -98,7 +98,7 @@ const DEFAULT_MODES: GraphMode[] = [
 
 function AppContent() {
   const { workspace, openDiagram, closeDiagram, setActiveDiagram } = useWorkspace();
-  const { isConnected, isConnecting, connectionError, stats, connect } = useArmada();
+  const { isConnected, isConnecting, connectionError, stats, connect, search } = useArmada();
   const { isOpen: armadaDialogOpen, closeDialog: closeArmadaDialog, openDialog: openArmadaDialog } = useArmadaDialogContext();
   const { adapter: fileSystemAdapter } = useFileSystemContext();
 
@@ -188,22 +188,45 @@ function AppContent() {
 
   // Handle search
   const handleSearch = useCallback(async (query: string): Promise<SearchResult[]> => {
-    // TODO: Implement actual search via Armada
-    return [
-      {
-        id: '1',
-        type: 'symbol',
-        title: `${query} (mock)`,
-        subtitle: 'src/example.ts',
-        symbolId: 'mock:symbol',
-      },
-    ];
-  }, []);
+    if (!isConnected) {
+      return [];
+    }
+
+    try {
+      const results = await search(query);
+      return results.map(result => ({
+        id: result.id,
+        type: 'symbol' as const,
+        title: result.name,
+        subtitle: `${result.file}:${result.startLine}`,
+        symbolId: result.id,
+        file: result.file,
+        line: result.startLine,
+      }));
+    } catch (error) {
+      console.error('Search failed:', error);
+      return [];
+    }
+  }, [isConnected, search]);
 
   // Handle search result selection
   const handleSearchSelect = useCallback((result: SearchResult) => {
-    console.log('Selected:', result);
-    // TODO: Navigate to result
+    // Select the symbol in the diagram
+    if (result.symbolId) {
+      setSelectedSymbolId(result.symbolId);
+    }
+
+    // If result has file info, show in code preview
+    if (result.file) {
+      setSelectedNode({
+        symbolId: result.symbolId || result.id,
+        name: result.title,
+        type: 'symbol',
+        file: result.file,
+        startLine: result.line,
+      });
+      setInspectorTab('code');
+    }
   }, []);
 
   // Handle node selection from diagram
