@@ -295,7 +295,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 
 ## coral-code-design: Phase 2 (Enhancements)
 
-**Status**: In Progress
+**Status**: Complete
 
 **Deliverable**: Enhanced navigation, search, and persistence
 
@@ -307,7 +307,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | #14 | Navigator lazy loading callback | ✅ Complete |
 | #15 | Symbol click selects diagram node | ✅ Complete |
 | #16 | Search palette with Armada queries | ✅ Complete |
-| #17 | Workspace configuration persistence | ❌ Not started |
+| #17 | Workspace configuration persistence | ✅ Complete |
 
 ### Implementation
 
@@ -317,6 +317,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | Navigator lazy loading | 3db3358 | onDirectoryExpand/onDirectoryCollapse callbacks |
 | Programmatic node selection | 9c15151 | selectedSymbolId prop on DiagramRenderer |
 | Search functionality | 0c62a13 | ArmadaProvider.search() method |
+| Workspace persistence | 72a9905 | Save/load workspace config, layouts, annotations to .coral-code-design/ |
 
 ### Branch Projection
 
@@ -326,8 +327,8 @@ See: `dev/specs/armada-branch-projection.md`
 
 ### Tests
 
-- 97+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
-- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog
+- 109+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
+- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog, workspacePersistence
 
 ---
 
