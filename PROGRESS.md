@@ -484,6 +484,74 @@ Created comprehensive integration test infrastructure for Armada MCP tools:
 - Some tools have missing modules (e.g., `find_tests_for`)
 - Semantic search could rank exact name matches higher
 
+### coral-code-design Integration Testing (#35-#41) ✓
+
+Implemented comprehensive integration test infrastructure for coral-code-design:
+
+**GitHub Issues:**
+| Issue | Description | Status |
+|-------|-------------|--------|
+| #35 | Test Infrastructure: mockArmadaServer and renderWithProviders | ✅ Complete |
+| #36 | Test Fixtures: Armada, GraphIR, and Workspace JSON fixtures | ✅ Complete |
+| #37 | Connection Lifecycle Tests | ✅ Complete |
+| #38 | Error Handling Tests | ✅ Complete |
+| #39 | Data Flow Integration Tests | ✅ Complete |
+| #40 | Multi-Component Workflow Tests | ✅ Complete |
+| #41 | Real Armada E2E Tests | ✅ Complete |
+
+**Files Created:**
+```
+packages/coral-code-design/core/
+├── test/
+│   ├── utils/
+│   │   ├── mockArmadaServer.ts    # Mock fetch with setResponse/setError/setTimeout
+│   │   ├── renderWithProviders.ts # Test wrapper with ArmadaProvider
+│   │   └── index.ts               # Utility exports
+│   ├── fixtures/
+│   │   ├── armada/*.json          # 8 API response fixtures
+│   │   ├── graphIR/*.json         # 2 graph fixtures
+│   │   ├── workspace/*.json       # 2 workspace fixtures
+│   │   └── index.ts               # Fixture exports
+│   ├── integration/
+│   │   ├── connection.test.tsx    # 12 tests: connect/disconnect/reconnect flows
+│   │   ├── dataFlow.test.tsx      # 10 tests: diagram fetch, mode switch, symbols
+│   │   ├── errorHandling.test.tsx # 8 tests: timeout, invalid data, graceful degradation
+│   │   └── workflows.test.tsx     # 8 tests: multi-component interactions
+│   └── e2e/
+│       └── armada.test.tsx        # 6 tests: real Armada instance validation
+└── src/providers/
+    └── ArmadaProvider.tsx         # Added clearArmadaQueryCache() for test isolation
+```
+
+**Test Counts:**
+- Utility tests (mockArmadaServer): 28 tests
+- Connection lifecycle: 12 tests
+- Data flow: 10 tests
+- Error handling: 8 tests
+- Workflows: 8 tests
+- E2E: 6 tests
+- **Total new tests: 72**
+
+**Test Commands:**
+```bash
+# Unit tests only (fast, default)
+npm test
+
+# Integration tests (mocked Armada)
+npm test -- --testPathPattern=integration
+
+# E2E tests (requires running Armada instance)
+ARMADA_URL=http://localhost:8765 npm test -- --testPathPattern=e2e
+
+# All tests
+npm test -- --run
+```
+
+**Key Technical Notes:**
+- Added `clearArmadaQueryCache()` to ArmadaProvider for test isolation (TanStack Query caches at module level)
+- E2E tests auto-skip when ARMADA_URL not set
+- vitest.config.ts updated with `getExclusions()` for conditional test inclusion
+
 ---
 
 **Last Updated**: 2026-02-05
