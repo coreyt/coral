@@ -72,3 +72,19 @@ export {
   type ImageExportOptions,
   type UseImageExportResult,
 } from './useImageExport';
+
+export {
+  useCodebaseOverview,
+  type C4Level,
+  type DiagramType as OverviewDiagramType,
+  type LevelContext,
+  type PathEntry,
+  type UseCodebaseOverviewResult,
+} from './useCodebaseOverview';
+
+export {
+  useArmadaBreadcrumbs,
+  type Breadcrumb,
+  type UseArmadaBreadcrumbsOptions,
+  type UseArmadaBreadcrumbsResult,
+} from './useArmadaBreadcrumbs';
