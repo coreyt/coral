@@ -395,4 +395,37 @@ See: `dev/specs/armada-branch-projection.md`
 
 ---
 
+## Recent Work (2026-02-05)
+
+### CORAL-REQ-012: Font Customization (#33) ✓
+
+Implemented font customization for diagrams:
+- FontSettings and DiagramFontSettings types in schema.ts
+- Font family presets (System, Sans, Serif, Mono, Handwritten)
+- Font size presets (11px, 14px, 16px, 18px) + custom
+- FontSettingsForm component with family, size, weight, line height
+- 34 tests for font settings and component
+- ELK-compatible via existing measureText/computeNodeSize
+
+### CCD-REQ-004: Code Navigation Design ✓
+
+Completed design proposal (2 passes):
+- **Finding**: Architecture is 80% complete - components exist, need wiring
+- NavigationProvider has VS Code compatibility built-in
+- Inspector has action buttons with callback props
+- DiagramRenderer has node selection callbacks
+- **Remaining**: Hover tooltips, edge click, context menu, keyboard shortcuts
+- Design document: `dev/specs/ccd-req-004-code-navigation-design.md`
+- Estimated implementation: 14-21 hours
+
+### coral-code-design Issues Complete
+
+| Issue | Description |
+|-------|-------------|
+| #30 | PNG/SVG Image Export |
+| #32 | Codebase Overview & Armada Breadcrumbs |
+| #33 | Font Customization (viz package) |
+
+---
+
 **Last Updated**: 2026-02-05
