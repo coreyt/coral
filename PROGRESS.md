@@ -418,6 +418,33 @@ Completed design proposal (2 passes):
 - Design document: `dev/specs/ccd-req-004-code-navigation-design.md`
 - Estimated implementation: 14-21 hours
 
+### CCD-REQ-003: Diagram Types Analysis ✓
+
+Analyzed C4-style diagram hierarchy for auto-documentation:
+
+- **Key finding**: C4 Levels 3-4 (Component/Code) can be auto-generated from Armada
+- **Gap identified**: C4 Levels 1-2 (Context/Container) need human curation + infrastructure knowledge
+- **Recommendation**: "Auto-generate structural truth, let users annotate architectural intent"
+- **Blocker**: Annotation layer (CCD-REQ-006 for coral-code-design) needed first
+- Analysis document: `dev/analysis/CCD-REQ-003-diagram-types-analysis.md`
+
+### Phase-Change Indexers Analysis ✓
+
+Proposed strategy for bridging code → infrastructure knowledge gap:
+
+- **Concept**: Code transforms through phases (source → artifact → container → deploy → infra)
+- **Each phase has indexable artifacts** that inform C4 Levels 1-2
+- **Proposed indexers**:
+  - IaC: Terraform, Pulumi, K8s manifests
+  - Manifests: package.json, pyproject.toml, go.mod
+  - Containers: Dockerfile, docker-compose
+  - CI/CD: GitHub Actions, GitLab CI
+  - API specs: OpenAPI, GraphQL schemas
+  - Docs: Mermaid in markdown, ADRs
+- **Hardest problem**: Cross-phase linking (connecting Terraform resources to code)
+- **MVP proposal**: Mermaid parsing (already done) + package.json deps + Terraform resources
+- Analysis document: `dev/analysis/phase-change-indexers-analysis.md`
+
 ### coral-code-design Issues Complete
 
 | Issue | Description |
