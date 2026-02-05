@@ -358,6 +358,8 @@ See: `dev/specs/armada-branch-projection.md`
 | #27 | CCD-REQ-005: Live Diagram Updates | ✅ Complete |
 | #28 | CCD-REQ-003: Diagram Types (C4-Inspired) | ✅ Complete |
 | #29 | CCD-REQ-008: Search and Discovery | ✅ Complete |
+| #30 | CCD-REQ-009: PNG/SVG Image Export | ✅ Complete |
+| #32 | CCD-REQ-003: Codebase Overview & Armada Breadcrumbs | ✅ Complete |
 
 ### Implementation
 
@@ -381,12 +383,16 @@ See: `dev/specs/armada-branch-projection.md`
 | useSearch | `core/src/hooks/useSearch.ts` | Debounced search, history, keyboard navigation |
 | SearchDialog | `core/src/components/SearchDialog/` | Modal search with focus management |
 | SearchResults | `core/src/components/SearchResults/` | Results list with type grouping |
+| useImageExport | `core/src/hooks/useImageExport.ts` | PNG/SVG export, configurable scale, background options |
+| ImageExportDialog | `core/src/components/ImageExportDialog/` | Format/scale/background options, download/clipboard actions |
+| useCodebaseOverview | `core/src/hooks/useCodebaseOverview.ts` | C4 abstraction levels, navigation path, diagram type suggestions |
+| useArmadaBreadcrumbs | `core/src/hooks/useArmadaBreadcrumbs.ts` | Breadcrumb state with Armada integration, scope/query storage |
 
 ### Tests
 
-- 368 tests passing in core package
-- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView, FilterPanel, LiveDiagram, DiagramNavigation, Search
+- 419 tests passing in core package
+- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView, FilterPanel, LiveDiagram, DiagramNavigation, Search, ImageExport, CodebaseOverview
 
 ---
 
-**Last Updated**: 2026-02-04
+**Last Updated**: 2026-02-05
