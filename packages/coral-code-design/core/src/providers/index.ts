@@ -17,6 +17,8 @@ export {
   type ArmadaContextValue,
   type ArmadaStats,
   type ArmadaSearchResult,
+  type BranchProjectionConfig,
+  type BranchConflict,
 } from './ArmadaProvider';
 
 export {

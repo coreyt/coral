@@ -71,6 +71,25 @@ export interface ArmadaSearchResult {
   endLine: number;
 }
 
+/**
+ * Branch projection configuration
+ */
+export interface BranchProjectionConfig {
+  /** Base branch (e.g., "dev") */
+  baseBranch: string;
+  /** Branches to include in the projection */
+  includeBranches: string[];
+}
+
+/**
+ * Conflict detected in branch projection
+ */
+export interface BranchConflict {
+  file_path: string;
+  branches: string[];
+  conflict_type: 'both_modified' | 'deleted_modified' | 'renamed';
+}
+
 export interface ArmadaContextValue {
   // Connection state
   isConnected: boolean;
@@ -83,6 +102,10 @@ export interface ArmadaContextValue {
   availableModes: GraphMode[];
   setMode: (mode: GraphMode) => void;
 
+  // Branch projection state
+  branchProjection: BranchProjectionConfig | null;
+  setBranchProjection: (config: BranchProjectionConfig | null) => void;
+
   // Refresh state
   isRefreshing: boolean;
 
@@ -90,12 +113,12 @@ export interface ArmadaContextValue {
   connect: (config: ArmadaConnectionConfig) => Promise<void>;
   disconnect: () => void;
 
-  // Data fetching
+  // Data fetching (returns conflicts when branch projection is active)
   fetchDiagram: (
     type: DiagramType,
     scope?: ScopeConfig,
     mode?: GraphMode
-  ) => Promise<CoralDocument>;
+  ) => Promise<CoralDocument & { conflicts?: BranchConflict[] }>;
 
   // Symbol fetching
   fetchSymbols: (scope: string) => Promise<ArmadaSymbol[]>;
@@ -159,6 +182,11 @@ function ArmadaProviderInner({
   // Mode state
   const [currentMode, setCurrentMode] = useState<GraphMode | null>(
     initialConfig?.mode ?? null
+  );
+
+  // Branch projection state
+  const [branchProjection, setBranchProjectionState] = useState<BranchProjectionConfig | null>(
+    null
   );
   const [availableModes, setAvailableModes] = useState<GraphMode[]>(DEFAULT_MODES);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -248,12 +276,19 @@ function ArmadaProviderInner({
     client.invalidateQueries({ queryKey: ['armada', 'diagram'] });
   }, [client, onModeChange]);
 
+  // Set branch projection
+  const setBranchProjection = useCallback((config: BranchProjectionConfig | null) => {
+    setBranchProjectionState(config);
+    // Invalidate diagram-related queries when branch projection changes
+    client.invalidateQueries({ queryKey: ['armada', 'diagram'] });
+  }, [client]);
+
   // Fetch diagram
   const fetchDiagram = useCallback(async (
     type: DiagramType,
     scope?: ScopeConfig,
     mode?: GraphMode
-  ): Promise<CoralDocument> => {
+  ): Promise<CoralDocument & { conflicts?: BranchConflict[] }> => {
     if (!connectionState?.config) {
       throw new Error('Not connected to Armada');
     }
@@ -267,11 +302,17 @@ function ArmadaProviderInner({
       url.searchParams.set('filter', scope.rootPath);
     }
 
+    // Add branch projection parameters
+    if (branchProjection) {
+      const branches = [branchProjection.baseBranch, ...branchProjection.includeBranches];
+      url.searchParams.set('include_branches', branches.join(','));
+    }
+
     const response = await fetch(url.toString());
     if (!response.ok) throw new Error('Failed to fetch diagram');
 
     return response.json();
-  }, [connectionState, currentMode]);
+  }, [connectionState, currentMode, branchProjection]);
 
   // Fetch symbols for a scope (file or directory)
   const fetchSymbols = useCallback(async (scope: string): Promise<ArmadaSymbol[]> => {
@@ -341,6 +382,8 @@ function ArmadaProviderInner({
     currentMode,
     availableModes,
     setMode,
+    branchProjection,
+    setBranchProjection,
     isRefreshing,
     connect,
     disconnect,

@@ -472,4 +472,191 @@ describe('ArmadaProvider', () => {
       expect(results).toEqual([]);
     });
   });
+
+  // ============================================================================
+  // Issue #13: Branch projection support
+  // ============================================================================
+
+  describe('branch projection', () => {
+    it('should expose branchProjection state', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.branchProjection).toBeDefined();
+      });
+    });
+
+    it('should expose setBranchProjection function', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.setBranchProjection).toBeDefined();
+        expect(typeof contextRef?.setBranchProjection).toBe('function');
+      });
+    });
+
+    it('should pass includeBranches to fetch calls', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/graph')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              schemaVersion: '1.0.0',
+              content: { format: 'graph-ir', graphIR: { nodes: [], edges: [] } },
+              conflicts: [],
+            }),
+          });
+        }
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Set branch projection
+      act(() => {
+        contextRef!.setBranchProjection({
+          baseBranch: 'dev',
+          includeBranches: ['feature/auth', 'feature/api'],
+        });
+      });
+
+      // Fetch diagram - should include branches in URL
+      await contextRef!.fetchDiagram('module-graph');
+
+      // Check that includeBranches was passed
+      const graphCalls = mockFetch.mock.calls.filter(
+        (call) => call[0].includes('/api/graph')
+      );
+      expect(graphCalls.length).toBeGreaterThan(0);
+      const lastCall = graphCalls[graphCalls.length - 1][0];
+      expect(lastCall).toContain('include_branches=');
+    });
+
+    it('should return conflicts from fetch response', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      const mockConflicts = [
+        {
+          file_path: 'src/auth/handler.ts',
+          branches: ['feature/auth', 'feature/api'],
+          conflict_type: 'both_modified',
+        },
+      ];
+
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/graph')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              schemaVersion: '1.0.0',
+              content: { format: 'graph-ir', graphIR: { nodes: [], edges: [] } },
+              conflicts: mockConflicts,
+            }),
+          });
+        }
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Fetch diagram with branch projection
+      act(() => {
+        contextRef!.setBranchProjection({
+          baseBranch: 'dev',
+          includeBranches: ['feature/auth'],
+        });
+      });
+
+      const result = await contextRef!.fetchDiagram('module-graph');
+
+      // Should include conflicts in response
+      expect(result.conflicts).toEqual(mockConflicts);
+    });
+  });
 });
