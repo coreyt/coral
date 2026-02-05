@@ -170,6 +170,14 @@ const queryClient = new QueryClient({
   },
 });
 
+/**
+ * Clear all cached queries. Use in tests to ensure fresh state.
+ * @internal - For testing only
+ */
+export function clearArmadaQueryCache(): void {
+  queryClient.clear();
+}
+
 // ============================================================================
 // Provider Component
 // ============================================================================
