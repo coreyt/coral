@@ -76,6 +76,9 @@ export interface DiagramRendererProps {
   /** Called when a node is double-clicked (for navigation) */
   onNodeDoubleClick?: (nodeData: InspectorNodeData) => void;
 
+  /** Programmatically select a node by symbolId */
+  selectedSymbolId?: string | null;
+
   /** The type of diagram being rendered */
   diagramType?: DiagramType;
 
@@ -118,6 +121,7 @@ export function DiagramRenderer({
   error,
   onNodeSelect,
   onNodeDoubleClick,
+  selectedSymbolId,
   diagramType = 'module-graph',
   notation: notationProp,
   onNotationChange,
@@ -182,6 +186,33 @@ export function DiagramRenderer({
 
     layoutGraph();
   }, [graphIR, layoutDirection, setNodes, setEdges]);
+
+  // Handle programmatic selection via selectedSymbolId prop
+  useEffect(() => {
+    if (selectedSymbolId === undefined) return;
+
+    // Update nodes to reflect selection
+    setNodes((prevNodes) =>
+      prevNodes.map((node) => ({
+        ...node,
+        selected: selectedSymbolId !== null && (node.data?.symbolId === selectedSymbolId || node.id === selectedSymbolId),
+      }))
+    );
+
+    // Notify parent of selection change
+    if (selectedSymbolId === null) {
+      onNodeSelect?.(null);
+    } else {
+      // Find the selected node and call onNodeSelect
+      const selectedNode = nodes.find(
+        (n) => n.data?.symbolId === selectedSymbolId || n.id === selectedSymbolId
+      ) as Node<SymbolNodeData> | undefined;
+
+      if (selectedNode) {
+        onNodeSelect?.(toInspectorNodeData(selectedNode));
+      }
+    }
+  }, [selectedSymbolId, setNodes, onNodeSelect, nodes]);
 
   // Handle selection changes
   const handleSelectionChange = useCallback(

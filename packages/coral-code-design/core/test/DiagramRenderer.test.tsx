@@ -422,4 +422,136 @@ describe('DiagramRenderer', () => {
       });
     });
   });
+
+  // ============================================================================
+  // Issue #15: Programmatic node selection
+  // ============================================================================
+
+  describe('programmatic selection', () => {
+    it('should accept selectedSymbolId prop', () => {
+      expect(() => {
+        renderDiagramRenderer({
+          graphIR: mockGraphIR,
+          isLoading: false,
+          selectedSymbolId: 'node1',
+        });
+      }).not.toThrow();
+    });
+
+    it('should trigger selection effect when selectedSymbolId is provided', async () => {
+      const onNodeSelect = vi.fn();
+
+      renderDiagramRenderer({
+        graphIR: mockGraphIR,
+        isLoading: false,
+        selectedSymbolId: 'node1',
+        onNodeSelect,
+      });
+
+      // The selection effect should call onNodeSelect with the matching node
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalledWith(
+          expect.objectContaining({
+            symbolId: 'node1',
+          })
+        );
+      });
+    });
+
+    it('should call onNodeSelect when selectedSymbolId is set', async () => {
+      const onNodeSelect = vi.fn();
+
+      renderDiagramRenderer({
+        graphIR: mockGraphIR,
+        isLoading: false,
+        selectedSymbolId: 'node1',
+        onNodeSelect,
+      });
+
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalled();
+      });
+
+      // Should be called with node data
+      expect(onNodeSelect).toHaveBeenCalledWith(
+        expect.objectContaining({
+          symbolId: 'node1',
+        })
+      );
+    });
+
+    it('should update selection when selectedSymbolId changes', async () => {
+      // This test verifies that changing selectedSymbolId triggers setNodes
+      // The mock doesn't fully simulate React state, so we verify the effect runs
+
+      const onNodeSelect = vi.fn();
+      const { rerender } = render(
+        <DiagramRenderer
+          graphIR={mockGraphIR}
+          isLoading={false}
+          error={null}
+          selectedSymbolId="node1"
+          onNodeSelect={onNodeSelect}
+        />
+      );
+
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalled();
+      });
+
+      onNodeSelect.mockClear();
+
+      // Rerender with different selection
+      rerender(
+        <DiagramRenderer
+          graphIR={mockGraphIR}
+          isLoading={false}
+          error={null}
+          selectedSymbolId="node2"
+          onNodeSelect={onNodeSelect}
+        />
+      );
+
+      // onNodeSelect should be called for the new selection
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalled();
+      });
+    });
+
+    it('should clear selection when selectedSymbolId is null', async () => {
+      const onNodeSelect = vi.fn();
+
+      const { rerender } = render(
+        <DiagramRenderer
+          graphIR={mockGraphIR}
+          isLoading={false}
+          error={null}
+          selectedSymbolId="node1"
+          onNodeSelect={onNodeSelect}
+        />
+      );
+
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalled();
+      });
+
+      onNodeSelect.mockClear();
+
+      // Rerender with null selection
+      rerender(
+        <DiagramRenderer
+          graphIR={mockGraphIR}
+          isLoading={false}
+          error={null}
+          selectedSymbolId={null}
+          onNodeSelect={onNodeSelect}
+        />
+      );
+
+      // onNodeSelect should be called with null for clearing
+      await vi.waitFor(() => {
+        expect(onNodeSelect).toHaveBeenCalledWith(null);
+      });
+    });
+  });
 });

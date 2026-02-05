@@ -105,6 +105,7 @@ function AppContent() {
   // UI state
   const [searchOpen, setSearchOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState<InspectorNodeData | null>(null);
+  const [selectedSymbolId, setSelectedSymbolId] = useState<string | null>(null);
   const [codeContent, setCodeContent] = useState<string | null>(null);
   const [codeLoading, setCodeLoading] = useState(false);
   const [codeError, setCodeError] = useState<string | null>(null);
@@ -208,6 +209,8 @@ function AppContent() {
   // Handle node selection from diagram
   const handleNodeSelect = useCallback((nodeData: InspectorNodeData | null) => {
     setSelectedNode(nodeData);
+    // Clear programmatic selection to prevent loops
+    setSelectedSymbolId(null);
     // Auto-switch to properties tab when selecting a node
     if (nodeData) {
       setInspectorTab('properties');
@@ -285,9 +288,10 @@ function AppContent() {
         isLoading={diagramLoading}
         error={diagramError}
         onNodeSelect={handleNodeSelect}
+        selectedSymbolId={selectedSymbolId}
       />
     );
-  }, [activeDiagramId, isConnected, graphIR, diagramLoading, diagramError, handleNodeSelect, openArmadaDialog]);
+  }, [activeDiagramId, isConnected, graphIR, diagramLoading, diagramError, handleNodeSelect, openArmadaDialog, selectedSymbolId]);
 
   // Render inspector content based on tab
   const renderInspectorContent = () => {
@@ -332,8 +336,8 @@ function AppContent() {
               setInspectorTab('code');
             }}
             onSymbolSelect={(symbolId) => {
-              // Find symbol in diagram and select
-              console.log('Symbol selected:', symbolId);
+              // Select the corresponding node in the diagram
+              setSelectedSymbolId(symbolId);
             }}
             onDirectoryExpand={expandDirectory}
             onDirectoryCollapse={collapseDirectory}
