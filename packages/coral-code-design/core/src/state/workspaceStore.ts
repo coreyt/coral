@@ -48,6 +48,7 @@ export interface WorkspaceState {
   createNamedLayout: (name: string, description?: string) => NamedLayout;
   loadNamedLayout: (layoutId: string) => void;
   deleteNamedLayout: (layoutId: string) => void;
+  setSavedLayouts: (layouts: NamedLayout[]) => void;
 
   // Annotations
   updateAnnotations: (annotations: Partial<AnnotationStore>) => void;
@@ -178,6 +179,8 @@ export const useWorkspaceStore = create<WorkspaceState>((set, get) => ({
   deleteNamedLayout: (layoutId) => set((state) => ({
     savedLayouts: state.savedLayouts.filter(l => l.id !== layoutId),
   })),
+
+  setSavedLayouts: (layouts) => set({ savedLayouts: layouts }),
 
   // Annotation actions
   updateAnnotations: (annotations) => set((state) => {

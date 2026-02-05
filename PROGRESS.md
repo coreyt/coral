@@ -303,6 +303,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 
 | Issue | Description | Status |
 |-------|-------------|--------|
+| #13 | Branch projection support | ✅ Complete |
 | #14 | Navigator lazy loading callback | ✅ Complete |
 | #15 | Symbol click selects diagram node | ✅ Complete |
 | #16 | Search palette with Armada queries | ✅ Complete |
@@ -312,19 +313,20 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 
 | Feature | Commit | Details |
 |---------|--------|---------|
+| Branch projection support | ba0f955 | BranchProjectionConfig, setBranchProjection, include_branches param |
 | Navigator lazy loading | 3db3358 | onDirectoryExpand/onDirectoryCollapse callbacks |
 | Programmatic node selection | 9c15151 | selectedSymbolId prop on DiagramRenderer |
 | Search functionality | 0c62a13 | ArmadaProvider.search() method |
 
 ### Branch Projection
 
-Armada #26 (MCP tools with `include_branches`) is now **complete**. coral-code-design can implement branch projection UI (#13) when ready.
+Armada #26 (MCP tools with `include_branches`) is now **complete**. coral-code-design has implemented the backend support (#13). The UI for branch selection can be added as a follow-up.
 
 See: `dev/specs/armada-branch-projection.md`
 
 ### Tests
 
-- 93+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
+- 97+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
 - Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog
 
 ---

@@ -5,8 +5,16 @@
  * Designed for VS Code compatibility - no direct filesystem access.
  */
 
-import { createContext, useContext, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { useWorkspaceStore } from '../state/workspaceStore';
+import {
+  saveWorkspaceConfig,
+  loadWorkspaceConfig,
+  saveLayout as persistLayout,
+  loadLayouts,
+  saveAnnotations as persistAnnotations,
+  loadAnnotations,
+} from '../persistence/workspacePersistence';
 import type {
   Workspace,
   WorkspaceSettings,
@@ -109,26 +117,34 @@ export function WorkspaceProvider({
     store.setError(null);
 
     try {
-      // Load workspace config from .coral-code-design/workspace.json
-      const configPath = `${rootPath}/.coral-code-design/workspace.json`;
-
       let workspace: Workspace;
 
-      if (fileSystemAdapter && await fileSystemAdapter.exists(configPath)) {
-        const content = await fileSystemAdapter.readFile(configPath);
-        workspace = JSON.parse(content);
-      } else {
-        // Create new workspace
-        workspace = createDefaultWorkspace(rootPath);
+      if (fileSystemAdapter) {
+        // Try to load existing workspace config
+        const loadedWorkspace = await loadWorkspaceConfig(fileSystemAdapter, rootPath);
 
-        // Save it
-        if (fileSystemAdapter) {
-          await fileSystemAdapter.mkdir(`${rootPath}/.coral-code-design`);
-          await fileSystemAdapter.writeFile(
-            configPath,
-            JSON.stringify(workspace, null, 2)
-          );
+        if (loadedWorkspace) {
+          workspace = loadedWorkspace;
+
+          // Load saved layouts
+          const layouts = await loadLayouts(fileSystemAdapter, rootPath);
+          store.setSavedLayouts(layouts);
+
+          // Load annotations (merge with workspace's annotations)
+          const loadedAnnotations = await loadAnnotations(fileSystemAdapter, rootPath);
+          if (loadedAnnotations) {
+            workspace = { ...workspace, annotations: loadedAnnotations };
+          }
+        } else {
+          // Create new workspace
+          workspace = createDefaultWorkspace(rootPath);
+
+          // Save it
+          await saveWorkspaceConfig(fileSystemAdapter, workspace);
         }
+      } else {
+        // No file system adapter, create in-memory workspace
+        workspace = createDefaultWorkspace(rootPath);
       }
 
       store.setWorkspace(workspace);
@@ -163,9 +179,14 @@ export function WorkspaceProvider({
   // Layout operations
   const saveLayout = useCallback(async (name: string, description?: string): Promise<NamedLayout> => {
     const layout = store.createNamedLayout(name, description);
-    // TODO: Persist to filesystem
+
+    // Persist to filesystem
+    if (fileSystemAdapter && store.workspace) {
+      await persistLayout(fileSystemAdapter, store.workspace.rootPath, layout);
+    }
+
     return layout;
-  }, [store]);
+  }, [store, fileSystemAdapter]);
 
   const loadLayout = useCallback((layoutId: string) => {
     store.loadNamedLayout(layoutId);
@@ -185,8 +206,46 @@ export function WorkspaceProvider({
   }, [store]);
 
   const saveAnnotations = useCallback(async () => {
-    // TODO: Persist to filesystem
-  }, []);
+    if (!fileSystemAdapter || !store.workspace) return;
+
+    await persistAnnotations(
+      fileSystemAdapter,
+      store.workspace.rootPath,
+      store.workspace.annotations
+    );
+  }, [store, fileSystemAdapter]);
+
+  // Auto-save workspace changes (debounced)
+  const autoSaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (!fileSystemAdapter || !store.workspace) return;
+
+    // Clear any pending auto-save
+    if (autoSaveTimeoutRef.current) {
+      clearTimeout(autoSaveTimeoutRef.current);
+    }
+
+    // Schedule auto-save after 1 second of inactivity
+    autoSaveTimeoutRef.current = setTimeout(async () => {
+      try {
+        await saveWorkspaceConfig(fileSystemAdapter, store.workspace!);
+      } catch (error) {
+        console.error('Failed to auto-save workspace:', error);
+      }
+    }, 1000);
+
+    return () => {
+      if (autoSaveTimeoutRef.current) {
+        clearTimeout(autoSaveTimeoutRef.current);
+      }
+    };
+  }, [
+    fileSystemAdapter,
+    store.workspace?.openDiagrams,
+    store.workspace?.activeLayout,
+    store.workspace?.settings,
+  ]);
 
   const value: WorkspaceContextValue = {
     workspace: store.workspace,
