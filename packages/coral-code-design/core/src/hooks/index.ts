@@ -31,3 +31,8 @@ export {
   type ExportFormat,
   type UseExportResult,
 } from './useExport';
+
+export {
+  useMultiDiagram,
+  type UseMultiDiagramResult,
+} from './useMultiDiagram';
