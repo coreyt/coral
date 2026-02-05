@@ -453,6 +453,37 @@ Proposed strategy for bridging code → infrastructure knowledge gap:
 | #32 | Codebase Overview & Armada Breadcrumbs |
 | #33 | Font Customization (viz package) |
 
+### Armada Integration Test Suite ✓
+
+Created comprehensive integration test infrastructure for Armada MCP tools:
+
+**Files Created:**
+- `packages/mcp-server/test/integration/armada-integration.test.ts` - 30+ tests
+- `packages/mcp-server/test/integration/validate-armada.ts` - CLI validation script
+- `packages/mcp-server/test/integration/README.md` - Documentation with current state
+
+**Test Categories:**
+- Indexer Correctness (4 tests) - Verify known symbols indexed correctly
+- Semantic Search (4 tests) - Natural language code discovery
+- Query Filtering (3 tests) - Type filters, limits, empty handling
+- Context Retrieval (3 tests) - Scoped context queries
+- Dependency Graph (3 tests) - Upstream/downstream traversal
+- Impact Analysis (2 tests) - Blast radius calculation
+- Call Tracing (2 tests) - Call path discovery
+- Response Format (3 tests) - API structure validation
+- Edge Cases (4 tests) - Robustness testing
+- Performance (3 tests) - Query timing benchmarks
+
+**Current Armada State (verified via MCP):**
+- 5,552 nodes indexed (757 functions, 187 classes, 175 modules)
+- 10,914 edges in knowledge graph
+- 2,071 vector store points for semantic search
+
+**Identified Gaps:**
+- `what_uses` and `what_breaks` often return 0 results for widely-used symbols
+- Some tools have missing modules (e.g., `find_tests_for`)
+- Semantic search could rank exact name matches higher
+
 ---
 
 **Last Updated**: 2026-02-05
