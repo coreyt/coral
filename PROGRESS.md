@@ -291,13 +291,42 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 61cae34 Scaffold coral-code-design package structure
 ```
 
-### Future Enhancements (Phase 2)
+---
 
-- Directory lazy loading triggered from Navigator (currently local state)
-- Symbol click → select in diagram
-- Search palette → Armada queries
-- Branch projection UI (when Armada supports it)
+## coral-code-design: Phase 2 (Enhancements)
+
+**Status**: In Progress
+
+**Deliverable**: Enhanced navigation, search, and persistence
+
+### GitHub Issues
+
+| Issue | Description | Status |
+|-------|-------------|--------|
+| #14 | Navigator lazy loading callback | ✅ Complete |
+| #15 | Symbol click selects diagram node | ✅ Complete |
+| #16 | Search palette with Armada queries | ✅ Complete |
+| #17 | Workspace configuration persistence | ❌ Not started |
+
+### Implementation
+
+| Feature | Commit | Details |
+|---------|--------|---------|
+| Navigator lazy loading | 3db3358 | onDirectoryExpand/onDirectoryCollapse callbacks |
+| Programmatic node selection | 9c15151 | selectedSymbolId prop on DiagramRenderer |
+| Search functionality | 0c62a13 | ArmadaProvider.search() method |
+
+### Branch Projection
+
+Armada #26 (MCP tools with `include_branches`) is now **complete**. coral-code-design can implement branch projection UI (#13) when ready.
+
+See: `dev/specs/armada-branch-projection.md`
+
+### Tests
+
+- 93+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
+- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog
 
 ---
 
-**Last Updated**: 2026-02-04
+**Last Updated**: 2026-02-05
