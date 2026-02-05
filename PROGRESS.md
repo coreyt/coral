@@ -297,7 +297,7 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 
 **Status**: Complete
 
-**Deliverable**: Enhanced navigation, search, and persistence
+**Deliverable**: Enhanced navigation, search, persistence, annotations, export, and theming
 
 ### GitHub Issues
 
@@ -309,6 +309,9 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | #16 | Search palette with Armada queries | ✅ Complete |
 | #17 | Workspace configuration persistence | ✅ Complete |
 | #18 | Branch selection UI | ✅ Complete |
+| #19 | CCD-REQ-006: Annotation Layer | ✅ Complete |
+| #20 | CCD-REQ-009: Export and Sharing | ✅ Complete |
+| #21 | CCD-REQ-010: Theming and Accessibility | ✅ Complete |
 
 ### Implementation
 
@@ -320,6 +323,9 @@ bf65b62 Implement coral-code-design Phase 1: workspace, diagram, code preview
 | Search functionality | 0c62a13 | ArmadaProvider.search() method |
 | Workspace persistence | 72a9905 | Save/load workspace config, layouts, annotations to .coral-code-design/ |
 | Branch selection UI | 6ed5d92 | BranchSelector component, fetchBranches, ArmadaDialog integration |
+| Theming and accessibility | a467a50 | ThemeProvider, light/dark/high-contrast themes, CSS custom properties |
+| Annotation layer | 62b470a | useAnnotations hook with node/edge/group annotations, tags, orphan management |
+| Export and sharing | db670c4 | useExport hook for Coral DSL, JSON, Markdown export with clipboard/download |
 
 ### Branch Projection
 
@@ -329,9 +335,9 @@ See: `dev/specs/armada-branch-projection.md`
 
 ### Tests
 
-- 122+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
-- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog, workspacePersistence, BranchSelector
+- 163+ tests passing in core package (some memory issues during teardown, documented in `dev/vitest-memory-issue.md`)
+- Test files: Navigator, DiagramRenderer, ArmadaProvider, CodePreview, useFileTree, useSymbolOutline, useDiagramData, ArmadaConnectionDialog, workspacePersistence, BranchSelector, ThemeProvider, useAnnotations, useExport
 
 ---
 
-**Last Updated**: 2026-02-05
+**Last Updated**: 2026-02-04
