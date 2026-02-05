@@ -354,6 +354,8 @@ See: `dev/specs/armada-branch-projection.md`
 | #23 | CCD-REQ-006 (UI): Annotation Panel | ✅ Complete |
 | #24 | CCD-REQ-009 (UI): Export Dialog | ✅ Complete |
 | #25 | CCD-REQ-010 (UI): Theme Switcher | ✅ Complete |
+| #26 | CCD-REQ-007: Filter and Focus | ✅ Complete |
+| #27 | CCD-REQ-005: Live Diagram Updates | ✅ Complete |
 
 ### Implementation
 
@@ -365,11 +367,17 @@ See: `dev/specs/armada-branch-projection.md`
 | useMultiDiagram | `core/src/hooks/useMultiDiagram.ts` | Diagram state, layouts, linked selection, presets |
 | DiagramTabs | `core/src/components/DiagramTabs/` | Tab bar with close buttons, add button, keyboard nav |
 | SplitPane | `core/src/components/SplitPane/` | Resizable split container, ARIA slider |
+| useFilteredDiagram | `core/src/hooks/useFilteredDiagram.ts` | Node filtering by type/path/tags, focus mode, filter presets |
+| FilterPanel | `core/src/components/FilterPanel/` | Filter UI, path pattern input, preset management |
+| useLiveDiagram | `core/src/hooks/useLiveDiagram.ts` | Auto-refresh, stale detection, diff tracking, position preservation |
+| RefreshControl | `core/src/components/RefreshControl/` | Manual/auto refresh toggle, loading indicator |
+| StaleIndicator | `core/src/components/StaleIndicator/` | Visual stale badge with timestamp |
+| DiffOverlay | `core/src/components/DiffOverlay/` | Added/removed/modified node summary badges |
 
 ### Tests
 
-- 249 tests passing in core package
-- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView
+- 312 tests passing in core package
+- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView, FilterPanel, LiveDiagram
 
 ---
 
