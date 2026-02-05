@@ -43,3 +43,10 @@ export {
   type FilterPreset,
   type UseFilteredDiagramResult,
 } from './useFilteredDiagram';
+
+export {
+  useLiveDiagram,
+  type DiagramDiff,
+  type UseLiveDiagramOptions,
+  type UseLiveDiagramResult,
+} from './useLiveDiagram';

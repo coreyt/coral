@@ -18,3 +18,6 @@ export { AnnotationPanel, type AnnotationPanelProps, type SelectedNode } from '.
 export { DiagramTabs, type DiagramTabsProps } from './DiagramTabs';
 export { SplitPane, type SplitPaneProps } from './SplitPane';
 export { FilterPanel, type FilterPanelProps } from './FilterPanel';
+export { RefreshControl, type RefreshControlProps } from './RefreshControl';
+export { StaleIndicator, type StaleIndicatorProps } from './StaleIndicator';
+export { DiffOverlay, type DiffOverlayProps, type DiagramDiff } from './DiffOverlay';
