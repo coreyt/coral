@@ -23,3 +23,8 @@ export {
   type SettingsPanelProps,
   type SettingsTab,
 } from './SettingsPanel.js';
+
+export {
+  FontSettingsForm,
+  type FontSettingsFormProps,
+} from './FontSettingsForm.js';

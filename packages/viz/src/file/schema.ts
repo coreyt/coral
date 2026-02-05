@@ -76,6 +76,8 @@ export interface DocumentSettings {
   notation: string;
   /** Layout configuration */
   layout: LayoutSettings;
+  /** Font settings (CORAL-REQ-012) */
+  font?: DiagramFontSettings;
 }
 
 /**
@@ -203,6 +205,117 @@ export interface ValidationResult {
   valid: boolean;
   /** List of validation errors */
   errors: string[];
+}
+
+// ============================================================================
+// Font Settings Types (CORAL-REQ-012)
+// ============================================================================
+
+/**
+ * Font settings for diagram text
+ */
+export interface FontSettings {
+  /** Font family (CSS font-family value) */
+  family: string;
+  /** Font size in pixels */
+  size: number;
+  /** Font weight */
+  weight: 'normal' | 'bold' | number;
+  /** Line height multiplier */
+  lineHeight: number;
+}
+
+/**
+ * Diagram font settings with optional symbol overrides
+ */
+export interface DiagramFontSettings {
+  /** Default font settings for all text */
+  default: FontSettings;
+  /** Override font settings for specific symbol types */
+  symbolOverrides?: Record<string, Partial<FontSettings>>;
+}
+
+/**
+ * Font family preset
+ */
+export interface FontFamilyPreset {
+  id: string;
+  name: string;
+  family: string;
+}
+
+/**
+ * Font size preset
+ */
+export interface FontSizePreset {
+  id: string;
+  name: string;
+  size: number;
+}
+
+/**
+ * Default font settings
+ */
+export const DEFAULT_FONT_SETTINGS: FontSettings = {
+  family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  size: 14,
+  weight: 'normal',
+  lineHeight: 1.3,
+};
+
+/**
+ * Font family presets
+ */
+export const FONT_FAMILY_PRESETS: FontFamilyPreset[] = [
+  {
+    id: 'system',
+    name: 'System',
+    family: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  },
+  {
+    id: 'sans',
+    name: 'Sans Serif',
+    family: '"Inter", "Helvetica Neue", Arial, sans-serif',
+  },
+  {
+    id: 'serif',
+    name: 'Serif',
+    family: '"Georgia", "Times New Roman", serif',
+  },
+  {
+    id: 'mono',
+    name: 'Monospace',
+    family: '"JetBrains Mono", "Fira Code", "Consolas", monospace',
+  },
+  {
+    id: 'handwritten',
+    name: 'Handwritten',
+    family: '"Comic Neue", "Comic Sans MS", cursive',
+  },
+];
+
+/**
+ * Font size presets
+ */
+export const FONT_SIZE_PRESETS: FontSizePreset[] = [
+  { id: 'small', name: 'Small', size: 11 },
+  { id: 'normal', name: 'Normal', size: 14 },
+  { id: 'large', name: 'Large', size: 16 },
+  { id: 'xlarge', name: 'Extra Large', size: 18 },
+];
+
+/**
+ * Get a font family preset by ID
+ */
+export function getFontFamilyPreset(id: string): FontFamilyPreset | undefined {
+  return FONT_FAMILY_PRESETS.find((p) => p.id === id);
+}
+
+/**
+ * Get a font size preset by ID
+ */
+export function getFontSizePreset(id: string): FontSizePreset | undefined {
+  return FONT_SIZE_PRESETS.find((p) => p.id === id);
 }
 
 // ============================================================================
