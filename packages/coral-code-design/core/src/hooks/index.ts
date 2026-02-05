@@ -58,3 +58,10 @@ export {
   type UseDiagramNavigationOptions,
   type UseDiagramNavigationResult,
 } from './useDiagramNavigation';
+
+export {
+  useSearch,
+  type SearchResult,
+  type UseSearchOptions,
+  type UseSearchResult,
+} from './useSearch';

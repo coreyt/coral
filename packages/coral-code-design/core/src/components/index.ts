@@ -23,3 +23,5 @@ export { StaleIndicator, type StaleIndicatorProps } from './StaleIndicator';
 export { DiffOverlay, type DiffOverlayProps, type DiagramDiff } from './DiffOverlay';
 export { Breadcrumbs, type BreadcrumbsProps } from './Breadcrumbs';
 export { DiagramTypeSelector, type DiagramTypeSelectorProps } from './DiagramTypeSelector';
+export { SearchDialog, type SearchDialogProps } from './SearchDialog';
+export { SearchResults, type SearchResultsProps } from './SearchResults';
