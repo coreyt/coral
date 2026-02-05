@@ -7,6 +7,8 @@
 
 import { useState, useCallback } from 'react';
 import type { GraphMode, ArmadaConnectionConfig } from '../../types';
+import type { BranchProjectionConfig } from '../../providers/ArmadaProvider';
+import { BranchSelector } from '../BranchSelector';
 
 /** Mode display names */
 const MODE_LABELS: Record<GraphMode, string> = {
@@ -50,6 +52,18 @@ export interface ArmadaConnectionDialogProps {
 
   /** Available graph modes */
   availableModes: GraphMode[];
+
+  /** Available branches (for branch projection) */
+  availableBranches?: string[];
+
+  /** Current branch projection */
+  branchProjection?: BranchProjectionConfig | null;
+
+  /** Called when branch projection changes */
+  onBranchProjectionChange?: (projection: BranchProjectionConfig | null) => void;
+
+  /** Called to fetch branches */
+  onFetchBranches?: () => Promise<string[]>;
 }
 
 export function ArmadaConnectionDialog({
@@ -61,9 +75,16 @@ export function ArmadaConnectionDialog({
   isConnecting,
   error,
   availableModes,
+  availableBranches = [],
+  branchProjection,
+  onBranchProjectionChange,
+  onFetchBranches,
 }: ArmadaConnectionDialogProps) {
   const [serverUrl, setServerUrl] = useState(initialServerUrl);
   const [mode, setMode] = useState<GraphMode>(initialMode);
+
+  // Whether to show branch selector
+  const showBranchSelector = onBranchProjectionChange && onFetchBranches;
 
   const handleConnect = useCallback(() => {
     onConnect({ serverUrl, mode });
@@ -227,6 +248,16 @@ export function ArmadaConnectionDialog({
             {MODE_DESCRIPTIONS[mode]}
           </p>
         </div>
+
+        {/* Branch Selector (optional) */}
+        {showBranchSelector && (
+          <BranchSelector
+            availableBranches={availableBranches}
+            currentProjection={branchProjection ?? null}
+            onChange={onBranchProjectionChange!}
+            onFetchBranches={onFetchBranches!}
+          />
+        )}
 
         {/* Error message */}
         {error && (

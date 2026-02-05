@@ -659,4 +659,142 @@ describe('ArmadaProvider', () => {
       expect(result.conflicts).toEqual(mockConflicts);
     });
   });
+
+  // ============================================================================
+  // Issue #18: Branch selection UI support
+  // ============================================================================
+
+  describe('fetchBranches', () => {
+    it('should fetch available branches from Armada', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      const mockBranches = ['main', 'dev', 'feature/auth', 'feature/api'];
+
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/branches')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ branches: mockBranches }),
+          });
+        }
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Fetch branches
+      const branches = await contextRef!.fetchBranches();
+
+      // Should have called the branches API
+      const branchCalls = mockFetch.mock.calls.filter(
+        (call) => call[0].includes('/api/branches')
+      );
+      expect(branchCalls.length).toBeGreaterThan(0);
+
+      // Should return branches
+      expect(branches).toEqual(mockBranches);
+    });
+
+    it('should return empty array when API returns error', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      mockFetch.mockImplementation((url: string) => {
+        if (url.includes('/api/branches')) {
+          return Promise.resolve({
+            ok: false,
+            status: 404,
+          });
+        }
+        if (url.includes('/health')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ status: 'ok' }),
+          });
+        }
+        if (url.includes('/api/stats')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ nodes: 100, edges: 200 }),
+          });
+        }
+        if (url.includes('/api/modes')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve(['call-graph']),
+          });
+        }
+        return Promise.reject(new Error('Unknown URL'));
+      });
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.isConnected).toBe(true);
+      });
+
+      // Fetch branches - should gracefully handle error
+      const branches = await contextRef!.fetchBranches();
+      expect(branches).toEqual([]);
+    });
+
+    it('should expose availableBranches state', async () => {
+      const initialConfig: ArmadaConnectionConfig = {
+        serverUrl: 'http://localhost:8765',
+        mode: 'call-graph',
+      };
+
+      let contextRef: ReturnType<typeof useArmada> | null = null;
+
+      render(
+        <ArmadaProvider initialConfig={initialConfig}>
+          <TestConsumer onMount={(ctx) => (contextRef = ctx)} />
+        </ArmadaProvider>
+      );
+
+      await waitFor(() => {
+        expect(contextRef?.availableBranches).toBeDefined();
+        expect(Array.isArray(contextRef?.availableBranches)).toBe(true);
+      });
+    });
+  });
 });

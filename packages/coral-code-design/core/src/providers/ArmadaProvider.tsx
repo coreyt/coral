@@ -105,6 +105,8 @@ export interface ArmadaContextValue {
   // Branch projection state
   branchProjection: BranchProjectionConfig | null;
   setBranchProjection: (config: BranchProjectionConfig | null) => void;
+  availableBranches: string[];
+  fetchBranches: () => Promise<string[]>;
 
   // Refresh state
   isRefreshing: boolean;
@@ -188,6 +190,7 @@ function ArmadaProviderInner({
   const [branchProjection, setBranchProjectionState] = useState<BranchProjectionConfig | null>(
     null
   );
+  const [availableBranches, setAvailableBranches] = useState<string[]>([]);
   const [availableModes, setAvailableModes] = useState<GraphMode[]>(DEFAULT_MODES);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -345,6 +348,31 @@ function ArmadaProviderInner({
     return data.results ?? [];
   }, [connectionState]);
 
+  // Fetch available branches
+  const fetchBranches = useCallback(async (): Promise<string[]> => {
+    if (!connectionState?.config) {
+      return [];
+    }
+
+    try {
+      const url = new URL(`${connectionState.config.serverUrl}/api/branches`);
+      const response = await fetch(url.toString());
+
+      if (!response.ok) {
+        // Armada may not support branches yet, return empty array
+        return [];
+      }
+
+      const data = await response.json();
+      const branches = data.branches ?? [];
+      setAvailableBranches(branches);
+      return branches;
+    } catch {
+      // Graceful fallback if API doesn't exist
+      return [];
+    }
+  }, [connectionState]);
+
   // Connect
   const connect = useCallback(async (config: ArmadaConnectionConfig) => {
     await connectMutation.mutateAsync(config);
@@ -384,6 +412,8 @@ function ArmadaProviderInner({
     setMode,
     branchProjection,
     setBranchProjection,
+    availableBranches,
+    fetchBranches,
     isRefreshing,
     connect,
     disconnect,

@@ -10,3 +10,4 @@ export { SearchPalette, type SearchPaletteProps, type SearchResult } from './Sea
 export { ArmadaConnectionDialog, type ArmadaConnectionDialogProps } from './ArmadaDialog';
 export { DiagramRenderer, type DiagramRendererProps } from './DiagramRenderer';
 export { CodePreview, type CodePreviewProps } from './CodePreview';
+export { BranchSelector, type BranchSelectorProps } from './BranchSelector';
