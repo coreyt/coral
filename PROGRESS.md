@@ -356,6 +356,8 @@ See: `dev/specs/armada-branch-projection.md`
 | #25 | CCD-REQ-010 (UI): Theme Switcher | ✅ Complete |
 | #26 | CCD-REQ-007: Filter and Focus | ✅ Complete |
 | #27 | CCD-REQ-005: Live Diagram Updates | ✅ Complete |
+| #28 | CCD-REQ-003: Diagram Types (C4-Inspired) | ✅ Complete |
+| #29 | CCD-REQ-008: Search and Discovery | ✅ Complete |
 
 ### Implementation
 
@@ -373,11 +375,17 @@ See: `dev/specs/armada-branch-projection.md`
 | RefreshControl | `core/src/components/RefreshControl/` | Manual/auto refresh toggle, loading indicator |
 | StaleIndicator | `core/src/components/StaleIndicator/` | Visual stale badge with timestamp |
 | DiffOverlay | `core/src/components/DiffOverlay/` | Added/removed/modified node summary badges |
+| useDiagramNavigation | `core/src/hooks/useDiagramNavigation.ts` | C4-inspired drill-down, history, breadcrumb navigation |
+| Breadcrumbs | `core/src/components/Breadcrumbs/` | Navigation trail with clickable history |
+| DiagramTypeSelector | `core/src/components/DiagramTypeSelector/` | Dropdown/compact type picker |
+| useSearch | `core/src/hooks/useSearch.ts` | Debounced search, history, keyboard navigation |
+| SearchDialog | `core/src/components/SearchDialog/` | Modal search with focus management |
+| SearchResults | `core/src/components/SearchResults/` | Results list with type grouping |
 
 ### Tests
 
-- 312 tests passing in core package
-- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView, FilterPanel, LiveDiagram
+- 368 tests passing in core package
+- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView, FilterPanel, LiveDiagram, DiagramNavigation, Search
 
 ---
 
