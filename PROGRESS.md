@@ -340,4 +340,37 @@ See: `dev/specs/armada-branch-projection.md`
 
 ---
 
+## coral-code-design: Phase 3 (UI Components)
+
+**Status**: Complete
+
+**Deliverable**: UI components for hooks implemented in Phase 2, plus Multi-Diagram View
+
+### GitHub Issues
+
+| Issue | Description | Status |
+|-------|-------------|--------|
+| #22 | CCD-REQ-002: Multi-Diagram View | ✅ Complete |
+| #23 | CCD-REQ-006 (UI): Annotation Panel | ✅ Complete |
+| #24 | CCD-REQ-009 (UI): Export Dialog | ✅ Complete |
+| #25 | CCD-REQ-010 (UI): Theme Switcher | ✅ Complete |
+
+### Implementation
+
+| Component | File | Features |
+|-----------|------|----------|
+| ThemeSwitcher | `core/src/components/ThemeSwitcher/` | 4 theme options, 3 variants (default, compact, dropdown), keyboard nav |
+| ExportDialog | `core/src/components/ExportDialog/` | Format selector, preview, copy to clipboard, download |
+| AnnotationPanel | `core/src/components/AnnotationPanel/` | Note editing, color picker, tags, orphan manager |
+| useMultiDiagram | `core/src/hooks/useMultiDiagram.ts` | Diagram state, layouts, linked selection, presets |
+| DiagramTabs | `core/src/components/DiagramTabs/` | Tab bar with close buttons, add button, keyboard nav |
+| SplitPane | `core/src/components/SplitPane/` | Resizable split container, ARIA slider |
+
+### Tests
+
+- 249 tests passing in core package
+- New test files: ThemeSwitcher, ExportDialog, AnnotationPanel, MultiDiagramView
+
+---
+
 **Last Updated**: 2026-02-04
