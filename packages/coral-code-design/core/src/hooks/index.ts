@@ -20,3 +20,8 @@ export {
   type UseSymbolOutlineOptions,
   type UseSymbolOutlineResult,
 } from './useSymbolOutline';
+
+export {
+  useAnnotations,
+  type UseAnnotationsResult,
+} from './useAnnotations';
