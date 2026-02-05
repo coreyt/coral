@@ -230,25 +230,122 @@ Critical for Coral: DSL → IR → DSL must produce equivalent output.
 
 ## Development Workflow
 
-### Model Routing
-- Use Opus for: architecture, complex debugging, planning, code review of critical paths
-- Use Sonnet for: implementation, tests, refactoring, documentation
-- Use Haiku for: codebase exploration, file search, simple lookups
+> **You are the orchestrator.** Delegate to specialized agents; manage flow between steps.
 
-### Workflow (follow for every task)
-1. Review or write the requirement document (check `dev/` or create one if missing)
-2. Review or write acceptance criteria within the requirement document
-3. Check `.claude/skills/` and project docs for relevant patterns or utilities
-4. Find or create a GitHub issue (`gh issue list` / `gh issue create`); tag with the relevant label
-5. Follow TDD:
-   a. Write tests that map to the acceptance criteria
-   b. Implement until all tests pass
-   c. Re-read the requirement and acceptance criteria — ask: "Was something important overlooked?"
-   d. If yes, add tests for overlooked items and implement until they pass
-6. Commit referencing the issue: `git commit -m "feat: description (#ISSUE_ID)"`
-7. Only push when fully implemented; close the issue on push
+### Flow
+
+```
+USER REQUEST → 1.Requirements → 2.Issue → 3.TDD → 4.Ship
+                [req-writer]    [you]    [tdd]   [you]
+```
+
+### Step 1: Requirements
+
+| | |
+|-|-|
+| **Owner** | `requirements-writer` agent |
+| **Entry** | User request |
+| **Exit** | `dev/requirements/REQ-XXX.md` with Given/When/Then ACs |
+
+**Action**: Check `dev/requirements/`. If missing → delegate:
+```
+"Create requirement for [feature]. Include testable acceptance criteria."
+```
+
+**Verify**: Scope defined · ACs testable · Dependencies listed
+
+**Errors**:
+- Too broad → ask to split
+- Untestable AC → return with feedback
+
+---
+
+### Step 2: Issue
+
+| | |
+|-|-|
+| **Owner** | Orchestrator |
+| **Entry** | Approved requirement |
+| **Exit** | GitHub issue referencing REQ-XXX |
+
+**Action**: `gh issue list --search "[keywords]"`. If none:
+```bash
+gh issue create --title "feat: [desc]" --body "Implements REQ-XXX" --label feature
+```
+
+---
+
+### Step 3: TDD
+
+| | |
+|-|-|
+| **Owner** | `tdd-implementer` agent |
+| **Entry** | Requirement + Issue # |
+| **Exit** | All tests green, implementation complete |
+
+**Action**: Delegate:
+```
+"Implement REQ-XXX via TDD. Issue #N. Tests first, then implement."
+```
+
+**Verify**: Test count ≥ AC count · No scope creep · Edge cases covered
+
+**Metacognition**: Re-read requirement. Overlooked anything? → delegate additions.
+
+**Errors**:
+- Architecture blocks test → revise requirement (Step 1)
+- Ambiguous AC → clarify with user, update req
+- Scope creep → revert unrelated changes
+
+---
+
+### Step 4: Ship
+
+| | |
+|-|-|
+| **Owner** | Orchestrator |
+| **Entry** | Tests passing |
+| **Exit** | Commit + issue closed (after user approval) |
+
+**Actions**:
+1. `git add [specific files]` (never `-A`)
+2. Commit: `feat: [desc] (#ISSUE)` referencing REQ-XXX
+3. Update requirement status → Complete
+4. Ask: "Ready to push and close #N?"
+
+**Errors**:
+- Hook fails → fix, NEW commit (never amend after failure)
+- User wants changes → Step 3
+
+---
+
+### Quick Reference
+
+| Step | Agent | Entry | Exit |
+|------|-------|-------|------|
+| 1 | requirements-writer | Request | REQ-XXX.md |
+| 2 | — | Requirement | Issue #N |
+| 3 | tdd-implementer | Req + Issue | Tests + Code |
+| 4 | — | Green tests | Commit |
+
+### Model Routing
+
+| Task | Model |
+|------|-------|
+| Requirements, architecture | Opus |
+| Implementation, tests | Sonnet |
+| File search, exploration | Haiku |
+
+### Anti-Patterns
+
+- Skip requirements → scope creep
+- Code before tests → violates TDD
+- `git add -A` → risks secrets
+- Amend after hook fail → destroys work
+- Push without approval → surprises user
 
 ### Commands
+
 ```bash
 # Run tests (from package directory)
 npm test                    # or: npx vitest run
@@ -258,18 +355,6 @@ npm run typecheck          # TypeScript
 # Run all tests in monorepo
 npm test --workspaces
 ```
-
-### GitHub Issue Labels
-- `bug` - Something isn't working
-- `feature` - New feature or enhancement
-- `chore` - Maintenance, refactoring, tests
-- `docs` - Documentation only
-- `integration` - Integration testing
-
-### Branch Strategy
-- Feature branches off `main`: `feat/ISSUE_ID-short-description`
-- Bug fix branches: `fix/ISSUE_ID-short-description`
-- Direct commits to `main` acceptable for small changes
 
 ---
 
