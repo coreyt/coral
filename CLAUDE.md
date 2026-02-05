@@ -228,6 +228,51 @@ Critical for Coral: DSL → IR → DSL must produce equivalent output.
 
 ---
 
+## Development Workflow
+
+### Model Routing
+- Use Opus for: architecture, complex debugging, planning, code review of critical paths
+- Use Sonnet for: implementation, tests, refactoring, documentation
+- Use Haiku for: codebase exploration, file search, simple lookups
+
+### Workflow (follow for every task)
+1. Review or write the requirement document (check `dev/` or create one if missing)
+2. Review or write acceptance criteria within the requirement document
+3. Check `.claude/skills/` and project docs for relevant patterns or utilities
+4. Find or create a GitHub issue (`gh issue list` / `gh issue create`); tag with the relevant label
+5. Follow TDD:
+   a. Write tests that map to the acceptance criteria
+   b. Implement until all tests pass
+   c. Re-read the requirement and acceptance criteria — ask: "Was something important overlooked?"
+   d. If yes, add tests for overlooked items and implement until they pass
+6. Commit referencing the issue: `git commit -m "feat: description (#ISSUE_ID)"`
+7. Only push when fully implemented; close the issue on push
+
+### Commands
+```bash
+# Run tests (from package directory)
+npm test                    # or: npx vitest run
+npm run lint               # ESLint
+npm run typecheck          # TypeScript
+
+# Run all tests in monorepo
+npm test --workspaces
+```
+
+### GitHub Issue Labels
+- `bug` - Something isn't working
+- `feature` - New feature or enhancement
+- `chore` - Maintenance, refactoring, tests
+- `docs` - Documentation only
+- `integration` - Integration testing
+
+### Branch Strategy
+- Feature branches off `main`: `feat/ISSUE_ID-short-description`
+- Bug fix branches: `fix/ISSUE_ID-short-description`
+- Direct commits to `main` acceptable for small changes
+
+---
+
 ## Directory Structure
 
 ```
