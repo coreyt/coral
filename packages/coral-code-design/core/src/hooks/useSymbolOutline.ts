@@ -10,6 +10,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useArmada, type ArmadaSymbol } from '../providers/ArmadaProvider';
+import { useWorkspace } from '../providers/WorkspaceProvider';
+import { normalizePath } from '../utils/pathUtils';
 import type { SymbolOutlineNode } from '../components/Navigator';
 
 export interface UseSymbolOutlineOptions {
@@ -112,6 +114,7 @@ export function useSymbolOutline(
   const { scope, types } = options;
 
   const armada = useArmada();
+  const workspace = useWorkspace();
   const [symbols, setSymbols] = useState<SymbolOutlineNode[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,7 +130,12 @@ export function useSymbolOutline(
     setError(null);
 
     try {
-      let nodes = await armada.fetchSymbols(scope);
+      // Normalize path to absolute before calling Armada API
+      // Requirement: CORAL-REQ-019 - Path Normalization for Armada Integration
+      const workspaceRoot = workspace.workspace?.rootPath;
+      const normalizedScope = normalizePath(scope, workspaceRoot);
+
+      let nodes = await armada.fetchSymbols(normalizedScope);
 
       // Filter by types if specified
       if (types && types.length > 0) {
@@ -143,7 +151,7 @@ export function useSymbolOutline(
     } finally {
       setIsLoading(false);
     }
-  }, [armada, scope, types]);
+  }, [armada, workspace.workspace?.rootPath, scope, types]);
 
   // Load symbols when scope changes
   useEffect(() => {

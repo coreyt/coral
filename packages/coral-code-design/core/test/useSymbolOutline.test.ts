@@ -10,6 +10,7 @@ import { useSymbolOutline, type UseSymbolOutlineOptions } from '../src/hooks/use
 import type { ArmadaContextValue } from '../src/providers/ArmadaProvider';
 import type { SymbolOutlineNode } from '../src/components/Navigator';
 import * as ArmadaModule from '../src/providers/ArmadaProvider';
+import * as WorkspaceModule from '../src/providers/WorkspaceProvider';
 
 // Mock useArmada
 vi.mock('../src/providers/ArmadaProvider', async () => {
@@ -20,20 +21,67 @@ vi.mock('../src/providers/ArmadaProvider', async () => {
   };
 });
 
-const mockUseArmada = vi.mocked(ArmadaModule.useArmada);
+// Mock useWorkspace
+vi.mock('../src/providers/WorkspaceProvider', async () => {
+  const actual = await vi.importActual('../src/providers/WorkspaceProvider');
+  return {
+    ...actual,
+    useWorkspace: vi.fn(),
+  };
+});
 
-// Mock Armada node data
+const mockUseArmada = vi.mocked(ArmadaModule.useArmada);
+const mockUseWorkspace = vi.mocked(WorkspaceModule.useWorkspace);
+
+// Mock Armada node data (using absolute paths as Armada returns)
+// IMPORTANT: Mock nodes MUST use absolute paths that match the workspace root + relative path
+// because useSymbolOutline normalizes paths before calling fetchSymbols.
+// Example: workspace root '/home/user/project' + 'src/user.ts' = '/home/user/project/src/user.ts'
+// If mock data doesn't match, filters like `mockArmadaNodes.filter(n => n.file === scope)` will fail.
 const mockArmadaNodes = [
-  { id: 'class:User', name: 'User', type: 'class', file: 'src/user.ts', startLine: 1, endLine: 50 },
-  { id: 'method:User.getName', name: 'getName', type: 'method', file: 'src/user.ts', startLine: 10, endLine: 15, parent: 'class:User' },
-  { id: 'method:User.setName', name: 'setName', type: 'method', file: 'src/user.ts', startLine: 17, endLine: 22, parent: 'class:User' },
-  { id: 'function:validate', name: 'validate', type: 'function', file: 'src/utils.ts', startLine: 1, endLine: 10 },
-  { id: 'interface:IUser', name: 'IUser', type: 'interface', file: 'src/types.ts', startLine: 1, endLine: 5 },
+  { id: 'class:User', name: 'User', type: 'class', file: '/home/user/project/src/user.ts', startLine: 1, endLine: 50 },
+  { id: 'method:User.getName', name: 'getName', type: 'method', file: '/home/user/project/src/user.ts', startLine: 10, endLine: 15, parent: 'class:User' },
+  { id: 'method:User.setName', name: 'setName', type: 'method', file: '/home/user/project/src/user.ts', startLine: 17, endLine: 22, parent: 'class:User' },
+  { id: 'function:validate', name: 'validate', type: 'function', file: '/home/user/project/src/utils.ts', startLine: 1, endLine: 10 },
+  { id: 'interface:IUser', name: 'IUser', type: 'interface', file: '/home/user/project/src/types.ts', startLine: 1, endLine: 5 },
 ];
 
 describe('useSymbolOutline', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Setup default workspace mock
+    mockUseWorkspace.mockReturnValue({
+      workspace: {
+        id: 'test-workspace',
+        name: 'Test Workspace',
+        rootPath: '/home/user/project',
+        armadaConnection: { serverUrl: 'http://localhost:8765', mode: 'call-graph' },
+        openDiagrams: [],
+        activeLayout: { type: 'single', primary: null },
+        annotations: { nodes: {}, edges: {} },
+        settings: {
+          defaultNotation: 'flowchart',
+          defaultDiagramType: 'call-graph',
+          autoRefresh: false,
+          refreshInterval: 30000,
+        },
+      },
+      isLoading: false,
+      error: null,
+      openWorkspace: vi.fn(),
+      closeWorkspace: vi.fn(),
+      updateSettings: vi.fn(),
+      openDiagram: vi.fn(),
+      closeDiagram: vi.fn(),
+      setActiveDiagram: vi.fn(),
+      saveLayout: vi.fn(),
+      loadLayout: vi.fn(),
+      getSavedLayouts: vi.fn(),
+      deleteLayout: vi.fn(),
+      getAnnotations: vi.fn(),
+      saveAnnotations: vi.fn(),
+    });
   });
 
   it('should return empty outline when not connected', () => {
@@ -97,7 +145,9 @@ describe('useSymbolOutline', () => {
   });
 
   it('should build hierarchy from flat Armada nodes', async () => {
-    const mockFetchSymbols = vi.fn().mockResolvedValue(mockArmadaNodes.filter(n => n.file === 'src/user.ts'));
+    const mockFetchSymbols = vi.fn().mockImplementation(async (scope: string) => {
+      return mockArmadaNodes.filter(n => n.file === scope);
+    });
 
     mockUseArmada.mockReturnValue({
       isConnected: true,
@@ -195,6 +245,8 @@ describe('useSymbolOutline', () => {
 
   it('should refresh symbols when scope changes', async () => {
     const mockFetchSymbols = vi.fn().mockImplementation(async (scope: string) => {
+      // Mock returns all nodes for the requested file
+      // scope will be normalized to absolute path by useSymbolOutline
       return mockArmadaNodes.filter(n => n.file === scope);
     });
 
@@ -234,7 +286,9 @@ describe('useSymbolOutline', () => {
   });
 
   it('should provide symbol metadata for selection', async () => {
-    const mockFetchSymbols = vi.fn().mockResolvedValue(mockArmadaNodes.filter(n => n.file === 'src/user.ts'));
+    const mockFetchSymbols = vi.fn().mockImplementation(async (scope: string) => {
+      return mockArmadaNodes.filter(n => n.file === scope);
+    });
 
     mockUseArmada.mockReturnValue({
       isConnected: true,

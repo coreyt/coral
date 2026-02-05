@@ -1618,6 +1618,119 @@ Extend the Armada datasource integration with filtering capabilities and a legen
 
 ---
 
+### CORAL-REQ-019: Path Normalization for Armada Integration
+
+**Traces To**: Integration testing for coral-code-design + Armada ATON
+**Status**: In Progress
+**Priority**: High
+**Created**: 2026-02-05
+
+#### Description
+
+Armada's `/api/symbols` endpoint requires absolute file paths, but coral-code-design's file tree and hooks may work with relative paths. Add path normalization to ensure all Armada API calls use absolute paths.
+
+#### Problem
+
+Integration testing revealed:
+- ❌ `/api/symbols?scope=packages/viz/src/index.ts` → Returns `[]` (empty)
+- ✅ `/api/symbols?scope=/home/coreyt/projects/coral/packages/viz/src/index.ts` → Returns symbols
+
+coral-code-design components (file tree, symbol outline) need to convert relative paths to absolute paths before calling Armada endpoints.
+
+#### User Story
+
+As a developer using coral-code-design:
+1. I open a file in the file tree navigator
+2. The symbol outline panel loads automatically
+3. I see all symbols in the file without errors
+4. The app handles path conversion transparently
+
+#### Implementation Location
+
+```
+packages/coral-code-design/core/src/
+├── hooks/
+│   ├── useSymbolOutline.ts    # Add path normalization before API call
+│   └── useFileTree.ts          # Ensure absolute paths in file tree
+├── providers/
+│   └── WorkspaceProvider.tsx  # Store workspace root for path resolution
+└── utils/
+    └── pathUtils.ts            # NEW: Path normalization utilities
+```
+
+#### Acceptance Criteria
+
+**Given** a workspace with root `/home/user/project`
+**When** I request symbols for a relative path `packages/viz/src/index.ts`
+**Then** the API call uses absolute path `/home/user/project/packages/viz/src/index.ts`
+
+**Given** a workspace with root `/home/user/project`
+**When** I request symbols for an absolute path `/home/user/project/packages/viz/src/index.ts`
+**Then** the API call uses the path as-is (no double normalization)
+
+**Given** no workspace root is set
+**When** I request symbols for any path
+**Then** the path is used as-is (graceful degradation)
+
+- [ ] `normalizePath(path, root)` utility function works correctly
+- [ ] `isAbsolutePath(path)` utility function detects absolute vs relative
+- [ ] `useSymbolOutline` normalizes paths before calling `fetchSymbols()`
+- [ ] `useFileTree` returns absolute paths in file metadata
+- [ ] WorkspaceProvider stores workspace root from File System Access API
+- [ ] Tests for path normalization edge cases (Windows paths, .., ., etc.)
+- [ ] Integration test with Armada ATON verifies symbols load correctly
+
+#### PROGRESS.md Steps
+
+| Step | Description | Status |
+|------|-------------|--------|
+| 1 | Create `pathUtils.ts` with normalization utilities | Pending |
+| 2 | Add tests for `normalizePath` and `isAbsolutePath` | Pending |
+| 3 | Update `WorkspaceProvider` to store workspace root | Pending |
+| 4 | Update `useSymbolOutline` to normalize paths | Pending |
+| 5 | Update `useFileTree` to return absolute paths | Pending |
+| 6 | Integration test with real Armada server | Pending |
+
+#### Test Cases
+
+```typescript
+// pathUtils.test.ts
+describe('normalizePath', () => {
+  it('converts relative to absolute with workspace root', () => {
+    expect(normalizePath('packages/viz/src/index.ts', '/home/user/project'))
+      .toBe('/home/user/project/packages/viz/src/index.ts');
+  });
+
+  it('returns absolute path unchanged', () => {
+    expect(normalizePath('/home/user/project/packages/viz/src/index.ts', '/home/user/project'))
+      .toBe('/home/user/project/packages/viz/src/index.ts');
+  });
+
+  it('handles no workspace root gracefully', () => {
+    expect(normalizePath('packages/viz/src/index.ts', undefined))
+      .toBe('packages/viz/src/index.ts');
+  });
+
+  it('handles Windows paths', () => {
+    expect(normalizePath('packages\\viz\\src\\index.ts', 'C:\\project'))
+      .toBe('C:/project/packages/viz/src/index.ts');
+  });
+});
+```
+
+#### Design Decisions
+
+**Q: Should we normalize in the hook or in the provider?**
+A: In the hook (useSymbolOutline). This keeps the provider generic and allows different hooks to normalize differently if needed.
+
+**Q: What about Windows paths?**
+A: Normalize all paths to forward slashes for consistency. Armada uses forward slashes in its graph.
+
+**Q: Should we validate that workspace root exists?**
+A: No. Just normalize paths. If the path doesn't exist, Armada will return an empty array, which is acceptable.
+
+---
+
 ## Requirement Index
 
 | ID | Title | Traces To | Status |
@@ -1640,7 +1753,8 @@ Extend the Armada datasource integration with filtering capabilities and a legen
 | CORAL-REQ-016 | Auto-Recovery and Session Persistence | SYS-REQ-005 | Complete |
 | CORAL-REQ-017 | Armada HTTP Datasource for viz-demo | SYS-REQ-007 | Complete |
 | CORAL-REQ-018 | Filter UI and Legend for Armada | SYS-REQ-007 | Proposed |
+| CORAL-REQ-019 | Path Normalization for Armada Integration | N/A | In Progress |
 
 ---
 
-**Last Updated**: 2026-02-02 (Added CORAL-REQ-018 - Filter UI and Legend)
+**Last Updated**: 2026-02-05 (Added CORAL-REQ-019 - Path Normalization)
