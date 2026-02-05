@@ -1,0 +1,36 @@
+{
+  "id": "ws-minimal",
+  "name": "Minimal Workspace",
+  "rootPath": "/project",
+  "armadaConnection": {
+    "serverUrl": "http://localhost:8765",
+    "mode": "call-graph"
+  },
+  "openDiagrams": [],
+  "activeLayout": {
+    "mode": "tabs",
+    "panes": [],
+    "linkedSelection": false,
+    "linkedNavigation": false,
+    "scopeLinking": {
+      "enabled": false,
+      "mode": "manual",
+      "primaryPane": "",
+      "linkedPanes": []
+    }
+  },
+  "annotations": {
+    "version": "1.0.0",
+    "nodes": {},
+    "edges": {},
+    "groups": [],
+    "tags": [],
+    "orphaned": []
+  },
+  "settings": {
+    "defaultNotation": "architecture",
+    "defaultDiagramType": "codebase-overview",
+    "autoRefresh": false,
+    "refreshInterval": 30000
+  }
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "scip:src/auth/service.ts:AuthService#",
+    "name": "AuthService",
+    "type": "class",
+    "file": "src/auth/service.ts",
+    "startLine": 10,
+    "endLine": 150
+  },
+  {
+    "id": "scip:src/auth/service.ts:AuthService#constructor#",
+    "name": "constructor",
+    "type": "constructor",
+    "file": "src/auth/service.ts",
+    "startLine": 15,
+    "endLine": 20,
+    "parent": "scip:src/auth/service.ts:AuthService#"
+  },
+  {
+    "id": "scip:src/auth/service.ts:AuthService#authenticate#",
+    "name": "authenticate",
+    "type": "method",
+    "file": "src/auth/service.ts",
+    "startLine": 25,
+    "endLine": 60,
+    "parent": "scip:src/auth/service.ts:AuthService#"
+  },
+  {
+    "id": "scip:src/auth/service.ts:AuthService#validateToken#",
+    "name": "validateToken",
+    "type": "method",
+    "file": "src/auth/service.ts",
+    "startLine": 65,
+    "endLine": 85,
+    "parent": "scip:src/auth/service.ts:AuthService#"
+  },
+  {
+    "id": "scip:src/auth/service.ts:AuthService#refreshToken#",
+    "name": "refreshToken",
+    "type": "method",
+    "file": "src/auth/service.ts",
+    "startLine": 90,
+    "endLine": 120,
+    "parent": "scip:src/auth/service.ts:AuthService#"
+  },
+  {
+    "id": "scip:src/auth/service.ts:TokenPayload#",
+    "name": "TokenPayload",
+    "type": "interface",
+    "file": "src/auth/service.ts",
+    "startLine": 5,
+    "endLine": 8
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "branches": [
+    "main",
+    "dev",
+    "feature/auth-refactor",
+    "feature/api-v2",
+    "bugfix/login-issue",
+    "release/1.0.0"
+  ],
+  "defaultBranch": "main",
+  "currentBranch": "dev"
+}

@@ -1,0 +1,42 @@
+{
+  "results": [
+    {
+      "id": "scip:src/auth/service.ts:AuthService#",
+      "name": "AuthService",
+      "type": "class",
+      "file": "src/auth/service.ts",
+      "startLine": 10,
+      "endLine": 150,
+      "score": 0.95
+    },
+    {
+      "id": "scip:src/auth/service.ts:AuthService#authenticate#",
+      "name": "authenticate",
+      "type": "method",
+      "file": "src/auth/service.ts",
+      "startLine": 25,
+      "endLine": 60,
+      "score": 0.82
+    },
+    {
+      "id": "scip:src/auth/middleware.ts:authMiddleware#",
+      "name": "authMiddleware",
+      "type": "function",
+      "file": "src/auth/middleware.ts",
+      "startLine": 5,
+      "endLine": 35,
+      "score": 0.75
+    },
+    {
+      "id": "scip:src/types/auth.ts:AuthConfig#",
+      "name": "AuthConfig",
+      "type": "interface",
+      "file": "src/types/auth.ts",
+      "startLine": 1,
+      "endLine": 15,
+      "score": 0.68
+    }
+  ],
+  "totalCount": 4,
+  "query": "auth"
+}

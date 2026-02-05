@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "1.0.0",
+  "metadata": {
+    "name": "Module Graph",
+    "description": "Module dependency graph from Armada",
+    "tags": ["module", "dependency"],
+    "version": "1.0.0",
+    "created": "2024-01-15T10:00:00Z",
+    "modified": "2024-01-15T10:00:00Z"
+  },
+  "content": {
+    "format": "graph-ir",
+    "graphIR": {
+      "nodes": [
+        {
+          "id": "scip:src/index.ts:module#",
+          "label": "src/index.ts",
+          "type": "module",
+          "metadata": {
+            "file": "src/index.ts",
+            "lines": 45
+          }
+        },
+        {
+          "id": "scip:src/auth/index.ts:module#",
+          "label": "src/auth/index.ts",
+          "type": "module",
+          "metadata": {
+            "file": "src/auth/index.ts",
+            "lines": 120
+          }
+        },
+        {
+          "id": "scip:src/api/index.ts:module#",
+          "label": "src/api/index.ts",
+          "type": "module",
+          "metadata": {
+            "file": "src/api/index.ts",
+            "lines": 85
+          }
+        },
+        {
+          "id": "scip:src/utils/index.ts:module#",
+          "label": "src/utils/index.ts",
+          "type": "module",
+          "metadata": {
+            "file": "src/utils/index.ts",
+            "lines": 200
+          }
+        },
+        {
+          "id": "scip:src/db/index.ts:module#",
+          "label": "src/db/index.ts",
+          "type": "module",
+          "metadata": {
+            "file": "src/db/index.ts",
+            "lines": 150
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "e1",
+          "source": "scip:src/index.ts:module#",
+          "target": "scip:src/auth/index.ts:module#",
+          "relation": "imports"
+        },
+        {
+          "id": "e2",
+          "source": "scip:src/index.ts:module#",
+          "target": "scip:src/api/index.ts:module#",
+          "relation": "imports"
+        },
+        {
+          "id": "e3",
+          "source": "scip:src/auth/index.ts:module#",
+          "target": "scip:src/utils/index.ts:module#",
+          "relation": "imports"
+        },
+        {
+          "id": "e4",
+          "source": "scip:src/auth/index.ts:module#",
+          "target": "scip:src/db/index.ts:module#",
+          "relation": "imports"
+        },
+        {
+          "id": "e5",
+          "source": "scip:src/api/index.ts:module#",
+          "target": "scip:src/auth/index.ts:module#",
+          "relation": "imports"
+        },
+        {
+          "id": "e6",
+          "source": "scip:src/api/index.ts:module#",
+          "target": "scip:src/db/index.ts:module#",
+          "relation": "imports"
+        }
+      ]
+    }
+  },
+  "settings": {
+    "notation": "architecture",
+    "layout": {
+      "algorithm": "layered",
+      "direction": "TB",
+      "spacing": {
+        "nodeSpacing": 50,
+        "layerSpacing": 100
+      }
+    }
+  }
+}

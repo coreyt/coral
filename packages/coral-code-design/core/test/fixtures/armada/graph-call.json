@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "1.0.0",
+  "metadata": {
+    "name": "Call Graph",
+    "description": "Function call graph from Armada",
+    "tags": ["call", "function"],
+    "version": "1.0.0",
+    "created": "2024-01-15T10:00:00Z",
+    "modified": "2024-01-15T10:00:00Z"
+  },
+  "content": {
+    "format": "graph-ir",
+    "graphIR": {
+      "nodes": [
+        {
+          "id": "scip:src/api/handler.ts:handleRequest#",
+          "label": "handleRequest",
+          "type": "function",
+          "metadata": {
+            "file": "src/api/handler.ts",
+            "startLine": 15,
+            "endLine": 45,
+            "signature": "handleRequest(req: Request): Promise<Response>"
+          }
+        },
+        {
+          "id": "scip:src/auth/service.ts:AuthService#authenticate#",
+          "label": "authenticate",
+          "type": "method",
+          "metadata": {
+            "file": "src/auth/service.ts",
+            "startLine": 25,
+            "endLine": 60,
+            "signature": "authenticate(token: string): Promise<User>"
+          }
+        },
+        {
+          "id": "scip:src/auth/service.ts:AuthService#validateToken#",
+          "label": "validateToken",
+          "type": "method",
+          "metadata": {
+            "file": "src/auth/service.ts",
+            "startLine": 65,
+            "endLine": 85,
+            "signature": "validateToken(token: string): boolean"
+          }
+        },
+        {
+          "id": "scip:src/db/repository.ts:UserRepository#findById#",
+          "label": "findById",
+          "type": "method",
+          "metadata": {
+            "file": "src/db/repository.ts",
+            "startLine": 30,
+            "endLine": 50,
+            "signature": "findById(id: string): Promise<User | null>"
+          }
+        },
+        {
+          "id": "scip:src/utils/logger.ts:log#",
+          "label": "log",
+          "type": "function",
+          "metadata": {
+            "file": "src/utils/logger.ts",
+            "startLine": 10,
+            "endLine": 20,
+            "signature": "log(message: string, level: LogLevel): void"
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "c1",
+          "source": "scip:src/api/handler.ts:handleRequest#",
+          "target": "scip:src/auth/service.ts:AuthService#authenticate#",
+          "relation": "calls"
+        },
+        {
+          "id": "c2",
+          "source": "scip:src/api/handler.ts:handleRequest#",
+          "target": "scip:src/utils/logger.ts:log#",
+          "relation": "calls"
+        },
+        {
+          "id": "c3",
+          "source": "scip:src/auth/service.ts:AuthService#authenticate#",
+          "target": "scip:src/auth/service.ts:AuthService#validateToken#",
+          "relation": "calls"
+        },
+        {
+          "id": "c4",
+          "source": "scip:src/auth/service.ts:AuthService#authenticate#",
+          "target": "scip:src/db/repository.ts:UserRepository#findById#",
+          "relation": "calls"
+        },
+        {
+          "id": "c5",
+          "source": "scip:src/auth/service.ts:AuthService#authenticate#",
+          "target": "scip:src/utils/logger.ts:log#",
+          "relation": "calls"
+        }
+      ]
+    }
+  },
+  "settings": {
+    "notation": "code",
+    "layout": {
+      "algorithm": "layered",
+      "direction": "TB",
+      "spacing": {
+        "nodeSpacing": 40,
+        "layerSpacing": 80
+      }
+    }
+  }
+}

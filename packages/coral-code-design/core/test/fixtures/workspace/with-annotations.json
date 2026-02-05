@@ -1,0 +1,121 @@
+{
+  "id": "ws-annotated",
+  "name": "Annotated Workspace",
+  "rootPath": "/annotated-project",
+  "armadaConnection": {
+    "serverUrl": "http://localhost:8765",
+    "mode": "dependency-graph"
+  },
+  "openDiagrams": [
+    {
+      "id": "diagram-1",
+      "name": "Auth Module",
+      "type": "module-graph",
+      "scope": {
+        "rootPath": "src/auth"
+      }
+    }
+  ],
+  "activeLayout": {
+    "mode": "split-h",
+    "panes": [
+      {
+        "id": "pane-1",
+        "diagramId": "diagram-1",
+        "position": "left",
+        "size": 60
+      },
+      {
+        "id": "pane-2",
+        "diagramId": "diagram-2",
+        "position": "right",
+        "size": 40
+      }
+    ],
+    "linkedSelection": true,
+    "linkedNavigation": false,
+    "scopeLinking": {
+      "enabled": true,
+      "mode": "follow-selection",
+      "primaryPane": "pane-1",
+      "linkedPanes": ["pane-2"]
+    }
+  },
+  "annotations": {
+    "version": "1.0.0",
+    "nodes": {
+      "scip:src/auth/service.ts:AuthService#": {
+        "symbolId": "scip:src/auth/service.ts:AuthService#",
+        "note": "Main authentication service - handles JWT tokens",
+        "color": "#4CAF50",
+        "tags": ["critical", "security"],
+        "lastVerified": "2024-01-15T10:00:00Z"
+      },
+      "scip:src/db/repository.ts:UserRepository#": {
+        "symbolId": "scip:src/db/repository.ts:UserRepository#",
+        "note": "Database access layer for users",
+        "tags": ["persistence"],
+        "lastVerified": "2024-01-14T15:30:00Z"
+      }
+    },
+    "edges": {
+      "scip:src/auth/service.ts:AuthService#->scip:src/db/repository.ts:UserRepository#": {
+        "sourceSymbolId": "scip:src/auth/service.ts:AuthService#",
+        "targetSymbolId": "scip:src/db/repository.ts:UserRepository#",
+        "note": "Queries user data for authentication",
+        "style": "solid"
+      }
+    },
+    "groups": [
+      {
+        "id": "group-auth",
+        "label": "Authentication Layer",
+        "symbolIds": [
+          "scip:src/auth/service.ts:AuthService#",
+          "scip:src/auth/middleware.ts:authMiddleware#"
+        ],
+        "color": "#2196F3",
+        "note": "All authentication-related components"
+      }
+    ],
+    "tags": [
+      {
+        "id": "tag-critical",
+        "name": "critical",
+        "color": "#F44336",
+        "description": "Business-critical components requiring extra review"
+      },
+      {
+        "id": "tag-security",
+        "name": "security",
+        "color": "#FF9800",
+        "description": "Security-sensitive code"
+      },
+      {
+        "id": "tag-persistence",
+        "name": "persistence",
+        "color": "#9C27B0",
+        "description": "Database and storage related"
+      }
+    ],
+    "orphaned": [
+      {
+        "originalSymbolId": "scip:src/old/legacy.ts:LegacyAuth#",
+        "annotation": {
+          "symbolId": "scip:src/old/legacy.ts:LegacyAuth#",
+          "note": "Old auth system - was removed in v2",
+          "tags": ["deprecated"]
+        },
+        "orphanedAt": "2024-01-10T08:00:00Z",
+        "lastKnownName": "LegacyAuth",
+        "lastKnownPath": "src/old/legacy.ts"
+      }
+    ]
+  },
+  "settings": {
+    "defaultNotation": "architecture",
+    "defaultDiagramType": "module-graph",
+    "autoRefresh": true,
+    "refreshInterval": 60000
+  }
+}

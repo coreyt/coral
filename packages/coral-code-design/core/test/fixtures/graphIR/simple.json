@@ -1,0 +1,48 @@
+{
+  "nodes": [
+    {
+      "id": "node-1",
+      "label": "UserService",
+      "type": "class",
+      "metadata": {
+        "file": "src/services/user.ts",
+        "startLine": 10,
+        "endLine": 100
+      }
+    },
+    {
+      "id": "node-2",
+      "label": "AuthService",
+      "type": "class",
+      "metadata": {
+        "file": "src/services/auth.ts",
+        "startLine": 5,
+        "endLine": 80
+      }
+    },
+    {
+      "id": "node-3",
+      "label": "Database",
+      "type": "module",
+      "metadata": {
+        "file": "src/db/index.ts",
+        "startLine": 1,
+        "endLine": 50
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-1",
+      "source": "node-1",
+      "target": "node-2",
+      "relation": "calls"
+    },
+    {
+      "id": "edge-2",
+      "source": "node-1",
+      "target": "node-3",
+      "relation": "imports"
+    }
+  ]
+}
