@@ -37,7 +37,7 @@ export interface MockConfig {
 }
 
 export interface DefaultResponses {
-  health: { status: string };
+  health: { status: string; database?: string };
   stats: ArmadaStats;
   modes: GraphMode[];
   graph: CoralDocument & { conflicts?: BranchConflict[] };
@@ -73,7 +73,7 @@ export interface MockArmadaServer {
 // Default Responses
 // ============================================================================
 
-const DEFAULT_HEALTH: DefaultResponses['health'] = { status: 'ok' };
+const DEFAULT_HEALTH: DefaultResponses['health'] = { status: 'ok', database: 'connected' };
 
 const DEFAULT_STATS: DefaultResponses['stats'] = {
   nodes: 100,
@@ -107,8 +107,8 @@ const DEFAULT_GRAPH: DefaultResponses['graph'] = {
         { id: 'node3', label: 'Node 3', type: 'module' },
       ],
       edges: [
-        { id: 'edge1', source: 'node1', target: 'node2', relation: 'calls' },
-        { id: 'edge2', source: 'node2', target: 'node3', relation: 'imports' },
+        { id: 'edge1', source: 'node1', target: 'node2', label: 'calls' },
+        { id: 'edge2', source: 'node2', target: 'node3', label: 'imports' },
       ],
     },
   },
@@ -116,8 +116,8 @@ const DEFAULT_GRAPH: DefaultResponses['graph'] = {
     notation: 'architecture',
     layout: {
       algorithm: 'layered',
-      direction: 'TB',
-      spacing: { nodeSpacing: 50, layerSpacing: 100 },
+      direction: 'DOWN',
+      spacing: { nodeNode: 50, layerSpacing: 100 },
     },
   },
 };
@@ -391,8 +391,8 @@ export function createEmptyGraphServer(): MockArmadaServer {
           notation: 'architecture',
           layout: {
             algorithm: 'layered',
-            direction: 'TB',
-            spacing: { nodeSpacing: 50, layerSpacing: 100 },
+            direction: 'DOWN',
+            spacing: { nodeNode: 50, layerSpacing: 100 },
           },
         },
       },
