@@ -129,3 +129,20 @@ passed. Workflow policy and its `16` tests passed, the `68` release/package
 contract tests passed, and the redacted gitleaks scan found no leaks.
 Exact-SHA final-candidate CI and explicit owner approval remain the promotion
 and publication gates.
+
+## Hosted contract closure
+
+The first hosted candidate (`4a6eded`, run `45708820793`) exposed missing
+registration records in the full Linux and Windows contracts gates. Nine
+existing edition `0.2.14` test inputs and 25 already implemented source
+diagnostic codes are now registered. The corpus harness derives its trusted
+digests from every pinned edition manifest while keeping `0.2.8` as the
+implicit source default. Parser behavior, diagnostic output, and the frozen
+`0.2.8`/`0.2.9` catalogs are unchanged.
+
+The focused corpus/specification suite passed `52/52`. The complete local CI
+contracts function passed its `164` script tests, workspace typechecks, all
+bounded fuzz targets, language-specification verification, and exact public
+GraphIR dependency verification. The required renderer/browser rebuild and
+`22` bundle tests also passed. A changed source commit requires a fresh
+exact-SHA final-candidate matrix before owner approval.

@@ -342,7 +342,11 @@
         "packages/diagram-editor/test/portSafety.test.ts#8793348ed804e1c3",
         "packages/diagram-editor/test/portSafety.test.ts#d84ac4571333f743",
         "packages/diagram-editor/test/portSafety.test.ts#dd66e73a89b400ed",
-        "packages/diagram-editor/test/portSafety.test.ts#f95e9bf5dea81a8a"
+        "packages/diagram-editor/test/portSafety.test.ts#f95e9bf5dea81a8a",
+        "packages/language/test/edition0214.test.ts#28a6329c17ddcc3f",
+        "packages/language/test/edition0214.test.ts#72ca950db8f2c220",
+        "packages/language/test/edition0214.test.ts#883f37edb5009862",
+        "packages/language/test/edition0214.test.ts#d7864acd07997c47"
       ],
       "negative": {
         "packages/diagram-editor/test/diagnosticPropagation.test.ts#68c8444f74a7d3dd": ["coral.syntax.type.duplicate"],
@@ -374,6 +378,22 @@
         ],
         "packages/diagram-editor/test/parsers.test.ts#a709fc335f53cd4b": [
           "header.diagram.disabled"
+        ],
+        "packages/language/test/edition0214.test.ts#2443f689c8e7f0c5": [
+          "coral.erd.chen.retired"
+        ],
+        "packages/language/test/edition0214.test.ts#4d28a83d9f6d0d2a": [
+          "coral.uml.member.invalid"
+        ],
+        "packages/language/test/edition0214.test.ts#723188ac318e9ff4": [
+          "coral.syntax.bracket.unknown-field",
+          "coral.syntax.node.field.unknown"
+        ],
+        "packages/language/test/edition0214.test.ts#763c4f02e46322e2": [
+          "coral.relation.unknown"
+        ],
+        "packages/language/test/edition0214.test.ts#82136c7d877e96d8": [
+          "coral.syntax.bracket.relation-hyphen"
         ]
       }
     }

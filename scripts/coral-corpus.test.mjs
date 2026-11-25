@@ -25,9 +25,9 @@ import { loadSpellings, validateExpectedPositions, diagnosticExpectationMismatch
 
 const { REMOVED_SPELLINGS } = await loadSpellings();
 const runtime028 = { manifest: HEADER_MANIFEST_028, currentVersion: '0.2.8',
-  trustedDigests: Object.fromEntries(Object.values(HEADER_MANIFEST_028['0.2.8'])
-    .flatMap((edition) => edition.catalogs.map((catalog) =>
-      [`${catalog.id}@${catalog.version}`, catalog.digest]))) };
+  trustedDigests: Object.fromEntries(Object.values(HEADER_MANIFEST_028)
+    .flatMap((edition) => Object.values(edition).flatMap((entry) => entry.catalogs.map((catalog) =>
+      [`${catalog.id}@${catalog.version}`, catalog.digest])))) };
 
 const CONFORMANCE = 'packages/language/spec/conformance';
 const ACCURACY_EXISTING = 'packages/diagram-editor/test/llm/fixtures/accuracy/*/existing.txt';
