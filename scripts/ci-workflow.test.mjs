@@ -80,7 +80,7 @@ test('every current obligation runs exactly once in its required cell', () => {
     /Windows product suites .* must run exactly once on windows-latest/);
   // Both browser phases run once, on the browser runner, with the config defaults.
   rejects(replaceOnce(ci, '          CORAL_E2E_PHASE: smoke\n', '          CORAL_E2E_PHASE: full\n'), /browser smoke .* found 0/);
-  rejects(inJob('e2e', 'runs-on: [self-hosted, coral-e2e]', 'runs-on: ubuntu-latest'),
+  rejects(inJob('e2e', 'runs-on: ubuntu-latest', 'runs-on: windows-latest'),
     /complete browser correctness .* found 0/);
 });
 

@@ -35,7 +35,7 @@ const MINIMUM_NODE = '24.19.0';
 const NPM_VERSION = '12.0.2';
 const RETENTION_DAYS = 90;
 const HOSTED_RUNNERS = Object.freeze({ 'ubuntu-latest': 'Linux', 'macos-15': 'macOS', 'windows-latest': 'Windows' });
-const BROWSER_RUNNER = 'self-hosted,coral-e2e';
+const BROWSER_RUNNER = 'ubuntu-latest';
 const NATIVE_PLATFORMS = Object.freeze({ 'ubuntu-latest': 'linux-x64', 'macos-15': 'darwin-arm64', 'windows-latest': 'win32-x64' });
 
 // The exact installed-consumer case sets that apply to the current candidate,
