@@ -1,0 +1,11 @@
+{
+  "slug": "ci-cd-pipeline",
+  "sourceUrl": "synthetic-original",
+  "license": "synthetic-original",
+  "attribution": "authored for Slice 49 corpus scale-up",
+  "collectedDate": "2026-09-13",
+  "diagramType": "flowchart",
+  "complexity": "complex",
+  "nodeCount": 16,
+  "edgeCount": 18
+}

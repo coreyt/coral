@@ -1,0 +1,12 @@
+@diagram uml-sequence
+browser participant as "Web"
+api participant
+auth participant
+db participant
+login = browser -#> api as "login"
+verify = api -> auth as "verify"
+verified = auth -.-> api as "ok"
+query = api -#> db as "read"
+data = db -.-> api as "row"
+answer = api -.-> browser as "ready"
+audit = browser -> db as "audit"

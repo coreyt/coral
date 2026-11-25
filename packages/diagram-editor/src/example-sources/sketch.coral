@@ -1,0 +1,7 @@
+@diagram sketch
+idea cloud [symbol: "sketch-cloud"] as "Idea"
+decision decision [symbol: "sketch-decision"] as "Ready?"
+next step [symbol: "sketch-step"] as "Next step"
+ideaDecision = idea -> decision [flow]
+decisionNext = decision -> next [flow] as "Yes"
+decisionIdea = decision -> idea [flow] as "No"

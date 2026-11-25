@@ -1,0 +1,16 @@
+{
+  "originalFilename": "login-request-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nClient actor\nWebServer participant as \"Web Server\"\nAuthService participant as \"Auth Service\"\nDatabase participant\n\nmsg_1 = Client -#> WebServer as \"POST /login (username, password)\"\nmsg_2 = WebServer -#> AuthService as \"validateCredentials(username, password)\"\nmsg_3 = AuthService -#> Database as \"SELECT user WHERE username = ?\"\nmsg_4 = Database -.-> AuthService as \"user record\"\nmsg_5 = AuthService -#> AuthService as \"verify password hash\"\nalt \"credentials valid\" {\n  msg_6 = AuthService -.-> WebServer as \"auth token\"\n  msg_7 = WebServer -.-> Client as \"200 OK + session token\"\n} else \"credentials invalid\" {\n  msg_8 = AuthService -.-> WebServer as \"authentication failed\"\n  msg_9 = WebServer -.-> Client as \"401 Unauthorized\"\n}",
+  "injectedDefects": [
+    {
+      "defectType": "line-break-in-label",
+      "location": {
+        "line": 3,
+        "column": 29,
+        "charOffset": 64
+      },
+      "description": "inserted a line break inside label \"Web Server\""
+    }
+  ],
+  "outputFilename": "login-request-sequence-line-break-in-label-1.coral"
+}

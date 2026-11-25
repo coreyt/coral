@@ -1,0 +1,16 @@
+{
+  "originalFilename": "shape-hierarchy-class.coral",
+  "originalDsl": "@diagram uml-class\nShape class as \"Shape\" {\n  attributes = attributes {\n    attribute_1 = public attribute color: String\n  }\n  operations = operations {\n    operation_1 = public operation area()\n  }\n}\nCircle class as \"Circle\" {\n  attributes = attributes {\n    attribute_1 = public attribute radius: double\n  }\n  operations = operations {\n    operation_1 = public operation area()\n  }\n}\nRectangle class as \"Rectangle\" {\n  attributes = attributes {\n    attribute_1 = public attribute width: double\n    attribute_2 = public attribute height: double\n  }\n  operations = operations {\n    operation_1 = public operation area()\n  }\n}\nTriangle class as \"Triangle\" {\n  attributes = attributes {\n    attribute_1 = public attribute base: double\n    attribute_2 = public attribute height: double\n  }\n  operations = operations {\n    operation_1 = public operation area()\n  }\n}\nCanvas class as \"Canvas\" {\n  operations = operations {\n    operation_1 = public operation addShape()\n  }\n}\n\nrel_1 = Circle --|> Shape [inheritance]\nrel_2 = Rectangle --|> Shape [inheritance]\nrel_3 = Triangle --|> Shape [inheritance]\nrel_4 = Canvas -- Shape [aggregation, firstEnd: diamond]\n",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-quote",
+      "location": {
+        "line": 2,
+        "column": 15,
+        "charOffset": 34
+      },
+      "description": "removed opening quote on label \"Shape\""
+    }
+  ],
+  "outputFilename": "shape-hierarchy-class-missing-opening-quote-1.coral"
+}

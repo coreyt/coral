@@ -1,0 +1,3 @@
+service "API" as api
+service "Queue" as queue
+api -> queue [event, label = "x"]

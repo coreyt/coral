@@ -1,0 +1,192 @@
+name: Promote frozen Coral Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact Coral version
+        required: true
+        type: string
+      commit:
+        description: Full verified release commit SHA
+        required: true
+        type: string
+      candidate_run_id:
+        description: Successful exact-SHA final-candidate CI run ID
+        required: true
+        type: string
+      deploy:
+        description: Deploy the verified Pages artifact
+        required: true
+        default: false
+        type: boolean
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+      commit:
+        required: true
+        type: string
+      candidate_run_id:
+        required: true
+        type: string
+      deploy:
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coral-pages
+  cancel-in-progress: false
+
+jobs:
+  # Promotes the frozen candidate-site payload of the selected exact-SHA
+  # final-candidate run. Nothing is rebuilt here; the proof, the live run
+  # readback and the six package bytes are verified before restore, and the
+  # restored identity records are compared with the proof before the single
+  # Pages artifact upload.
+  build:
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci --ignore-scripts
+      - name: Verify immutable release identity
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/release-guard.mjs
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: final-candidate-proof
+          path: candidate-proof
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: candidate-site
+          path: candidate-site
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify the final-candidate proof, live run and frozen site payload
+        id: proof
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+        run: node scripts/release-final-candidate.mjs candidate-proof/final-candidate-proof.json candidate-artifacts/candidate-manifest.json --site candidate-site/site.tar
+      - name: Verify retained candidate package bytes
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Restore the frozen candidate site
+        env:
+          CORAL_SITE_ARTIFACT_DIR: candidate-site
+          EXPECTED_SITE_SHA256: ${{ steps.proof.outputs.site-sha256 }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/ci.mjs restore-site
+      - name: Verify restored identity records against the proof
+        env:
+          EXPECTED_VERSION_SHA256: ${{ steps.proof.outputs.version-sha256 }}
+          EXPECTED_INTEGRITY_SHA256: ${{ steps.proof.outputs.integrity-sha256 }}
+        run: node scripts/release-final-candidate.mjs --restored-site build/site
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: build/site
+          retention-days: 90
+
+  registry:
+    if: ${{ inputs.deploy && needs.build.result == 'success' }}
+    needs: build
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit }}
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: final-candidate-proof
+          path: candidate-proof
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify exact final-candidate run and retained package identity
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+        run: node scripts/release-final-candidate.mjs candidate-proof/final-candidate-proof.json candidate-artifacts/candidate-manifest.json
+      - name: Verify retained candidate package bytes
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Verify public registry artifacts for the exact source
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_PRIVATE_REPOSITORY: ${{ github.event.repository.private }}
+          RELEASE_PAGES_REGISTRY_VERIFICATION: true
+          RELEASE_JOB_WORKFLOW_REF: ${{ job.workflow_ref }}
+          RELEASE_CANDIDATE_MANIFEST: candidate-artifacts/candidate-manifest.json
+        run: node scripts/release-registry.mjs verify
+
+  deploy:
+    # Restore an earlier retained payload through pages-restore.yml. GitHub job
+    # reruns include dependencies and therefore repeat this workflow's checks.
+    if: ${{ inputs.deploy && needs.build.result == 'success' && needs.registry.result == 'success' }}
+    needs: [build, registry]
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy exact verified artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

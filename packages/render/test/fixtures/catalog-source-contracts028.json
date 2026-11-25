@@ -1,0 +1,1688 @@
+{
+  "schemaVersion": 1,
+  "scope": "Approved author type aliases where available; explicit generic visual selection otherwise. Canonical profile validity and ownership/scope are separate contracts.",
+  "cases": [
+    {
+      "id": "aiml-agent",
+      "notation": "aiml",
+      "symbol": "aiml-agent",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-agent\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-annotation",
+      "notation": "aiml",
+      "symbol": "aiml-annotation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-annotation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-dataset",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-dataset/test",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "test",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"test\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-dataset/training",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "training",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"training\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-dataset/validation",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "validation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"validation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-embedding",
+      "notation": "aiml",
+      "symbol": "aiml-embedding",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-embedding\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-evaluator",
+      "notation": "aiml",
+      "symbol": "aiml-evaluator",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-evaluator\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-feature-store",
+      "notation": "aiml",
+      "symbol": "aiml-feature-store",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-feature-store\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-gpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-gpu/cluster",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "cluster",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"cluster\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-gpu/gpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "gpu",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"gpu\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-gpu/tpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "tpu",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"tpu\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-guardrail",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-guardrail/input",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "variant": "input",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\", variant: \"input\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-guardrail/output",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "variant": "output",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\", variant: \"output\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-inference",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-inference/batch",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "batch",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"batch\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-inference/realtime",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "realtime",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"realtime\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-inference/serverless",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "serverless",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"serverless\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-llm",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-llm/chat",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "chat",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"chat\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-llm/completion",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "completion",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"completion\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-llm/multimodal",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "multimodal",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"multimodal\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-memory",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-memory/long-term",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "variant": "long-term",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\", variant: \"long-term\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-memory/short-term",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "variant": "short-term",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\", variant: \"short-term\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-model",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-model/classifier",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "classifier",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"classifier\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-model/fine-tuned",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "fine-tuned",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"fine-tuned\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-model/foundation",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "foundation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"foundation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-model/regression",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "regression",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"regression\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-prompt",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-prompt/chain",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "variant": "chain",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\", variant: \"chain\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-prompt/template",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "variant": "template",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\", variant: \"template\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-retriever",
+      "notation": "aiml",
+      "symbol": "aiml-retriever",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-retriever\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-tool",
+      "notation": "aiml",
+      "symbol": "aiml-tool",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-tool\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-training",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-training/distributed",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "variant": "distributed",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\", variant: \"distributed\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-training/fine-tune",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "variant": "fine-tune",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\", variant: \"fine-tune\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "aiml-vector-store",
+      "notation": "aiml",
+      "symbol": "aiml-vector-store",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-vector-store\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-actor",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "sourceType": "actor",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe actor as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-actor/admin",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "admin",
+      "sourceType": "actor",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe actor [variant: \"admin\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-actor/system",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "system",
+      "sourceType": "actor",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe actor [variant: \"system\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-actor/user",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "user",
+      "sourceType": "actor",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe actor [variant: \"user\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-annotation",
+      "notation": "architecture",
+      "symbol": "arch-annotation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-annotation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-cdn",
+      "notation": "architecture",
+      "symbol": "arch-cdn",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-cdn\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-container",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-container/cluster",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "cluster",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"cluster\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-container/namespace",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "namespace",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"namespace\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-container/vpc",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "vpc",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"vpc\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-database",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "sourceType": "database",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe database as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-database/cache",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "cache",
+      "sourceType": "database",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe database [variant: \"cache\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-database/nosql",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "nosql",
+      "sourceType": "database",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe database [variant: \"nosql\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-database/search",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "search",
+      "sourceType": "database",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe database [variant: \"search\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-database/sql",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "sql",
+      "sourceType": "database",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe database [variant: \"sql\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-external-api",
+      "notation": "architecture",
+      "symbol": "arch-external-api",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-external-api\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-function",
+      "notation": "architecture",
+      "symbol": "arch-function",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-function\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-load-balancer",
+      "notation": "architecture",
+      "symbol": "arch-load-balancer",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-load-balancer\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-queue",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-queue/queue",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "queue",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"queue\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-queue/stream",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "stream",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"stream\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-queue/topic",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "topic",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"topic\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-service",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "sourceType": "service",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe service as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-service/api",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "api",
+      "sourceType": "service",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe service [variant: \"api\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-service/gateway",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "gateway",
+      "sourceType": "service",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe service [variant: \"gateway\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-service/web",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "web",
+      "sourceType": "service",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe service [variant: \"web\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-service/worker",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "worker",
+      "sourceType": "service",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe service [variant: \"worker\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "arch-storage",
+      "notation": "architecture",
+      "symbol": "arch-storage",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-storage\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "block-unit",
+      "notation": "block",
+      "symbol": "block-unit",
+      "sourceType": "block",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram block\nprobe block as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-annotation",
+      "notation": "bpmn",
+      "symbol": "bpmn-annotation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-annotation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-data-object",
+      "notation": "bpmn",
+      "symbol": "bpmn-data-object",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-data-object\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-data-store",
+      "notation": "bpmn",
+      "symbol": "bpmn-data-store",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-data-store\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-end-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-end-event",
+      "sourceType": "endEvent",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe endEvent as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-gateway-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-event",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-event\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-gateway-exclusive",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-exclusive",
+      "sourceType": "exclusiveGateway",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe exclusiveGateway as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-gateway-inclusive",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-inclusive",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-inclusive\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-gateway-parallel",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-parallel",
+      "sourceType": "parallelGateway",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe parallelGateway as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-intermediate-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-intermediate-event/catch",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "variant": "catch",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\", variant: \"catch\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-intermediate-event/throw",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "variant": "throw",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\", variant: \"throw\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-lane",
+      "notation": "bpmn",
+      "symbol": "bpmn-lane",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-lane\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.bpmn-scope"
+    },
+    {
+      "id": "bpmn-pool",
+      "notation": "bpmn",
+      "symbol": "bpmn-pool",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-pool\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.bpmn-scope"
+    },
+    {
+      "id": "bpmn-start-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-start-event",
+      "sourceType": "startEvent",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe startEvent as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-subprocess",
+      "notation": "bpmn",
+      "symbol": "bpmn-subprocess",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-subprocess\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-task",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "sourceType": "task",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe task as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-task/manual",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "manual",
+      "sourceType": "task",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe task [variant: \"manual\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-task/script",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "script",
+      "sourceType": "task",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe task [variant: \"script\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-task/service",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "service",
+      "sourceType": "task",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe task [variant: \"service\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "bpmn-task/user",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "user",
+      "sourceType": "task",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram bpmn\nprobe task [variant: \"user\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-class",
+      "notation": "code",
+      "symbol": "code-class",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-class/abstract",
+      "notation": "code",
+      "symbol": "code-class",
+      "variant": "abstract",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\", variant: \"abstract\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-class/interface",
+      "notation": "code",
+      "symbol": "code-class",
+      "variant": "interface",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\", variant: \"interface\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-comment",
+      "notation": "code",
+      "symbol": "code-comment",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-comment\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-external",
+      "notation": "code",
+      "symbol": "code-external",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-external\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-function",
+      "notation": "code",
+      "symbol": "code-function",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-function/async",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "async",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"async\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-function/constructor",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "constructor",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"constructor\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-function/generator",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "generator",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"generator\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-module",
+      "notation": "code",
+      "symbol": "code-module",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-module\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-namespace",
+      "notation": "code",
+      "symbol": "code-namespace",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-namespace\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-type",
+      "notation": "code",
+      "symbol": "code-type",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-type\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-variable",
+      "notation": "code",
+      "symbol": "code-variable",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-variable/constant",
+      "notation": "code",
+      "symbol": "code-variable",
+      "variant": "constant",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\", variant: \"constant\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "code-variable/static",
+      "notation": "code",
+      "symbol": "code-variable",
+      "variant": "static",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\", variant: \"static\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-annotation",
+      "notation": "data-engineering",
+      "symbol": "data-annotation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-annotation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-batch",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-batch/scheduled",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "variant": "scheduled",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\", variant: \"scheduled\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-batch/triggered",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "variant": "triggered",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\", variant: \"triggered\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-catalog",
+      "notation": "data-engineering",
+      "symbol": "data-catalog",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-catalog\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-cdc",
+      "notation": "data-engineering",
+      "symbol": "data-cdc",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-cdc\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-dashboard",
+      "notation": "data-engineering",
+      "symbol": "data-dashboard",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-dashboard\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-lake",
+      "notation": "data-engineering",
+      "symbol": "data-lake",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-lake\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-pipeline",
+      "notation": "data-engineering",
+      "symbol": "data-pipeline",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-pipeline\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-quality",
+      "notation": "data-engineering",
+      "symbol": "data-quality",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-quality\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-schema",
+      "notation": "data-engineering",
+      "symbol": "data-schema",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-schema\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-sink",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-sink/api",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "api",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"api\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-sink/database",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "database",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"database\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-sink/file",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "file",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"file\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-sink/stream",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "stream",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"stream\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-source",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-source/api",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "api",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"api\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-source/database",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "database",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"database\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-source/file",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "file",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"file\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-source/stream",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "stream",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"stream\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-stream",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-stream/kafka",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "kafka",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"kafka\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-stream/kinesis",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "kinesis",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"kinesis\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-stream/pubsub",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "pubsub",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"pubsub\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-transform",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-transform/aggregate",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "aggregate",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"aggregate\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-transform/filter",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "filter",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"filter\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-transform/join",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "join",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"join\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-transform/map",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "map",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"map\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "data-warehouse",
+      "notation": "data-engineering",
+      "symbol": "data-warehouse",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-warehouse\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-attribute",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "sourceType": "attribute",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe attribute as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-ownership"
+    },
+    {
+      "id": "erd-attribute/composite",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "composite",
+      "sourceType": "attribute",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe attribute [variant: \"composite\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-ownership"
+    },
+    {
+      "id": "erd-attribute/derived",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "derived",
+      "sourceType": "attribute",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe attribute [variant: \"derived\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-ownership"
+    },
+    {
+      "id": "erd-attribute/multivalued",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "multivalued",
+      "sourceType": "attribute",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe attribute [variant: \"multivalued\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-ownership"
+    },
+    {
+      "id": "erd-attribute/primary-key",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "primary-key",
+      "sourceType": "attribute",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe attribute [variant: \"primary-key\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-ownership"
+    },
+    {
+      "id": "erd-cardinality",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-cardinality/many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "many",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"many\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-cardinality/one",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "one",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"one\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-cardinality/one-many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "one-many",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"one-many\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-cardinality/zero-many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "zero-many",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"zero-many\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-cardinality/zero-one",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "zero-one",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"zero-one\"] as \"Contract probe\"\n",
+      "expectedCapabilityNotice": "render.capability.chen-cardinality"
+    },
+    {
+      "id": "erd-entity",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "sourceType": "entity",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe entity as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-entity/strong",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "variant": "strong",
+      "sourceType": "entity",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe entity [variant: \"strong\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-entity/weak",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "variant": "weak",
+      "sourceType": "entity",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe entity [variant: \"weak\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-isa",
+      "notation": "erd",
+      "symbol": "erd-isa",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-isa\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-note",
+      "notation": "erd",
+      "symbol": "erd-note",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-note\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-relationship",
+      "notation": "erd",
+      "symbol": "erd-relationship",
+      "sourceType": "relationship",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe relationship as \"Contract probe\"\n"
+    },
+    {
+      "id": "erd-relationship/identifying",
+      "notation": "erd",
+      "symbol": "erd-relationship",
+      "variant": "identifying",
+      "sourceType": "relationship",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram erd\nprobe relationship [variant: \"identifying\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-annotation",
+      "notation": "flowchart",
+      "symbol": "flowchart-annotation",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-annotation\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-connector",
+      "notation": "flowchart",
+      "symbol": "flowchart-connector",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-connector\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-decision",
+      "notation": "flowchart",
+      "symbol": "flowchart-decision",
+      "sourceType": "decision",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe decision as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-document",
+      "notation": "flowchart",
+      "symbol": "flowchart-document",
+      "sourceType": "document",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe document as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-io",
+      "notation": "flowchart",
+      "symbol": "flowchart-io",
+      "sourceType": "io",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe io as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-predefined",
+      "notation": "flowchart",
+      "symbol": "flowchart-predefined",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-predefined\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-process",
+      "notation": "flowchart",
+      "symbol": "flowchart-process",
+      "sourceType": "process",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe process as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-terminal",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "sourceType": "terminal",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe terminal as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-terminal/end",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "variant": "end",
+      "sourceType": "terminal",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe terminal [variant: \"end\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "flowchart-terminal/start",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "variant": "start",
+      "sourceType": "terminal",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram flowchart\nprobe terminal [variant: \"start\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-box",
+      "notation": "sketch",
+      "symbol": "sketch-box",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-box\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-circle",
+      "notation": "sketch",
+      "symbol": "sketch-circle",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-circle\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-cloud",
+      "notation": "sketch",
+      "symbol": "sketch-cloud",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-cloud\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-decision",
+      "notation": "sketch",
+      "symbol": "sketch-decision",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-decision\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-group",
+      "notation": "sketch",
+      "symbol": "sketch-group",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-group\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-label",
+      "notation": "sketch",
+      "symbol": "sketch-label",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-label\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "sketch-step",
+      "notation": "sketch",
+      "symbol": "sketch-step",
+      "sourceType": "group",
+      "explicitSymbol": true,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-step\"] as \"Contract probe\"\n"
+    },
+    {
+      "id": "uml-actor",
+      "notation": "uml-sequence",
+      "symbol": "uml-actor",
+      "sourceType": "actor",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram uml-sequence\nprobe actor as \"Contract probe\"\n"
+    },
+    {
+      "id": "uml-class",
+      "notation": "uml-class",
+      "symbol": "uml-class",
+      "sourceType": "class",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram uml-class\nprobe class as \"Contract probe\"\n"
+    },
+    {
+      "id": "uml-enum",
+      "notation": "uml-class",
+      "symbol": "uml-enum",
+      "sourceType": "enum",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram uml-class\nprobe enum as \"Contract probe\"\n"
+    },
+    {
+      "id": "uml-interface",
+      "notation": "uml-class",
+      "symbol": "uml-interface",
+      "sourceType": "interface",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram uml-class\nprobe interface as \"Contract probe\"\n"
+    },
+    {
+      "id": "uml-participant",
+      "notation": "uml-sequence",
+      "symbol": "uml-participant",
+      "sourceType": "participant",
+      "explicitSymbol": false,
+      "meaning": "authored type and selected visual; no inferred scope or ownership",
+      "source": "@diagram uml-sequence\nprobe participant as \"Contract probe\"\n"
+    }
+  ]
+}

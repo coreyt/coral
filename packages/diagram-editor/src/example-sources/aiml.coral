@@ -1,0 +1,8 @@
+@diagram aiml
+dataset dataset [symbol: "aiml-dataset"] as "Dataset"
+training training [symbol: "aiml-training"] as "Training"
+model model [symbol: "aiml-model"] as "Model"
+inference inference [symbol: "aiml-inference"] as "Inference"
+datasetTraining = dataset -> training [training]
+trainingModel = training -> model [training]
+modelInference = model -> inference [inference]

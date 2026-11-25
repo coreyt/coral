@@ -1,0 +1,23 @@
+{
+  "slug": "e-commerce-domain-class",
+  "reviews": [
+    {
+      "descriptionFile": "e-commerce-domain-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 8 classes with members and all 8 relationships (1 aggregation, 1 composition, 6 labeled associations), preserving every association label correctly."
+    },
+    {
+      "descriptionFile": "e-commerce-domain-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from Order at the center of the domain and works both toward Product/Inventory and back toward Customer/Cart. All 8 classes and all 8 relationships verified present, correctly noting that both Order and Cart aggregate/compose OrderItem as two distinct edges."
+    },
+    {
+      "descriptionFile": "e-commerce-domain-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 8 classes with members first, then lists all 8 relationships with labels. No invented fields or edges."
+    }
+  ]
+}

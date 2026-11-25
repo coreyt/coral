@@ -1,0 +1,7 @@
+title = "Coral synthetic-secret detection fixture"
+
+[[rules]]
+id = "coral-synthetic-api-key"
+description = "Synthetic Coral credential used to prove the scanner gate"
+regex = '''CORAL_FAKE_[A-Z0-9]{24}'''
+keywords = ["CORAL_FAKE_"]

@@ -1,0 +1,23 @@
+{
+  "slug": "video-streaming-handshake-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "video-streaming-handshake-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological startup-handshake walkthrough naming all 7 participants and all 15 messages in diagram order, correctly distinguishing the cache-miss first segment fetch from the cache-hit second one and covering all three Analytics reports."
+    },
+    {
+      "descriptionFile": "video-streaming-handshake-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the final playback-progress report and works backward through rendering, buffering, the second (cache-hit) segment fetch, playback-started, the first (cache-miss) segment fetch through the Origin Server, license acquisition, and manifest retrieval, ending at the initial press-play. All 15 messages verified present."
+    },
+    {
+      "descriptionFile": "video-streaming-handshake-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates the 7 components then groups connections by participant, identifying the Player as the hub. Initial draft left the two CDN-to-Player segment-data replies (cache miss and cache hit) only loosely implied; revised to explicitly state both replies and the Origin Server hand-off, then re-verified all 15 messages are individually accounted for."
+    }
+  ]
+}

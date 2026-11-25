@@ -1,0 +1,19 @@
+@diagram uml-sequence
+client actor as "Client"
+app participant as "App"
+worker participant as "Temporary worker"
+audit participant as "Audit"
+request = client -#> app [sync] as "submit"
+spawn = app -.-> worker [create] as "start worker"
+work = activation worker {
+  choice = alt "valid" {
+    run = app -#> worker [sync] as "process"
+    done = worker -.-> app [return] as "processed"
+  } else "invalid" {
+    reject = worker -.-> app [return] as "rejected"
+  }
+}
+note "Temporary instance" on worker
+close = app -> worker [destroy] as "dispose"
+record = app -> audit [async] as "record outcome"
+result = app -.-> client [return] as "result"

@@ -1,0 +1,8 @@
+{
+  "originalFilename": "otp-verification-sequence.coral",
+  "defectType": "out-of-order-sequence",
+  "affectedNodeIds": ["User", "App", "AuthService", "SMSGateway"],
+  "affectedEdgeIds": ["msg_3", "msg_4", "msg_5"],
+  "explanation": "The description says the User enters the OTP code into the App only after the AuthService sends the code to the SMSGateway and the SMSGateway delivers it via SMS; here \"enter OTP code\" is placed before those two messages, so the User is entering a code that has not yet been generated or delivered.",
+  "outputFilename": "otp-verification-sequence-out-of-order-sequence-1.coral"
+}

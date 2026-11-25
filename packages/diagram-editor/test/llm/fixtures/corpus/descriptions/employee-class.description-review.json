@@ -1,0 +1,23 @@
+{
+  "slug": "employee-class",
+  "reviews": [
+    {
+      "descriptionFile": "employee-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 5 classes with members and all 5 relationships (1 composition, 1 aggregation, 1 inheritance, 2 labeled associations), correctly distinguishing composition (Company/Department) from aggregation (Department/Employee)."
+    },
+    {
+      "descriptionFile": "employee-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from Employee and works outward to Project, Department, Manager, and Company. All 5 classes and all 5 relationships verified present, with both association labels ('assigned to', 'leads') preserved."
+    },
+    {
+      "descriptionFile": "employee-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Lists all 5 classes with members first, then all 5 relationships with labels intact. No invented members or edges."
+    }
+  ]
+}

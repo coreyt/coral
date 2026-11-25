@@ -1,0 +1,6 @@
+@diagram flowchart
+intake process as "Receive request"
+review process as "Review request"
+archive process as "Archive approved request"
+near = intake -> review
+far = review ------> archive

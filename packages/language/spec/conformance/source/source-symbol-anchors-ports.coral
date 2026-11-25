@@ -1,0 +1,19 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol shield {
+  name "Shield"
+  size 48 x 56
+  anchor crest [side: N, at: 0.5]
+  anchor crest [side: S, at: 0.5]
+  anchor N [side: N, at: 0.5]
+  anchor high [side: N, at: 1.5]
+  anchor inner [x: 0.5, y: 0.5]
+  login port [direction: in, label: Sign]
+  audit port [direction: out, maxConnections: 0]
+  artwork svg """
+<svg viewBox="0 0 1 1"/>
+"""
+}
+vault database {
+  ingest port [direction: in, maxConnections: 1.5]
+}

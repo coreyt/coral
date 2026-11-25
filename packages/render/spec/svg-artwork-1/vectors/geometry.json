@@ -1,0 +1,695 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "geometry-nonfinite-path",
+      "description": "A path coordinate that overflows binary64 is refused.",
+      "covers": [
+        "nonfinite:path"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0L1e999 0\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-nonfinite-rect",
+      "description": "A non-finite size is refused.",
+      "covers": [
+        "nonfinite:attribute"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"1e400\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-nonfinite-transform",
+      "description": "A non-finite transform argument is refused.",
+      "covers": [
+        "nonfinite:transform"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"scale(1e309)\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-nan-token",
+      "description": "NaN is not a number in the grammar.",
+      "covers": [
+        "nonfinite:token"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect x=\"NaN\" width=\"1\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-infinity-token",
+      "description": "Infinity is not a number in the grammar.",
+      "covers": [
+        "nonfinite:token"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><circle cx=\"Infinity\" r=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-magnitude-at-bound",
+      "description": "A coordinate of exactly 1,000,000,000 is within N1.",
+      "covers": [
+        "bound:n1-at"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000000000 1000000000\"><path d=\"M0 0L1000000000 0\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000000000 1000000000\">\n  <path d=\"M 0 0 L 1000000000 0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-magnitude-over-bound",
+      "description": "A coordinate above 1,000,000,000 is refused.",
+      "covers": [
+        "bound:n1-over"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1000000000 1000000000\"><path d=\"M0 0L1000000001 0\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-negative-width",
+      "description": "A negative width is refused.",
+      "covers": [
+        "geometry:sign"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"-1\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-negative-radius",
+      "description": "A negative radius is refused.",
+      "covers": [
+        "geometry:sign"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><circle r=\"-2\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-negative-stroke-width",
+      "description": "A negative stroke width is refused.",
+      "covers": [
+        "geometry:sign"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke-width=\"-1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-missing-radius",
+      "description": "A circle without r is refused.",
+      "covers": [
+        "geometry:required"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><circle cx=\"1\" cy=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-empty-path",
+      "description": "An empty path is refused.",
+      "covers": [
+        "geometry:required"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-odd-points",
+      "description": "A point list with an odd count is refused.",
+      "covers": [
+        "geometry:points"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><polygon points=\"0 0 1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-path-without-moveto",
+      "description": "Path data must begin with a moveto.",
+      "covers": [
+        "path:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"L1 1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-path-bad-arc-flag",
+      "description": "Arc flags must be 0 or 1.",
+      "covers": [
+        "path:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0A5 5 0 2 1 10 10\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-path-bearing-command",
+      "description": "SVG 2 bearing commands are not admitted.",
+      "covers": [
+        "path:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0B45L1 1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-path-trailing-garbage",
+      "description": "Path data that stops parsing part way is refused, not partially rendered.",
+      "covers": [
+        "path:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0L1 1 L2\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-css-units",
+      "description": "Units other than px are refused in geometry.",
+      "covers": [
+        "unit:excluded"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"2em\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-length-unit-space",
+      "description": "Whitespace between a number and px fails the length grammar.",
+      "covers": [
+        "unit:interior-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"1 px\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-stroke-width-unit-space",
+      "description": "Whitespace between the stroke width and px fails the length grammar.",
+      "covers": [
+        "unit:interior-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-width=\"2 px\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-root-dimension-unit-space",
+      "description": "Whitespace between a root width and its unit fails the grammar.",
+      "covers": [
+        "unit:interior-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"48 px\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-percentage-size",
+      "description": "Percentages are refused in primitive geometry.",
+      "covers": [
+        "unit:excluded"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"50%\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-css-transform-syntax",
+      "description": "CSS transform syntax is refused.",
+      "covers": [
+        "transform:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"rotate(45deg)\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-rect-auto-radius",
+      "description": "rx auto is refused.",
+      "covers": [
+        "geometry:rect-radius"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect width=\"1\" height=\"1\" rx=\"auto\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-singular-transform",
+      "description": "A transform with determinant 0 is refused.",
+      "covers": [
+        "geometry:singular"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"scale(0)\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-skew-90",
+      "description": "skewX(90) puts geometry far outside the effective bounds.",
+      "covers": [
+        "geometry:effective-bound"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"skewX(90)\"><path d=\"M0 0V10\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-effective-bound-at",
+      "description": "A transformed point exactly on the effective bound (24 + 8 \u00d7 24 = 216) is admitted.",
+      "covers": [
+        "geometry:effective-bound-at"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"translate(192)\"><path d=\"M0 0H24\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g transform=\"translate(192 0)\">\n    <path d=\"M 0 0 H 24\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-effective-bound-over",
+      "description": "A transformed point just past the effective bound is refused.",
+      "covers": [
+        "geometry:effective-bound-over"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"translate(192)\"><path d=\"M0 0H24.5\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-stroke-extent-at",
+      "description": "A stroke width equal to R is admitted.",
+      "covers": [
+        "geometry:stroke-extent-at"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-width=\"192\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"#000000\" stroke-width=\"192\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-stroke-extent-over",
+      "description": "A stroke width above R is refused.",
+      "covers": [
+        "geometry:stroke-extent-over"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-width=\"193\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-percentage-stroke-width",
+      "description": "A percentage stroke width is refused as geometry.",
+      "covers": [
+        "unit:stroke-width-percentage"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-width=\"10%\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-arc-radius-at",
+      "description": "An arc radius equal to R times the CTM scale is admitted.",
+      "covers": [
+        "geometry:arc-radius-at"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0A192 192 0 0 1 1 0\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 A 192 192 0 0 1 1 0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-arc-radius-over",
+      "description": "A large-arc radius above R is refused even though its end points are inside the bounds.",
+      "covers": [
+        "geometry:arc-radius-over"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"scale(2)\"><path d=\"M0 0A97 1 0 1 1 1 0\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-reflected-control-s-at",
+      "description": "The control point S implies by reflection (100 + (100 + 16) = 216) lies exactly on the bound.",
+      "covers": [
+        "geometry:reflected-control-s"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0C0 0 -16 0 100 0S1 1 0 0\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 C 0 0 -16 0 100 0 S 1 1 0 0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-reflected-control-s-over",
+      "description": "The control point S implies by reflection (100 + (100 + 100) = 300) is outside the bound although every written point is inside.",
+      "covers": [
+        "geometry:reflected-control-s"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0C0 0 -100 0 100 0S1 1 0 0\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-reflected-control-t-over",
+      "description": "The control point T implies by reflection (300) is outside the bound although every written point is inside.",
+      "covers": [
+        "geometry:reflected-control-t"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0Q-100 0 100 0T0 0\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.geometry.invalid"
+        ]
+      }
+    },
+    {
+      "id": "geometry-root-dimensions-removed",
+      "description": "Root width, height, preserveAspectRatio and version are validated and removed.",
+      "covers": [
+        "root:dimensions-removed"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100%\" height=\"10mm\" preserveAspectRatio=\"xMinYMin slice\" version=\"1.1\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-root-bad-preserve-aspect-ratio",
+      "description": "Discarded root attributes are still validated.",
+      "covers": [
+        "root:validated"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" preserveAspectRatio=\"stretch\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-missing",
+      "description": "A missing viewBox is refused.",
+      "covers": [
+        "viewbox:missing"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-zero-width",
+      "description": "A zero-width viewBox is refused.",
+      "covers": [
+        "viewbox:zero"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 0 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-negative-height",
+      "description": "A negative viewBox height is refused.",
+      "covers": [
+        "viewbox:negative"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 -1\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-three-numbers",
+      "description": "A viewBox with three numbers is refused.",
+      "covers": [
+        "viewbox:arity"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-not-numeric",
+      "description": "A non-numeric viewBox is refused.",
+      "covers": [
+        "viewbox:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"a b c d\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-units",
+      "description": "A viewBox with units is refused.",
+      "covers": [
+        "viewbox:grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24px 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-nonfinite",
+      "description": "A non-finite viewBox is refused.",
+      "covers": [
+        "viewbox:nonfinite"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1e999 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-over-bound",
+      "description": "A viewBox number above N1 is refused.",
+      "covers": [
+        "viewbox:bound"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 2000000000 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.viewbox.invalid"
+        ]
+      }
+    },
+    {
+      "id": "viewbox-separators",
+      "description": "viewBox separators and spacing normalize; a negative origin is allowed.",
+      "covers": [
+        "viewbox:normalize"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\" -12,-12, 24 24 \"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"-12 -12 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-minor-arc-radius-over",
+      "description": "A short minor arc passes the chord/axis-ratio bound despite its authored radius.",
+      "covers": [
+        "geometry:minor-arc-chord-bound"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"scale(2)\"><path d=\"M0 0A97 1 0 0 1 1 0\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g transform=\"scale(2 2)\">\n    <path d=\"M 0 0 A 97 1 0 0 1 1 0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "geometry-minor-arc-coincident-subnormal",
+      "description": "A coincident minor arc has zero bound even when the authored radius ratio overflows.",
+      "covers": [
+        "geometry:minor-arc-coincident-subnormal"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M12 12 A1000000000 5e-324 0 0 1 12 12\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 12 12 A 1000000000 5e-324 0 0 1 12 12\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+sequenceDiagram
+    actor Viewer
+    participant Player as Client Player
+    participant ManifestService as Manifest Service
+    participant LicenseServer as License Server
+    participant CDNEdge as CDN Edge Node
+    participant OriginServer as Origin Server
+    participant Analytics as Analytics Service
+
+    Viewer->>Player: press play
+    Player->>ManifestService: request manifest
+    ManifestService-->>Player: manifest (available renditions)
+    Player->>LicenseServer: request DRM license
+    LicenseServer-->>Player: license granted
+    Player->>CDNEdge: request video segment
+    CDNEdge->>OriginServer: fetch segment (cache miss)
+    OriginServer-->>CDNEdge: segment data
+    CDNEdge-->>Player: segment data
+    Player->>Analytics: report playback started
+    Player->>CDNEdge: request next segment
+    CDNEdge-->>Player: segment data (cache hit)
+    Player->>Analytics: report buffering event
+    Player-->>Viewer: render video frame
+    Player->>Analytics: report playback progress

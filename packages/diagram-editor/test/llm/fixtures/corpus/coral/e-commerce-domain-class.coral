@@ -1,0 +1,63 @@
+@diagram uml-class
+Customer class as "Customer" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute email: String
+  }
+}
+Cart class as "Cart" {
+  operations = operations {
+    operation_1 = public operation addItem()
+  }
+}
+Order class as "Order" {
+  attributes = attributes {
+    attribute_1 = public attribute placedAt: Date
+  }
+  operations = operations {
+    operation_1 = public operation calculateTotal()
+  }
+}
+OrderItem class as "OrderItem" {
+  attributes = attributes {
+    attribute_1 = public attribute quantity: int
+    attribute_2 = public attribute price: double
+  }
+}
+Product class as "Product" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute price: double
+  }
+}
+Inventory class as "Inventory" {
+  attributes = attributes {
+    attribute_1 = public attribute stockLevel: int
+  }
+  operations = operations {
+    operation_1 = public operation reserve()
+  }
+}
+Payment class as "Payment" {
+  attributes = attributes {
+    attribute_1 = public attribute amount: double
+  }
+  operations = operations {
+    operation_1 = public operation process()
+  }
+}
+ShippingAddress class as "ShippingAddress" {
+  attributes = attributes {
+    attribute_1 = public attribute street: String
+    attribute_2 = public attribute city: String
+  }
+}
+
+rel_1 = Customer --> Cart [association] as "owns"
+rel_2 = Cart -- OrderItem [aggregation, firstEnd: diamond]
+rel_3 = Customer --> Order [association] as "places"
+rel_4 = Order -- OrderItem [composition, firstEnd: filledDiamond]
+rel_5 = OrderItem --> Product [association] as "references"
+rel_6 = Product --> Inventory [association] as "tracked by"
+rel_7 = Order --> Payment [association] as "paid by"
+rel_8 = Order --> ShippingAddress [association] as "ships to"

@@ -1,0 +1,8 @@
+{
+  "originalFilename": "microservices-checkout.coral",
+  "defectType": "node-type-role-mismatch",
+  "affectedNodeIds": ["OrderDB"],
+  "affectedEdgeIds": [],
+  "explanation": "The description says the Order Service persists orders to a separate Order Database, and the sibling User Database is typed as a database, but the Order Database node is now typed as a service, so its label and its \"persist order\" storage role no longer match its declared type.",
+  "outputFilename": "microservices-checkout-node-type-role-mismatch-1.coral"
+}

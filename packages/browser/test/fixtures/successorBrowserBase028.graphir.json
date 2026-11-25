@@ -1,0 +1,313 @@
+{
+  "id": "coral-graph",
+  "metadata": {
+    "notation": "uml-sequence"
+  },
+  "version": "4.0.0",
+  "profile": {
+    "id": "uml",
+    "kind": "sequence",
+    "version": "1.0.0"
+  },
+  "catalog": {
+    "id": "uml-sequence",
+    "version": "1.0.0",
+    "digest": "sha256-eecf2a75c554bfd9fae724b600fcde151ee4f14ab00d304f708e05960c529350"
+  },
+  "conformanceLevel": "typical",
+  "nodes": [
+    {
+      "id": "a",
+      "type": "participant",
+      "label": "Client"
+    },
+    {
+      "id": "b",
+      "type": "participant",
+      "label": "Service"
+    },
+    {
+      "id": "c",
+      "type": "participant",
+      "label": "Audit"
+    }
+  ],
+  "edges": [
+    {
+      "id": "first",
+      "first": {
+        "node": "a"
+      },
+      "second": {
+        "node": "b"
+      },
+      "direction": "first-to-second",
+      "secondEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "async",
+      "label": "Submit\nrequest",
+      "labelPlacement": {
+        "side": "above",
+        "at": 0.25,
+        "offset": 0
+      }
+    },
+    {
+      "id": "inside",
+      "first": {
+        "node": "b"
+      },
+      "second": {
+        "node": "c"
+      },
+      "direction": "first-to-second",
+      "secondEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "async",
+      "label": "Review\nrecord",
+      "labelPlacement": {
+        "side": "below",
+        "at": 0.5,
+        "offset": 0
+      }
+    },
+    {
+      "id": "self",
+      "first": {
+        "node": "c"
+      },
+      "second": {
+        "node": "c"
+      },
+      "direction": "first-to-second",
+      "secondEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "async",
+      "label": "Record\nstatus",
+      "labelPlacement": {
+        "side": "center",
+        "at": 0.5
+      }
+    },
+    {
+      "id": "reverse",
+      "first": {
+        "node": "a"
+      },
+      "second": {
+        "node": "b"
+      },
+      "direction": "second-to-first",
+      "firstEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "async",
+      "label": "Return",
+      "labelPlacement": {
+        "side": "above",
+        "at": 0.25
+      }
+    },
+    {
+      "id": "close",
+      "first": {
+        "node": "a"
+      },
+      "second": {
+        "node": "b"
+      },
+      "direction": "first-to-second",
+      "secondEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "destroy",
+      "label": "Close",
+      "labelPlacement": {
+        "side": "right",
+        "at": 0.5,
+        "offset": 16
+      }
+    },
+    {
+      "id": "last",
+      "first": {
+        "node": "a"
+      },
+      "second": {
+        "node": "c"
+      },
+      "direction": "first-to-second",
+      "secondEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      },
+      "proximityHint": 1,
+      "type": "async",
+      "label": "Continue",
+      "labelPlacement": {
+        "side": "left",
+        "at": 0.5,
+        "offset": 16
+      }
+    }
+  ],
+  "interaction": {
+    "participants": [
+      {
+        "id": "a",
+        "nodeId": "a"
+      },
+      {
+        "id": "b",
+        "nodeId": "b",
+        "destroyedByMessageId": "close"
+      },
+      {
+        "id": "c",
+        "nodeId": "c"
+      }
+    ],
+    "participantOrder": [
+      "a",
+      "b",
+      "c"
+    ],
+    "messages": [
+      {
+        "id": "first",
+        "edgeId": "first",
+        "kind": "asynchronous",
+        "senderParticipantId": "a",
+        "receiverParticipantId": "b"
+      },
+      {
+        "id": "inside",
+        "edgeId": "inside",
+        "kind": "asynchronous",
+        "senderParticipantId": "b",
+        "receiverParticipantId": "c"
+      },
+      {
+        "id": "self",
+        "edgeId": "self",
+        "kind": "asynchronous",
+        "senderParticipantId": "c",
+        "receiverParticipantId": "c"
+      },
+      {
+        "id": "reverse",
+        "edgeId": "reverse",
+        "kind": "asynchronous",
+        "senderParticipantId": "b",
+        "receiverParticipantId": "a"
+      },
+      {
+        "id": "close",
+        "edgeId": "close",
+        "kind": "destroy",
+        "senderParticipantId": "a",
+        "receiverParticipantId": "b"
+      },
+      {
+        "id": "last",
+        "edgeId": "last",
+        "kind": "asynchronous",
+        "senderParticipantId": "a",
+        "receiverParticipantId": "c"
+      }
+    ],
+    "fragments": [
+      {
+        "id": "retry",
+        "kind": "loop",
+        "operands": [
+          {
+            "id": "retry-operand-1",
+            "items": [
+              {
+                "kind": "region",
+                "id": "review"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "items": [
+      {
+        "kind": "message",
+        "id": "first"
+      },
+      {
+        "kind": "fragment",
+        "id": "retry"
+      },
+      {
+        "kind": "message",
+        "id": "reverse"
+      },
+      {
+        "kind": "message",
+        "id": "close"
+      },
+      {
+        "kind": "message",
+        "id": "last"
+      }
+    ],
+    "notes": [
+      {
+        "id": "note-1",
+        "text": "Ready",
+        "participantIds": [
+          "c"
+        ]
+      }
+    ],
+    "regions": [
+      {
+        "id": "review",
+        "label": "Work region",
+        "items": [
+          {
+            "kind": "message",
+            "id": "inside"
+          },
+          {
+            "kind": "note",
+            "id": "note-1"
+          },
+          {
+            "kind": "message",
+            "id": "self"
+          }
+        ]
+      }
+    ]
+  }
+}

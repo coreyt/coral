@@ -1,0 +1,8 @@
+@diagram flowchart
+start terminal
+review process
+approved decision
+done terminal
+start -> review
+review -> approved
+approved -> done as "Yes"

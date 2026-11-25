@@ -1,0 +1,17 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol key {
+  artwork svg """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><!-- // { } @symbol "kept" byte for byte --><circle cx="8" cy="8" r="6"/></svg>
+"""
+  out port [maxConnections: 2, label: 'Out', direction: out]
+  anchor tip [at: 0.25, side: E]
+  tint stroke
+  outline diamond
+  label below
+  size 16 x 16
+  name "Key"
+}
+vault database as "Secrets" {
+  ingest port [label: "Writes", maxConnections: 3, anchor: W, direction: in]
+}

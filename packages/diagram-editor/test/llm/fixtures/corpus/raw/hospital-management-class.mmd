@@ -1,0 +1,44 @@
+classDiagram
+class Hospital {
+  +String name
+  +String address
+}
+class Department {
+  +String name
+  +String specialty
+}
+class Doctor {
+  +String name
+  +String specialization
+  +examinePatient()
+}
+class Nurse {
+  +String name
+  +String shift
+}
+class Patient {
+  +String name
+  +int age
+  +String insuranceId
+}
+class Appointment {
+  +DateTime scheduledTime
+  +String status
+}
+class MedicalRecord {
+  +String diagnosis
+  +String notes
+}
+class Prescription {
+  +String medication
+  +String dosage
+}
+Hospital *-- Department
+Department o-- Doctor
+Department o-- Nurse
+Patient --> Appointment : books
+Doctor --> Appointment : conducts
+Appointment --> MedicalRecord : generates
+Doctor --> Prescription : issues
+Patient *-- MedicalRecord
+Prescription --> Patient : dispensed to

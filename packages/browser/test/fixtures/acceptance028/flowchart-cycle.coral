@@ -1,0 +1,9 @@
+@diagram flowchart
+start terminal
+work process as "Review queued requests"
+choice decision
+end terminal
+start -> work
+work -> choice
+choice -> work as "Retry"
+choice -> end as "Complete"

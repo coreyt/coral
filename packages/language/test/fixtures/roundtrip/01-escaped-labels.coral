@@ -1,0 +1,3 @@
+service "say \"hi\""
+service "C:\\path"
+service "Line1\nLine2"

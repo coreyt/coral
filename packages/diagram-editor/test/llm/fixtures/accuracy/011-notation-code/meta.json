@@ -1,0 +1,8 @@
+{
+  "caseId": "011-notation-code",
+  "caseType": "notation",
+  "notationId": "code",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "Tests only interface/class/function/external_module vocabulary, not the code notation's full symbol set"
+}

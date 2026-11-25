@@ -1,0 +1,23 @@
+{
+  "slug": "file-upload-flow",
+  "reviews": [
+    {
+      "descriptionFile": "file-upload-flow.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 6 nodes and all 6 edges present, including the return edge from Virus Scanner Service back to Upload Service reporting the scan passed, which is easy to drop."
+    },
+    {
+      "descriptionFile": "file-upload-flow.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Ends-first framing naming the Notification Service outcome up front, then traces all 6 nodes and 6 edges in causal order. No fabricated steps."
+    },
+    {
+      "descriptionFile": "file-upload-flow.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 6 nodes, then lists all 6 edges in order, including the scan-passed reply edge. Matches the diagram exactly."
+    }
+  ]
+}

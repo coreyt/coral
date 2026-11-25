@@ -1,0 +1,18 @@
+<script src="/assets/coral-browser.iife.js"></script>
+
+<pre data-coral>
+@diagram architecture
+api service as "API"
+orders database as "Orders"
+api -> orders
+</pre>
+
+<coral-diagram>@diagram architecture
+worker service as "Worker"
+storage database as "Storage"
+worker -> storage</coral-diagram>
+
+<script>
+  Coral.scan();
+  Coral.defineCustomElement();
+</script>

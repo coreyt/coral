@@ -1,0 +1,16 @@
+{
+  "originalFilename": "employee-class.coral",
+  "originalDsl": "@diagram uml-class\nCompany class as \"Company\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n  }\n}\nDepartment class as \"Department\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n  }\n}\nEmployee class as \"Employee\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute id: String\n  }\n  operations = operations {\n    operation_1 = public operation calculatePay()\n  }\n}\nManager class as \"Manager\" {\n  operations = operations {\n    operation_1 = public operation manageTeam()\n  }\n}\nProject class as \"Project\" {\n  attributes = attributes {\n    attribute_1 = public attribute title: String\n  }\n}\n\nrel_1 = Company -- Department [composition, firstEnd: filledDiamond]\nrel_2 = Department -- Employee [aggregation, firstEnd: diamond]\nrel_3 = Manager --|> Employee [inheritance]\nrel_4 = Manager --> Department [association] as \"leads\"\nrel_5 = Employee --> Project [association] as \"assigned to\"\n",
+  "injectedDefects": [
+    {
+      "defectType": "stray-character",
+      "location": {
+        "line": 2,
+        "column": 5,
+        "charOffset": 24
+      },
+      "description": "inserted stray character \"~\" after \"class\""
+    }
+  ],
+  "outputFilename": "employee-class-stray-character-1.coral"
+}

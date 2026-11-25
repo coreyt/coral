@@ -1,0 +1,54 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    { "id": "api", "type": "service", "label": "API" },
+    { "id": "orders", "type": "database", "label": "Orders", "position": { "x": 320, "y": 80 } },
+    { "id": "ingress", "type": "service", "label": "Ingress" }
+  ],
+  "edges": [
+    {
+      "id": "writes",
+      "source": "api",
+      "target": "orders",
+      "label": "writes",
+      "routeIntent": {
+        "waypoints": [
+          {
+            "id": "coral.waypoint.writes.1",
+            "placement": { "kind": "absolute", "position": { "x": 240, "y": 80 } }
+          }
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "coral.constraint.relative.1",
+      "kind": "relative",
+      "strength": "preferred",
+      "subject": { "kind": "node", "nodeId": "api" },
+      "relation": "above",
+      "target": { "kind": "node", "nodeId": "orders" }
+    },
+    {
+      "id": "coral.constraint.boundary.2",
+      "kind": "boundary",
+      "strength": "preferred",
+      "subject": { "kind": "node", "nodeId": "ingress" },
+      "side": "top",
+      "scope": { "kind": "graph" }
+    },
+    {
+      "id": "coral.constraint.arrangement.3",
+      "kind": "arrangement",
+      "strength": "preferred",
+      "subjects": [
+        { "kind": "node", "nodeId": "ingress" },
+        { "kind": "node", "nodeId": "api" },
+        { "kind": "node", "nodeId": "orders" }
+      ],
+      "axis": "row"
+    }
+  ]
+}

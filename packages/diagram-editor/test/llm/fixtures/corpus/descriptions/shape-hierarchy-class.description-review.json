@@ -1,0 +1,23 @@
+{
+  "slug": "shape-hierarchy-class",
+  "reviews": [
+    {
+      "descriptionFile": "shape-hierarchy-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 5 classes with their member lists and all 4 relationships (3 inheritance edges, 1 aggregation), correctly describing aggregation as a hold-without-own relationship."
+    },
+    {
+      "descriptionFile": "shape-hierarchy-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from Canvas (the aggregating root) and works down through the inheritance tree. Original draft called Shape 'abstract-feeling', a characterization not present in the diagram (no <<abstract>> annotation exists in this diagram's syntax); removed that phrase. All 5 classes and all 4 relationships now stated plainly and accurately."
+    },
+    {
+      "descriptionFile": "shape-hierarchy-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 5 classes with members first, then lists all 4 relationships separately. Straightforward and accurate, no invented fields or edges."
+    }
+  ]
+}

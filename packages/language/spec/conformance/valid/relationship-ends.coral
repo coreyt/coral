@@ -1,0 +1,7 @@
+@graph {"id":"relationship-ends"}
+
+service "A"
+service "B"
+
+a (1..* "orders" one-or-many nav) -> b data {"targetEnd":{"marker":{"fill":"filled","kind":"diamond"},"navigability":"unspecified","role":"owner"}}
+b -> a ("members" arrow- nonav) data {"sourceEnd":{"navigability":"unspecified"}}

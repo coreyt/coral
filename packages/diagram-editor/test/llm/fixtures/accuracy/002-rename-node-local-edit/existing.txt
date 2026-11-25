@@ -1,0 +1,6 @@
+service "API Gateway" as "gateway"
+service "User Service" as "users"
+database "User DB" as "userdb"
+
+gateway -> users [label: "route"]
+users -> userdb [label: "query"]

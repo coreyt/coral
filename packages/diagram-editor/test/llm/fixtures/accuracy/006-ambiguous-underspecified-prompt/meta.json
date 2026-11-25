@@ -1,0 +1,7 @@
+{
+  "caseId": "006-ambiguous-underspecified-prompt",
+  "caseType": "ambiguous",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), aspect (b)'s ambiguous/underspecified case",
+  "limitations": "No single 'correct' output exists for this prompt by design; requiresManualReview is always set for this caseType"
+}

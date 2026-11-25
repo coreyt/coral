@@ -1,0 +1,8 @@
+@graph {"id":"json-keys","id":"other"}
+
+service "A" data {"symbol":"x","symbol":"y"}
+service "B" data {"ports":[{"id":"p","properties":{"k":1,"k":2},"side":"EAST"}]} {
+  config: {"retries":1,"retries":2}
+}
+
+a -> b data {"targetPort":"p","targetPort":"q"}

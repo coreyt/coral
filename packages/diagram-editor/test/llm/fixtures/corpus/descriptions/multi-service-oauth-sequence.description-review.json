@@ -1,0 +1,23 @@
+{
+  "slug": "multi-service-oauth-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "multi-service-oauth-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological OAuth authorization-code-flow walkthrough naming all 7 participants and all 18 messages in diagram order, including the two direct User-to-Identity-Provider and User-to-Consent-Service messages that bypass the Client App."
+    },
+    {
+      "descriptionFile": "multi-service-oauth-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the final protected-resource handoff and traces backward through token validation, token exchange, code issuance, consent, and identity confirmation. Initially the identity-confirmed reply was only implied rather than named; revised the sentence to explicitly state the Identity Provider's 'identity confirmed' reply so all 18 messages are named. Re-verified against the diagram after the fix."
+    },
+    {
+      "descriptionFile": "multi-service-oauth-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates the 7 components then groups connections by participant, correctly identifying the Authorization Server as the hub with the most connections. All 18 messages verified present, including both User bypass messages and the Resource Server's token-validation round trip."
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+This diagram exists to demonstrate a simple round-trip health check being logged. Twice over, the Client pings the Server, the Server pongs back to the Client, and then the Server reports the ping-pong latency to the Logger, so the Client, Server, and Logger each appear, with the ping/pong/log pattern repeating a second time identically.

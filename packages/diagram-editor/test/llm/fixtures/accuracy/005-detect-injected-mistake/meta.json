@@ -1,0 +1,7 @@
+{
+  "caseId": "005-detect-injected-mistake",
+  "caseType": "injected-mistake",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), the 'detect an injected mistake in a dense diagram' case from ai-editing-exploration.md",
+  "limitations": "This is a human-detection question inside a UX study, not a structural one (per llm-accuracy-harness.md's scoring model) -- requiresManualReview is always set for this caseType, and this harness makes no automated pass/fail claim for it"
+}

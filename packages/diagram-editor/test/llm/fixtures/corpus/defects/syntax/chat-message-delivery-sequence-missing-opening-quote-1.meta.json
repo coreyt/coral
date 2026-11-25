@@ -1,0 +1,16 @@
+{
+  "originalFilename": "chat-message-delivery-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nSender actor as \"Sender\"\nChatService participant as \"Chat Service\"\nQueue participant as \"Message Queue\"\nPresence participant as \"Presence Service\"\nPushService participant as \"Push Notification Service\"\nRecipient participant as \"Recipient Device\"\n\nmsg_1 = Sender -#> ChatService as \"send message\"\nmsg_2 = ChatService -#> Queue as \"enqueue message\"\nmsg_3 = ChatService -#> Presence as \"check recipient status\"\nmsg_4 = Presence -.-> ChatService as \"recipient offline\"\nmsg_5 = ChatService -#> PushService as \"send push notification\"\nmsg_6 = PushService -.-> ChatService as \"notification queued\"\nmsg_7 = Queue -#> Recipient as \"deliver message\"\nmsg_8 = Recipient -.-> Queue as \"delivery ack\"\nmsg_9 = Queue -.-> ChatService as \"message delivered\"\nmsg_10 = ChatService -.-> Sender as \"delivery receipt\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-quote",
+      "location": {
+        "line": 3,
+        "column": 27,
+        "charOffset": 74
+      },
+      "description": "removed opening quote on label \"Chat Service\""
+    }
+  ],
+  "outputFilename": "chat-message-delivery-sequence-missing-opening-quote-1.coral"
+}

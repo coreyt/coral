@@ -1,0 +1,8 @@
+{
+  "caseId": "017-adversarial-unicode-label",
+  "caseType": "adversarial-label",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), testing content fidelity for a label containing non-ASCII text and an emoji",
+  "limitations": "Tests only one specific Unicode label; does not test right-to-left scripts or combining-mark edge cases beyond this one example",
+  "expectedSubstrings": ["Café ☕ متجر"]
+}

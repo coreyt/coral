@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Client
+    participant WebServer as Web Server
+    participant AuthService as Auth Service
+    participant Database
+
+    Client->>WebServer: POST /login (username, password)
+    WebServer->>AuthService: validateCredentials(username, password)
+    AuthService->>Database: SELECT user WHERE username = ?
+    Database-->>AuthService: user record
+    AuthService->>AuthService: verify password hash
+    alt credentials valid
+        AuthService-->>WebServer: auth token
+        WebServer-->>Client: 200 OK + session token
+    else credentials invalid
+        AuthService-->>WebServer: authentication failed
+        WebServer-->>Client: 401 Unauthorized
+    end

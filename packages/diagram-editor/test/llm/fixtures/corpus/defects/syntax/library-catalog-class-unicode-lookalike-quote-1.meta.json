@@ -1,0 +1,16 @@
+{
+  "originalFilename": "library-catalog-class.coral",
+  "originalDsl": "@diagram uml-class\nLibrary class as \"Library\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute address: String\n  }\n}\nBranch class as \"Branch\" {\n  attributes = attributes {\n    attribute_1 = public attribute location: String\n  }\n}\nCatalog class as \"Catalog\" {\n  operations = operations {\n    operation_1 = public operation search()\n  }\n}\nBook class as \"Book\" {\n  attributes = attributes {\n    attribute_1 = public attribute title: String\n    attribute_2 = public attribute isbn: String\n  }\n}\nAuthor class as \"Author\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n  }\n}\nMember class as \"Member\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute memberId: String\n  }\n}\nLoan class as \"Loan\" {\n  attributes = attributes {\n    attribute_1 = public attribute dueDate: Date\n  }\n  operations = operations {\n    operation_1 = public operation returnBook()\n  }\n}\nLibrarian class as \"Librarian\" {\n  attributes = attributes {\n    attribute_1 = public attribute employeeId: String\n  }\n  operations = operations {\n    operation_1 = public operation checkOut()\n  }\n}\n\nrel_1 = Library -- Branch [composition, firstEnd: filledDiamond]\nrel_2 = Branch -- Catalog [composition, firstEnd: filledDiamond]\nrel_3 = Catalog -- Book [aggregation, firstEnd: diamond]\nrel_4 = Book --> Author [association] as \"written by\"\nrel_5 = Member --> Loan [association] as \"borrows\"\nrel_6 = Loan --> Book [association] as \"references\"\nrel_7 = Librarian --> Loan [association] as \"processes\"\nrel_8 = Branch -- Librarian [aggregation, firstEnd: diamond]\n",
+  "injectedDefects": [
+    {
+      "defectType": "unicode-lookalike-quote",
+      "location": {
+        "line": 35,
+        "column": 19,
+        "charOffset": 844
+      },
+      "description": "replaced closing quote on label \"Loan\" with Unicode look-alike U+201D"
+    }
+  ],
+  "outputFilename": "library-catalog-class-unicode-lookalike-quote-1.coral"
+}

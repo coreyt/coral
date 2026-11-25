@@ -1,0 +1,1147 @@
+{
+  "schemaVersion": 1,
+  "scope": "Explicit symbol/variant selection from installed source; semantic type-specific support is separate",
+  "cases": [
+    {
+      "id": "aiml-agent",
+      "notation": "aiml",
+      "symbol": "aiml-agent",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-agent\"]\n"
+    },
+    {
+      "id": "aiml-annotation",
+      "notation": "aiml",
+      "symbol": "aiml-annotation",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-annotation\"]\n"
+    },
+    {
+      "id": "aiml-dataset",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\"]\n"
+    },
+    {
+      "id": "aiml-dataset/test",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "test",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"test\"]\n"
+    },
+    {
+      "id": "aiml-dataset/training",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "training",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"training\"]\n"
+    },
+    {
+      "id": "aiml-dataset/validation",
+      "notation": "aiml",
+      "symbol": "aiml-dataset",
+      "variant": "validation",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-dataset\", variant: \"validation\"]\n"
+    },
+    {
+      "id": "aiml-embedding",
+      "notation": "aiml",
+      "symbol": "aiml-embedding",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-embedding\"]\n"
+    },
+    {
+      "id": "aiml-evaluator",
+      "notation": "aiml",
+      "symbol": "aiml-evaluator",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-evaluator\"]\n"
+    },
+    {
+      "id": "aiml-feature-store",
+      "notation": "aiml",
+      "symbol": "aiml-feature-store",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-feature-store\"]\n"
+    },
+    {
+      "id": "aiml-gpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\"]\n"
+    },
+    {
+      "id": "aiml-gpu/cluster",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "cluster",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"cluster\"]\n"
+    },
+    {
+      "id": "aiml-gpu/gpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "gpu",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"gpu\"]\n"
+    },
+    {
+      "id": "aiml-gpu/tpu",
+      "notation": "aiml",
+      "symbol": "aiml-gpu",
+      "variant": "tpu",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-gpu\", variant: \"tpu\"]\n"
+    },
+    {
+      "id": "aiml-guardrail",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\"]\n"
+    },
+    {
+      "id": "aiml-guardrail/input",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "variant": "input",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\", variant: \"input\"]\n"
+    },
+    {
+      "id": "aiml-guardrail/output",
+      "notation": "aiml",
+      "symbol": "aiml-guardrail",
+      "variant": "output",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-guardrail\", variant: \"output\"]\n"
+    },
+    {
+      "id": "aiml-inference",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\"]\n"
+    },
+    {
+      "id": "aiml-inference/batch",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "batch",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"batch\"]\n"
+    },
+    {
+      "id": "aiml-inference/realtime",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "realtime",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"realtime\"]\n"
+    },
+    {
+      "id": "aiml-inference/serverless",
+      "notation": "aiml",
+      "symbol": "aiml-inference",
+      "variant": "serverless",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-inference\", variant: \"serverless\"]\n"
+    },
+    {
+      "id": "aiml-llm",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\"]\n"
+    },
+    {
+      "id": "aiml-llm/chat",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "chat",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"chat\"]\n"
+    },
+    {
+      "id": "aiml-llm/completion",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "completion",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"completion\"]\n"
+    },
+    {
+      "id": "aiml-llm/multimodal",
+      "notation": "aiml",
+      "symbol": "aiml-llm",
+      "variant": "multimodal",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-llm\", variant: \"multimodal\"]\n"
+    },
+    {
+      "id": "aiml-memory",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\"]\n"
+    },
+    {
+      "id": "aiml-memory/long-term",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "variant": "long-term",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\", variant: \"long-term\"]\n"
+    },
+    {
+      "id": "aiml-memory/short-term",
+      "notation": "aiml",
+      "symbol": "aiml-memory",
+      "variant": "short-term",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-memory\", variant: \"short-term\"]\n"
+    },
+    {
+      "id": "aiml-model",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\"]\n"
+    },
+    {
+      "id": "aiml-model/classifier",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "classifier",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"classifier\"]\n"
+    },
+    {
+      "id": "aiml-model/fine-tuned",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "fine-tuned",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"fine-tuned\"]\n"
+    },
+    {
+      "id": "aiml-model/foundation",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "foundation",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"foundation\"]\n"
+    },
+    {
+      "id": "aiml-model/regression",
+      "notation": "aiml",
+      "symbol": "aiml-model",
+      "variant": "regression",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-model\", variant: \"regression\"]\n"
+    },
+    {
+      "id": "aiml-prompt",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\"]\n"
+    },
+    {
+      "id": "aiml-prompt/chain",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "variant": "chain",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\", variant: \"chain\"]\n"
+    },
+    {
+      "id": "aiml-prompt/template",
+      "notation": "aiml",
+      "symbol": "aiml-prompt",
+      "variant": "template",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-prompt\", variant: \"template\"]\n"
+    },
+    {
+      "id": "aiml-retriever",
+      "notation": "aiml",
+      "symbol": "aiml-retriever",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-retriever\"]\n"
+    },
+    {
+      "id": "aiml-tool",
+      "notation": "aiml",
+      "symbol": "aiml-tool",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-tool\"]\n"
+    },
+    {
+      "id": "aiml-training",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\"]\n"
+    },
+    {
+      "id": "aiml-training/distributed",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "variant": "distributed",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\", variant: \"distributed\"]\n"
+    },
+    {
+      "id": "aiml-training/fine-tune",
+      "notation": "aiml",
+      "symbol": "aiml-training",
+      "variant": "fine-tune",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-training\", variant: \"fine-tune\"]\n"
+    },
+    {
+      "id": "aiml-vector-store",
+      "notation": "aiml",
+      "symbol": "aiml-vector-store",
+      "source": "@diagram aiml\nprobe group [symbol: \"aiml-vector-store\"]\n"
+    },
+    {
+      "id": "arch-actor",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-actor\"]\n"
+    },
+    {
+      "id": "arch-actor/admin",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "admin",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-actor\", variant: \"admin\"]\n"
+    },
+    {
+      "id": "arch-actor/system",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "system",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-actor\", variant: \"system\"]\n"
+    },
+    {
+      "id": "arch-actor/user",
+      "notation": "architecture",
+      "symbol": "arch-actor",
+      "variant": "user",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-actor\", variant: \"user\"]\n"
+    },
+    {
+      "id": "arch-annotation",
+      "notation": "architecture",
+      "symbol": "arch-annotation",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-annotation\"]\n"
+    },
+    {
+      "id": "arch-cdn",
+      "notation": "architecture",
+      "symbol": "arch-cdn",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-cdn\"]\n"
+    },
+    {
+      "id": "arch-container",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\"]\n"
+    },
+    {
+      "id": "arch-container/cluster",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "cluster",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"cluster\"]\n"
+    },
+    {
+      "id": "arch-container/namespace",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "namespace",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"namespace\"]\n"
+    },
+    {
+      "id": "arch-container/vpc",
+      "notation": "architecture",
+      "symbol": "arch-container",
+      "variant": "vpc",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-container\", variant: \"vpc\"]\n"
+    },
+    {
+      "id": "arch-database",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-database\"]\n"
+    },
+    {
+      "id": "arch-database/cache",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "cache",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-database\", variant: \"cache\"]\n"
+    },
+    {
+      "id": "arch-database/nosql",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "nosql",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-database\", variant: \"nosql\"]\n"
+    },
+    {
+      "id": "arch-database/search",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "search",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-database\", variant: \"search\"]\n"
+    },
+    {
+      "id": "arch-database/sql",
+      "notation": "architecture",
+      "symbol": "arch-database",
+      "variant": "sql",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-database\", variant: \"sql\"]\n"
+    },
+    {
+      "id": "arch-external-api",
+      "notation": "architecture",
+      "symbol": "arch-external-api",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-external-api\"]\n"
+    },
+    {
+      "id": "arch-function",
+      "notation": "architecture",
+      "symbol": "arch-function",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-function\"]\n"
+    },
+    {
+      "id": "arch-load-balancer",
+      "notation": "architecture",
+      "symbol": "arch-load-balancer",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-load-balancer\"]\n"
+    },
+    {
+      "id": "arch-queue",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\"]\n"
+    },
+    {
+      "id": "arch-queue/queue",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "queue",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"queue\"]\n"
+    },
+    {
+      "id": "arch-queue/stream",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "stream",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"stream\"]\n"
+    },
+    {
+      "id": "arch-queue/topic",
+      "notation": "architecture",
+      "symbol": "arch-queue",
+      "variant": "topic",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-queue\", variant: \"topic\"]\n"
+    },
+    {
+      "id": "arch-service",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-service\"]\n"
+    },
+    {
+      "id": "arch-service/api",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "api",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-service\", variant: \"api\"]\n"
+    },
+    {
+      "id": "arch-service/gateway",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "gateway",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-service\", variant: \"gateway\"]\n"
+    },
+    {
+      "id": "arch-service/web",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "web",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-service\", variant: \"web\"]\n"
+    },
+    {
+      "id": "arch-service/worker",
+      "notation": "architecture",
+      "symbol": "arch-service",
+      "variant": "worker",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-service\", variant: \"worker\"]\n"
+    },
+    {
+      "id": "arch-storage",
+      "notation": "architecture",
+      "symbol": "arch-storage",
+      "source": "@diagram architecture\nprobe group [symbol: \"arch-storage\"]\n"
+    },
+    {
+      "id": "block-unit",
+      "notation": "block",
+      "symbol": "block-unit",
+      "source": "@diagram block\nprobe group [symbol: \"block-unit\"]\n"
+    },
+    {
+      "id": "bpmn-annotation",
+      "notation": "bpmn",
+      "symbol": "bpmn-annotation",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-annotation\"]\n"
+    },
+    {
+      "id": "bpmn-data-object",
+      "notation": "bpmn",
+      "symbol": "bpmn-data-object",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-data-object\"]\n"
+    },
+    {
+      "id": "bpmn-data-store",
+      "notation": "bpmn",
+      "symbol": "bpmn-data-store",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-data-store\"]\n"
+    },
+    {
+      "id": "bpmn-end-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-end-event",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-end-event\"]\n"
+    },
+    {
+      "id": "bpmn-gateway-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-event",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-event\"]\n"
+    },
+    {
+      "id": "bpmn-gateway-exclusive",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-exclusive",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-exclusive\"]\n"
+    },
+    {
+      "id": "bpmn-gateway-inclusive",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-inclusive",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-inclusive\"]\n"
+    },
+    {
+      "id": "bpmn-gateway-parallel",
+      "notation": "bpmn",
+      "symbol": "bpmn-gateway-parallel",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-gateway-parallel\"]\n"
+    },
+    {
+      "id": "bpmn-intermediate-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\"]\n"
+    },
+    {
+      "id": "bpmn-intermediate-event/catch",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "variant": "catch",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\", variant: \"catch\"]\n"
+    },
+    {
+      "id": "bpmn-intermediate-event/throw",
+      "notation": "bpmn",
+      "symbol": "bpmn-intermediate-event",
+      "variant": "throw",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-intermediate-event\", variant: \"throw\"]\n"
+    },
+    {
+      "id": "bpmn-lane",
+      "notation": "bpmn",
+      "symbol": "bpmn-lane",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-lane\"]\n"
+    },
+    {
+      "id": "bpmn-pool",
+      "notation": "bpmn",
+      "symbol": "bpmn-pool",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-pool\"]\n"
+    },
+    {
+      "id": "bpmn-start-event",
+      "notation": "bpmn",
+      "symbol": "bpmn-start-event",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-start-event\"]\n"
+    },
+    {
+      "id": "bpmn-subprocess",
+      "notation": "bpmn",
+      "symbol": "bpmn-subprocess",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-subprocess\"]\n"
+    },
+    {
+      "id": "bpmn-task",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-task\"]\n"
+    },
+    {
+      "id": "bpmn-task/manual",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "manual",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-task\", variant: \"manual\"]\n"
+    },
+    {
+      "id": "bpmn-task/script",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "script",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-task\", variant: \"script\"]\n"
+    },
+    {
+      "id": "bpmn-task/service",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "service",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-task\", variant: \"service\"]\n"
+    },
+    {
+      "id": "bpmn-task/user",
+      "notation": "bpmn",
+      "symbol": "bpmn-task",
+      "variant": "user",
+      "source": "@diagram bpmn\nprobe group [symbol: \"bpmn-task\", variant: \"user\"]\n"
+    },
+    {
+      "id": "code-class",
+      "notation": "code",
+      "symbol": "code-class",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\"]\n"
+    },
+    {
+      "id": "code-class/abstract",
+      "notation": "code",
+      "symbol": "code-class",
+      "variant": "abstract",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\", variant: \"abstract\"]\n"
+    },
+    {
+      "id": "code-class/interface",
+      "notation": "code",
+      "symbol": "code-class",
+      "variant": "interface",
+      "source": "@diagram code\nprobe group [symbol: \"code-class\", variant: \"interface\"]\n"
+    },
+    {
+      "id": "code-comment",
+      "notation": "code",
+      "symbol": "code-comment",
+      "source": "@diagram code\nprobe group [symbol: \"code-comment\"]\n"
+    },
+    {
+      "id": "code-external",
+      "notation": "code",
+      "symbol": "code-external",
+      "source": "@diagram code\nprobe group [symbol: \"code-external\"]\n"
+    },
+    {
+      "id": "code-function",
+      "notation": "code",
+      "symbol": "code-function",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\"]\n"
+    },
+    {
+      "id": "code-function/async",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "async",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"async\"]\n"
+    },
+    {
+      "id": "code-function/constructor",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "constructor",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"constructor\"]\n"
+    },
+    {
+      "id": "code-function/generator",
+      "notation": "code",
+      "symbol": "code-function",
+      "variant": "generator",
+      "source": "@diagram code\nprobe group [symbol: \"code-function\", variant: \"generator\"]\n"
+    },
+    {
+      "id": "code-module",
+      "notation": "code",
+      "symbol": "code-module",
+      "source": "@diagram code\nprobe group [symbol: \"code-module\"]\n"
+    },
+    {
+      "id": "code-namespace",
+      "notation": "code",
+      "symbol": "code-namespace",
+      "source": "@diagram code\nprobe group [symbol: \"code-namespace\"]\n"
+    },
+    {
+      "id": "code-type",
+      "notation": "code",
+      "symbol": "code-type",
+      "source": "@diagram code\nprobe group [symbol: \"code-type\"]\n"
+    },
+    {
+      "id": "code-variable",
+      "notation": "code",
+      "symbol": "code-variable",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\"]\n"
+    },
+    {
+      "id": "code-variable/constant",
+      "notation": "code",
+      "symbol": "code-variable",
+      "variant": "constant",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\", variant: \"constant\"]\n"
+    },
+    {
+      "id": "code-variable/static",
+      "notation": "code",
+      "symbol": "code-variable",
+      "variant": "static",
+      "source": "@diagram code\nprobe group [symbol: \"code-variable\", variant: \"static\"]\n"
+    },
+    {
+      "id": "data-annotation",
+      "notation": "data-engineering",
+      "symbol": "data-annotation",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-annotation\"]\n"
+    },
+    {
+      "id": "data-batch",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\"]\n"
+    },
+    {
+      "id": "data-batch/scheduled",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "variant": "scheduled",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\", variant: \"scheduled\"]\n"
+    },
+    {
+      "id": "data-batch/triggered",
+      "notation": "data-engineering",
+      "symbol": "data-batch",
+      "variant": "triggered",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-batch\", variant: \"triggered\"]\n"
+    },
+    {
+      "id": "data-catalog",
+      "notation": "data-engineering",
+      "symbol": "data-catalog",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-catalog\"]\n"
+    },
+    {
+      "id": "data-cdc",
+      "notation": "data-engineering",
+      "symbol": "data-cdc",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-cdc\"]\n"
+    },
+    {
+      "id": "data-dashboard",
+      "notation": "data-engineering",
+      "symbol": "data-dashboard",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-dashboard\"]\n"
+    },
+    {
+      "id": "data-lake",
+      "notation": "data-engineering",
+      "symbol": "data-lake",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-lake\"]\n"
+    },
+    {
+      "id": "data-pipeline",
+      "notation": "data-engineering",
+      "symbol": "data-pipeline",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-pipeline\"]\n"
+    },
+    {
+      "id": "data-quality",
+      "notation": "data-engineering",
+      "symbol": "data-quality",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-quality\"]\n"
+    },
+    {
+      "id": "data-schema",
+      "notation": "data-engineering",
+      "symbol": "data-schema",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-schema\"]\n"
+    },
+    {
+      "id": "data-sink",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\"]\n"
+    },
+    {
+      "id": "data-sink/api",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "api",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"api\"]\n"
+    },
+    {
+      "id": "data-sink/database",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "database",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"database\"]\n"
+    },
+    {
+      "id": "data-sink/file",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "file",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"file\"]\n"
+    },
+    {
+      "id": "data-sink/stream",
+      "notation": "data-engineering",
+      "symbol": "data-sink",
+      "variant": "stream",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-sink\", variant: \"stream\"]\n"
+    },
+    {
+      "id": "data-source",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\"]\n"
+    },
+    {
+      "id": "data-source/api",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "api",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"api\"]\n"
+    },
+    {
+      "id": "data-source/database",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "database",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"database\"]\n"
+    },
+    {
+      "id": "data-source/file",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "file",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"file\"]\n"
+    },
+    {
+      "id": "data-source/stream",
+      "notation": "data-engineering",
+      "symbol": "data-source",
+      "variant": "stream",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-source\", variant: \"stream\"]\n"
+    },
+    {
+      "id": "data-stream",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\"]\n"
+    },
+    {
+      "id": "data-stream/kafka",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "kafka",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"kafka\"]\n"
+    },
+    {
+      "id": "data-stream/kinesis",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "kinesis",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"kinesis\"]\n"
+    },
+    {
+      "id": "data-stream/pubsub",
+      "notation": "data-engineering",
+      "symbol": "data-stream",
+      "variant": "pubsub",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-stream\", variant: \"pubsub\"]\n"
+    },
+    {
+      "id": "data-transform",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\"]\n"
+    },
+    {
+      "id": "data-transform/aggregate",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "aggregate",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"aggregate\"]\n"
+    },
+    {
+      "id": "data-transform/filter",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "filter",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"filter\"]\n"
+    },
+    {
+      "id": "data-transform/join",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "join",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"join\"]\n"
+    },
+    {
+      "id": "data-transform/map",
+      "notation": "data-engineering",
+      "symbol": "data-transform",
+      "variant": "map",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-transform\", variant: \"map\"]\n"
+    },
+    {
+      "id": "data-warehouse",
+      "notation": "data-engineering",
+      "symbol": "data-warehouse",
+      "source": "@diagram data-engineering\nprobe group [symbol: \"data-warehouse\"]\n"
+    },
+    {
+      "id": "erd-attribute",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-attribute\"]\n"
+    },
+    {
+      "id": "erd-attribute/composite",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "composite",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-attribute\", variant: \"composite\"]\n"
+    },
+    {
+      "id": "erd-attribute/derived",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "derived",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-attribute\", variant: \"derived\"]\n"
+    },
+    {
+      "id": "erd-attribute/multivalued",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "multivalued",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-attribute\", variant: \"multivalued\"]\n"
+    },
+    {
+      "id": "erd-attribute/primary-key",
+      "notation": "erd",
+      "symbol": "erd-attribute",
+      "variant": "primary-key",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-attribute\", variant: \"primary-key\"]\n"
+    },
+    {
+      "id": "erd-cardinality",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\"]\n"
+    },
+    {
+      "id": "erd-cardinality/many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "many",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"many\"]\n"
+    },
+    {
+      "id": "erd-cardinality/one",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "one",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"one\"]\n"
+    },
+    {
+      "id": "erd-cardinality/one-many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "one-many",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"one-many\"]\n"
+    },
+    {
+      "id": "erd-cardinality/zero-many",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "zero-many",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"zero-many\"]\n"
+    },
+    {
+      "id": "erd-cardinality/zero-one",
+      "notation": "erd",
+      "symbol": "erd-cardinality",
+      "variant": "zero-one",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-cardinality\", variant: \"zero-one\"]\n"
+    },
+    {
+      "id": "erd-entity",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-entity\"]\n"
+    },
+    {
+      "id": "erd-entity/strong",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "variant": "strong",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-entity\", variant: \"strong\"]\n"
+    },
+    {
+      "id": "erd-entity/weak",
+      "notation": "erd",
+      "symbol": "erd-entity",
+      "variant": "weak",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-entity\", variant: \"weak\"]\n"
+    },
+    {
+      "id": "erd-isa",
+      "notation": "erd",
+      "symbol": "erd-isa",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-isa\"]\n"
+    },
+    {
+      "id": "erd-note",
+      "notation": "erd",
+      "symbol": "erd-note",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-note\"]\n"
+    },
+    {
+      "id": "erd-relationship",
+      "notation": "erd",
+      "symbol": "erd-relationship",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-relationship\"]\n"
+    },
+    {
+      "id": "erd-relationship/identifying",
+      "notation": "erd",
+      "symbol": "erd-relationship",
+      "variant": "identifying",
+      "source": "@diagram erd\nprobe group [symbol: \"erd-relationship\", variant: \"identifying\"]\n"
+    },
+    {
+      "id": "flowchart-annotation",
+      "notation": "flowchart",
+      "symbol": "flowchart-annotation",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-annotation\"]\n"
+    },
+    {
+      "id": "flowchart-connector",
+      "notation": "flowchart",
+      "symbol": "flowchart-connector",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-connector\"]\n"
+    },
+    {
+      "id": "flowchart-decision",
+      "notation": "flowchart",
+      "symbol": "flowchart-decision",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-decision\"]\n"
+    },
+    {
+      "id": "flowchart-document",
+      "notation": "flowchart",
+      "symbol": "flowchart-document",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-document\"]\n"
+    },
+    {
+      "id": "flowchart-io",
+      "notation": "flowchart",
+      "symbol": "flowchart-io",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-io\"]\n"
+    },
+    {
+      "id": "flowchart-predefined",
+      "notation": "flowchart",
+      "symbol": "flowchart-predefined",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-predefined\"]\n"
+    },
+    {
+      "id": "flowchart-process",
+      "notation": "flowchart",
+      "symbol": "flowchart-process",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-process\"]\n"
+    },
+    {
+      "id": "flowchart-terminal",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-terminal\"]\n"
+    },
+    {
+      "id": "flowchart-terminal/end",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "variant": "end",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-terminal\", variant: \"end\"]\n"
+    },
+    {
+      "id": "flowchart-terminal/start",
+      "notation": "flowchart",
+      "symbol": "flowchart-terminal",
+      "variant": "start",
+      "source": "@diagram flowchart\nprobe group [symbol: \"flowchart-terminal\", variant: \"start\"]\n"
+    },
+    {
+      "id": "sketch-box",
+      "notation": "sketch",
+      "symbol": "sketch-box",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-box\"]\n"
+    },
+    {
+      "id": "sketch-circle",
+      "notation": "sketch",
+      "symbol": "sketch-circle",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-circle\"]\n"
+    },
+    {
+      "id": "sketch-cloud",
+      "notation": "sketch",
+      "symbol": "sketch-cloud",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-cloud\"]\n"
+    },
+    {
+      "id": "sketch-decision",
+      "notation": "sketch",
+      "symbol": "sketch-decision",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-decision\"]\n"
+    },
+    {
+      "id": "sketch-group",
+      "notation": "sketch",
+      "symbol": "sketch-group",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-group\"]\n"
+    },
+    {
+      "id": "sketch-label",
+      "notation": "sketch",
+      "symbol": "sketch-label",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-label\"]\n"
+    },
+    {
+      "id": "sketch-step",
+      "notation": "sketch",
+      "symbol": "sketch-step",
+      "source": "@diagram sketch\nprobe group [symbol: \"sketch-step\"]\n"
+    },
+    {
+      "id": "uml-actor",
+      "notation": "uml-sequence",
+      "symbol": "uml-actor",
+      "source": "@diagram uml-sequence\nprobe participant [symbol: \"uml-actor\"]\n"
+    },
+    {
+      "id": "uml-class",
+      "notation": "uml-class",
+      "symbol": "uml-class",
+      "source": "@diagram uml-class\nprobe group [symbol: \"uml-class\"]\n"
+    },
+    {
+      "id": "uml-enum",
+      "notation": "uml-class",
+      "symbol": "uml-enum",
+      "source": "@diagram uml-class\nprobe group [symbol: \"uml-enum\"]\n"
+    },
+    {
+      "id": "uml-interface",
+      "notation": "uml-class",
+      "symbol": "uml-interface",
+      "source": "@diagram uml-class\nprobe group [symbol: \"uml-interface\"]\n"
+    },
+    {
+      "id": "uml-participant",
+      "notation": "uml-sequence",
+      "symbol": "uml-participant",
+      "source": "@diagram uml-sequence\nprobe participant [symbol: \"uml-participant\"]\n"
+    }
+  ]
+}

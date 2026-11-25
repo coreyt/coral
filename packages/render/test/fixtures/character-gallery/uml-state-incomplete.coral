@@ -1,0 +1,4 @@
+@diagram uml-state
+Idle state
+Running state
+Idle -> Running

@@ -1,0 +1,12 @@
+@diagram uml-class
+Document class
+Order class {
+  attributes {
+    + orderId: String
+  }
+}
+Quote class
+Invoice class
+orderParent = Order --|> Document [inheritance]
+quoteParent = Quote --|> Document [inheritance]
+invoiceParent = Invoice --|> Document [inheritance]

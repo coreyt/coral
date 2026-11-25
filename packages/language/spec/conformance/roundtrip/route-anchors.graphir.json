@@ -1,0 +1,24 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    { "id": "api", "type": "service", "label": "API", "ports": [{ "id": "out", "side": "EAST" }] },
+    { "id": "orders", "type": "database", "label": "Orders", "ports": [{ "id": "in", "side": "WEST" }] }
+  ],
+  "edges": [
+    {
+      "id": "routed",
+      "source": "api",
+      "target": "orders",
+      "routeIntent": {
+        "waypoints": [
+          { "id": "fixed", "placement": { "kind": "absolute", "position": { "x": 100, "y": 80 } } },
+          { "id": "from_source", "placement": { "kind": "relative", "anchor": { "kind": "source" }, "offset": { "x": 10, "y": 0 } } },
+          { "id": "toward_target", "placement": { "kind": "relative", "anchor": { "kind": "target" }, "offset": { "x": -10, "y": 0 } } },
+          { "id": "beside_orders", "placement": { "kind": "relative", "anchor": { "kind": "node", "nodeId": "orders" }, "offset": { "x": -20, "y": 0 } } },
+          { "id": "port_entry", "placement": { "kind": "relative", "anchor": { "kind": "port", "nodeId": "orders", "portId": "in" }, "offset": { "x": -4, "y": 0 } } }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+@graph {"id":"coral_overview","layoutOptions":{"direction":"RIGHT"}}
+
+process "Source" as source
+process "Transform" as transform
+process "Result" as result
+
+source -> transform
+transform -> result

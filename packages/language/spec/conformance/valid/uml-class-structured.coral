@@ -1,0 +1,25 @@
+@graph {"id":"uml-structured","metadata":{"notation":"uml-class"}}
+
+class "Order" as Order modifiers {abstract} {
+  attributes {
+    + id: UUID {readonly}
+  }
+  operations as behavior {
+    + add(item: LineItem, count: Int): Void as "add-item"
+  }
+}
+
+interface "Repository" as Repository modifiers {abstract} {
+  operations {
+    + save(order: Order): Void
+  }
+}
+
+enum "State" as State {
+  literals {
+    literal OPEN = "open"
+    literal CLOSED
+  }
+}
+
+Order -> Repository [realization]

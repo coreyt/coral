@@ -1,0 +1,73 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "backend",
+      "type": "group",
+      "label": "Backend",
+      "children": [
+        {
+          "id": "api",
+          "type": "service",
+          "label": "API",
+          "parent": "backend",
+          "labelPlacement": { "side": "below", "offset": 8 }
+        },
+        { "id": "orders", "type": "database", "label": "Orders", "parent": "backend" }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "writes",
+      "source": "api",
+      "target": "orders",
+      "label": "writes",
+      "labelPlacement": { "side": "below", "at": 0.25, "offset": 8 },
+      "routeIntent": {
+        "waypoints": [
+          {
+            "id": "approach",
+            "placement": {
+              "kind": "relative",
+              "anchor": { "kind": "target" },
+              "offset": { "x": -20, "y": 0 }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "coral.constraint.relative.1",
+      "kind": "relative",
+      "strength": "preferred",
+      "subject": { "kind": "node", "nodeId": "api" },
+      "relation": "above",
+      "target": { "kind": "node", "nodeId": "orders" }
+    },
+    {
+      "id": "api_above_orders",
+      "kind": "relative",
+      "strength": "required",
+      "subject": { "kind": "node", "nodeId": "api" },
+      "relation": "above",
+      "target": { "kind": "node", "nodeId": "orders" },
+      "gap": 24,
+      "alignment": "center"
+    },
+    {
+      "id": "backend_row",
+      "kind": "arrangement",
+      "strength": "preferred",
+      "subjects": [
+        { "kind": "node", "nodeId": "api" },
+        { "kind": "node", "nodeId": "orders" }
+      ],
+      "axis": "row",
+      "gap": 16
+    }
+  ]
+}

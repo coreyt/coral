@@ -1,0 +1,9 @@
+@diagram flowchart
+start terminal [variant: "start"]
+review process as "Review request"
+check decision as "Approved?"
+finish terminal [variant: "end"]
+start -> review
+review -> check
+check -> finish [label: "Yes"]
+check -> review [label: "No"]

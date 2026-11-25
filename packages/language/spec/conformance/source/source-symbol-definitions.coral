@@ -1,0 +1,32 @@
+// Edition 0.2.9 definitions; raw artwork is inert to every line reader.
+@diagram architecture
+@coralVersion "0.2.9"
+
+@symbol shield {
+  name "Shield"
+  description "Security boundary or policy enforcement point"
+  tags "security" "auth"
+  size 48 x 56
+  label below
+  outline rounded
+  source "Drawn in-house"
+  license "CC0-1.0"
+  anchor crest [side: N, at: 0.5]
+  anchor keyhole [x: 0.5, y: 0.55, exit: S]
+  login port [direction: in, anchor: W, label: "Sign-in", maxConnections: 1]
+  token port [direction: out, anchor: E, label: "Token"]
+  audit port [direction: out, anchor: keyhole]
+  artwork svg """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28">
+  <!-- // not a comment; { braces } and @symbol x { are inert; 'quotes' "too" -->
+  <path d="M12 0 L24 4 L24 14 C24 21 18 26 12 28 C6 26 0 21 0 14 L0 4 Z" fill="#2f6f4f"/>
+</svg>
+"""
+}
+
+gate service [symbol: "local.shield"] as "Auth gateway"
+vault database as "Secrets" {
+  ingest port [direction: in, anchor: W, label: "Writes"]
+}
+gate:token -> vault [reads]
+gate:audit -> vault:ingest [type: writes, secondEnd: arrow]

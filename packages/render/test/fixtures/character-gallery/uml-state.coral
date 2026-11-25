@@ -1,0 +1,8 @@
+@diagram uml-state
+start initial
+Idle state
+Running state
+finish final
+begin = start -> Idle [label: "begin"]
+run = Idle -> Running [label: "run"]
+end = Running -> finish [label: "end"]

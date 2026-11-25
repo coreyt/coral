@@ -1,0 +1,8 @@
+{
+  "caseId": "016-adversarial-quote-in-label",
+  "caseType": "adversarial-label",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), testing whether the model (instructed only by CORAL_GRAMMAR_REFERENCE) can escape a literal quote inside a label -- the exact grammar-reference gap the slice draft plan's aspect (b) already flagged as not currently closed",
+  "limitations": "Tests only the model-side escaping behavior for one node's label; does not test a quote inside an edge label or a property value",
+  "expectedSubstrings": ["Say \\\"Hello\\\" to the user"]
+}

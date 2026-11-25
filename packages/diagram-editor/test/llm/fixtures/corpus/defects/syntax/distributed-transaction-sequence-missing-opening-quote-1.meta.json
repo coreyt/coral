@@ -1,0 +1,16 @@
+{
+  "originalFilename": "distributed-transaction-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nClient actor as \"Client\"\nCoordinator participant as \"Transaction Coordinator\"\nOrderService participant as \"Order Service\"\nInventoryService participant as \"Inventory Service\"\nPaymentService participant as \"Payment Service\"\nOrderDB participant as \"Order Database\"\nInventoryDB participant as \"Inventory Database\"\nPaymentDB participant as \"Payment Database\"\n\nmsg_1 = Client -#> Coordinator as \"begin transaction\"\nmsg_2 = Coordinator -#> OrderService as \"prepare(order)\"\nmsg_3 = OrderService -#> OrderDB as \"write pending order\"\nmsg_4 = OrderDB -.-> OrderService as \"write ok\"\nmsg_5 = OrderService -.-> Coordinator as \"vote commit\"\nmsg_6 = Coordinator -#> InventoryService as \"prepare(reserve stock)\"\nmsg_7 = InventoryService -#> InventoryDB as \"write pending reservation\"\nmsg_8 = InventoryDB -.-> InventoryService as \"write ok\"\nmsg_9 = InventoryService -.-> Coordinator as \"vote commit\"\nmsg_10 = Coordinator -#> PaymentService as \"prepare(charge)\"\nmsg_11 = PaymentService -#> PaymentDB as \"write pending charge\"\nmsg_12 = PaymentDB -.-> PaymentService as \"write ok\"\nmsg_13 = PaymentService -.-> Coordinator as \"vote commit\"\nmsg_14 = Coordinator -#> OrderService as \"commit\"\nmsg_15 = Coordinator -#> InventoryService as \"commit\"\nmsg_16 = Coordinator -#> PaymentService as \"commit\"\nmsg_17 = Coordinator -.-> Client as \"transaction committed\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-quote",
+      "location": {
+        "line": 4,
+        "column": 28,
+        "charOffset": 128
+      },
+      "description": "removed opening quote on label \"Order Service\""
+    }
+  ],
+  "outputFilename": "distributed-transaction-sequence-missing-opening-quote-1.coral"
+}

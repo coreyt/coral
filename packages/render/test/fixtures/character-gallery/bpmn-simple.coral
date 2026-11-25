@@ -1,0 +1,6 @@
+@diagram bpmn
+begin startEvent as "Begin"
+prepare task as "Prepare"
+done endEvent as "Done"
+begin -> prepare
+prepare -> done

@@ -1,0 +1,1 @@
+Create an AI pipeline diagram: a dataset "Customer Reviews", an embedding step that processes it, a vector store "Pinecone Index" that stores the embeddings, a retriever that queries the vector store, an LLM "Claude" that the retriever feeds into, and a guardrail that checks the LLM's output.

@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    { "id": "gateway", "label": "API Gateway", "x": 0, "y": 0 },
+    { "id": "cache", "label": "Cache", "x": 200, "y": 0 },
+    { "id": "products", "label": "Product Service", "x": 0, "y": 150 }
+  ],
+  "edges": [
+    { "id": "gateway_to_cache", "source": "gateway", "target": "cache" },
+    { "id": "gateway_to_products", "source": "gateway", "target": "products" }
+  ]
+}

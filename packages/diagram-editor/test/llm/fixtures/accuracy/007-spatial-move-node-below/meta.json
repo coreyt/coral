@@ -1,0 +1,8 @@
+{
+  "caseId": "007-spatial-move-node-below",
+  "caseType": "spatial",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), exercising R-025's prompt-context spatial path (layout.json / composeLayoutContext), not R-040's deterministic spatial field",
+  "limitations": "Node placement compliance is not machine-verifiable from structure alone -- per llm-accuracy-harness.md's scoring model, this requires a manual check that the candidate honors the described placement",
+  "requiresManualReview": true
+}

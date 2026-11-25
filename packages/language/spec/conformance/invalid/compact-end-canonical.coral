@@ -1,0 +1,17 @@
+service "A"
+service "B"
+
+a (diamond "owner" 1) -> b
+a -> b (nav 0..*)
+a (1.0) -> b
+a (1e0) -> b
+a (01..2) -> b
+a (+1) -> b
+a (1..1) -> b
+a (1e400) -> b
+a (0..9007199254740992) -> b
+a -> b data {"targetEnd":{"navigability":"navigable","role":"items"}}
+a -> b data {"sourceEnd":{"navigability":"non-navigable"}}
+a (diamond 1..1) -> b
+a -> b (nav 1 nav)
+a (1 "owner") -> b

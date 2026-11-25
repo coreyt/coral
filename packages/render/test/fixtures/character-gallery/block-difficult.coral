@@ -1,0 +1,21 @@
+@diagram block
+input block as "Input"
+parse block as "Parse"
+validate block as "Validate"
+enrich block as "Enrich"
+transform block as "Transform"
+publish block as "Publish"
+monitor block as "Monitor"
+reject block as "Reject"
+raw = input -> parse [label: "raw"]
+parsed = parse -> validate [label: "parsed"]
+valid = validate -> enrich [label: "valid"]
+enriched = enrich -> transform [label: "enriched"]
+ready = transform -> publish [label: "ready"]
+telemetry = publish -> monitor [label: "telemetry"]
+invalid = validate -> reject [label: "invalid"]
+retry = reject -> parse [label: "retry"]
+feedback = monitor -> validate [label: "feedback"]
+fast = enrich -> publish [label: "fast"]
+failed = transform -> reject [label: "failed"]
+observe = input -> monitor [label: "observe"]

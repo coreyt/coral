@@ -1,0 +1,8 @@
+@diagram erd
+customer entity
+order entity
+invoice entity
+places relationship
+customer -- places
+places -- order
+places -- invoice

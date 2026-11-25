@@ -1,0 +1,13 @@
+@diagram uml-sequence
+User actor as "User"
+App participant as "App"
+AuthService participant as "AuthService"
+SMSGateway participant as "SMSGateway"
+
+msg_1 = User -#> App as "enter phone number"
+msg_2 = App -#> AuthService as "request OTP"
+msg_3 = AuthService -#> SMSGateway as "send OTP code"
+msg_4 = SMSGateway -.-> User as "deliver OTP via SMS"
+msg_5 = User -#> App as "enter OTP code"
+msg_6 = App -#> AuthService as "verify OTP"
+msg_7 = AuthService -.-> App as "OTP valid"

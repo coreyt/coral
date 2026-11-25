@@ -1,0 +1,22 @@
+flowchart TD
+    User((New User))
+    SignupForm[Signup Form]
+    AuthService[Auth Service]
+    UserDB[(User Database)]
+    EmailService[Email Verification Service]
+    ProfileWizard[Profile Setup Wizard]
+    WelcomeService[Welcome Email Service]
+    Dashboard[User Dashboard]
+    AnalyticsService[Analytics Service]
+
+    User -->|submits signup form| SignupForm
+    SignupForm -->|create account| AuthService
+    AuthService -->|store credentials| UserDB
+    AuthService -->|send verification email| EmailService
+    EmailService -->|deliver verification link| User
+    User -->|clicks verification link| AuthService
+    AuthService -->|redirect to| ProfileWizard
+    ProfileWizard -->|save profile data| UserDB
+    ProfileWizard -->|trigger| WelcomeService
+    WelcomeService -->|redirect to| Dashboard
+    Dashboard -->|log activity| AnalyticsService

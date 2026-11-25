@@ -1,0 +1,23 @@
+{
+  "slug": "hospital-management-class",
+  "reviews": [
+    {
+      "descriptionFile": "hospital-management-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 8 classes (Hospital, Department, Doctor, Nurse, Patient, Appointment, MedicalRecord, Prescription) and covers all 9 relationships in diagram order: Hospital*--Department, Department o--Doctor, Department o--Nurse, Patient-->Appointment (books), Doctor-->Appointment (conducts), Appointment-->MedicalRecord (generates), Doctor-->Prescription (issues), Patient*--MedicalRecord, Prescription-->Patient (dispensed to). Correctly distinguishes composition vs aggregation vs labeled association wording."
+    },
+    {
+      "descriptionFile": "hospital-management-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 8 classes up front and states there are 9 relationships, then lists each one individually with its exact edge label where present. Matches the diagram line for line; no invented relationships or classes."
+    },
+    {
+      "descriptionFile": "hospital-management-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from Prescription-->Patient and traces backward through the appointment/record chain, then zooms out to the Department/Doctor/Nurse/Hospital aggregation and composition structure. All 8 classes and all 9 relationships are covered, including the closing summary tally matching nodeCount/edgeCount."
+    }
+  ]
+}

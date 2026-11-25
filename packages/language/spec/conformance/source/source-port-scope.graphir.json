@@ -1,0 +1,48 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "outer",
+      "type": "group",
+      "label": "outer",
+      "children": [
+        {
+          "id": "outer.api",
+          "type": "service",
+          "label": "outer.api",
+          "parent": "outer"
+        },
+        {
+          "id": "outer.db",
+          "type": "database",
+          "label": "outer.db",
+          "parent": "outer"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "outer.send",
+      "source": "outer.api",
+      "target": "outer.db",
+      "sourcePort": "output",
+      "sourceEnd": {
+        "marker": {
+          "kind": "none",
+          "fill": "unspecified"
+        }
+      },
+      "targetEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "notation": "architecture"
+  }
+}

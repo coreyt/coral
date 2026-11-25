@@ -1,0 +1,3178 @@
+{
+  "airline-reservation-class": {
+    "source": {
+      "slug": "airline-reservation-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "complex",
+      "nodeCount": 14,
+      "edgeCount": 15
+    },
+    "descriptions": {
+      "review": {
+        "slug": "airline-reservation-class",
+        "reviews": [
+          {
+            "descriptionFile": "airline-reservation-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 14 classes and covers all 15 relationships, explicitly calling out that Route has two distinct labeled associations to Airport (origin and destination) rather than collapsing them into one."
+          },
+          {
+            "descriptionFile": "airline-reservation-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "States totals (14 classes, 15 relationships) then enumerates each relationship with its label, explicitly flagging the Route->Airport pair as two separate relationships to the same target class. Matches the .mmd exactly."
+          },
+          {
+            "descriptionFile": "airline-reservation-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from LoyaltyAccount and traces backward through Reservation/Ticket/Flight/Route/Airline. Verified all 14 classes and all 15 relationships are present, including both Route->Airport edges and the closing tally."
+          }
+        ]
+      },
+      "files": [
+        "airline-reservation-class.description-1.txt",
+        "airline-reservation-class.description-2.txt",
+        "airline-reservation-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "airline-reservation-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 62,
+            "column": 25,
+            "charOffset": 1737
+          },
+          "outputFile": "airline-reservation-class-missing-closing-quote-1.coral",
+          "seed": 2582802142
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 44,
+            "column": 16,
+            "charOffset": 1218
+          },
+          "outputFile": "airline-reservation-class-missing-opening-quote-1.coral",
+          "seed": 1158648069
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 84,
+            "column": 2,
+            "charOffset": 2391
+          },
+          "outputFile": "airline-reservation-class-missing-closing-brace-1.coral",
+          "seed": 945900613
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 26,
+            "column": 27,
+            "charOffset": 716
+          },
+          "outputFile": "airline-reservation-class-missing-opening-brace-1.coral",
+          "seed": 258228702
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 50,
+            "column": 5,
+            "charOffset": 1373
+          },
+          "outputFile": "airline-reservation-class-stray-character-1.coral",
+          "seed": 275713454
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 26,
+            "column": 25,
+            "charOffset": 714
+          },
+          "outputFile": "airline-reservation-class-unicode-lookalike-quote-1.coral",
+          "seed": 530913527
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "mislabeled-relationship",
+          "affectedNodeIds": [
+            "Airport",
+            "Route"
+          ],
+          "affectedEdgeIds": [
+            "rel_5"
+          ],
+          "explanation": "The description says Route has two separate associations to Airport, one labeled \"origin\" and one labeled \"destination\". Edge rel_5 has been relabeled from \"destination\" to \"origin\", so the diagram now shows two origin airports and no destination.",
+          "outputFile": "airline-reservation-class-mislabeled-relationship-1.coral"
+        }
+      ]
+    }
+  },
+  "banking-system-class": {
+    "source": {
+      "slug": "banking-system-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "complex",
+      "nodeCount": 14,
+      "edgeCount": 16
+    },
+    "descriptions": {
+      "review": {
+        "slug": "banking-system-class",
+        "reviews": [
+          {
+            "descriptionFile": "banking-system-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 14 classes and covers all 16 relationships, correctly rendering the two inheritance edges (CheckingAccount and SavingsAccount both inheriting from Account) and the two aggregations under Branch. No invented relationships."
+          },
+          {
+            "descriptionFile": "banking-system-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "States the totals (14 classes, 16 relationships) up front, then lists every relationship individually including exact labels ('owns', 'holds', 'linked to', 'submits', 'approved as', 'disbursed to', 'generates', 'accrues', 'processes' twice for Teller and ATM). Fully matches the .mmd source."
+          },
+          {
+            "descriptionFile": "banking-system-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Organizes the narrative around the Customer's journey and then the institutional structure. Verified against the diagram: all 14 classes named and all 16 relationships present, including both inheritance edges and both Branch aggregations. Closing tally matches nodeCount/edgeCount."
+          }
+        ]
+      },
+      "files": [
+        "banking-system-class.description-1.txt",
+        "banking-system-class.description-2.txt",
+        "banking-system-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "banking-system-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 60,
+            "column": 23,
+            "charOffset": 1675
+          },
+          "outputFile": "banking-system-class-missing-closing-quote-1.coral",
+          "seed": 1636050413
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 2,
+            "column": 14,
+            "charOffset": 33
+          },
+          "outputFile": "banking-system-class-missing-opening-quote-1.coral",
+          "seed": 846196178
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 23,
+            "column": 2,
+            "charOffset": 650
+          },
+          "outputFile": "banking-system-class-missing-closing-brace-1.coral",
+          "seed": 2453759382
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 60,
+            "column": 25,
+            "charOffset": 1677
+          },
+          "outputFile": "banking-system-class-missing-opening-brace-1.coral",
+          "seed": 502879089
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 54,
+            "column": 5,
+            "charOffset": 1468
+          },
+          "outputFile": "banking-system-class-stray-character-1.coral",
+          "seed": 1166549341
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 14,
+            "column": 25,
+            "charOffset": 369
+          },
+          "outputFile": "banking-system-class-unicode-lookalike-quote-1.coral",
+          "seed": 71933680
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "orphan-node",
+          "affectedNodeIds": [
+            "InterestRate"
+          ],
+          "affectedEdgeIds": [
+            "rel_14"
+          ],
+          "explanation": "The description states that a SavingsAccount accrues an InterestRate. The only edge touching InterestRate (rel_14) has been removed, leaving the InterestRate class declared but disconnected from every other class in the banking system.",
+          "outputFile": "banking-system-class-orphan-node-1.coral"
+        }
+      ]
+    }
+  },
+  "chat-message-delivery-sequence": {
+    "source": {
+      "slug": "chat-message-delivery-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "moderate",
+      "nodeCount": 6,
+      "edgeCount": 10
+    },
+    "descriptions": {
+      "review": {
+        "slug": "chat-message-delivery-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "chat-message-delivery-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological account naming all 6 participants and all 10 messages in order, correctly attributing the push-notification branch to the offline presence check. No invented content."
+          },
+          {
+            "descriptionFile": "chat-message-delivery-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the final delivery receipt and works backward through the causal chain. Checked off all 10 messages against the diagram: delivery receipt, message delivered, delivery ack, deliver message, recipient offline/check status, notification queued/push notification, send message/enqueue. All 6 participants present."
+          },
+          {
+            "descriptionFile": "chat-message-delivery-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates the 6 components then lists each one's connections. All 10 messages verified present exactly once each, correctly grouped by the Chat Service's four counterparts and the Message Queue's direct link to the Recipient Device."
+          }
+        ]
+      },
+      "files": [
+        "chat-message-delivery-sequence.description-1.txt",
+        "chat-message-delivery-sequence.description-2.txt",
+        "chat-message-delivery-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "chat-message-delivery-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 23,
+            "charOffset": 45
+          },
+          "outputFile": "chat-message-delivery-sequence-missing-closing-quote-1.coral",
+          "seed": 952238947
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 3,
+            "column": 27,
+            "charOffset": 74
+          },
+          "outputFile": "chat-message-delivery-sequence-missing-opening-quote-1.coral",
+          "seed": 4230866092
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 3,
+            "column": 11,
+            "charOffset": 58
+          },
+          "outputFile": "chat-message-delivery-sequence-stray-character-1.coral",
+          "seed": 3570934107
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 4,
+            "column": 29,
+            "charOffset": 118
+          },
+          "outputFile": "chat-message-delivery-sequence-line-break-in-label-1.coral",
+          "seed": 3732373323
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 3,
+            "column": 40,
+            "charOffset": 87
+          },
+          "outputFile": "chat-message-delivery-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 1944882118
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "Queue",
+            "Recipient"
+          ],
+          "affectedEdgeIds": [
+            "msg_7"
+          ],
+          "explanation": "The description says the Message Queue delivers the message to the Recipient Device, which then acks back to the queue. Edge msg_7 has been reversed so the Recipient Device \"delivers\" the message to the Message Queue, making the recipient both deliver and acknowledge the same message while the queue never sends anything to the device.",
+          "outputFile": "chat-message-delivery-sequence-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "ci-cd-pipeline": {
+    "source": {
+      "slug": "ci-cd-pipeline",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "complex",
+      "nodeCount": 16,
+      "edgeCount": 18
+    },
+    "descriptions": {
+      "review": {
+        "slug": "ci-cd-pipeline",
+        "reviews": [
+          {
+            "descriptionFile": "ci-cd-pipeline.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 16 nodes and all 18 edges verified against the .mmd file, including the two easy-to-miss edges: the Container Registry pulling its image into the Integration Test Stage (parallel to the Security Scan Stage passing into it), and the CI Server reporting status directly to the Notification Service independent of the Monitoring Service alert path."
+          },
+          {
+            "descriptionFile": "ci-cd-pipeline.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 16 nodes up front, then all 18 edges in the same order as the diagram. Cross-checked; no omissions or fabricated stages."
+          },
+          {
+            "descriptionFile": "ci-cd-pipeline.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative framing from the deployed/monitored end state. Re-verified the two dual-source edges into Integration Test Stage and the two independent paths into Notification Service are both preserved despite the non-enumerative prose."
+          }
+        ]
+      },
+      "files": [
+        "ci-cd-pipeline.description-1.txt",
+        "ci-cd-pipeline.description-2.txt",
+        "ci-cd-pipeline.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "ci-cd-pipeline.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 16,
+            "column": 50,
+            "charOffset": 475
+          },
+          "outputFile": "ci-cd-pipeline-missing-closing-quote-1.coral",
+          "seed": 3330279505
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 8,
+            "column": 15,
+            "charOffset": 159
+          },
+          "outputFile": "ci-cd-pipeline-missing-opening-quote-1.coral",
+          "seed": 3528394126
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 16,
+            "column": 7,
+            "charOffset": 432
+          },
+          "outputFile": "ci-cd-pipeline-stray-character-1.coral",
+          "seed": 4071337609
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 12,
+            "column": 25,
+            "charOffset": 288
+          },
+          "outputFile": "ci-cd-pipeline-line-break-in-label-1.coral",
+          "seed": 1807215177
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 13,
+            "column": 29,
+            "charOffset": 330
+          },
+          "outputFile": "ci-cd-pipeline-unicode-lookalike-quote-1.coral",
+          "seed": 2391731356
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "Repo",
+            "CI"
+          ],
+          "affectedEdgeIds": [
+            "edge_2"
+          ],
+          "explanation": "The description says the Source Repository triggers a webhook to the CI Server after the Developer's push, but edge_2 now points from the CI Server back to the Source Repository, so the pipeline has no path from the commit into CI and the webhook flows the wrong way.",
+          "outputFile": "ci-cd-pipeline-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "content-moderation-flow": {
+    "source": {
+      "slug": "content-moderation-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "moderate",
+      "nodeCount": 9,
+      "edgeCount": 11
+    },
+    "descriptions": {
+      "review": {
+        "slug": "content-moderation-flow",
+        "reviews": [
+          {
+            "descriptionFile": "content-moderation-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 9 nodes and all 11 edges present, including the two edges into Policy Engine (from AI Content Classifier auto-approve and from Human Reviewer decision) and the two edges into Notification Service (from Policy Engine reject and from Publish Service notify author)."
+          },
+          {
+            "descriptionFile": "content-moderation-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 9 nodes then all 11 edges. Cross-checked against the .mmd file; the Appeal Service loop back into Moderation Queue is correctly captured as a re-queue, not a new queue."
+          },
+          {
+            "descriptionFile": "content-moderation-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative from the end state (published/rejected/appealed). Re-verified all 9 nodes and 11 edges, including both branches out of AI Content Classifier and both edges into Notification Service."
+          }
+        ]
+      },
+      "files": [
+        "content-moderation-flow.description-1.txt",
+        "content-moderation-flow.description-2.txt",
+        "content-moderation-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "content-moderation-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 15,
+            "column": 46,
+            "charOffset": 471
+          },
+          "outputFile": "content-moderation-flow-missing-closing-quote-1.coral",
+          "seed": 2577655925
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 16,
+            "column": 25,
+            "charOffset": 498
+          },
+          "outputFile": "content-moderation-flow-missing-opening-quote-1.coral",
+          "seed": 2453800602
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 16,
+            "column": 7,
+            "charOffset": 480
+          },
+          "outputFile": "content-moderation-flow-stray-character-1.coral",
+          "seed": 139352549
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 14,
+            "column": 34,
+            "charOffset": 415
+          },
+          "outputFile": "content-moderation-flow-line-break-in-label-1.coral",
+          "seed": 1391437197
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 10,
+            "column": 45,
+            "charOffset": 250
+          },
+          "outputFile": "content-moderation-flow-unicode-lookalike-quote-1.coral",
+          "seed": 1751839960
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "missing-decision-branch",
+          "affectedNodeIds": [
+            "PolicyEngine",
+            "NotifyService"
+          ],
+          "affectedEdgeIds": [
+            "edge_8"
+          ],
+          "explanation": "The description says the Policy Engine either approves the post to the Publish Service or rejects it to the Notification Service, but the \"reject\" branch (edge_8) has been removed, leaving the Policy Engine with only an \"approve\" outcome and no way for a rejected post to be reported.",
+          "outputFile": "content-moderation-flow-missing-decision-branch-1.coral"
+        }
+      ]
+    }
+  },
+  "distributed-transaction-sequence": {
+    "source": {
+      "slug": "distributed-transaction-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "complex",
+      "nodeCount": 8,
+      "edgeCount": 17
+    },
+    "descriptions": {
+      "review": {
+        "slug": "distributed-transaction-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "distributed-transaction-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological two-phase-commit walkthrough naming all 8 participants and all 17 messages in diagram order, correctly grouping the three parallel prepare/write/vote sub-sequences before the three commit instructions and final confirmation."
+          },
+          {
+            "descriptionFile": "distributed-transaction-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the final 'transaction committed' outcome and traces backward through all three prepare branches. Verified all 17 messages present: transaction committed, 3 commit instructions, 3 vote commits, 3 prepare instructions, 3 write-pending messages, 3 write ok replies, and begin transaction. All 8 participants named."
+          },
+          {
+            "descriptionFile": "distributed-transaction-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates the 8 components then describes each one's connections, grouping the three service-to-database pairs by their shared pattern. Cross-checked all 17 messages are represented (including all three vote commit messages, described collectively but accurately as occurring once per service before any commit). No invented messages."
+          }
+        ]
+      },
+      "files": [
+        "distributed-transaction-sequence.description-1.txt",
+        "distributed-transaction-sequence.description-2.txt",
+        "distributed-transaction-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "distributed-transaction-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 7,
+            "column": 38,
+            "charOffset": 282
+          },
+          "outputFile": "distributed-transaction-sequence-missing-closing-quote-1.coral",
+          "seed": 738417666
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 4,
+            "column": 28,
+            "charOffset": 128
+          },
+          "outputFile": "distributed-transaction-sequence-missing-opening-quote-1.coral",
+          "seed": 333986961
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 11,
+            "charOffset": 111
+          },
+          "outputFile": "distributed-transaction-sequence-stray-character-1.coral",
+          "seed": 1422415594
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 8,
+            "column": 37,
+            "charOffset": 321
+          },
+          "outputFile": "distributed-transaction-sequence-line-break-in-label-1.coral",
+          "seed": 449799914
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 3,
+            "column": 51,
+            "charOffset": 98
+          },
+          "outputFile": "distributed-transaction-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 674581763
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "Coordinator",
+            "OrderService"
+          ],
+          "affectedEdgeIds": [
+            "msg_14"
+          ],
+          "explanation": "The description says the Coordinator only issues its \"commit\" instructions once all three services have voted commit, but msg_14 (\"commit\" to the Order Service) now occurs immediately after the Order Service's vote, before the Inventory and Payment services have even been sent their prepare messages, breaking the two-phase-commit ordering.",
+          "outputFile": "distributed-transaction-sequence-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "e-commerce-domain-class": {
+    "source": {
+      "slug": "e-commerce-domain-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "moderate",
+      "nodeCount": 8,
+      "edgeCount": 8
+    },
+    "descriptions": {
+      "review": {
+        "slug": "e-commerce-domain-class",
+        "reviews": [
+          {
+            "descriptionFile": "e-commerce-domain-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 8 classes with members and all 8 relationships (1 aggregation, 1 composition, 6 labeled associations), preserving every association label correctly."
+          },
+          {
+            "descriptionFile": "e-commerce-domain-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from Order at the center of the domain and works both toward Product/Inventory and back toward Customer/Cart. All 8 classes and all 8 relationships verified present, correctly noting that both Order and Cart aggregate/compose OrderItem as two distinct edges."
+          },
+          {
+            "descriptionFile": "e-commerce-domain-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 8 classes with members first, then lists all 8 relationships with labels. No invented fields or edges."
+          }
+        ]
+      },
+      "files": [
+        "e-commerce-domain-class.description-1.txt",
+        "e-commerce-domain-class.description-2.txt",
+        "e-commerce-domain-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "e-commerce-domain-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 13,
+            "column": 21,
+            "charOffset": 304
+          },
+          "outputFile": "e-commerce-domain-class-missing-closing-quote-1.coral",
+          "seed": 4223650159
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 41,
+            "column": 17,
+            "charOffset": 1013
+          },
+          "outputFile": "e-commerce-domain-class-missing-opening-quote-1.coral",
+          "seed": 1742576224
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 31,
+            "column": 2,
+            "charOffset": 797
+          },
+          "outputFile": "e-commerce-domain-class-missing-closing-brace-1.coral",
+          "seed": 3525066912
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 33,
+            "column": 31,
+            "charOffset": 832
+          },
+          "outputFile": "e-commerce-domain-class-missing-opening-brace-1.coral",
+          "seed": 2660350735
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 21,
+            "column": 5,
+            "charOffset": 481
+          },
+          "outputFile": "e-commerce-domain-class-stray-character-1.coral",
+          "seed": 434364815
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 27,
+            "column": 25,
+            "charOffset": 666
+          },
+          "outputFile": "e-commerce-domain-class-unicode-lookalike-quote-1.coral",
+          "seed": 532654490
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "missing-expected-connector",
+          "affectedNodeIds": [
+            "OrderItem",
+            "Order"
+          ],
+          "affectedEdgeIds": [
+            "rel_4"
+          ],
+          "explanation": "The description says Order is composed of OrderItem, but the composition edge rel_4 between OrderItem and Order has been deleted. Both classes remain connected elsewhere (OrderItem to Cart and Product, Order to Customer, Payment, and ShippingAddress), so the order now has no relationship to its own line items.",
+          "outputFile": "e-commerce-domain-class-missing-expected-connector-1.coral"
+        }
+      ]
+    }
+  },
+  "employee-class": {
+    "source": {
+      "slug": "employee-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "simple",
+      "nodeCount": 5,
+      "edgeCount": 5
+    },
+    "descriptions": {
+      "review": {
+        "slug": "employee-class",
+        "reviews": [
+          {
+            "descriptionFile": "employee-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 5 classes with members and all 5 relationships (1 composition, 1 aggregation, 1 inheritance, 2 labeled associations), correctly distinguishing composition (Company/Department) from aggregation (Department/Employee)."
+          },
+          {
+            "descriptionFile": "employee-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from Employee and works outward to Project, Department, Manager, and Company. All 5 classes and all 5 relationships verified present, with both association labels ('assigned to', 'leads') preserved."
+          },
+          {
+            "descriptionFile": "employee-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Lists all 5 classes with members first, then all 5 relationships with labels intact. No invented members or edges."
+          }
+        ]
+      },
+      "files": [
+        "employee-class.description-1.txt",
+        "employee-class.description-2.txt",
+        "employee-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "employee-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 12,
+            "column": 27,
+            "charOffset": 274
+          },
+          "outputFile": "employee-class-missing-closing-quote-1.coral",
+          "seed": 3003877369
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 26,
+            "column": 17,
+            "charOffset": 616
+          },
+          "outputFile": "employee-class-missing-opening-quote-1.coral",
+          "seed": 4153453206
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 5,
+            "column": 2,
+            "charOffset": 126
+          },
+          "outputFile": "employee-class-missing-closing-brace-1.coral",
+          "seed": 3031059834
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 7,
+            "column": 33,
+            "charOffset": 163
+          },
+          "outputFile": "employee-class-missing-opening-brace-1.coral",
+          "seed": 1569974605
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 2,
+            "column": 5,
+            "charOffset": 24
+          },
+          "outputFile": "employee-class-stray-character-1.coral",
+          "seed": 610356369
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 2,
+            "column": 25,
+            "charOffset": 44
+          },
+          "outputFile": "employee-class-unicode-lookalike-quote-1.coral",
+          "seed": 1338071556
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "mislabeled-relationship",
+          "affectedNodeIds": [
+            "Project",
+            "Employee"
+          ],
+          "affectedEdgeIds": [
+            "rel_5"
+          ],
+          "explanation": "The description says Employee has an \"assigned to\" association with Project, while \"leads\" is the label Manager uses toward Department. Edge rel_5 has been relabeled from \"assigned to\" to \"leads\", so the diagram now claims a leadership relationship between Project and Employee that the description never mentions, and the assignment relationship is gone.",
+          "outputFile": "employee-class-mislabeled-relationship-1.coral"
+        }
+      ]
+    }
+  },
+  "file-upload-flow": {
+    "source": {
+      "slug": "file-upload-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "simple",
+      "nodeCount": 6,
+      "edgeCount": 6
+    },
+    "descriptions": {
+      "review": {
+        "slug": "file-upload-flow",
+        "reviews": [
+          {
+            "descriptionFile": "file-upload-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 6 nodes and all 6 edges present, including the return edge from Virus Scanner Service back to Upload Service reporting the scan passed, which is easy to drop."
+          },
+          {
+            "descriptionFile": "file-upload-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Ends-first framing naming the Notification Service outcome up front, then traces all 6 nodes and 6 edges in causal order. No fabricated steps."
+          },
+          {
+            "descriptionFile": "file-upload-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 6 nodes, then lists all 6 edges in order, including the scan-passed reply edge. Matches the diagram exactly."
+          }
+        ]
+      },
+      "files": [
+        "file-upload-flow.description-1.txt",
+        "file-upload-flow.description-2.txt",
+        "file-upload-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "file-upload-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 7,
+            "column": 41,
+            "charOffset": 238
+          },
+          "outputFile": "file-upload-flow-missing-closing-quote-1.coral",
+          "seed": 3264644291
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 7,
+            "column": 26,
+            "charOffset": 223
+          },
+          "outputFile": "file-upload-flow-missing-opening-quote-1.coral",
+          "seed": 3047050252
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 7,
+            "column": 8,
+            "charOffset": 205
+          },
+          "outputFile": "file-upload-flow-stray-character-1.coral",
+          "seed": 2303664827
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 8,
+            "column": 38,
+            "charOffset": 278
+          },
+          "outputFile": "file-upload-flow-line-break-in-label-1.coral",
+          "seed": 3801566891
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 5,
+            "column": 36,
+            "charOffset": 147
+          },
+          "outputFile": "file-upload-flow-unicode-lookalike-quote-1.coral",
+          "seed": 1447513894
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "UploadAPI",
+            "StorageBucket"
+          ],
+          "affectedEdgeIds": [
+            "edge_5"
+          ],
+          "explanation": "The description says the Upload Service stores the file in Object Storage after the scan passes, but edge_5 has been reversed so Object Storage now points at the Upload Service with the label \"store file\". A passive storage bucket initiating a store action toward the service is backwards from the described data flow.",
+          "outputFile": "file-upload-flow-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "hospital-management-class": {
+    "source": {
+      "slug": "hospital-management-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "moderate",
+      "nodeCount": 8,
+      "edgeCount": 9
+    },
+    "descriptions": {
+      "review": {
+        "slug": "hospital-management-class",
+        "reviews": [
+          {
+            "descriptionFile": "hospital-management-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 8 classes (Hospital, Department, Doctor, Nurse, Patient, Appointment, MedicalRecord, Prescription) and covers all 9 relationships in diagram order: Hospital*--Department, Department o--Doctor, Department o--Nurse, Patient-->Appointment (books), Doctor-->Appointment (conducts), Appointment-->MedicalRecord (generates), Doctor-->Prescription (issues), Patient*--MedicalRecord, Prescription-->Patient (dispensed to). Correctly distinguishes composition vs aggregation vs labeled association wording."
+          },
+          {
+            "descriptionFile": "hospital-management-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 8 classes up front and states there are 9 relationships, then lists each one individually with its exact edge label where present. Matches the diagram line for line; no invented relationships or classes."
+          },
+          {
+            "descriptionFile": "hospital-management-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from Prescription-->Patient and traces backward through the appointment/record chain, then zooms out to the Department/Doctor/Nurse/Hospital aggregation and composition structure. All 8 classes and all 9 relationships are covered, including the closing summary tally matching nodeCount/edgeCount."
+          }
+        ]
+      },
+      "files": [
+        "hospital-management-class.description-1.txt",
+        "hospital-management-class.description-2.txt",
+        "hospital-management-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "hospital-management-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 29,
+            "column": 25,
+            "charOffset": 785
+          },
+          "outputFile": "hospital-management-class-missing-closing-quote-1.coral",
+          "seed": 2566634889
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 14,
+            "column": 16,
+            "charOffset": 369
+          },
+          "outputFile": "hospital-management-class-missing-opening-quote-1.coral",
+          "seed": 3166622374
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 12,
+            "column": 2,
+            "charOffset": 349
+          },
+          "outputFile": "hospital-management-class-missing-closing-brace-1.coral",
+          "seed": 2245361866
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 8,
+            "column": 33,
+            "charOffset": 216
+          },
+          "outputFile": "hospital-management-class-missing-opening-brace-1.coral",
+          "seed": 3783006493
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 23,
+            "column": 5,
+            "charOffset": 609
+          },
+          "outputFile": "hospital-management-class-stray-character-1.coral",
+          "seed": 148533761
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 23,
+            "column": 21,
+            "charOffset": 625
+          },
+          "outputFile": "hospital-management-class-unicode-lookalike-quote-1.coral",
+          "seed": 279607828
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "orphan-node",
+          "affectedNodeIds": [
+            "Nurse"
+          ],
+          "affectedEdgeIds": [
+            "rel_3"
+          ],
+          "explanation": "The description states that each Department aggregates Nurse instances. The only edge touching Nurse (rel_3, the aggregation to Department) has been removed, leaving the Nurse class declared but disconnected from every other class in the hospital system.",
+          "outputFile": "hospital-management-class-orphan-node-1.coral"
+        }
+      ]
+    }
+  },
+  "library-catalog-class": {
+    "source": {
+      "slug": "library-catalog-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "moderate",
+      "nodeCount": 8,
+      "edgeCount": 8
+    },
+    "descriptions": {
+      "review": {
+        "slug": "library-catalog-class",
+        "reviews": [
+          {
+            "descriptionFile": "library-catalog-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological/structural walkthrough naming all 8 classes with members and all 8 relationships (2 composition, 2 aggregation, 4 labeled associations), preserving all association labels correctly."
+          },
+          {
+            "descriptionFile": "library-catalog-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the Loan class at the center of the borrowing activity and works outward to the organizational containment structure. All 8 classes and all 8 relationships verified present with labels intact."
+          },
+          {
+            "descriptionFile": "library-catalog-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 8 classes with members first, then lists all 8 relationships separately with labels. No invented fields or edges."
+          }
+        ]
+      },
+      "files": [
+        "library-catalog-class.description-1.txt",
+        "library-catalog-class.description-2.txt",
+        "library-catalog-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "library-catalog-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 13,
+            "column": 25,
+            "charOffset": 319
+          },
+          "outputFile": "library-catalog-class-missing-closing-quote-1.coral",
+          "seed": 1635195618
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 2,
+            "column": 17,
+            "charOffset": 36
+          },
+          "outputFile": "library-catalog-class-missing-opening-quote-1.coral",
+          "seed": 2366323057
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 22,
+            "column": 2,
+            "charOffset": 551
+          },
+          "outputFile": "library-catalog-class-missing-closing-brace-1.coral",
+          "seed": 2017087489
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 24,
+            "column": 25,
+            "charOffset": 580
+          },
+          "outputFile": "library-catalog-class-missing-opening-brace-1.coral",
+          "seed": 183752706
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 2,
+            "column": 5,
+            "charOffset": 24
+          },
+          "outputFile": "library-catalog-class-stray-character-1.coral",
+          "seed": 2550763338
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 35,
+            "column": 19,
+            "charOffset": 844
+          },
+          "outputFile": "library-catalog-class-unicode-lookalike-quote-1.coral",
+          "seed": 4004649955
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "duplicate-relationship",
+          "affectedNodeIds": [
+            "Author",
+            "Book"
+          ],
+          "affectedEdgeIds": [
+            "rel_4"
+          ],
+          "explanation": "The description specifies a single \"written by\" association between Book and Author. A second edge (newly added, with no id in the known-good diagram) with the same endpoints and direction as rel_4 has been added with the reworded label \"authored by\", redundantly expressing the same relationship twice.",
+          "outputFile": "library-catalog-class-duplicate-relationship-1.coral"
+        }
+      ]
+    }
+  },
+  "login-flow": {
+    "source": {
+      "slug": "login-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 pilot corpus",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "simple",
+      "nodeCount": 5,
+      "edgeCount": 5
+    },
+    "descriptions": {
+      "review": {
+        "slug": "login-flow",
+        "reviews": [
+          {
+            "descriptionFile": "login-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 5 nodes (User, Login Form, Valid Credentials?, Dashboard, Error Message) and all 5 edges are covered. The yes/no edge labels are paraphrased ('if valid'/'if not valid') rather than quoted verbatim, but the semantic meaning matches the diagram exactly; no invented entities or relationships."
+          },
+          {
+            "descriptionFile": "login-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 5 nodes and all 5 edges present, with edge labels quoted verbatim ('submits credentials', 'validate', 'yes', 'no', 'retry'). Accurate against the diagram."
+          },
+          {
+            "descriptionFile": "login-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Written in reverse order (starting from the Dashboard) but still names all 5 nodes and all 5 edges (submits credentials, validate, yes, no, retry) without inventing anything. Completeness confirmed despite the non-linear presentation order."
+          }
+        ]
+      },
+      "files": [
+        "login-flow.description-1.txt",
+        "login-flow.description-2.txt",
+        "login-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "login-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 8,
+            "column": 21,
+            "charOffset": 165
+          },
+          "outputFile": "login-flow-missing-closing-quote-1.coral",
+          "seed": 3463104276
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 10,
+            "column": 16,
+            "charOffset": 217
+          },
+          "outputFile": "login-flow-missing-opening-quote-1.coral",
+          "seed": 1136731487
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 8,
+            "column": 7,
+            "charOffset": 151
+          },
+          "outputFile": "login-flow-stray-character-1.coral",
+          "seed": 374715756
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 12,
+            "column": 26,
+            "charOffset": 297
+          },
+          "outputFile": "login-flow-line-break-in-label-1.coral",
+          "seed": 2846710740
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 10,
+            "column": 35,
+            "charOffset": 236
+          },
+          "outputFile": "login-flow-unicode-lookalike-quote-1.coral",
+          "seed": 2915020925
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "missing-decision-branch",
+          "affectedNodeIds": [
+            "Valid",
+            "ErrorMsg"
+          ],
+          "affectedEdgeIds": [
+            "edge_4"
+          ],
+          "explanation": "The description says the \"Valid Credentials?\" decision branches to the Dashboard on Yes and to the Error Message on No, but the No branch (Valid -> ErrorMsg) has been removed, leaving the decision with only a Yes outcome and the Error Message screen with no way to be reached.",
+          "outputFile": "login-flow-missing-decision-branch-1.coral"
+        }
+      ]
+    }
+  },
+  "login-request-sequence": {
+    "source": {
+      "slug": "login-request-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 pilot corpus",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "moderate",
+      "nodeCount": 4,
+      "edgeCount": 9
+    },
+    "descriptions": {
+      "review": {
+        "slug": "login-request-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "login-request-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 4 participants and all 9 messages present, including the self-message 'verify password hash' and both branch outcomes. No invented messages."
+          },
+          {
+            "descriptionFile": "login-request-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Grouped by participant rather than chronologically; verified all 9 messages are still individually named (checked off against the diagram one by one) despite the reorganization, including the self-message."
+          },
+          {
+            "descriptionFile": "login-request-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Leads with the branch outcome framing but still names all 4 participants and all 9 messages in order. Accurate; the two reply pairs (auth token/200 OK and authentication failed/401) are correctly kept as separate, mutually exclusive outcomes rather than implying both happen."
+          }
+        ]
+      },
+      "files": [
+        "login-request-sequence.description-1.txt",
+        "login-request-sequence.description-2.txt",
+        "login-request-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "login-request-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 4,
+            "column": 40,
+            "charOffset": 113
+          },
+          "outputFile": "login-request-sequence-missing-closing-quote-1.coral",
+          "seed": 229504397
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 4,
+            "column": 27,
+            "charOffset": 100
+          },
+          "outputFile": "login-request-sequence-missing-opening-quote-1.coral",
+          "seed": 914774386
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 11,
+            "charOffset": 84
+          },
+          "outputFile": "login-request-sequence-stray-character-1.coral",
+          "seed": 3633800829
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 3,
+            "column": 29,
+            "charOffset": 64
+          },
+          "outputFile": "login-request-sequence-line-break-in-label-1.coral",
+          "seed": 4154485221
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 4,
+            "column": 40,
+            "charOffset": 113
+          },
+          "outputFile": "login-request-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 3674726416
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "AuthService",
+            "Database"
+          ],
+          "affectedEdgeIds": [
+            "msg_3"
+          ],
+          "explanation": "The description says the Auth Service queries the Database with \"SELECT user WHERE username = ?\" and the Database replies with the user record, but msg_3 now flows from Database to Auth Service, so the Database appears to issue the query to the service that should be querying it and the Auth Service never sends anything to the Database.",
+          "outputFile": "login-request-sequence-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "microservices-checkout": {
+    "source": {
+      "slug": "microservices-checkout",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 pilot corpus",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "complex",
+      "nodeCount": 11,
+      "edgeCount": 11
+    },
+    "descriptions": {
+      "review": {
+        "slug": "microservices-checkout",
+        "reviews": [
+          {
+            "descriptionFile": "microservices-checkout.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 11 nodes and all 11 edges accounted for, including both edges into User Database (from Auth Service and from User Service) which are easy to accidentally collapse into one. No invented components or connections."
+          },
+          {
+            "descriptionFile": "microservices-checkout.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 11 nodes up front then all 11 edges; cross-checked against the diagram, no omissions or fabrications. The dual User Database edges are again both present."
+          },
+          {
+            "descriptionFile": "microservices-checkout.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative framing starting from the payment outcome. Verified all 11 nodes and all 11 edges are still named exactly once each despite the non-enumerative style; the 'four things happen off of' Order Service sentence correctly lists all four of its outgoing edges (Order Database, Inventory, Payment, Notification)."
+          }
+        ]
+      },
+      "files": [
+        "microservices-checkout.description-1.txt",
+        "microservices-checkout.description-2.txt",
+        "microservices-checkout.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "microservices-checkout.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 13,
+            "column": 29,
+            "charOffset": 429
+          },
+          "outputFile": "microservices-checkout-missing-closing-quote-1.coral",
+          "seed": 4197863107
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 8,
+            "column": 20,
+            "charOffset": 228
+          },
+          "outputFile": "microservices-checkout-missing-opening-quote-1.coral",
+          "seed": 3980269068
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 7,
+            "charOffset": 85
+          },
+          "outputFile": "microservices-checkout-stray-character-1.coral",
+          "seed": 4066622651
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 9,
+            "column": 31,
+            "charOffset": 277
+          },
+          "outputFile": "microservices-checkout-line-break-in-label-1.coral",
+          "seed": 1725663403
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 11,
+            "column": 33,
+            "charOffset": 361
+          },
+          "outputFile": "microservices-checkout-unicode-lookalike-quote-1.coral",
+          "seed": 3776260390
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "node-type-role-mismatch",
+          "affectedNodeIds": [
+            "OrderDB"
+          ],
+          "affectedEdgeIds": [],
+          "explanation": "The description says the Order Service persists orders to a separate Order Database, and the sibling User Database is typed as a database, but the Order Database node is now typed as a service, so its label and its \"persist order\" storage role no longer match its declared type.",
+          "outputFile": "microservices-checkout-node-type-role-mismatch-1.coral"
+        }
+      ]
+    }
+  },
+  "multi-service-oauth-sequence": {
+    "source": {
+      "slug": "multi-service-oauth-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "complex",
+      "nodeCount": 7,
+      "edgeCount": 18
+    },
+    "descriptions": {
+      "review": {
+        "slug": "multi-service-oauth-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "multi-service-oauth-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological OAuth authorization-code-flow walkthrough naming all 7 participants and all 18 messages in diagram order, including the two direct User-to-Identity-Provider and User-to-Consent-Service messages that bypass the Client App."
+          },
+          {
+            "descriptionFile": "multi-service-oauth-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the final protected-resource handoff and traces backward through token validation, token exchange, code issuance, consent, and identity confirmation. Initially the identity-confirmed reply was only implied rather than named; revised the sentence to explicitly state the Identity Provider's 'identity confirmed' reply so all 18 messages are named. Re-verified against the diagram after the fix."
+          },
+          {
+            "descriptionFile": "multi-service-oauth-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates the 7 components then groups connections by participant, correctly identifying the Authorization Server as the hub with the most connections. All 18 messages verified present, including both User bypass messages and the Resource Server's token-validation round trip."
+          }
+        ]
+      },
+      "files": [
+        "multi-service-oauth-sequence.description-1.txt",
+        "multi-service-oauth-sequence.description-2.txt",
+        "multi-service-oauth-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "multi-service-oauth-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 19,
+            "charOffset": 41
+          },
+          "outputFile": "multi-service-oauth-sequence-missing-closing-quote-1.coral",
+          "seed": 1809169125
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 2,
+            "column": 14,
+            "charOffset": 36
+          },
+          "outputFile": "multi-service-oauth-sequence-missing-opening-quote-1.coral",
+          "seed": 348819274
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 8,
+            "column": 11,
+            "charOffset": 281
+          },
+          "outputFile": "multi-service-oauth-sequence-stray-character-1.coral",
+          "seed": 1139801013
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 7,
+            "column": 32,
+            "charOffset": 262
+          },
+          "outputFile": "multi-service-oauth-sequence-line-break-in-label-1.coral",
+          "seed": 1015869469
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 5,
+            "column": 50,
+            "charOffset": 180
+          },
+          "outputFile": "multi-service-oauth-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 957790600
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "AuthServer",
+            "ClientApp",
+            "TokenStore"
+          ],
+          "affectedEdgeIds": [
+            "msg_12",
+            "msg_13",
+            "msg_14"
+          ],
+          "explanation": "The description says the Authorization Server validates the code with the Token Store (receiving \"code valid\") and only then returns an access token to the Client App, but the sequence now issues the access token (msg_14) before the validate code / code valid exchange (msg_12, msg_13), so the token is granted before the code has been checked.",
+          "outputFile": "multi-service-oauth-sequence-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "order-fulfillment-network": {
+    "source": {
+      "slug": "order-fulfillment-network",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "complex",
+      "nodeCount": 16,
+      "edgeCount": 18
+    },
+    "descriptions": {
+      "review": {
+        "slug": "order-fulfillment-network",
+        "reviews": [
+          {
+            "descriptionFile": "order-fulfillment-network.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 16 nodes and all 18 edges verified, including the two edges into Notification Service (from Tracking Service and directly from Order Service) and the two edges into Inventory Service (from Order Service checking stock and Returns Service restocking)."
+          },
+          {
+            "descriptionFile": "order-fulfillment-network.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 16 nodes then all 18 edges in diagram order. Cross-checked against the .mmd file; the dual-purpose Payment Gateway (used both by Payment Service and Refund Service) is correctly captured with both incoming edges."
+          },
+          {
+            "descriptionFile": "order-fulfillment-network.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Splits into a fulfillment branch and a returns branch narratively; re-verified all 16 nodes and 18 edges are present, including both edges feeding Notification Service and both feeding Inventory Service."
+          }
+        ]
+      },
+      "files": [
+        "order-fulfillment-network.description-1.txt",
+        "order-fulfillment-network.description-2.txt",
+        "order-fulfillment-network.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "order-fulfillment-network.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 11,
+            "column": 55,
+            "charOffset": 437
+          },
+          "outputFile": "order-fulfillment-network-missing-closing-quote-1.coral",
+          "seed": 4203930946
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 16,
+            "column": 25,
+            "charOffset": 633
+          },
+          "outputFile": "order-fulfillment-network-missing-opening-quote-1.coral",
+          "seed": 2006852817
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 13,
+            "column": 7,
+            "charOffset": 490
+          },
+          "outputFile": "order-fulfillment-network-stray-character-1.coral",
+          "seed": 193333674
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 13,
+            "column": 36,
+            "charOffset": 519
+          },
+          "outputFile": "order-fulfillment-network-line-break-in-label-1.coral",
+          "seed": 1430945706
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 18,
+            "column": 40,
+            "charOffset": 740
+          },
+          "outputFile": "order-fulfillment-network-unicode-lookalike-quote-1.coral",
+          "seed": 4235429955
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "Carrier",
+            "TrackingService"
+          ],
+          "affectedEdgeIds": [
+            "edge_12"
+          ],
+          "explanation": "The description says the Carrier API provides a tracking number to the Tracking Service, which then sends updates to the Notification Service; the edge now runs from Tracking Service to Carrier API, so the tracking number flows the wrong way and the Tracking Service has no input to base its updates on.",
+          "outputFile": "order-fulfillment-network-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "otp-verification-sequence": {
+    "source": {
+      "slug": "otp-verification-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "simple",
+      "nodeCount": 4,
+      "edgeCount": 7
+    },
+    "descriptions": {
+      "review": {
+        "slug": "otp-verification-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "otp-verification-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 4 participants and all 7 messages are named in exact diagram order, including both directions of the AuthService/SMSGateway hop and the final AuthService-to-App confirmation reply."
+          },
+          {
+            "descriptionFile": "otp-verification-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 4 participants then all 7 messages as sender-to-receiver pairs. Cross-checked against the .mmd file; no omissions."
+          },
+          {
+            "descriptionFile": "otp-verification-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Ends-first framing (OTP validity confirmed). Re-verified all 4 participants and all 7 messages are present, including the final AuthService-to-App reply that completes the loop."
+          }
+        ]
+      },
+      "files": [
+        "otp-verification-sequence.description-1.txt",
+        "otp-verification-sequence.description-2.txt",
+        "otp-verification-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "otp-verification-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 19,
+            "charOffset": 41
+          },
+          "outputFile": "otp-verification-sequence-missing-closing-quote-1.coral",
+          "seed": 2550018513
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 2,
+            "column": 14,
+            "charOffset": 36
+          },
+          "outputFile": "otp-verification-sequence-missing-opening-quote-1.coral",
+          "seed": 2748133134
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 3,
+            "column": 11,
+            "charOffset": 54
+          },
+          "outputFile": "otp-verification-sequence-stray-character-1.coral",
+          "seed": 3076293641
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 4,
+            "column": 39,
+            "charOffset": 107
+          },
+          "outputFile": "otp-verification-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 3994350108
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "User",
+            "App",
+            "AuthService",
+            "SMSGateway"
+          ],
+          "affectedEdgeIds": [
+            "msg_3",
+            "msg_4",
+            "msg_5"
+          ],
+          "explanation": "The description says the User enters the OTP code into the App only after the AuthService sends the code to the SMSGateway and the SMSGateway delivers it via SMS; here \"enter OTP code\" is placed before those two messages, so the User is entering a code that has not yet been generated or delivered.",
+          "outputFile": "otp-verification-sequence-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "password-change-sequence": {
+    "source": {
+      "slug": "password-change-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "simple",
+      "nodeCount": 4,
+      "edgeCount": 7
+    },
+    "descriptions": {
+      "review": {
+        "slug": "password-change-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "password-change-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 4 participants and all 7 messages named in exact diagram order, including both AuthService/UserDB round trips (verify hash, then store new hash) which are easy to collapse into one."
+          },
+          {
+            "descriptionFile": "password-change-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 4 participants then all 7 messages as sender-to-receiver pairs in order. Cross-checked against the .mmd file; no omissions or fabricated messages."
+          },
+          {
+            "descriptionFile": "password-change-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Ends-first framing (success message shown to User). Re-verified all 4 participants and all 7 messages are present, including both distinct AuthService-to-UserDB messages."
+          }
+        ]
+      },
+      "files": [
+        "password-change-sequence.description-1.txt",
+        "password-change-sequence.description-2.txt",
+        "password-change-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "password-change-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 19,
+            "charOffset": 41
+          },
+          "outputFile": "password-change-sequence-missing-closing-quote-1.coral",
+          "seed": 3356602470
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 5,
+            "column": 22,
+            "charOffset": 137
+          },
+          "outputFile": "password-change-sequence-missing-opening-quote-1.coral",
+          "seed": 3254055917
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 11,
+            "charOffset": 85
+          },
+          "outputFile": "password-change-sequence-stray-character-1.coral",
+          "seed": 1679056822
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 2,
+            "column": 19,
+            "charOffset": 41
+          },
+          "outputFile": "password-change-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 3080812799
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "AuthService",
+            "UserDB"
+          ],
+          "affectedEdgeIds": [
+            "msg_3",
+            "msg_4",
+            "msg_5"
+          ],
+          "explanation": "The description says the AuthService verifies the current password hash with the UserDB and receives a 'password hash valid' reply before it stores the new password hash; here the store step (msg_5) is moved ahead of the verify request/reply (msg_3, msg_4), so the new hash is written before the current password has been checked.",
+          "outputFile": "password-change-sequence-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "password-reset-flow": {
+    "source": {
+      "slug": "password-reset-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "simple",
+      "nodeCount": 6,
+      "edgeCount": 6
+    },
+    "descriptions": {
+      "review": {
+        "slug": "password-reset-flow",
+        "reviews": [
+          {
+            "descriptionFile": "password-reset-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 6 nodes (User, Password Reset Request, Auth Service, Reset Token Store, Email Service, New Password Form) and all 6 edges (submit email, request token, store token, send reset email, deliver reset link, submit new password) are named in trigger-first order. No invented steps."
+          },
+          {
+            "descriptionFile": "password-reset-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 6 nodes up front, then all 6 edges. Cross-checked against the .mmd file; no omissions or fabricated connections."
+          },
+          {
+            "descriptionFile": "password-reset-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative framing starting from the end state (new password entered). Verified all 6 nodes and all 6 edges still appear exactly once each despite the non-enumerative style."
+          }
+        ]
+      },
+      "files": [
+        "password-reset-flow.description-1.txt",
+        "password-reset-flow.description-2.txt",
+        "password-reset-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "password-reset-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 6,
+            "column": 41,
+            "charOffset": 195
+          },
+          "outputFile": "password-reset-flow-missing-closing-quote-1.coral",
+          "seed": 2492696504
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 4,
+            "column": 21,
+            "charOffset": 91
+          },
+          "outputFile": "password-reset-flow-missing-opening-quote-1.coral",
+          "seed": 666016123
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 8,
+            "column": 7,
+            "charOffset": 244
+          },
+          "outputFile": "password-reset-flow-stray-character-1.coral",
+          "seed": 3687012776
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 5,
+            "column": 28,
+            "charOffset": 144
+          },
+          "outputFile": "password-reset-flow-line-break-in-label-1.coral",
+          "seed": 3835728440
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 4,
+            "column": 44,
+            "charOffset": 114
+          },
+          "outputFile": "password-reset-flow-unicode-lookalike-quote-1.coral",
+          "seed": 3123315945
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "EmailService",
+            "User"
+          ],
+          "affectedEdgeIds": [
+            "edge_5"
+          ],
+          "explanation": "The description says the Email Service delivers the reset link back to the User; edge_5 now points from User to Email Service, so the user is depicted as delivering the reset link to the email service, and the Email Service becomes a dead end that never returns anything to the user.",
+          "outputFile": "password-reset-flow-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "payment-authorization-sequence": {
+    "source": {
+      "slug": "payment-authorization-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "moderate",
+      "nodeCount": 6,
+      "edgeCount": 10
+    },
+    "descriptions": {
+      "review": {
+        "slug": "payment-authorization-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "payment-authorization-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological walkthrough naming all 6 participants (Customer, Checkout Service, Payment Gateway, Fraud Service, Card Network, Bank) and all 10 messages in diagram order, including the risk check and fund verification steps. No invented content."
+          },
+          {
+            "descriptionFile": "payment-authorization-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the end state (order confirmed) and traces causally backward to the initial submission. Verified all 10 messages are named despite the reverse ordering: order confirmed, payment authorized, authorization code, verify funds/funds available, risk score: low, submit payment details, authorize(amount, card token). All 6 participants appear."
+          },
+          {
+            "descriptionFile": "payment-authorization-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates components first, then connections per participant. Cross-checked each of the 10 messages appears exactly once attached to the correct participant pair; no duplicated or invented messages. All 6 participants named."
+          }
+        ]
+      },
+      "files": [
+        "payment-authorization-sequence.description-1.txt",
+        "payment-authorization-sequence.description-2.txt",
+        "payment-authorization-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "payment-authorization-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 27,
+            "charOffset": 49
+          },
+          "outputFile": "payment-authorization-sequence-missing-closing-quote-1.coral",
+          "seed": 2257368700
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 6,
+            "column": 23,
+            "charOffset": 195
+          },
+          "outputFile": "payment-authorization-sequence-missing-opening-quote-1.coral",
+          "seed": 139553639
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 11,
+            "charOffset": 105
+          },
+          "outputFile": "payment-authorization-sequence-stray-character-1.coral",
+          "seed": 1695316884
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 4,
+            "column": 31,
+            "charOffset": 125
+          },
+          "outputFile": "payment-authorization-sequence-line-break-in-label-1.coral",
+          "seed": 1917057756
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 3,
+            "column": 41,
+            "charOffset": 92
+          },
+          "outputFile": "payment-authorization-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 1545572389
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "missing-expected-connector",
+          "affectedNodeIds": [
+            "Bank",
+            "Network"
+          ],
+          "affectedEdgeIds": [
+            "msg_7"
+          ],
+          "explanation": "The description says the Card Network asks the Bank to verify funds and the Bank replies that funds are available before the Card Network sends back an authorization code; the 'funds available' reply (msg_7) is missing, so the Card Network issues an authorization code without ever hearing back from the Bank.",
+          "outputFile": "payment-authorization-sequence-missing-expected-connector-1.coral"
+        }
+      ]
+    }
+  },
+  "ping-pong-sequence": {
+    "source": {
+      "slug": "ping-pong-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "simple",
+      "nodeCount": 3,
+      "edgeCount": 6
+    },
+    "descriptions": {
+      "review": {
+        "slug": "ping-pong-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "ping-pong-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 3 participants (Client, Server, Logger) and describes the repeating three-message pattern, explicitly stating it occurs twice for a total of 6 messages, matching the .mmd file exactly."
+          },
+          {
+            "descriptionFile": "ping-pong-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 6 messages individually in exact order (ping, pong, log, ping, pong, log) rather than summarizing the repetition, which is a genuinely different structure from description-1."
+          },
+          {
+            "descriptionFile": "ping-pong-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Purpose-first framing (health check) that still names all 3 participants and confirms the pattern repeats a second time identically, covering all 6 messages without enumerating each one."
+          }
+        ]
+      },
+      "files": [
+        "ping-pong-sequence.description-1.txt",
+        "ping-pong-sequence.description-2.txt",
+        "ping-pong-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "ping-pong-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 23,
+            "charOffset": 45
+          },
+          "outputFile": "ping-pong-sequence-missing-closing-quote-1.coral",
+          "seed": 2355193185
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 4,
+            "column": 22,
+            "charOffset": 100
+          },
+          "outputFile": "ping-pong-sequence-missing-opening-quote-1.coral",
+          "seed": 2402854942
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 4,
+            "column": 11,
+            "charOffset": 89
+          },
+          "outputFile": "ping-pong-sequence-stray-character-1.coral",
+          "seed": 2199588729
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 4,
+            "column": 29,
+            "charOffset": 107
+          },
+          "outputFile": "ping-pong-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 3448945324
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "orphan-node",
+          "affectedNodeIds": [
+            "Logger"
+          ],
+          "affectedEdgeIds": [
+            "msg_3",
+            "msg_6"
+          ],
+          "explanation": "The description says that in each of the two rounds the Server also sends a message to the Logger recording the ping-pong latency; both of those messages (msg_3, msg_6) are gone, leaving the Logger declared as a participant but never sent or receiving anything.",
+          "outputFile": "ping-pong-sequence-orphan-node-1.coral"
+        }
+      ]
+    }
+  },
+  "search-indexing-flow": {
+    "source": {
+      "slug": "search-indexing-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "moderate",
+      "nodeCount": 9,
+      "edgeCount": 10
+    },
+    "descriptions": {
+      "review": {
+        "slug": "search-indexing-flow",
+        "reviews": [
+          {
+            "descriptionFile": "search-indexing-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 9 nodes and all 10 edges present, correctly splitting the diagram's two tracks: crawling/indexing (Crawler through Search Index) and querying (User through Query Service, Search Index, Ranking Service, back to User)."
+          },
+          {
+            "descriptionFile": "search-indexing-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 9 nodes then all 10 edges in diagram order. Cross-checked; Search Index's dual role (written by Index Builder, read by Query Service) is correctly represented as two separate edges."
+          },
+          {
+            "descriptionFile": "search-indexing-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative explicitly separating the indexing track from the query track and ending at the User seeing results. Re-verified all 9 nodes and 10 edges are present with no fabricated connections."
+          }
+        ]
+      },
+      "files": [
+        "search-indexing-flow.description-1.txt",
+        "search-indexing-flow.description-2.txt",
+        "search-indexing-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "search-indexing-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 10,
+            "column": 38,
+            "charOffset": 341
+          },
+          "outputFile": "search-indexing-flow-missing-closing-quote-1.coral",
+          "seed": 4160453278
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 7,
+            "column": 24,
+            "charOffset": 225
+          },
+          "outputFile": "search-indexing-flow-missing-opening-quote-1.coral",
+          "seed": 382339013
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 9,
+            "column": 7,
+            "charOffset": 287
+          },
+          "outputFile": "search-indexing-flow-stray-character-1.coral",
+          "seed": 3582045678
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 8,
+            "column": 31,
+            "charOffset": 272
+          },
+          "outputFile": "search-indexing-flow-line-break-in-label-1.coral",
+          "seed": 667968630
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 3,
+            "column": 40,
+            "charOffset": 87
+          },
+          "outputFile": "search-indexing-flow-unicode-lookalike-quote-1.coral",
+          "seed": 1366079159
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "Crawler",
+            "ParserService",
+            "Tokenizer",
+            "IndexBuilder"
+          ],
+          "affectedEdgeIds": [
+            "edge_2",
+            "edge_3",
+            "edge_4"
+          ],
+          "explanation": "The description says the Crawler sends raw content to the Parser Service, which extracts text for the Tokenizer, which then emits tokens to the Index Builder. Here the Tokenizer and Parser Service are swapped in the indexing chain, so raw content is tokenized before any text has been extracted and the Parser Service is the one emitting tokens.",
+          "outputFile": "search-indexing-flow-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "shape-hierarchy-class": {
+    "source": {
+      "slug": "shape-hierarchy-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "simple",
+      "nodeCount": 5,
+      "edgeCount": 4
+    },
+    "descriptions": {
+      "review": {
+        "slug": "shape-hierarchy-class",
+        "reviews": [
+          {
+            "descriptionFile": "shape-hierarchy-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 5 classes with their member lists and all 4 relationships (3 inheritance edges, 1 aggregation), correctly describing aggregation as a hold-without-own relationship."
+          },
+          {
+            "descriptionFile": "shape-hierarchy-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from Canvas (the aggregating root) and works down through the inheritance tree. Original draft called Shape 'abstract-feeling', a characterization not present in the diagram (no <<abstract>> annotation exists in this diagram's syntax); removed that phrase. All 5 classes and all 4 relationships now stated plainly and accurately."
+          },
+          {
+            "descriptionFile": "shape-hierarchy-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 5 classes with members first, then lists all 4 relationships separately. Straightforward and accurate, no invented fields or edges."
+          }
+        ]
+      },
+      "files": [
+        "shape-hierarchy-class.description-1.txt",
+        "shape-hierarchy-class.description-2.txt",
+        "shape-hierarchy-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "shape-hierarchy-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 27,
+            "column": 27,
+            "charOffset": 653
+          },
+          "outputFile": "shape-hierarchy-class-missing-closing-quote-1.coral",
+          "seed": 111591844
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 2,
+            "column": 15,
+            "charOffset": 34
+          },
+          "outputFile": "shape-hierarchy-class-missing-opening-quote-1.coral",
+          "seed": 3150761007
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 39,
+            "column": 2,
+            "charOffset": 966
+          },
+          "outputFile": "shape-hierarchy-class-missing-closing-brace-1.coral",
+          "seed": 1971458939
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 10,
+            "column": 25,
+            "charOffset": 226
+          },
+          "outputFile": "shape-hierarchy-class-missing-opening-brace-1.coral",
+          "seed": 2069193824
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 2,
+            "column": 5,
+            "charOffset": 24
+          },
+          "outputFile": "shape-hierarchy-class-stray-character-1.coral",
+          "seed": 473182044
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 18,
+            "column": 29,
+            "charOffset": 415
+          },
+          "outputFile": "shape-hierarchy-class-unicode-lookalike-quote-1.coral",
+          "seed": 569621773
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "orphan-node",
+          "affectedNodeIds": [
+            "Triangle"
+          ],
+          "affectedEdgeIds": [
+            "rel_3"
+          ],
+          "explanation": "The description states that Triangle is one of three subclasses that inherit from Shape, alongside Circle and Rectangle. Here the Triangle inheritance edge has been removed, leaving Triangle declared with its own area() override but disconnected from the hierarchy it is supposed to belong to.",
+          "outputFile": "shape-hierarchy-class-orphan-node-1.coral"
+        }
+      ]
+    }
+  },
+  "social-network-class": {
+    "source": {
+      "slug": "social-network-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "complex",
+      "nodeCount": 14,
+      "edgeCount": 17
+    },
+    "descriptions": {
+      "review": {
+        "slug": "social-network-class",
+        "reviews": [
+          {
+            "descriptionFile": "social-network-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 14 classes and covers all 17 relationships, correctly distinguishing the two separate Post compositions (Comment and Like) and the two separate User-Conversation paths (via Message and directly)."
+          },
+          {
+            "descriptionFile": "social-network-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "States totals (14 classes, 17 relationships) then lists each relationship individually with exact labels. Matches the .mmd source line for line, including both User*--Album and Album*--Photo compositions."
+          },
+          {
+            "descriptionFile": "social-network-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Uses the components-then-connections structure requested. Verified all 14 classes and all 17 relationships are named, and the closing tally ('seventeen relationships') matches edgeCount."
+          }
+        ]
+      },
+      "files": [
+        "social-network-class.description-1.txt",
+        "social-network-class.description-2.txt",
+        "social-network-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "social-network-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 20,
+            "column": 25,
+            "charOffset": 524
+          },
+          "outputFile": "social-network-class-missing-closing-quote-1.coral",
+          "seed": 3854222781
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 31,
+            "column": 20,
+            "charOffset": 794
+          },
+          "outputFile": "social-network-class-missing-opening-quote-1.coral",
+          "seed": 2176993186
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 24,
+            "column": 2,
+            "charOffset": 660
+          },
+          "outputFile": "social-network-class-missing-closing-brace-1.coral",
+          "seed": 908162278
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 31,
+            "column": 33,
+            "charOffset": 807
+          },
+          "outputFile": "social-network-class-missing-opening-brace-1.coral",
+          "seed": 2983445697
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 43,
+            "column": 5,
+            "charOffset": 1118
+          },
+          "outputFile": "social-network-class-stray-character-1.coral",
+          "seed": 349838541
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 2,
+            "column": 19,
+            "charOffset": 38
+          },
+          "outputFile": "social-network-class-unicode-lookalike-quote-1.coral",
+          "seed": 1134030848
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "mislabeled-relationship",
+          "affectedNodeIds": [
+            "NewsFeed",
+            "User"
+          ],
+          "affectedEdgeIds": [
+            "rel_17"
+          ],
+          "explanation": "The description says a User views a NewsFeed, with the NewsFeed-to-User association labeled \"views\". Here that label has been replaced with \"creates\" (the label that belongs on the Post-to-User association), so the diagram now claims a User authors the NewsFeed rather than consuming it.",
+          "outputFile": "social-network-class-mislabeled-relationship-1.coral"
+        }
+      ]
+    }
+  },
+  "user-onboarding-flow": {
+    "source": {
+      "slug": "user-onboarding-flow",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "flowchart",
+      "complexity": "moderate",
+      "nodeCount": 9,
+      "edgeCount": 11
+    },
+    "descriptions": {
+      "review": {
+        "slug": "user-onboarding-flow",
+        "reviews": [
+          {
+            "descriptionFile": "user-onboarding-flow.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "All 9 nodes and all 11 edges present, including the two separate edges into User Database (credential storage from Auth Service and profile data from Profile Setup Wizard), which are easy to conflate."
+          },
+          {
+            "descriptionFile": "user-onboarding-flow.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates all 9 nodes then all 11 edges in diagram order. Cross-checked; both User Database edges and the round-trip verification-link edges (Email Verification Service to User, then User back to Auth Service) are both captured."
+          },
+          {
+            "descriptionFile": "user-onboarding-flow.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Narrative from the end state (Dashboard plus Analytics). Re-verified all 9 nodes and 11 edges are named exactly once, no fabricated steps."
+          }
+        ]
+      },
+      "files": [
+        "user-onboarding-flow.description-1.txt",
+        "user-onboarding-flow.description-2.txt",
+        "user-onboarding-flow.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "user-onboarding-flow.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 9,
+            "column": 48,
+            "charOffset": 332
+          },
+          "outputFile": "user-onboarding-flow-missing-closing-quote-1.coral",
+          "seed": 1391831790
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 7,
+            "column": 24,
+            "charOffset": 207
+          },
+          "outputFile": "user-onboarding-flow-missing-opening-quote-1.coral",
+          "seed": 3978364309
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 3,
+            "column": 7,
+            "charOffset": 54
+          },
+          "outputFile": "user-onboarding-flow-stray-character-1.coral",
+          "seed": 4059486558
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 9,
+            "column": 34,
+            "charOffset": 318
+          },
+          "outputFile": "user-onboarding-flow-line-break-in-label-1.coral",
+          "seed": 2743792422
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 5,
+            "column": 36,
+            "charOffset": 146
+          },
+          "outputFile": "user-onboarding-flow-unicode-lookalike-quote-1.coral",
+          "seed": 1182742663
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "out-of-order-sequence",
+          "affectedNodeIds": [
+            "AuthService",
+            "ProfileWizard",
+            "WelcomeService",
+            "Dashboard"
+          ],
+          "affectedEdgeIds": [
+            "edge_7",
+            "edge_9",
+            "edge_10"
+          ],
+          "explanation": "The description says the Auth Service redirects to the Profile Setup Wizard, which then triggers the Welcome Email Service, which redirects to the User Dashboard; here the chain is reordered so the Auth Service goes to the Welcome Email Service first, which triggers the Profile Setup Wizard, and the wizard redirects to the Dashboard, so the welcome email is sent before the profile is set up.",
+          "outputFile": "user-onboarding-flow-out-of-order-sequence-1.coral"
+        }
+      ]
+    }
+  },
+  "vehicle-class": {
+    "source": {
+      "slug": "vehicle-class",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "classDiagram",
+      "complexity": "simple",
+      "nodeCount": 5,
+      "edgeCount": 4
+    },
+    "descriptions": {
+      "review": {
+        "slug": "vehicle-class",
+        "reviews": [
+          {
+            "descriptionFile": "vehicle-class.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Names all 5 classes with members and all 4 relationships (2 inheritance, 1 composition, 1 labeled association), correctly explaining composition as lifecycle ownership."
+          },
+          {
+            "descriptionFile": "vehicle-class.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from Owner (the outermost association) and works into the composition and inheritance edges. All 5 classes and all 4 relationships verified present; the 'owns' label is preserved."
+          },
+          {
+            "descriptionFile": "vehicle-class.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Lists all 5 classes with members first, then all 4 relationships separately with the association label intact. No invented members or edges."
+          }
+        ]
+      },
+      "files": [
+        "vehicle-class.description-1.txt",
+        "vehicle-class.description-2.txt",
+        "vehicle-class.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "vehicle-class.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 2,
+            "column": 25,
+            "charOffset": 44
+          },
+          "outputFile": "vehicle-class-missing-closing-quote-1.coral",
+          "seed": 3035190943
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 29,
+            "column": 15,
+            "charOffset": 685
+          },
+          "outputFile": "vehicle-class-missing-opening-quote-1.coral",
+          "seed": 985422352
+        },
+        {
+          "defectType": "missing-closing-brace",
+          "location": {
+            "line": 19,
+            "column": 2,
+            "charOffset": 478
+          },
+          "outputFile": "vehicle-class-missing-closing-brace-1.coral",
+          "seed": 1518171920
+        },
+        {
+          "defectType": "missing-opening-brace",
+          "location": {
+            "line": 11,
+            "column": 19,
+            "charOffset": 273
+          },
+          "outputFile": "vehicle-class-missing-opening-brace-1.coral",
+          "seed": 3039505791
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 29,
+            "column": 5,
+            "charOffset": 675
+          },
+          "outputFile": "vehicle-class-stray-character-1.coral",
+          "seed": 2012166623
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 29,
+            "column": 21,
+            "charOffset": 691
+          },
+          "outputFile": "vehicle-class-unicode-lookalike-quote-1.coral",
+          "seed": 553814666
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "reversed-relationship-direction",
+          "affectedNodeIds": [
+            "Car",
+            "Vehicle"
+          ],
+          "affectedEdgeIds": [
+            "rel_1"
+          ],
+          "explanation": "The description says Car inherits from Vehicle, but the inheritance edge has been reversed so that Vehicle now inherits from Car, making the general base class a subclass of one of its own specializations while Motorcycle still correctly inherits from Vehicle.",
+          "outputFile": "vehicle-class-reversed-relationship-direction-1.coral"
+        }
+      ]
+    }
+  },
+  "video-streaming-handshake-sequence": {
+    "source": {
+      "slug": "video-streaming-handshake-sequence",
+      "sourceUrl": "synthetic-original",
+      "license": "synthetic-original",
+      "attribution": "authored for Slice 49 corpus scale-up",
+      "collectedDate": "2026-09-13",
+      "diagramType": "sequenceDiagram",
+      "complexity": "complex",
+      "nodeCount": 7,
+      "edgeCount": 15
+    },
+    "descriptions": {
+      "review": {
+        "slug": "video-streaming-handshake-sequence",
+        "reviews": [
+          {
+            "descriptionFile": "video-streaming-handshake-sequence.description-1.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Chronological startup-handshake walkthrough naming all 7 participants and all 15 messages in diagram order, correctly distinguishing the cache-miss first segment fetch from the cache-hit second one and covering all three Analytics reports."
+          },
+          {
+            "descriptionFile": "video-streaming-handshake-sequence.description-2.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Starts from the final playback-progress report and works backward through rendering, buffering, the second (cache-hit) segment fetch, playback-started, the first (cache-miss) segment fetch through the Origin Server, license acquisition, and manifest retrieval, ending at the initial press-play. All 15 messages verified present."
+          },
+          {
+            "descriptionFile": "video-streaming-handshake-sequence.description-3.txt",
+            "accurate": true,
+            "complete": true,
+            "notes": "Enumerates the 7 components then groups connections by participant, identifying the Player as the hub. Initial draft left the two CDN-to-Player segment-data replies (cache miss and cache hit) only loosely implied; revised to explicitly state both replies and the Origin Server hand-off, then re-verified all 15 messages are individually accounted for."
+          }
+        ]
+      },
+      "files": [
+        "video-streaming-handshake-sequence.description-1.txt",
+        "video-streaming-handshake-sequence.description-2.txt",
+        "video-streaming-handshake-sequence.description-3.txt"
+      ]
+    },
+    "coral": {
+      "file": "video-streaming-handshake-sequence.coral",
+      "conversionNotes": []
+    },
+    "knownDefects": {
+      "syntax": [
+        {
+          "defectType": "missing-closing-quote",
+          "location": {
+            "line": 7,
+            "column": 42,
+            "charOffset": 262
+          },
+          "outputFile": "video-streaming-handshake-sequence-missing-closing-quote-1.coral",
+          "seed": 340266920
+        },
+        {
+          "defectType": "missing-opening-quote",
+          "location": {
+            "line": 8,
+            "column": 25,
+            "charOffset": 289
+          },
+          "outputFile": "video-streaming-handshake-sequence-missing-opening-quote-1.coral",
+          "seed": 4144377259
+        },
+        {
+          "defectType": "stray-character",
+          "location": {
+            "line": 6,
+            "column": 11,
+            "charOffset": 192
+          },
+          "outputFile": "video-streaming-handshake-sequence-stray-character-1.coral",
+          "seed": 790840568
+        },
+        {
+          "defectType": "line-break-in-label",
+          "location": {
+            "line": 6,
+            "column": 27,
+            "charOffset": 208
+          },
+          "outputFile": "video-streaming-handshake-sequence-line-break-in-label-1.coral",
+          "seed": 3208229448
+        },
+        {
+          "defectType": "unicode-lookalike-quote",
+          "location": {
+            "line": 8,
+            "column": 43,
+            "charOffset": 307
+          },
+          "outputFile": "video-streaming-handshake-sequence-unicode-lookalike-quote-1.coral",
+          "seed": 702901657
+        }
+      ],
+      "semantic": [
+        {
+          "defectType": "orphan-node",
+          "affectedNodeIds": [
+            "LicenseServer"
+          ],
+          "affectedEdgeIds": [
+            "msg_4",
+            "msg_5"
+          ],
+          "explanation": "The description says the Player requests a DRM license from the License Server and receives a \"license granted\" reply before fetching segments, but both messages have been removed, leaving the License Server declared as a participant that never exchanges any message with anyone.",
+          "outputFile": "video-streaming-handshake-sequence-orphan-node-1.coral"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,8 @@
+service "API" as api {
+  _private: true
+}
+database "Orders" as orders
+
+api -> orders [_trace: true]
+api -> orders data {"properties":{"_span":[1]}}
+api -> orders []

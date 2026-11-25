@@ -1,0 +1,24 @@
+flowchart TD
+    Client((Client App))
+    Gateway[API Gateway]
+    Auth[Auth Service]
+    Users[User Service]
+    Orders[Order Service]
+    Payments[Payment Service]
+    Inventory[Inventory Service]
+    Notify[Notification Service]
+    UserDB[(User Database)]
+    OrderDB[(Order Database)]
+    Stripe[Stripe API]
+
+    Client -->|HTTPS request| Gateway
+    Gateway -->|authenticate| Auth
+    Gateway -->|route user request| Users
+    Gateway -->|route order request| Orders
+    Auth -->|verify credentials| UserDB
+    Users -->|read/write profile| UserDB
+    Orders -->|persist order| OrderDB
+    Orders -->|check stock| Inventory
+    Orders -->|charge customer| Payments
+    Payments -->|process payment| Stripe
+    Orders -->|send confirmation| Notify

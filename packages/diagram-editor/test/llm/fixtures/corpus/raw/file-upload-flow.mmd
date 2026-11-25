@@ -1,0 +1,14 @@
+flowchart TD
+    User((User))
+    UploadForm[File Upload Form]
+    UploadAPI[Upload Service]
+    VirusScanner[Virus Scanner Service]
+    StorageBucket[(Object Storage)]
+    NotifyService[Notification Service]
+
+    User -->|selects file and submits| UploadForm
+    UploadForm -->|send file| UploadAPI
+    UploadAPI -->|scan for malware| VirusScanner
+    VirusScanner -->|scan passed| UploadAPI
+    UploadAPI -->|store file| StorageBucket
+    UploadAPI -->|send upload complete notice| NotifyService

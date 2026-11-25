@@ -1,0 +1,555 @@
+==================
+ID-first declarations and quoted rendered labels
+==================
+@diagram architecture
+api service as "API"
+store database as 'Store'
+api -> store [type: reads] as "Read"
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))
+      (label
+        (quoted))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))
+      (label
+        (quoted))))
+  (edge
+    (endpoint
+      (node_reference
+        (identifier)))
+    (connector)
+    (endpoint
+      (node_reference
+        (identifier)))
+    (edge_fields
+      (keyed_edge_field
+        (identifier)))
+    (label
+      (quoted))))
+
+==================
+Keyed connector ends and typed style
+==================
+@diagram erd
+customer entity
+order entity
+customer ------> order [firstEnd: one, secondEnd: zeroToMany, style: "dotted, #FF0000, thick"]
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (edge
+    (endpoint
+      (node_reference
+        (identifier)))
+    (connector)
+    (endpoint
+      (node_reference
+        (identifier)))
+    (edge_fields
+      (keyed_edge_field
+        (end_name))
+      (keyed_edge_field
+        (end_name))
+      (keyed_edge_field
+        (style_value
+          (double_quoted))))))
+
+==================
+Group-qualified references and node-local ports
+==================
+@diagram architecture
+sales group {
+  api service {
+    out port [direction: out, anchor: E]
+  }
+  db database
+  api:out -> db:in
+}
+sales.api -> sales.db
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))
+      (node_body
+        (body_line
+          (node
+            (identifier)
+            (node_kind
+              (identifier))
+            (node_body
+              (body_line
+                (port
+                  (identifier)
+                  (port_field)
+                  (port_field
+                    (identifier)))))))
+        (body_line
+          (node
+            (identifier)
+            (node_kind
+              (identifier))))
+        (body_line
+          (edge
+            (endpoint
+              (node_reference
+                (identifier))
+              (identifier))
+            (connector)
+            (endpoint
+              (node_reference
+                (identifier))
+              (identifier)))))))
+  (edge
+    (endpoint
+      (node_reference
+        (identifier)
+        (identifier)))
+    (connector)
+    (endpoint
+      (node_reference
+        (identifier)
+        (identifier)))))
+
+==================
+Named arrangement and explicit node symbol
+==================
+@diagram block
+a block [symbol: "block-component"]
+b block
+row = arrange row: a, b
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))
+      (node_fields
+        (node_field
+          (quoted)))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (arrangement
+    (identifier)
+    (rectangle_member
+      (node_reference
+        (identifier)))
+    (rectangle_member
+      (node_reference
+        (identifier)))))
+
+==================
+Named UML class operations and attributes
+==================
+@diagram uml-class
+Order class {
+  fields = attributes {
+    orderId = public attribute id: String
+  }
+  actions = operations {
+    saveOp = public operation save(id: String): Boolean
+    + load()
+    - reset()
+    # inspect()
+    ~ refresh()
+  }
+}
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (node
+    (identifier)
+    (node_kind
+      (identifier))
+    (node_body
+      (body_line
+        (compartment
+          (identifier)
+          (attribute_line
+            (attribute
+              (identifier)
+              (identifier)
+              (identifier)))))
+      (body_line
+        (compartment
+          (identifier)
+          (operation_line
+            (operation
+              (identifier)
+              (operation_signature
+                (identifier)
+                (operation_parameter
+                  (identifier)
+                  (identifier))
+                (identifier))))
+          (operation_line
+            (operation
+              (operation_signature
+                (identifier))))
+          (operation_line
+            (operation
+              (operation_signature
+                (identifier))))
+          (operation_line
+            (operation
+              (operation_signature
+                (identifier))))
+          (operation_line
+            (operation
+              (operation_signature
+                (identifier)))))))))
+
+==================
+Recursive alternative with activation and note
+==================
+@diagram uml-sequence
+client participant
+server participant
+work = activation client {
+  call = client -#> server
+  choice = alt "accepted" {
+    note "Ready\nNow" on server
+    server -.-> client
+  } else "rejected" {
+    client -> server
+  }
+}
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (sequence_activation
+    (identifier)
+    (identifier)
+    (sequence_message_line
+      (edge
+        (identifier)
+        (endpoint
+          (node_reference
+            (identifier)))
+        (connector)
+        (endpoint
+          (node_reference
+            (identifier)))))
+    (sequence_fragment
+      (alt_fragment
+        (identifier)
+        (quoted)
+        (sequence_note_line
+          (sequence_note
+            (quoted)
+            (identifier)))
+        (sequence_message_line
+          (edge
+            (endpoint
+              (node_reference
+                (identifier)))
+            (connector)
+            (endpoint
+              (node_reference
+                (identifier)))))
+        (quoted)
+        (sequence_message_line
+          (edge
+            (endpoint
+              (node_reference
+                (identifier)))
+            (connector)
+            (endpoint
+              (node_reference
+                (identifier)))))))))
+
+==================
+Parallel operands and optional guards
+==================
+@diagram uml-sequence
+client participant
+server participant
+both = par "fast" {
+  client -> server
+} and {
+  server -> client
+} and "slow" {
+  loop {
+    client -> server
+  }
+}
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (sequence_fragment
+    (par_fragment
+      (identifier)
+      (quoted)
+      (sequence_message_line
+        (edge
+          (endpoint
+            (node_reference
+              (identifier)))
+          (connector)
+          (endpoint
+            (node_reference
+              (identifier)))))
+      (sequence_message_line
+        (edge
+          (endpoint
+            (node_reference
+              (identifier)))
+          (connector)
+          (endpoint
+            (node_reference
+              (identifier)))))
+      (quoted)
+      (sequence_fragment
+        (guarded_fragment
+          (sequence_message_line
+            (edge
+              (endpoint
+                (node_reference
+                  (identifier)))
+              (connector)
+              (endpoint
+                (node_reference
+                  (identifier))))))))))
+
+==================
+Version directives and Unicode quote
+==================
+@diagram flowchart
+@coralVersion "0.2.8"
+@conformanceLevel strict
+start process as "Café 🌊"
+end terminal
+start -> end [flow]
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (directive_line
+    (quoted))
+  (directive_line)
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))
+      (label
+        (quoted))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (edge
+    (endpoint
+      (node_reference
+        (identifier)))
+    (connector)
+    (endpoint
+      (node_reference
+        (identifier)))
+    (edge_fields
+      (bare_type
+        (identifier)))))
+
+==================
+Nested sequence region
+==================
+@diagram uml-sequence
+a participant
+b participant
+phase = region "Review" {
+  a -> b
+  region {
+    b -> a
+  }
+}
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (sequence_region
+    (identifier)
+    (quoted)
+    (sequence_message_line
+      (edge
+        (endpoint
+          (node_reference
+            (identifier)))
+        (connector)
+        (endpoint
+          (node_reference
+            (identifier)))))
+    (sequence_region
+      (sequence_message_line
+        (edge
+          (endpoint
+            (node_reference
+              (identifier)))
+          (connector)
+          (endpoint
+            (node_reference
+              (identifier))))))))
+
+==================
+Named participant group
+==================
+@diagram uml-sequence
+a participant
+b participant
+team = participants b, a [label: "Team"]
+a -> b
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (statement_line
+    (node
+      (identifier)
+      (node_kind
+        (identifier))))
+  (sequence_group
+    (identifier)
+    (identifier)
+    (identifier)
+    (quoted))
+  (edge
+    (endpoint
+      (node_reference
+        (identifier)))
+    (connector)
+    (endpoint
+      (node_reference
+        (identifier)))))
+
+==================
+Edition 0.2.9 symbol definition with inert raw artwork
+==================
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol dot {
+  name "Dot"
+  size 8 x 8
+  anchor tip [side: N, at: 0.5]
+  in port [direction: in, label: "In", maxConnections: 1]
+  artwork svg """
+<svg> // { } @symbol
+"""
+}
+a service [symbol: "local.dot"]
+---
+
+(source_file
+  (diagram_line
+    (diagram_type))
+  (directive_line
+    (quoted))
+  (symbol_definition
+    (identifier)
+    (symbol_line
+      (quoted))
+    (symbol_line
+      (coordinate)
+      (coordinate))
+    (symbol_line
+      (symbol_anchor
+        (identifier)
+        (anchor_field
+          (side_name))
+        (anchor_field
+          (coordinate))))
+    (symbol_line
+      (port
+        (identifier)
+        (port_field)
+        (port_field
+          (quoted))
+        (port_field
+          (positive_integer))))
+    (symbol_artwork
+      (raw_block)))
+  (node
+    (identifier)
+    (node_kind
+      (identifier))
+    (node_fields
+      (node_field
+        (quoted)))))

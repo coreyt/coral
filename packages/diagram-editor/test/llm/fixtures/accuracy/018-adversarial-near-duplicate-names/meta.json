@@ -1,0 +1,9 @@
+{
+  "caseId": "018-adversarial-near-duplicate-names",
+  "caseType": "adversarial-label",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), testing whether two requested labels differing only by case survive as two distinct nodes rather than colliding -- Coral's ID derivation (labelToId) lowercases labels, so 'User Service' and 'user service' both derive to the id 'user_service' unless the model gives one an explicit `as \"id\"` clause",
+  "limitations": "expectedSubstrings only checks that both label strings appear verbatim in the output text; a human must inspect the retained candidate DSL to confirm two distinct nodes.",
+  "requiresManualReview": true,
+  "expectedSubstrings": ["User Service", "user service"]
+}

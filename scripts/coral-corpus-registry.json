@@ -1,0 +1,535 @@
+{
+  "schemaVersion": 1,
+  "fragmentCodes": [
+    "coral.reference.unresolved.invalid",
+    "coral.constraint.reference.unresolved.invalid",
+    "coral.constraint.scope.invalid",
+    "coral.route.anchor.invalid"
+  ],
+  "embeddedInputs": {
+    "valid": [
+      "packages/diagram-editor/test/llm/graph-interchange-fixture.test.ts#aba13839422e29b3",
+      "packages/diagram-editor/test/llm/inject-corpus-defects.test.ts#9664ac6cb5745d78",
+      "packages/diagram-editor/test/llm/inject-syntax-defects.test.ts#191013183cb3353e",
+      "packages/diagram-editor/test/llm/inject-syntax-defects.test.ts#dc6fe76d6040eb22",
+      "packages/diagram-editor/test/llm/spatial/integration.test.ts#448ade19b292d2a6",
+      "packages/diagram-editor/test/llm/spatial/integration.test.ts#aa112cb1b371bc08",
+      "packages/language/test/compact-ends.test.ts#66190776cdd44e79",
+      "packages/language/test/compact-ends.test.ts#6beb8d7e866a20df",
+      "packages/language/test/compact-ends.test.ts#c4e79222b6a58433",
+      "packages/language/test/compact-ends.test.ts#ff03fce563926db7",
+      "packages/language/test/geometry.test.ts#0c55c9e8cab897c6",
+      "packages/language/test/geometry.test.ts#704becf83cac2d8e",
+      "packages/language/test/identity.test.ts#3f0d634d029ef69f",
+      "packages/language/test/identity.test.ts#6ee7c4c4f79b0425",
+      "packages/language/test/identity.test.ts#79f98096f95ee2fa",
+      "packages/language/test/identity.test.ts#acc46e5a238b4902",
+      "packages/language/test/parser.test.ts#02d958e5109c0e3b",
+      "packages/language/test/parser.test.ts#1b30aa1ba7e534dc",
+      "packages/language/test/parser.test.ts#31faa9571d663146",
+      "packages/language/test/parser.test.ts#3606db8f72b00a30",
+      "packages/language/test/parser.test.ts#3a95443046defc37",
+      "packages/language/test/parser.test.ts#3e35e1c9bd61ac69",
+      "packages/language/test/parser.test.ts#4605ef49226fea77",
+      "packages/language/test/parser.test.ts#4799990afa416f7b",
+      "packages/language/test/parser.test.ts#49386f643953e435",
+      "packages/language/test/parser.test.ts#5b668d70a313aff2",
+      "packages/language/test/parser.test.ts#5df1ebde764865f6",
+      "packages/language/test/parser.test.ts#6e52eefa8d639bd9",
+      "packages/language/test/parser.test.ts#726b6ca123b0ea1c",
+      "packages/language/test/parser.test.ts#73b884578bb1cc0c",
+      "packages/language/test/parser.test.ts#7a005b1060b50091",
+      "packages/language/test/parser.test.ts#86aecaa72b8cea0a",
+      "packages/language/test/parser.test.ts#8efcfcc3b296b81e",
+      "packages/language/test/parser.test.ts#adce1b6e1a160614",
+      "packages/language/test/parser.test.ts#c2adb2d9216e51f8",
+      "packages/language/test/parser.test.ts#c5a785b6b6bd8661",
+      "packages/language/test/parser.test.ts#c97644d25a5eb327",
+      "packages/language/test/parser.test.ts#da43e85777472f82",
+      "packages/language/test/parser.test.ts#e334ea7a3e4928b3",
+      "packages/language/test/printer.test.ts#04550d47f53657eb",
+      "packages/language/test/printer.test.ts#3f84e60c4afaeca6",
+      "packages/language/test/printer.test.ts#b3f5e81c6d58112d",
+      "packages/language/test/printer.test.ts#bead9dcddde7575a",
+      "packages/language/test/projection.test.ts#59cd4214e90135c2",
+      "packages/language/test/relationship-ends.test.ts#4c5ca4c20000bad7",
+      "packages/language/test/repair.test.ts#4deb099576b7fffd",
+      "packages/language/test/repair.test.ts#71faad9a7eb4d7a7",
+      "packages/language/test/spelling-collisions.test.ts#e7b29d2183f19285",
+      "packages/language/test/uml-class.test.ts#611be4faee596849",
+      "packages/language/test/uml-class.test.ts#6ef7a2683214d04e",
+      "packages/language/test/uml-class.test.ts#86a4875cf9cad773",
+      "packages/diagram-editor/test/SequenceInspector.test.tsx#648ceb46b23a35a1",
+      "packages/diagram-editor/test/sourceParity.test.ts#dd30f6eef2c8f40b",
+      "packages/language/test/mermaid-sequence.test.ts#41f5a5e74fc9398d",
+      "packages/language/test/diagnostics.test.ts#9460cd86fc98a2ef",
+      "packages/language/test/notation028-red.test.ts#8fa44228358f0b0b"
+    ],
+    "negative": {
+      "packages/language/test/parser.test.ts#c6c8fe91b401b8d5": [
+        "coral.source.reader.unsupported"
+      ],
+      "packages/language/test/uml-sequence.test.ts#e8f8c581cbf0fcdc": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/compact-ends.test.ts#3a9e88be2eec3a11": [
+        "coral.edge.end.invalid",
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#4dbede0fd97e2ad7": [
+        "coral.edge.data.unparsed",
+        "coral.route.anchor.invalid"
+      ],
+      "packages/language/test/compact-ends.test.ts#680e6304d7450243": [
+        "coral.edge.end.order.invalid"
+      ],
+      "packages/language/test/compact-ends.test.ts#763c6abca7fbb638": [
+        "coral.edge.end.order.invalid",
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#7c056f9f15caac6e": [
+        "coral.edge.end.compact.required"
+      ],
+      "packages/language/test/compact-ends.test.ts#9f246a10034ba6cf": [
+        "coral.edge.field.duplicate",
+        "coral.json.key.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#a733143c9e37a94c": [
+        "coral.json.key.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#bbc6eeaec17af7db": [
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#c60f3bc9af69722a": [
+        "coral.edge.end.invalid",
+        "coral.edge.end.order.invalid"
+      ],
+      "packages/language/test/compact-ends.test.ts#c79b6596a6bdf9a5": [
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#d27630ddca12be31": [
+        "coral.edge.end.invalid"
+      ],
+      "packages/language/test/compact-ends.test.ts#d762cd8d698f871a": [
+        "coral.edge.end.invalid",
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#ebfe29c8ae53ad89": [
+        "coral.edge.end.invalid",
+        "coral.edge.end.order.invalid"
+      ],
+      "packages/language/test/compact-ends.test.ts#f1f52cbcd5df4223": [
+        "coral.edge.end.invalid",
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/compact-ends.test.ts#f2ab5921f451ff7b": [
+        "coral.edge.end.invalid",
+        "coral.edge.end.order.invalid"
+      ],
+      "packages/language/test/diagnostics.test.ts#0ab54ce1a875d41a": [
+        "coral.json.key.duplicate"
+      ],
+      "packages/language/test/diagnostics.test.ts#431646970d42db00": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#862b04162f52de5c": [
+        "coral.brace.unparsed",
+        "coral.node.data.unparsed",
+        "coral.node.id.invalid",
+        "coral.node.reserved-key.invalid"
+      ],
+      "packages/language/test/diagnostics.test.ts#a6b7124633510c77": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#d432efbb2a2541a4": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#d6ce213a877697d1": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#e224135dc47339a9": [
+        "coral.brace.unparsed",
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#f960b02b9ca70de7": [
+        "coral.brace.unparsed",
+        "coral.node.data-field.invalid",
+        "coral.node.id.invalid"
+      ],
+      "packages/language/test/identity.test.ts#aabd405347439c92": [
+        "coral.node.id.invalid"
+      ],
+      "packages/language/test/identity.test.ts#f0e81d543002bafd": [
+        "coral.reference.unresolved.invalid"
+      ],
+      "packages/language/test/uml-class.test.ts#47c5dec005716dda": [
+        "coral.uml.classifier.symbol.invalid"
+      ],
+      "packages/language/test/uml-class.test.ts#60cfacb959af0ab4": [
+        "coral.uml.member.invalid"
+      ],
+      "packages/language/test/parser.test.ts#5cfeb2a55baf7020": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/parser.test.ts#b2b739fc15305426": [
+        "coral.attribute.equals.unsupported"
+      ],
+      "packages/language/test/parser.test.ts#bc7c118f749700c9": [
+        "coral.attribute.equals.unsupported"
+      ],
+      "packages/language/test/projection.test.ts#08a30017e83d11d2": [
+        "coral.line.unparsed",
+        "coral.node.type.unparsed"
+      ],
+      "packages/language/test/projection.test.ts#3598289d5a9c5114": [
+        "coral.graph.data-field.unsupported"
+      ],
+      "packages/language/test/projection.test.ts#4dc8afc3fc6d0dc2": [
+        "coral.graph.unparsed"
+      ],
+      "packages/language/test/projection.test.ts#753a9b16ef5174e9": [
+        "coral.edge.data-field.unsupported",
+        "coral.edge.field.duplicate",
+        "coral.node.data-field.invalid",
+        "coral.node.data-field.unsupported",
+        "coral.node.data.unparsed"
+      ],
+      "packages/language/test/projection.test.ts#847930571cc5a0eb": [
+        "coral.edge.id.invalid"
+      ],
+      "packages/language/test/projection.test.ts#c93ffea2bdb399ae": [
+        "coral.edge.data-field.unsupported"
+      ],
+      "packages/language/test/projection.test.ts#e906d49e317612c5": [
+        "coral.graph.data-field.invalid",
+        "coral.node.data-field.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#064b733707853c03": [
+        "coral.route.anchor.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#0b482ea9365b4157": [
+        "coral.reference.ambiguous.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#284e1657e1586804": [
+        "coral.reference.unresolved.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#6b4304aff7a9e915": [
+        "coral.constraint.reference.unresolved.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#863a7745509355d0": [
+        "coral.route.anchor.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#99b0645ac9a3ff8d": [
+        "coral.constraint.reference.unresolved.invalid"
+      ],
+      "packages/language/test/reference-provenance.test.ts#9c0d7aca9a5a2665": [
+        "coral.constraint.reference.unresolved.invalid",
+        "coral.constraint.scope.invalid"
+      ],
+      "packages/language/test/relationship-ends.test.ts#2a37e4b2d5ef51ff": [
+        "coral.edge.legacy-arrow.unsupported"
+      ],
+      "packages/language/test/repair.test.ts#9717b77804b57de0": [
+        "coral.node.data.unparsed"
+      ],
+      "packages/language/test/repair.test.ts#c795979cb12ed9c7": [
+        "coral.edge.data.unparsed"
+      ],
+      "packages/language/test/roundtrip.test.ts#08ed514f76886ba4": [
+        "coral.node.reserved-key.invalid"
+      ],
+      "packages/language/test/roundtrip.test.ts#54d62656387f4cd1": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/roundtrip.test.ts#7a50f0b4ba3a098a": [
+        "coral.attribute.equals.unsupported"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#05cba0f6b425560a": [
+        "coral.attribute.relation.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#696743fd3afc631b": [
+        "coral.constraint.parameter.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#791ee9dd1073534c": [
+        "coral.attribute.relation.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#84ca4dcaaaa03950": [
+        "coral.edge.data-field.unsupported",
+        "coral.edge.reserved-key.invalid",
+        "coral.node.reserved-key.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#9fd43878632b6147": [
+        "coral.edge.data-field.unsupported"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#bc2e23be04378199": [
+        "coral.constraint.parameter.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#bebcb47f80aa83f5": [
+        "coral.node.data-field.unsupported"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#c3832733b3795d03": [
+        "coral.attribute.relation.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#c674d17fb8406734": [
+        "coral.node.id.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#d67c9500ae5b001e": [
+        "coral.attribute.relation.invalid"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#f176bb60b4adf3e7": [
+        "coral.edge.field.duplicate"
+      ],
+      "packages/language/test/spelling-collisions.test.ts#fa91140e6b843860": [
+        "coral.edge.data-field.unsupported"
+      ],
+      "packages/language/test/diagnostics.test.ts#22128e939e3c630e": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/diagnostics.test.ts#3da6feb2513e2a02": [
+        "coral.syntax.spacing.invalid"
+      ],
+      "packages/language/test/diagnostics.test.ts#b2ab0d26575addbc": [
+        "coral.line.unparsed"
+      ],
+      "packages/language/test/notation028-red.test.ts#1be4d51ede5ca1e9": [
+        "coral.line.unparsed"
+      ]
+    },
+    "installed028": {
+      "valid": [
+        "packages/diagram-editor/test/diagnosticPropagation.test.ts#c308f278efb4c760",
+        "packages/diagram-editor/test/llm/graph-interchange-fixture.test.ts#73aab2b40636311c",
+        "packages/diagram-editor/test/slice35StateVisual028.test.ts#692804f01989830e",
+        "packages/diagram-editor/test/acceptance028.test.ts#019f3119d5c7e9fc",
+        "packages/diagram-editor/test/acceptance028.test.ts#11b8899189d938ca",
+        "packages/diagram-editor/test/diagramLayout.test.ts#3e38a35007a74099",
+        "packages/diagram-editor/test/diagramLayout.test.ts#633303a1038d2057",
+        "packages/diagram-editor/test/diagramLayout.test.ts#f22db66fd9b04057",
+        "packages/diagram-editor/test/parsers.test.ts#07c5a48081bfb2fa",
+        "packages/diagram-editor/test/parsers.test.ts#1375056b95ba4eb4",
+        "packages/diagram-editor/test/parsers.test.ts#257008bb55b7c490",
+        "packages/diagram-editor/test/parsers.test.ts#2619b5bbfd54087c",
+        "packages/diagram-editor/test/parsers.test.ts#2681625c9863b3a2",
+        "packages/diagram-editor/test/parsers.test.ts#2820c613b46afa6e",
+        "packages/diagram-editor/test/parsers.test.ts#4a037c8be4c36b9b",
+        "packages/diagram-editor/test/parsers.test.ts#5cd71b06082233ef",
+        "packages/diagram-editor/test/parsers.test.ts#769bad7de2ce69f9",
+        "packages/diagram-editor/test/parsers.test.ts#783de7db1bcc1267",
+        "packages/diagram-editor/test/parsers.test.ts#8ac29c7a0af126b5",
+        "packages/diagram-editor/test/parsers.test.ts#9d1d1d9813324444",
+        "packages/diagram-editor/test/parsers.test.ts#a2623168bcee0b3a",
+        "packages/diagram-editor/test/parsers.test.ts#a509d7ce42b44284",
+        "packages/diagram-editor/test/parsers.test.ts#abbfa89a96af3e9b",
+        "packages/diagram-editor/test/parsers.test.ts#abff5064f71482c7",
+        "packages/diagram-editor/test/parsers.test.ts#b591e090ad9d8282",
+        "packages/diagram-editor/test/parsers.test.ts#b68612d3d3f85f29",
+        "packages/diagram-editor/test/parsers.test.ts#c15d9a232ea70587",
+        "packages/diagram-editor/test/parsers.test.ts#f788c98d5dde62b2",
+      "packages/diagram-editor/test/parsers.test.ts#f89db57d885ff973",
+      "packages/language/test/publicSource028.test.ts#4a06207522806412",
+      "packages/language/test/formatDocument028.test.ts#2664462b425f008c",
+      "packages/language/test/formatDocument028.test.ts#dce821411b3747ec",
+      "packages/language/test/formatDocument028.test.ts#e7d7b94d8fad922a",
+        "packages/diagram-editor/test/diagramLayout.test.ts#5acd9ae24cc8f458",
+        "packages/diagram-editor/test/parsers.test.ts#1507d4a4e4d113b3",
+        "packages/diagram-editor/test/parsers.test.ts#224ea885a14dab01",
+        "packages/diagram-editor/test/parsers.test.ts#714961771fc1c02f",
+        "packages/diagram-editor/test/parsers.test.ts#81d8f1a121b0ec7d",
+        "packages/diagram-editor/test/parsers.test.ts#98bde2e9ff2b73c2",
+        "packages/diagram-editor/test/parsers.test.ts#b4b88553d9a0c8bb",
+        "packages/diagram-editor/test/parsers.test.ts#f81a8fc269a56b63",
+        "packages/diagram-editor/test/portSafety.test.ts#016299599d5f6264",
+        "packages/diagram-editor/test/portSafety.test.ts#8793348ed804e1c3",
+        "packages/diagram-editor/test/portSafety.test.ts#d84ac4571333f743",
+        "packages/diagram-editor/test/portSafety.test.ts#dd66e73a89b400ed",
+        "packages/diagram-editor/test/portSafety.test.ts#f95e9bf5dea81a8a"
+      ],
+      "negative": {
+        "packages/diagram-editor/test/diagnosticPropagation.test.ts#68c8444f74a7d3dd": ["coral.syntax.type.duplicate"],
+        "packages/language/test/publicSource028.test.ts#6326498695b2ce36": [
+          "coral.syntax.bracket.comma-required",
+          "coral.syntax.bracket.unknown-positional"
+        ],
+        "packages/language/test/publicSource028.test.ts#50083c7479e6cade": [
+          "coral.reference.target.unresolved"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#0aecb37438a65a7e": [
+          "coral.sequence.fragment.operands",
+          "coral.syntax.spacing.invalid"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#047f3184e7f90978": [
+          "header.directive.duplicate"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#70d160c650d14bde": [
+          "coral.syntax.bracket.unknown-positional"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#88686c747dcd4929": [
+          "header.diagram.unsupported"
+        ],
+        "packages/diagram-editor/test/editorAnalysis.test.ts#fa297c9a2eb5eaa2": [
+          "coral.identity.node.duplicate"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#9b8057057d893d95": [
+          "coral.syntax.legacy-node.unsupported"
+        ],
+        "packages/diagram-editor/test/parsers.test.ts#a709fc335f53cd4b": [
+          "header.diagram.disabled"
+        ]
+      }
+    }
+  },
+  "entries": [
+    {"id": "character-gallery-028", "match": "packages/render/test/fixtures/character-gallery/*.coral", "mode": "installed-028"},
+    {"id": "character-integration-028", "match": "packages/render/test/fixtures/character-integration/*.coral", "mode": "installed-028"},
+    {"id": "conformance", "match": "packages/language/spec/conformance/**/*.coral", "mode": "manifest"},
+    {"id": "language-roundtrip", "match": "packages/language/test/fixtures/roundtrip/*.coral", "mode": "valid"},
+    {
+      "id": "language-repair",
+      "match": "packages/language/test/fixtures/repair/*.coral",
+      "mode": "negative",
+      "codes": {
+        "bare-bracket-attribute.coral": [],
+        "colon-to-equals-attribute.coral": ["coral.attribute.equals.unsupported"],
+        "colon-to-equals-node-property.coral": ["coral.line.unparsed"],
+        "line-break-in-label.coral": ["coral.line.unparsed"],
+        "missing-closing-brace.coral": ["coral.brace.unparsed"],
+        "missing-closing-quote.coral": ["coral.line.unparsed"],
+        "missing-comma.coral": ["coral.attribute.value.unparsed"],
+        "missing-edge-target.coral": ["coral.line.unparsed"],
+        "missing-opening-brace.coral": ["coral.line.unparsed", "coral.brace.unparsed"],
+        "missing-opening-quote.coral": ["coral.line.unparsed"],
+        "missing-space-after-type.coral": ["coral.line.unparsed"],
+        "stray-character.coral": ["coral.line.unparsed"],
+        "trailing-comma.coral": [],
+        "unbalanced-bracket.coral": ["coral.line.unparsed"],
+        "unicode-lookalike-quote.coral": ["coral.line.unparsed"],
+        "wrong-arrow.coral": ["coral.line.unparsed"]
+      }
+    },
+    {"id": "llm-coral", "match": "packages/diagram-editor/test/llm/fixtures/corpus/coral/*.coral", "mode": "valid"},
+    {"id": "llm-semantic-defects", "match": "packages/diagram-editor/test/llm/fixtures/corpus/defects/semantic/*.coral", "mode": "valid"},
+    {
+      "id": "llm-syntax-defects",
+      "match": "packages/diagram-editor/test/llm/fixtures/corpus/defects/syntax/*.coral",
+      "mode": "negative",
+      "reader": "installed-028",
+      "defectTypeCodes": {
+        "line-break-in-label": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.node.kind-required", "coral.syntax.string.unclosed"],
+        "missing-closing-brace": ["coral.uml.class.unclosed", "coral.uml.compartment.invalid"],
+        "missing-closing-quote": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "missing-opening-brace": ["coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid"],
+        "missing-opening-quote": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "stray-character": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "unicode-lookalike-quote": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.string.unclosed"]
+      },
+      "codeOverrides": {
+        "airline-reservation-class-missing-closing-brace-1.coral": ["coral.uml.class.unclosed", "coral.uml.compartment.invalid"],
+        "airline-reservation-class-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "airline-reservation-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "airline-reservation-class-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "airline-reservation-class-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "banking-system-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "banking-system-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "banking-system-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "ci-cd-pipeline-line-break-in-label-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "ci-cd-pipeline-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "content-moderation-flow-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "e-commerce-domain-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "e-commerce-domain-class-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "e-commerce-domain-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "employee-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "employee-class-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "employee-class-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.syntax.node.kind-required"],
+        "employee-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "file-upload-flow-line-break-in-label-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required", "coral.syntax.string.unclosed"],
+        "file-upload-flow-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "file-upload-flow-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "file-upload-flow-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "hospital-management-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "hospital-management-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "hospital-management-class-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "hospital-management-class-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "library-catalog-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "library-catalog-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "library-catalog-class-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.syntax.node.kind-required"],
+        "library-catalog-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "login-flow-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.string.unclosed"],
+        "login-flow-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed", "coral.syntax.token.invalid"],
+        "login-flow-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.syntax.statement.trailing"],
+        "microservices-checkout-line-break-in-label-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required", "coral.syntax.string.unclosed"],
+        "microservices-checkout-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "microservices-checkout-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "multi-service-oauth-sequence-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.string.unclosed"],
+        "multi-service-oauth-sequence-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "order-fulfillment-network-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "otp-verification-sequence-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "password-reset-flow-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "password-reset-flow-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "payment-authorization-sequence-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "ping-pong-sequence-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "ping-pong-sequence-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "ping-pong-sequence-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "search-indexing-flow-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "search-indexing-flow-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"],
+        "shape-hierarchy-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "shape-hierarchy-class-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "shape-hierarchy-class-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "shape-hierarchy-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "social-network-class-missing-closing-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "social-network-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "social-network-class-stray-character-1.coral": ["coral.reference.target.unresolved", "coral.syntax.node.kind-required"],
+        "social-network-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "user-onboarding-flow-line-break-in-label-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "user-onboarding-flow-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "vehicle-class-missing-closing-quote-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "vehicle-class-missing-opening-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.label.quoted-required", "coral.syntax.node.body.invalid", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "vehicle-class-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.syntax.node.kind-required"],
+        "vehicle-class-unicode-lookalike-quote-1.coral": ["coral.reference.source.unresolved", "coral.syntax.group.unexpected-close", "coral.syntax.node.body.invalid", "coral.syntax.string.unclosed"],
+        "video-streaming-handshake-sequence-line-break-in-label-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "video-streaming-handshake-sequence-missing-opening-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.label.quoted-required", "coral.syntax.statement.trailing", "coral.syntax.string.unclosed"],
+        "video-streaming-handshake-sequence-stray-character-1.coral": ["coral.reference.source.unresolved", "coral.reference.target.unresolved", "coral.syntax.statement.trailing"],
+        "video-streaming-handshake-sequence-unicode-lookalike-quote-1.coral": ["coral.reference.target.unresolved", "coral.syntax.string.unclosed"]
+      }
+    },
+    {"id": "e2e-fixtures", "match": "e2e/fixtures/*.coral", "mode": "valid"},
+    {"id": "slice-92-e2e-fixtures", "match": "e2e/fixtures/slice92/*.coral", "mode": "valid"},
+    {"id": "e2e-028-fixtures", "match": "e2e/fixtures/acceptance028/*.coral", "mode": "installed-028"},
+    {"id": "browser-fixtures", "match": "packages/browser/test/fixtures/*.coral", "mode": "installed-028"},
+    {"id": "browser-028-fixtures", "match": "packages/browser/test/fixtures/acceptance028/*.coral", "mode": "installed-028",
+      "codes": {"erd-hub.coral": ["header.diagram.disabled"],
+        "erd-relationship-node.coral": ["header.diagram.disabled"],
+        "erd-relationship.coral": ["header.diagram.disabled"]}},
+    {"id": "editor-example-sources", "match": "packages/diagram-editor/src/example-sources/*.coral", "mode": "installed-028"},
+    {"id": "render-fixtures", "match": "packages/render/test/fixtures/*.coral", "mode": "installed-028"},
+    {"id": "accuracy-existing", "match": "packages/diagram-editor/test/llm/fixtures/accuracy/*/existing.txt", "mode": "valid"},
+    {
+      "id": "tree-sitter-corpus",
+      "match": "packages/tree-sitter-coral/test/corpus/*.txt",
+      "mode": "tree-sitter-028",
+      "caseCodes": {"coral-028.txt": {"Keyed connector ends and typed style": ["header.diagram.disabled"]}}
+    },
+    {
+      "id": "markdown",
+      "match": ["README.md", "agents/**/*.md", "docs/**/*.md", "packages/**/*.md", "skills/**/*.md", ".claude/skills/**/*.md"],
+      "mode": "fences",
+      "fragments": {
+        ".claude/skills/coral-validate/SKILL.md": [
+          {"firstLine": "// Example: unresolved target", "reader": "installed-028", "codes": ["coral.reference.target.unresolved"]}
+        ],
+        "packages/language/SPEC.md": [
+          {"firstLine": "api -> orders [label: \"writes\"] label below at 0.25 offset 12"},
+          {"firstLine": "service \"API\" as api above orders"},
+          {"firstLine": "require api above orders"},
+          {"firstLine": "constraint auth_above_orders: auth above orders [required, gap: 24, alignment: center]"},
+          {"firstLine": "api -> orders via (240, 80) (240, 180)"},
+          {"firstLine": "api -> orders via waypoint turn_1 at (240, 80), waypoint approach relative to target offset (-20, 0)"}
+        ],
+        "skills/coral-validate/SKILL.md": [
+          {"firstLine": "// Example: unresolved target", "reader": "installed-028", "codes": ["coral.reference.target.unresolved"]}
+        ]
+      }
+    },
+    {"id": "docs-figures", "match": "docs/figures/**", "mode": "excluded", "reason": "published figure source, not a corpus"},
+    {"id": "dev-history", "match": "dev/**/*.md", "mode": "excluded", "reason": "plans and history, not corpora"}
+  ]
+}

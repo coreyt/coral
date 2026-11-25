@@ -1,0 +1,6 @@
+@graph {"id":"field-spellings","layoutOptions":{"direction":"RIGHT"},"metadata":{"author":"Coral","tags":["spelling"]}}
+
+service "API" @ (10, 20) pinned data {"description":"Entry point","dimensions":{"height":60,"width":120},"layoutOptions":{"padding":{"top":4}},"symbol":"gateway","variant":"primary"}
+database "Orders"
+
+api (1) -> orders [dashed, label: "writes"] data {"targetEnd":{},"properties":{"schema":{"version":2}}}

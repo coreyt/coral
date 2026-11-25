@@ -1,0 +1,21 @@
+flowchart TD
+    ContentSource[(Content Store)]
+    Crawler[Crawler Service]
+    ParserService[Parser Service]
+    Tokenizer[Tokenizer]
+    IndexBuilder[Index Builder]
+    SearchIndex[(Search Index)]
+    User((User))
+    QueryService[Query Service]
+    RankingService[Ranking Service]
+
+    Crawler -->|fetch documents| ContentSource
+    Crawler -->|send raw content| ParserService
+    ParserService -->|extract text| Tokenizer
+    Tokenizer -->|emit tokens| IndexBuilder
+    IndexBuilder -->|write index| SearchIndex
+    User -->|submits search query| QueryService
+    QueryService -->|lookup terms| SearchIndex
+    SearchIndex -->|return matches| RankingService
+    RankingService -->|return ranked results| QueryService
+    QueryService -->|display results| User

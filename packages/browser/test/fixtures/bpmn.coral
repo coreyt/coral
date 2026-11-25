@@ -1,0 +1,11 @@
+@diagram bpmn
+start startEvent as "Invoice received"
+task task [variant: "user"] as "Approve invoice"
+gateway exclusiveGateway as "Approved?"
+revise task as "Request changes"
+end endEvent as "Approved"
+toTask = start -> task
+toGateway = task -> gateway
+toEnd = gateway -> end as "Yes"
+toRevise = gateway -> revise as "No"
+retry = revise -> gateway

@@ -1,0 +1,11 @@
+{
+  "slug": "hospital-management-class",
+  "sourceUrl": "synthetic-original",
+  "license": "synthetic-original",
+  "attribution": "authored for Slice 49 corpus scale-up",
+  "collectedDate": "2026-09-13",
+  "diagramType": "classDiagram",
+  "complexity": "moderate",
+  "nodeCount": 8,
+  "edgeCount": 9
+}

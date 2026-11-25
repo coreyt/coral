@@ -1,0 +1,6 @@
+service "API Gateway" as "gateway" @ (0, 0)
+service "Cache" as "cache" @ (200, 0)
+service "Product Service" as "products" @ (0, 150)
+
+gateway -> cache [label: "check"]
+gateway -> products [label: "fetch"]

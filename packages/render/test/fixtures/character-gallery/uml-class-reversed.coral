@@ -1,0 +1,8 @@
+@diagram uml-class
+Part class
+Whole class
+Base class
+Child class
+owns = Part --#<> Whole [composition]
+links = Whole -- Base [association]
+inherits = Base -- Child [inheritance, firstEnd: triangle, secondEnd: none]

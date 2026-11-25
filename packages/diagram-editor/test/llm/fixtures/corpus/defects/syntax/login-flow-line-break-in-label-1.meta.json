@@ -1,0 +1,16 @@
+{
+  "originalFilename": "login-flow.coral",
+  "originalDsl": "@diagram architecture\n@coralVersion \"0.2.8\"\n@profileVersion \"1.0.0\"\n@catalogVersion \"1.0.0\"\n@conformanceLevel typical\nlayout [direction: DOWN]\n\nUser service as \"User\"\nLoginForm service as \"Login Form\"\nValid module as \"Valid Credentials?\"\nDashboard service as \"Dashboard\"\nErrorMsg service as \"Error Message\"\nedge_1 = User -> LoginForm [secondEnd: arrow]\nedge_2 = LoginForm -> Valid [secondEnd: arrow]\nedge_3 = Valid -> Dashboard [secondEnd: arrow] as \"Yes\"\nedge_4 = Valid -> ErrorMsg [secondEnd: arrow] as \"No\"\nedge_5 = ErrorMsg -> LoginForm [secondEnd: arrow]\n",
+  "injectedDefects": [
+    {
+      "defectType": "line-break-in-label",
+      "location": {
+        "line": 12,
+        "column": 26,
+        "charOffset": 297
+      },
+      "description": "inserted a line break inside label \"Error Message\""
+    }
+  ],
+  "outputFilename": "login-flow-line-break-in-label-1.coral"
+}

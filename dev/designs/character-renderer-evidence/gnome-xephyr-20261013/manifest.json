@@ -1,0 +1,13 @@
+{
+  "status": "provisional native-app diagnostic; alignment acceptance open",
+  "date_utc": "2026-10-13",
+  "host": "private 1280x800 Xephyr nested X11 display with local dbus-run-session and private XDG configuration/runtime",
+  "capture_method": "Gdk3 pixbuf_get_from_window on private X11 root",
+  "applications": [
+    {"name": "GNOME Terminal", "version": "3.52.0 / VTE 0.76.0", "file": "character028-gnome-terminal-xephyr.png", "sha256": "f2c55bb19da25be5e31511020ed4df04418006aa4b1cefcc97d55ab4aaad0c6c", "font_setting": "private desktop monospace-font-name MonoTrue 12; terminal inherited system-font setting not independently inspected"},
+    {"name": "GNOME Text Editor", "version": "46.3", "file": "character028-gnome-editor-xephyr-12pt.png", "sha256": "d2699ebaeb9b3e6368fcd648b3cd9b51b50c2a86b167f3a950cdd7ee3014cb9c", "font_setting": "private use-system-font=false; custom-font MonoTrue 12"}
+  ],
+  "specimen": {"file": "character028-block40-complete-specimen.txt", "sha256": "c3382063c676aaee2f0298be2bd45354bcb8ccaba45c1106188cd0895695d35c", "origin": "release renderer public API, parsed one-node Block graph, controlled-display capability, 40-column output"},
+  "font": {"family": "MonoTrue", "face": "Regular", "built_ttf_sha256": "198d835ca603864991128d9492d0570451ab8285b71bd04e75975bc1072e5aef", "fontconfig": "resolved private copy of MonoTrue-Regular.ttf"},
+  "limitations": ["isolated GNOME applications, not active desktop session", "font substitution inside GNOME Terminal not independently inspected", "only one small Block 40-column specimen at 12 points", "visible box alignment irregularities remain for independent review", "no 80/120-column or flowchart native matrix", "no profile acceptance"]
+}

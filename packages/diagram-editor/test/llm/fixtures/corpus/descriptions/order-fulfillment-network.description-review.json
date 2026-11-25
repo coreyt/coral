@@ -1,0 +1,23 @@
+{
+  "slug": "order-fulfillment-network",
+  "reviews": [
+    {
+      "descriptionFile": "order-fulfillment-network.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 16 nodes and all 18 edges verified, including the two edges into Notification Service (from Tracking Service and directly from Order Service) and the two edges into Inventory Service (from Order Service checking stock and Returns Service restocking)."
+    },
+    {
+      "descriptionFile": "order-fulfillment-network.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 16 nodes then all 18 edges in diagram order. Cross-checked against the .mmd file; the dual-purpose Payment Gateway (used both by Payment Service and Refund Service) is correctly captured with both incoming edges."
+    },
+    {
+      "descriptionFile": "order-fulfillment-network.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Splits into a fulfillment branch and a returns branch narratively; re-verified all 16 nodes and 18 edges are present, including both edges feeding Notification Service and both feeding Inventory Service."
+    }
+  ]
+}

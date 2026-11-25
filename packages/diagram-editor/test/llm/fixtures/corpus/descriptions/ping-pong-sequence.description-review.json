@@ -1,0 +1,23 @@
+{
+  "slug": "ping-pong-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "ping-pong-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 3 participants (Client, Server, Logger) and describes the repeating three-message pattern, explicitly stating it occurs twice for a total of 6 messages, matching the .mmd file exactly."
+    },
+    {
+      "descriptionFile": "ping-pong-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 6 messages individually in exact order (ping, pong, log, ping, pong, log) rather than summarizing the repetition, which is a genuinely different structure from description-1."
+    },
+    {
+      "descriptionFile": "ping-pong-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Purpose-first framing (health check) that still names all 3 participants and confirms the pattern repeats a second time identically, covering all 6 messages without enumerating each one."
+    }
+  ]
+}

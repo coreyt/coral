@@ -1,0 +1,8 @@
+{
+  "originalFilename": "file-upload-flow.coral",
+  "defectType": "reversed-relationship-direction",
+  "affectedNodeIds": ["UploadAPI", "StorageBucket"],
+  "affectedEdgeIds": ["edge_5"],
+  "explanation": "The description says the Upload Service stores the file in Object Storage after the scan passes, but edge_5 has been reversed so Object Storage now points at the Upload Service with the label \"store file\". A passive storage bucket initiating a store action toward the service is backwards from the described data flow.",
+  "outputFilename": "file-upload-flow-reversed-relationship-direction-1.coral"
+}

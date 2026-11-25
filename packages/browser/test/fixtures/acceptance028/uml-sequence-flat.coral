@@ -1,0 +1,5 @@
+@diagram uml-sequence
+client participant
+server participant
+call = client -#> server as "load()"
+reply = server -.-> client as "result"

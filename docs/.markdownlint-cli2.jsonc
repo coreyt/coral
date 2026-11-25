@@ -1,0 +1,115 @@
+// Profile V — VitePress.
+//
+// Contract: dev/releases/0.2.5/slice-60/authoring-format.md
+// Record:   dev/releases/0.2.5/slice-60/markdownlint-vitepress.md
+//
+// Profile V is "Profile P plus additions", and markdownlint-cli2 merges a
+// directory configuration onto its parents, so this file carries ONLY the
+// additions. Every shared Profile P rule is inherited from the root
+// .markdownlint-cli2.jsonc and is deliberately not restated here.
+//
+// Two consequences of that merge, both established experimentally:
+//
+//  1. The nearest configuration replaces a rule WHOLESALE. It does not merge
+//     the rule's options. Each rule below therefore restates its complete
+//     option object, not just the option that differs from Profile P.
+//  2. Inheritance stops at the directory the run starts in. `check:docs` must
+//     invoke markdownlint-cli2 from the REPOSITORY ROOT. A run started inside
+//     docs/ silently drops every Profile P rule and is a false green.
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/v0.23.2/schema/markdownlint-cli2-config-schema.json",
+
+  "customRules": [
+    "../tools/markdownlint/rules/coral-fence-language.mjs"
+  ],
+
+  // Contract A3 rejects per-file annotation as a second source of truth. An
+  // HTML comment is invisible to MD033, so without this a single
+  // `markdownlint-disable` comment silently switches off any rule below.
+  // Profile P makes the same choice; this restatement pins it for docs/.
+  "noInlineConfig": true,
+
+  // Contract V1. Profile P sets a never-matching pattern so that MD041 can see
+  // frontmatter and reject it, which is the opposite of what docs/ needs.
+  //
+  // Transcribed from markdownlint's own helpers.frontMatterRe, restricted to
+  // the YAML `---` form and rewritten without the `m` flag, because
+  // markdownlint-cli2 compiles this value with `new RegExp(value, "u")` and
+  // supplies no other flag. Differenced against that default over fifteen
+  // documents: byte-identical on all thirteen YAML cases, and deliberately
+  // divergent on exactly two — a `---` block preceded by a blank line, which
+  // VitePress would not treat as frontmatter, and TOML `+++` frontmatter,
+  // which contract V1 does not permit.
+  "frontMatter": "^---[^\\S\\r\\n]*(?:\\r\\n|\\r|\\n)(?:[^]*?(?:\\r\\n|\\r|\\n))?---\\s*(?:\\r\\n|\\r|\\n|$)",
+
+  // The only override is the mechanism's self-test. Slice 70 normalised and
+  // relocated the legacy root pages, so no published page carries an
+  // accommodation.
+  "overrides": [
+    {
+      // NOT an accommodation. This is the mechanism's self-test: the fixture
+      // violates MD013 and MD004, only MD013 is exempted here, and
+      // tools/markdownlint/vitepress.test.mjs asserts that MD004 still fires.
+      //
+      // The path exists only inside that test's sandbox, so this block matches
+      // nothing in an ordinary run.
+      "filter": [
+        "override/md013-exempt.md"
+      ],
+      "config": { "MD013": false },
+      "combine": "merge"
+    }
+  ],
+
+  "config": {
+    // Contract V4 and A7. The allowlist is the delta; `script` and `style` are
+    // rejected by being absent from it, which is what stops a documentation
+    // page introducing Vue runtime behaviour into the published site.
+    //
+    // Profile P sets `allowed_elements: []` and `table_allowed_elements: []`.
+    // Omitting `table_allowed_elements` here is deliberate: MD033 falls back
+    // to `allowed_elements` when it is unset, so the same one element is
+    // permitted inside tables and outside them.
+    //
+    // Adding an element to this list is a reviewable change to the Slice 60
+    // record, not an author's decision.
+    "MD033": { "allowed_elements": ["kbd"] },
+
+    // Contract V3. Profile P sets `language_only: true`, which forbids
+    // anything after the language name. VitePress line highlighting and line
+    // numbers live exactly there, so docs/ needs the unconstrained rule: the
+    // language tag stays mandatory, the meta after it is permitted.
+    "MD040": true,
+
+    "coral-fence-language": {
+      "allowed_languages": [
+        "bash",
+        "coral",
+        "javascript",
+        "js",
+        "json",
+        "markdown",
+        "mermaid",
+        "sh",
+        "text",
+        "ts",
+        "tsx",
+        "typescript",
+        "yaml"
+      ]
+    },
+
+    // Contract V1. Profile P sets `front_matter_title: ""` so that frontmatter
+    // cannot satisfy the first-line-heading requirement. In docs/ it must.
+    // The pattern is markdownlint's own default, copied verbatim from
+    // helpers.cjs line 370, including the optional quotes that make
+    // `"title": X` work; helpers applies the `i` flag itself.
+    //
+    // MD025 is deliberately NOT restated. Profile P already sets
+    // `front_matter_title: ""` there, which means a frontmatter title plus one
+    // level-one heading is permitted and only a second level-one heading
+    // fails. The contract does not settle whether Profile V should be
+    // stricter, so this inherits rather than reinterprets.
+    "MD041": { "level": 1, "allow_preamble": false, "front_matter_title": "^\\s*\"?title\"?\\s*[:=]" }
+  }
+}

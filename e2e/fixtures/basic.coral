@@ -1,0 +1,4 @@
+@diagram architecture
+alpha service as "Alpha"
+beta database as "Beta"
+alpha -> beta [writes]

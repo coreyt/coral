@@ -1,0 +1,8 @@
+{
+  "originalFilename": "user-onboarding-flow.coral",
+  "defectType": "out-of-order-sequence",
+  "affectedNodeIds": ["AuthService", "ProfileWizard", "WelcomeService", "Dashboard"],
+  "affectedEdgeIds": ["edge_7", "edge_9", "edge_10"],
+  "explanation": "The description says the Auth Service redirects to the Profile Setup Wizard, which then triggers the Welcome Email Service, which redirects to the User Dashboard; here the chain is reordered so the Auth Service goes to the Welcome Email Service first, which triggers the Profile Setup Wizard, and the wizard redirects to the Dashboard, so the welcome email is sent before the profile is set up.",
+  "outputFilename": "user-onboarding-flow-out-of-order-sequence-1.coral"
+}

@@ -1,0 +1,19 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "frozen": "2026-10-31",
+  "artifacts": {
+    "../svg-artwork-1.md": "f66d6e06960ab25cb5373b6f0d3c052509d27da40f5b040987f2485836131c3c",
+    "vectors/manifest.json": "57e4194a30093960e404412d1831ebb554b2d81624009a8f1857788432a2c123",
+    "vectors/allowed.json": "0e0fcc300447405ec6d4c39b2c79dff956e9909e1879702d1a93f7ae91c54985",
+    "vectors/budgets.json": "1a536ccd7e3cc23b0c646ff096ef5972bae300175d95810be0bbc34bb6b14d2b",
+    "vectors/canonicalization.json": "c843834e02aa7e873b26cc97bab006185a842b0371e3a68978679d4f55a2fa96",
+    "vectors/excluded.json": "78749ce6cbad602f893c3e11c7e1a59e3fa1651522e94ab654b3530389860586",
+    "vectors/geometry.json": "5f453fc3ab562a9cca78568f5ffa8bf4845dab6d3009a296e33d027d2b48c74f",
+    "vectors/malicious.json": "3ab083fa9eb8acce026228eb488e8cecc8c59e6124d4d1270d1056e8d150e57b",
+    "vectors/references.json": "49f9757f288764b393947d6e7cf83c2b9a3852cbe9286f95076fb68eccdbc55d",
+    "vectors/style.json": "67c6eeefd383c00368fd7963f939c620700807e28c6dd41a07ae6d2d1fda82a4"
+  }
+}

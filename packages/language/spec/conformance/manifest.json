@@ -1,0 +1,3315 @@
+{
+  "languageVersion": "1.3.0",
+  "requiredCoverage": [
+    "ordinary-graph",
+    "preferred-relative-all-directions",
+    "preferred-boundary-graph-and-scope",
+    "preferred-arrangement-row-and-column",
+    "required-relative-boundary-arrangement",
+    "identified-constraint-parameters",
+    "route-absolute-derived-and-identified",
+    "route-relative-source-target-node-port",
+    "label-placement-node-and-edge",
+    "dynamic-membership-rejection-and-fixed-membership-edit",
+    "invalid-reference-scope-identity",
+    "invalid-range-and-parameter-applicability",
+    "invalid-attribute-and-reserved-key",
+    "canonical-defaults",
+    "graphir-mapping-goldens",
+    "valid-relationship-ends",
+    "invalid-relationship-ends",
+    "canonical-relationship-end-normalization",
+    "spelling-collisions",
+    "noncanonical-spellings-rejected",
+    "legacy-spellings-removed",
+    "uml-class-structured",
+    "uml-sequence-core",
+    "saved-source-exact-bytes",
+    "saved-source-staging",
+    "saved-source-header-refusal",
+    "saved-source-semantic-refusal",
+    "saved-source-formatting",
+    "saved-source-successor-only",
+    "saved-source-ports-containment",
+    "saved-source-classes",
+    "saved-source-sequences",
+    "saved-source-spatial",
+    "saved-source-invalid-spacing",
+    "saved-source-crlf",
+    "saved-source-symbol-definitions",
+    "saved-source-symbol-raw-block",
+    "saved-source-symbol-diagnostics",
+    "saved-source-symbol-canonical",
+    "saved-source-port-fields"
+  ],
+  "cases": [
+    {
+      "id": "uml-sequence-core",
+      "category": "valid",
+      "source": "valid/uml-sequence-core.coral",
+      "expectedGraphIR": "valid/uml-sequence-core.graphir.json",
+      "requirements": [
+        "R-060-AC1",
+        "R-060-AC3"
+      ],
+      "graphir": [
+        "GraphIR.profile",
+        "GraphIR.interaction",
+        "GraphNode.type",
+        "GraphEdge.type"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "uml-sequence-core",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-70",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "uml-class-structured",
+      "category": "valid",
+      "source": "valid/uml-class-structured.coral",
+      "expectedGraphIR": "valid/uml-class-structured.graphir.json",
+      "requirements": [
+        "R-059-AC1",
+        "R-059-AC2",
+        "R-059-AC3"
+      ],
+      "graphir": [
+        "GraphIR.profile",
+        "GraphNode.classifier",
+        "GraphNode.symbol"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "uml-class-structured",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": true,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-60",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "valid-relationship-ends",
+      "category": "valid",
+      "source": "valid/relationship-ends.coral",
+      "expectedGraphIR": "valid/relationship-ends.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-063-AC-2"
+      ],
+      "graphir": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd",
+        "RelationshipEnd",
+        "Multiplicity",
+        "EndpointMarker"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "valid-relationship-ends",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "invalid-relationship-ends",
+      "category": "invalid",
+      "source": "invalid/relationship-ends.coral",
+      "requirements": [
+        "R-055-AC2",
+        "R-063-AC-2"
+      ],
+      "graphir": [
+        "RelationshipEnd",
+        "Multiplicity",
+        "EndpointMarker"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 4
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 5
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 6
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 8
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 9
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 10
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 11
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 12
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 13
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 14
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 15
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 16
+        }
+      ],
+      "coverage": [
+        "invalid-relationship-ends"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "canonical-relationship-end-normalization",
+      "category": "canonical",
+      "source": "canonical/relationship-end-normalization.coral",
+      "canonical": "canonical/relationship-end-normalization.expected.coral",
+      "requirements": [
+        "R-055-AC4",
+        "R-063-AC-2"
+      ],
+      "graphir": [
+        "GraphEdge.sourceEnd"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "canonical-relationship-end-normalization"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "input-only"
+    },
+    {
+      "id": "valid-ordinary",
+      "category": "valid",
+      "source": "valid/ordinary.coral",
+      "expectedGraphIR": "valid/ordinary.graphir.json",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2"
+      ],
+      "graphir": [
+        "GraphIR",
+        "GraphNode",
+        "GraphEdge"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "ordinary-graph",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": true,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "partial"
+    },
+    {
+      "id": "valid-spatial",
+      "category": "valid",
+      "source": "valid/spatial.coral",
+      "expectedGraphIR": "valid/spatial.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "RelativeConstraint",
+        "BoundaryConstraint",
+        "ArrangementConstraint",
+        "RouteIntent"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "preferred-relative-all-directions",
+        "preferred-boundary-graph-and-scope",
+        "preferred-arrangement-row-and-column",
+        "route-absolute-derived-and-identified",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "valid-advanced-fields",
+      "category": "valid",
+      "source": "valid/advanced-fields.coral",
+      "expectedGraphIR": "valid/advanced-fields.graphir.json",
+      "requirements": [
+        "R-055-AC2"
+      ],
+      "graphir": [
+        "GraphNode.label",
+        "GraphNode.ports",
+        "GraphEdge.description",
+        "GraphEdge.properties",
+        "GraphEdge.style"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "ordinary-graph",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "valid-field-spellings",
+      "category": "valid",
+      "source": "valid/field-spellings.coral",
+      "expectedGraphIR": "valid/field-spellings.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-063-AC-5"
+      ],
+      "graphir": [
+        "GraphIR.metadata",
+        "GraphIR.layoutOptions",
+        "GraphNode.description",
+        "GraphNode.dimensions",
+        "GraphNode.layoutOptions",
+        "GraphNode.pinned",
+        "GraphNode.symbol",
+        "GraphNode.variant",
+        "EdgeStyle.lineStyle",
+        "GraphEdge.properties"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "ordinary-graph",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "valid-punctuated-identities",
+      "category": "valid",
+      "source": "valid/punctuated-identities.coral",
+      "expectedGraphIR": "valid/punctuated-identities.graphir.json",
+      "requirements": [
+        "R-035-AC1",
+        "R-055-AC2"
+      ],
+      "graphir": [
+        "GraphNode.id",
+        "GraphEdge.id",
+        "GraphEdge.source",
+        "GraphEdge.target"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "ordinary-graph",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-dynamic-membership",
+      "category": "invalid",
+      "source": "invalid/dynamic-membership.coral",
+      "requirements": [
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "ArrangementConstraint.subjects"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.constraint.dynamic-membership.unsupported",
+          "line": 6
+        }
+      ],
+      "coverage": [
+        "dynamic-membership-rejection-and-fixed-membership-edit"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "currently-generic-parse-error",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-pinned-without-position",
+      "category": "invalid",
+      "source": "invalid/pinned-without-position.coral",
+      "requirements": [
+        "R-055-AC2"
+      ],
+      "graphir": [
+        "GraphNode.pinned",
+        "GraphNode.position"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.node.pin.invalid",
+          "line": 1
+        }
+      ],
+      "coverage": [
+        "invalid-range-and-parameter-applicability"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "accidentally-accepted",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-non-string-label",
+      "category": "invalid",
+      "source": "invalid/non-string-label.coral",
+      "requirements": [
+        "R-055-AC2"
+      ],
+      "graphir": [
+        "GraphEdge.label"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.attribute.label.invalid",
+          "line": 4
+        }
+      ],
+      "coverage": [
+        "invalid-attribute-and-reserved-key"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "accidentally-accepted",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-legacy-spellings",
+      "category": "invalid",
+      "source": "invalid/legacy-spellings.coral",
+      "requirements": [
+        "R-055-AC1",
+        "R-063-AC-2",
+        "R-063-AC-5"
+      ],
+      "graphir": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd",
+        "GraphEdge.label",
+        "GraphEdge.description",
+        "RelativeConstraint.gap",
+        "LayoutOptions"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.graph.data-field.unsupported",
+          "line": 1
+        },
+        {
+          "code": "coral.edge.legacy-arrow.unsupported",
+          "line": 6
+        },
+        {
+          "code": "coral.edge.legacy-arrow.unsupported",
+          "line": 6
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 7,
+          "column": 13,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 13,
+              "offset": 206
+            },
+            "end": {
+              "line": 7,
+              "column": 24,
+              "offset": 217
+            }
+          }
+        },
+        {
+          "code": "coral.edge.legacy-arrow.unsupported",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 8,
+          "column": 13,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 13,
+              "offset": 291
+            },
+            "end": {
+              "line": 8,
+              "column": 24,
+              "offset": 302
+            }
+          }
+        },
+        {
+          "code": "coral.edge.legacy-arrow.unsupported",
+          "line": 8
+        },
+        {
+          "code": "coral.attribute.equals.unsupported",
+          "line": 9
+        },
+        {
+          "code": "coral.edge.data-field.unsupported",
+          "line": 10
+        },
+        {
+          "code": "coral.attribute.equals.unsupported",
+          "line": 11
+        }
+      ],
+      "coverage": [
+        "legacy-spellings-removed"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-duplicate-json-keys",
+      "category": "invalid",
+      "source": "invalid/duplicate-json-keys.coral",
+      "requirements": [
+        "R-063-AC-5"
+      ],
+      "graphir": [
+        "GraphIR.id",
+        "GraphNode.symbol",
+        "Port.properties",
+        "GraphNode.properties",
+        "GraphEdge.targetPort"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.json.key.duplicate",
+          "line": 1,
+          "column": 8,
+          "range": {
+            "start": {
+              "line": 1,
+              "column": 8,
+              "offset": 8
+            },
+            "end": {
+              "line": 1,
+              "column": 12,
+              "offset": 12
+            }
+          },
+          "related": [
+            {
+              "message": "Repeated JSON key \"id\"",
+              "position": {
+                "line": 1,
+                "column": 25,
+                "offset": 25
+              },
+              "range": {
+                "start": {
+                  "line": 1,
+                  "column": 25,
+                  "offset": 25
+                },
+                "end": {
+                  "line": 1,
+                  "column": 29,
+                  "offset": 29
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.json.key.duplicate",
+          "line": 3,
+          "column": 18,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 18,
+              "offset": 58
+            },
+            "end": {
+              "line": 3,
+              "column": 26,
+              "offset": 66
+            }
+          },
+          "related": [
+            {
+              "message": "Repeated JSON key \"symbol\"",
+              "position": {
+                "line": 3,
+                "column": 31,
+                "offset": 71
+              },
+              "range": {
+                "start": {
+                  "line": 3,
+                  "column": 31,
+                  "offset": 71
+                },
+                "end": {
+                  "line": 3,
+                  "column": 39,
+                  "offset": 79
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.json.key.duplicate",
+          "line": 4,
+          "column": 51,
+          "range": {
+            "start": {
+              "line": 4,
+              "column": 51,
+              "offset": 136
+            },
+            "end": {
+              "line": 4,
+              "column": 54,
+              "offset": 139
+            }
+          },
+          "related": [
+            {
+              "message": "Repeated JSON key \"k\"",
+              "position": {
+                "line": 4,
+                "column": 57,
+                "offset": 142
+              },
+              "range": {
+                "start": {
+                  "line": 4,
+                  "column": 57,
+                  "offset": 142
+                },
+                "end": {
+                  "line": 4,
+                  "column": 60,
+                  "offset": 145
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.json.key.duplicate",
+          "line": 5,
+          "column": 11,
+          "range": {
+            "start": {
+              "line": 5,
+              "column": 11,
+              "offset": 179
+            },
+            "end": {
+              "line": 5,
+              "column": 20,
+              "offset": 188
+            }
+          },
+          "related": [
+            {
+              "message": "Repeated JSON key \"retries\"",
+              "position": {
+                "line": 5,
+                "column": 23,
+                "offset": 191
+              },
+              "range": {
+                "start": {
+                  "line": 5,
+                  "column": 23,
+                  "offset": 191
+                },
+                "end": {
+                  "line": 5,
+                  "column": 32,
+                  "offset": 200
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.json.key.duplicate",
+          "line": 8,
+          "column": 13,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 13,
+              "offset": 220
+            },
+            "end": {
+              "line": 8,
+              "column": 25,
+              "offset": 232
+            }
+          },
+          "related": [
+            {
+              "message": "Repeated JSON key \"targetPort\"",
+              "position": {
+                "line": 8,
+                "column": 30,
+                "offset": 237
+              },
+              "range": {
+                "start": {
+                  "line": 8,
+                  "column": 30,
+                  "offset": 237
+                },
+                "end": {
+                  "line": 8,
+                  "column": 42,
+                  "offset": 249
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "coverage": [
+        "spelling-collisions"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "roundtrip-advanced",
+      "category": "roundtrip",
+      "source": "roundtrip/advanced.coral",
+      "expectedGraphIR": "roundtrip/advanced.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "NodeLabelPlacement",
+        "EdgeLabelPlacement",
+        "SpatialConstraint",
+        "RouteIntent"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "identified-constraint-parameters",
+        "route-relative-source-target-node-port",
+        "label-placement-node-and-edge",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "canonical-spatial-defaults",
+      "category": "canonical",
+      "source": "canonical/spatial-defaults.coral",
+      "canonical": "canonical/spatial-defaults.expected.coral",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "RelativeConstraint"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "canonical-defaults"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "valid-required-forms",
+      "category": "valid",
+      "source": "valid/required-forms.coral",
+      "expectedGraphIR": "valid/required-forms.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "RelativeConstraint",
+        "BoundaryConstraint",
+        "ArrangementConstraint"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "required-relative-boundary-arrangement",
+        "preferred-relative-all-directions",
+        "preferred-boundary-graph-and-scope",
+        "preferred-arrangement-row-and-column",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "roundtrip-route-anchors",
+      "category": "roundtrip",
+      "source": "roundtrip/route-anchors.coral",
+      "expectedGraphIR": "roundtrip/route-anchors.graphir.json",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "RouteAnchor",
+        "RouteIntent"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "route-absolute-derived-and-identified",
+        "route-relative-source-target-node-port",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "roundtrip-fixed-membership-edit",
+      "category": "roundtrip",
+      "source": "roundtrip/fixed-membership-edit.coral",
+      "expectedGraphIR": "roundtrip/fixed-membership-edit.graphir.json",
+      "requirements": [
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "ArrangementConstraint.subjects",
+        "GraphNode.children"
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "dynamic-membership-rejection-and-fixed-membership-edit",
+        "graphir-mapping-goldens"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-references-and-scope",
+      "category": "invalid",
+      "source": "invalid/references-and-scope.coral",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "ConstraintNodeReference",
+        "BoundaryScope",
+        "ConstraintBase.id"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.constraint.reference.unresolved.invalid",
+          "line": 6,
+          "column": 18,
+          "range": {
+            "start": {
+              "line": 6,
+              "column": 18,
+              "offset": 102
+            },
+            "end": {
+              "line": 6,
+              "column": 25,
+              "offset": 109
+            }
+          }
+        },
+        {
+          "code": "coral.constraint.scope.invalid",
+          "line": 7,
+          "column": 31,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 31,
+              "offset": 141
+            },
+            "end": {
+              "line": 7,
+              "column": 38,
+              "offset": 148
+            }
+          },
+          "related": [
+            {
+              "message": "Boundary subject",
+              "position": {
+                "line": 7,
+                "column": 8,
+                "offset": 118
+              },
+              "range": {
+                "start": {
+                  "line": 7,
+                  "column": 8,
+                  "offset": 118
+                },
+                "end": {
+                  "line": 7,
+                  "column": 15,
+                  "offset": 125
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.id.invalid",
+          "line": 9
+        }
+      ],
+      "coverage": [
+        "invalid-reference-scope-identity"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-ranges-and-parameters",
+      "category": "invalid",
+      "source": "invalid/ranges-and-parameters.coral",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC3"
+      ],
+      "graphir": [
+        "EdgeLabelPlacement",
+        "RelativeConstraint.gap",
+        "BoundaryConstraint.inset"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.label-placement.range.invalid",
+          "line": 4
+        },
+        {
+          "code": "coral.constraint.distance.invalid",
+          "line": 5
+        },
+        {
+          "code": "coral.constraint.parameter.invalid",
+          "line": 6
+        }
+      ],
+      "coverage": [
+        "invalid-range-and-parameter-applicability"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "slice-52-delta",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-spelling-collisions",
+      "category": "invalid",
+      "source": "invalid/spelling-collisions.coral",
+      "requirements": [
+        "R-063-AC-5"
+      ],
+      "graphir": [
+        "GraphEdge.properties",
+        "EdgeStyle.lineStyle",
+        "GraphEdge.label",
+        "GraphNode.properties",
+        "RelativeConstraint.strength",
+        "BoundaryConstraint.strength",
+        "ArrangementConstraint.strength",
+        "RelativeConstraint.gap"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.node.field.duplicate",
+          "line": 2,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 2,
+              "column": 2,
+              "offset": 21
+            },
+            "end": {
+              "line": 2,
+              "column": 7,
+              "offset": 26
+            }
+          },
+          "related": [
+            {
+              "message": "Node property \"owner\" repeated by this body",
+              "position": {
+                "line": 3,
+                "column": 2,
+                "offset": 37
+              },
+              "range": {
+                "start": {
+                  "line": 3,
+                  "column": 2,
+                  "offset": 37
+                },
+                "end": {
+                  "line": 3,
+                  "column": 7,
+                  "offset": 42
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 7,
+          "column": 8,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 8,
+              "offset": 80
+            },
+            "end": {
+              "line": 7,
+              "column": 9,
+              "offset": 81
+            }
+          },
+          "related": [
+            {
+              "message": "Edge property \"k\" repeated by data \"properties\"",
+              "position": {
+                "line": 7,
+                "column": 34,
+                "offset": 106
+              },
+              "range": {
+                "start": {
+                  "line": 7,
+                  "column": 34,
+                  "offset": 106
+                },
+                "end": {
+                  "line": 7,
+                  "column": 37,
+                  "offset": 109
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 8,
+          "column": 8,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 8,
+              "offset": 124
+            },
+            "end": {
+              "line": 8,
+              "column": 14,
+              "offset": 130
+            }
+          },
+          "related": [
+            {
+              "message": "Edge line style repeated by a line-style token",
+              "position": {
+                "line": 8,
+                "column": 16,
+                "offset": 132
+              },
+              "range": {
+                "start": {
+                  "line": 8,
+                  "column": 16,
+                  "offset": 132
+                },
+                "end": {
+                  "line": 8,
+                  "column": 22,
+                  "offset": 138
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 9,
+          "column": 8,
+          "range": {
+            "start": {
+              "line": 9,
+              "column": 8,
+              "offset": 148
+            },
+            "end": {
+              "line": 9,
+              "column": 13,
+              "offset": 153
+            }
+          },
+          "related": [
+            {
+              "message": "Edge label repeated by [label: …]",
+              "position": {
+                "line": 9,
+                "column": 20,
+                "offset": 160
+              },
+              "range": {
+                "start": {
+                  "line": 9,
+                  "column": 20,
+                  "offset": 160
+                },
+                "end": {
+                  "line": 9,
+                  "column": 25,
+                  "offset": 165
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.field.duplicate",
+          "line": 11,
+          "column": 28,
+          "range": {
+            "start": {
+              "line": 11,
+              "column": 28,
+              "offset": 201
+            },
+            "end": {
+              "line": 11,
+              "column": 31,
+              "offset": 204
+            }
+          },
+          "related": [
+            {
+              "message": "Constraint gap repeated by [gap: …]",
+              "position": {
+                "line": 11,
+                "column": 36,
+                "offset": 209
+              },
+              "range": {
+                "start": {
+                  "line": 11,
+                  "column": 36,
+                  "offset": 209
+                },
+                "end": {
+                  "line": 11,
+                  "column": 39,
+                  "offset": 212
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.field.duplicate",
+          "line": 12,
+          "column": 29,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 29,
+              "offset": 247
+            },
+            "end": {
+              "line": 12,
+              "column": 37,
+              "offset": 255
+            }
+          },
+          "related": [
+            {
+              "message": "Constraint strength repeated by a strength flag",
+              "position": {
+                "line": 12,
+                "column": 39,
+                "offset": 257
+              },
+              "range": {
+                "start": {
+                  "line": 12,
+                  "column": 39,
+                  "offset": 257
+                },
+                "end": {
+                  "line": 12,
+                  "column": 48,
+                  "offset": 266
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.field.duplicate",
+          "line": 13,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 13,
+              "column": 0,
+              "offset": 268
+            },
+            "end": {
+              "line": 13,
+              "column": 7,
+              "offset": 275
+            }
+          },
+          "related": [
+            {
+              "message": "Constraint strength repeated by a strength flag",
+              "position": {
+                "line": 13,
+                "column": 21,
+                "offset": 289
+              },
+              "range": {
+                "start": {
+                  "line": 13,
+                  "column": 21,
+                  "offset": 289
+                },
+                "end": {
+                  "line": 13,
+                  "column": 30,
+                  "offset": 298
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.field.duplicate",
+          "line": 14,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 14,
+              "column": 0,
+              "offset": 300
+            },
+            "end": {
+              "line": 14,
+              "column": 7,
+              "offset": 307
+            }
+          },
+          "related": [
+            {
+              "message": "Constraint strength repeated by a strength flag",
+              "position": {
+                "line": 14,
+                "column": 22,
+                "offset": 322
+              },
+              "range": {
+                "start": {
+                  "line": 14,
+                  "column": 22,
+                  "offset": 322
+                },
+                "end": {
+                  "line": 14,
+                  "column": 31,
+                  "offset": 331
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.constraint.field.duplicate",
+          "line": 15,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 15,
+              "column": 0,
+              "offset": 333
+            },
+            "end": {
+              "line": 15,
+              "column": 7,
+              "offset": 340
+            }
+          },
+          "related": [
+            {
+              "message": "Constraint strength repeated by a strength flag",
+              "position": {
+                "line": 15,
+                "column": 29,
+                "offset": 362
+              },
+              "range": {
+                "start": {
+                  "line": 15,
+                  "column": 29,
+                  "offset": 362
+                },
+                "end": {
+                  "line": 15,
+                  "column": 38,
+                  "offset": 371
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "collides": [
+        "GraphEdge.properties",
+        "RelativeConstraint.strength",
+        "BoundaryConstraint.strength",
+        "ArrangementConstraint.strength"
+      ],
+      "coverage": [
+        "spelling-collisions"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-noncanonical-spellings",
+      "category": "invalid",
+      "source": "invalid/noncanonical-spellings.coral",
+      "requirements": [
+        "R-063-AC-5"
+      ],
+      "graphir": [
+        "GraphIR.name",
+        "GraphNode.id",
+        "GraphNode.dimensions",
+        "GraphEdge.id",
+        "GraphEdge.sourcePort",
+        "GraphEdge.properties",
+        "EdgeStyle.routing",
+        "ArrangementConstraint.strength",
+        "RelativeConstraint.alignment"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.graph.data-field.unsupported",
+          "line": 1
+        },
+        {
+          "code": "coral.graph.data-field.invalid",
+          "line": 1
+        },
+        {
+          "code": "coral.node.data-field.unsupported",
+          "line": 3
+        },
+        {
+          "code": "coral.node.data-field.invalid",
+          "line": 3
+        },
+        {
+          "code": "coral.node.id.invalid",
+          "line": 4
+        },
+        {
+          "code": "coral.node.id.invalid",
+          "line": 5
+        },
+        {
+          "code": "coral.edge.data-field.unsupported",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.data-field.invalid",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.data-field.unsupported",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.data-field.invalid",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.data-field.unsupported",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.id.invalid",
+          "line": 8
+        },
+        {
+          "code": "coral.attribute.value.unparsed",
+          "line": 9
+        },
+        {
+          "code": "coral.constraint.parameter.invalid",
+          "line": 11
+        },
+        {
+          "code": "coral.constraint.parameter.invalid",
+          "line": 12
+        }
+      ],
+      "coverage": [
+        "noncanonical-spellings-rejected"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "unsupported"
+    },
+    {
+      "id": "invalid-reserved-and-empty-attributes",
+      "category": "invalid",
+      "source": "invalid/reserved-and-empty-attributes.coral",
+      "requirements": [
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "GraphNode.properties",
+        "GraphEdge.properties"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.node.reserved-key.invalid",
+          "line": 2
+        },
+        {
+          "code": "coral.edge.reserved-key.invalid",
+          "line": 6
+        },
+        {
+          "code": "coral.edge.reserved-key.invalid",
+          "line": 7
+        },
+        {
+          "code": "coral.attribute.empty.unparsed",
+          "line": 8
+        }
+      ],
+      "coverage": [
+        "invalid-attribute-and-reserved-key"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "pass",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "partial"
+    },
+    {
+      "id": "invalid-compact-end-collisions",
+      "category": "invalid",
+      "source": "invalid/compact-end-collisions.coral",
+      "requirements": [
+        "R-063-AC-5",
+        "R-063-AC-6"
+      ],
+      "graphir": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 3,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 2,
+              "offset": 36
+            },
+            "end": {
+              "line": 3,
+              "column": 5,
+              "offset": 39
+            }
+          },
+          "related": [
+            {
+              "message": "Edge sourceEnd repeated by data \"sourceEnd\"",
+              "position": {
+                "line": 3,
+                "column": 17,
+                "offset": 51
+              },
+              "range": {
+                "start": {
+                  "line": 3,
+                  "column": 17,
+                  "offset": 51
+                },
+                "end": {
+                  "line": 3,
+                  "column": 28,
+                  "offset": 62
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 4,
+          "column": 7,
+          "range": {
+            "start": {
+              "line": 4,
+              "column": 7,
+              "offset": 110
+            },
+            "end": {
+              "line": 4,
+              "column": 16,
+              "offset": 119
+            }
+          },
+          "related": [
+            {
+              "message": "Edge targetEnd repeated by data \"targetEnd\"",
+              "position": {
+                "line": 4,
+                "column": 23,
+                "offset": 126
+              },
+              "range": {
+                "start": {
+                  "line": 4,
+                  "column": 23,
+                  "offset": 126
+                },
+                "end": {
+                  "line": 4,
+                  "column": 34,
+                  "offset": 137
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 5,
+          "column": 3,
+          "range": {
+            "start": {
+              "line": 5,
+              "column": 3,
+              "offset": 184
+            },
+            "end": {
+              "line": 5,
+              "column": 11,
+              "offset": 192
+            }
+          },
+          "related": [
+            {
+              "message": "Edge sourceEnd.marker repeated by the end clause",
+              "position": {
+                "line": 5,
+                "column": 12,
+                "offset": 193
+              },
+              "range": {
+                "start": {
+                  "line": 5,
+                  "column": 12,
+                  "offset": 193
+                },
+                "end": {
+                  "line": 5,
+                  "column": 20,
+                  "offset": 201
+                }
+              }
+            },
+            {
+              "message": "Edge sourceEnd.marker repeated by the end clause",
+              "position": {
+                "line": 5,
+                "column": 21,
+                "offset": 202
+              },
+              "range": {
+                "start": {
+                  "line": 5,
+                  "column": 21,
+                  "offset": 202
+                },
+                "end": {
+                  "line": 5,
+                  "column": 28,
+                  "offset": 209
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 6,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 6,
+              "column": 2,
+              "offset": 218
+            },
+            "end": {
+              "line": 6,
+              "column": 5,
+              "offset": 221
+            }
+          },
+          "related": [
+            {
+              "message": "Edge sourceEnd repeated by the end clause",
+              "position": {
+                "line": 6,
+                "column": 6,
+                "offset": 222
+              },
+              "range": {
+                "start": {
+                  "line": 6,
+                  "column": 6,
+                  "offset": 222
+                },
+                "end": {
+                  "line": 6,
+                  "column": 9,
+                  "offset": 225
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 7,
+          "column": 13,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 13,
+              "offset": 244
+            },
+            "end": {
+              "line": 7,
+              "column": 24,
+              "offset": 255
+            }
+          }
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 8,
+          "column": 13,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 13,
+              "offset": 321
+            },
+            "end": {
+              "line": 8,
+              "column": 24,
+              "offset": 332
+            }
+          }
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 9
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 9,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 9,
+              "column": 2,
+              "offset": 353
+            },
+            "end": {
+              "line": 9,
+              "column": 6,
+              "offset": 357
+            }
+          },
+          "related": [
+            {
+              "message": "Edge sourceEnd repeated by the end clause",
+              "position": {
+                "line": 9,
+                "column": 7,
+                "offset": 358
+              },
+              "range": {
+                "start": {
+                  "line": 9,
+                  "column": 7,
+                  "offset": 358
+                },
+                "end": {
+                  "line": 9,
+                  "column": 10,
+                  "offset": 361
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 10,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 2,
+              "offset": 369
+            },
+            "end": {
+              "line": 10,
+              "column": 5,
+              "offset": 372
+            }
+          },
+          "related": [
+            {
+              "message": "Edge sourceEnd repeated by data \"sourceEnd\"",
+              "position": {
+                "line": 10,
+                "column": 17,
+                "offset": 384
+              },
+              "range": {
+                "start": {
+                  "line": 10,
+                  "column": 17,
+                  "offset": 384
+                },
+                "end": {
+                  "line": 10,
+                  "column": 28,
+                  "offset": 395
+                }
+              }
+            }
+          ]
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 10,
+          "column": 17,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 17,
+              "offset": 384
+            },
+            "end": {
+              "line": 10,
+              "column": 28,
+              "offset": 395
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "spelling-collisions",
+        "invalid-relationship-ends"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "collides": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "reject",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "invalid-compact-end-canonical",
+      "category": "invalid",
+      "source": "invalid/compact-end-canonical.coral",
+      "requirements": [
+        "R-063-AC-6"
+      ],
+      "graphir": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd",
+        "Multiplicity"
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.edge.end.order.invalid",
+          "line": 4
+        },
+        {
+          "code": "coral.edge.end.order.invalid",
+          "line": 5
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 6
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 7
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 8
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 9
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 10
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 11
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 12
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 13
+        },
+        {
+          "code": "coral.edge.end.compact.required",
+          "line": 14
+        },
+        {
+          "code": "coral.edge.end.order.invalid",
+          "line": 15
+        },
+        {
+          "code": "coral.edge.end.invalid",
+          "line": 15
+        },
+        {
+          "code": "coral.edge.end.order.invalid",
+          "line": 16
+        },
+        {
+          "code": "coral.edge.field.duplicate",
+          "line": 16
+        },
+        {
+          "code": "coral.syntax.spacing.invalid",
+          "line": 17
+        }
+      ],
+      "coverage": [
+        "noncanonical-spellings-rejected",
+        "invalid-relationship-ends"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "representation": "graphir-3",
+      "historicalStatus": "reject",
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "treeSitterHistory": "syntax-only"
+    },
+    {
+      "id": "source-exact-crlf",
+      "category": "valid",
+      "source": "source/source-exact-crlf.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-exact-bytes",
+        "saved-source-staging",
+        "saved-source-crlf"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "available",
+      "expectedGraphIR": "source/source-exact-crlf.graphir.json",
+      "lineEndings": "crlf"
+    },
+    {
+      "id": "source-header-unavailable",
+      "category": "invalid",
+      "source": "source/source-header-unavailable.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "header.version.unavailable",
+          "line": 2,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 2,
+              "column": 0,
+              "offset": 22
+            },
+            "end": {
+              "line": 2,
+              "column": 21,
+              "offset": 43
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-header-refusal"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-unresolved-reference",
+      "category": "invalid",
+      "source": "source/source-unresolved-reference.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.reference.target.unresolved",
+          "line": 3,
+          "column": 7,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 7,
+              "offset": 41
+            },
+            "end": {
+              "line": 3,
+              "column": 14,
+              "offset": 48
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-semantic-refusal"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-format-tabs",
+      "category": "canonical",
+      "source": "source/source-format-tabs.coral",
+      "entryPoint": "source-format",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-formatting"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "available",
+      "expectedGraphIR": "source/source-format-tabs.graphir.json",
+      "canonical": "source/source-format-tabs.expected.coral",
+      "lineEndings": "crlf"
+    },
+    {
+      "id": "source-successor-only-style",
+      "category": "roundtrip",
+      "source": "source/source-successor-only-style.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-successor-only",
+        "saved-source-exact-bytes"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-port-scope",
+      "category": "valid",
+      "source": "source/source-port-scope.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-ports-containment"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "available",
+      "expectedGraphIR": "source/source-port-scope.graphir.json"
+    },
+    {
+      "id": "source-uml-class",
+      "category": "valid",
+      "source": "source/source-uml-class.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-classes"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "available",
+      "expectedGraphIR": "source/source-uml-class.graphir.json"
+    },
+    {
+      "id": "source-uml-sequence",
+      "category": "roundtrip",
+      "source": "source/source-uml-sequence.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-sequences",
+        "saved-source-successor-only"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-spatial",
+      "category": "roundtrip",
+      "source": "source/source-spatial.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-spatial",
+        "saved-source-successor-only"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-invalid-spacing",
+      "category": "invalid",
+      "source": "source/source-invalid-spacing.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "requirements": [
+        "R-055-AC1",
+        "R-055-AC2",
+        "R-055-AC4"
+      ],
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.syntax.spacing.invalid",
+          "line": 2,
+          "column": 1,
+          "range": {
+            "start": {
+              "line": 2,
+              "column": 1,
+              "offset": 23
+            },
+            "end": {
+              "line": 2,
+              "column": 2,
+              "offset": 24
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-invalid-spacing"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-definitions",
+      "category": "roundtrip",
+      "source": "source/source-symbol-definitions.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1",
+        "R-065-AC5"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-definitions",
+        "saved-source-symbol-raw-block",
+        "saved-source-exact-bytes"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-crlf",
+      "category": "valid",
+      "source": "source/source-symbol-crlf.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-definitions",
+        "saved-source-symbol-raw-block",
+        "saved-source-crlf"
+      ],
+      "staging": "withheld",
+      "lineEndings": "crlf"
+    },
+    {
+      "id": "source-symbol-conformance-level",
+      "category": "valid",
+      "source": "source/source-symbol-conformance-level.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC2"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-definitions"
+      ],
+      "staging": "withheld",
+      "expectedConsumerDiagnostics": [
+        {
+          "code": "coral.symbol.local.conformance-unsupported",
+          "line": 3,
+          "column": 0
+        }
+      ]
+    },
+    {
+      "id": "source-symbol-conformance-unused",
+      "category": "valid",
+      "source": "source/source-symbol-conformance-unused.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC2"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-definitions"
+      ],
+      "staging": "withheld",
+      "expectedConsumerDiagnostics": [
+        {
+          "code": "coral.symbol.local.unused",
+          "line": 4,
+          "column": 0
+        }
+      ]
+    },
+    {
+      "id": "source-symbol-canonical",
+      "category": "canonical",
+      "source": "source/source-symbol-canonical.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1",
+        "R-065-AC5"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-canonical",
+        "saved-source-port-fields"
+      ],
+      "staging": "withheld",
+      "successorCanonical": "source/source-symbol-canonical.expected.coral"
+    },
+    {
+      "id": "source-symbol-edition",
+      "category": "invalid",
+      "source": "source/source-symbol-edition.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1",
+        "R-065-AC5"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "coral.symbol.local.edition",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 23
+            },
+            "end": {
+              "line": 3,
+              "column": 7,
+              "offset": 30
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.syntax.port.field.invalid",
+          "line": 12,
+          "column": 30,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 30,
+              "offset": 168
+            },
+            "end": {
+              "line": 12,
+              "column": 35,
+              "offset": 173
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-late",
+      "category": "invalid",
+      "source": "source/source-symbol-late.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "header.directive.late",
+          "line": 10,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 0,
+              "offset": 137
+            },
+            "end": {
+              "line": 10,
+              "column": 24,
+              "offset": 161
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.late",
+          "line": 12,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 0,
+              "offset": 175
+            },
+            "end": {
+              "line": 12,
+              "column": 7,
+              "offset": 182
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.syntax.statement.invalid",
+          "line": 10,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 0,
+              "offset": 137
+            },
+            "end": {
+              "line": 10,
+              "column": 1,
+              "offset": 138
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-unclosed",
+      "category": "invalid",
+      "source": "source/source-symbol-unclosed.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "coral.symbol.local.artwork.unclosed",
+          "line": 6,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 6,
+              "column": 2,
+              "offset": 94
+            },
+            "end": {
+              "line": 6,
+              "column": 17,
+              "offset": 109
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-fields",
+      "category": "invalid",
+      "source": "source/source-symbol-fields.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.symbol.local.field.required",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 44
+            },
+            "end": {
+              "line": 3,
+              "column": 15,
+              "offset": 59
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.required",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 44
+            },
+            "end": {
+              "line": 3,
+              "column": 15,
+              "offset": 59
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.required",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 44
+            },
+            "end": {
+              "line": 3,
+              "column": 15,
+              "offset": 59
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.duplicate",
+          "line": 8,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 2,
+              "offset": 138
+            },
+            "end": {
+              "line": 8,
+              "column": 6,
+              "offset": 142
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.invalid",
+          "line": 9,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 9,
+              "column": 2,
+              "offset": 153
+            },
+            "end": {
+              "line": 9,
+              "column": 15,
+              "offset": 166
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.invalid",
+          "line": 10,
+          "column": 10,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 10,
+              "offset": 177
+            },
+            "end": {
+              "line": 10,
+              "column": 16,
+              "offset": 183
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.invalid",
+          "line": 11,
+          "column": 11,
+          "range": {
+            "start": {
+              "line": 11,
+              "column": 11,
+              "offset": 195
+            },
+            "end": {
+              "line": 11,
+              "column": 14,
+              "offset": 198
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.unknown",
+          "line": 12,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 2,
+              "offset": 201
+            },
+            "end": {
+              "line": 12,
+              "column": 8,
+              "offset": 207
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.field.invalid",
+          "line": 13,
+          "column": 10,
+          "range": {
+            "start": {
+              "line": 13,
+              "column": 10,
+              "offset": 222
+            },
+            "end": {
+              "line": 13,
+              "column": 13,
+              "offset": 225
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.duplicate",
+          "line": 17,
+          "column": 8,
+          "range": {
+            "start": {
+              "line": 17,
+              "column": 8,
+              "offset": 251
+            },
+            "end": {
+              "line": 17,
+              "column": 14,
+              "offset": 257
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-anchors-ports",
+      "category": "invalid",
+      "source": "source/source-symbol-anchors-ports.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1",
+        "R-065-AC5"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.symbol.local.anchor.duplicate",
+          "line": 7,
+          "column": 9,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 9,
+              "offset": 135
+            },
+            "end": {
+              "line": 7,
+              "column": 14,
+              "offset": 140
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.anchor.invalid",
+          "line": 8,
+          "column": 9,
+          "range": {
+            "start": {
+              "line": 8,
+              "column": 9,
+              "offset": 169
+            },
+            "end": {
+              "line": 8,
+              "column": 10,
+              "offset": 170
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.anchor.invalid",
+          "line": 9,
+          "column": 28,
+          "range": {
+            "start": {
+              "line": 9,
+              "column": 28,
+              "offset": 218
+            },
+            "end": {
+              "line": 9,
+              "column": 31,
+              "offset": 221
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.anchor.invalid",
+          "line": 10,
+          "column": 2,
+          "range": {
+            "start": {
+              "line": 10,
+              "column": 2,
+              "offset": 225
+            },
+            "end": {
+              "line": 10,
+              "column": 31,
+              "offset": 254
+            }
+          }
+        },
+        {
+          "code": "coral.syntax.port.label.invalid",
+          "line": 11,
+          "column": 36,
+          "range": {
+            "start": {
+              "line": 11,
+              "column": 36,
+              "offset": 291
+            },
+            "end": {
+              "line": 11,
+              "column": 40,
+              "offset": 295
+            }
+          }
+        },
+        {
+          "code": "coral.syntax.port.max-connections.invalid",
+          "line": 12,
+          "column": 46,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 46,
+              "offset": 343
+            },
+            "end": {
+              "line": 12,
+              "column": 47,
+              "offset": 344
+            }
+          }
+        },
+        {
+          "code": "coral.syntax.port.max-connections.invalid",
+          "line": 18,
+          "column": 46,
+          "range": {
+            "start": {
+              "line": 18,
+              "column": 46,
+              "offset": 458
+            },
+            "end": {
+              "line": 18,
+              "column": 49,
+              "offset": 461
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-opening",
+      "category": "invalid",
+      "source": "source/source-symbol-opening.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "coral.symbol.local.syntax",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 44
+            },
+            "end": {
+              "line": 3,
+              "column": 12,
+              "offset": 56
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.syntax",
+          "line": 6,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 6,
+              "column": 0,
+              "offset": 72
+            },
+            "end": {
+              "line": 6,
+              "column": 7,
+              "offset": 79
+            }
+          }
+        },
+        {
+          "code": "coral.symbol.local.unclosed",
+          "line": 7,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 7,
+              "column": 0,
+              "offset": 80
+            },
+            "end": {
+              "line": 7,
+              "column": 14,
+              "offset": 94
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-symbol-late-edition",
+      "category": "invalid",
+      "source": "source/source-symbol-late-edition.coral",
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC1"
+      ],
+      "expectedHeaderDiagnostics": [
+        {
+          "code": "coral.symbol.local.edition",
+          "line": 3,
+          "column": 0,
+          "range": {
+            "start": {
+              "line": 3,
+              "column": 0,
+              "offset": 35
+            },
+            "end": {
+              "line": 3,
+              "column": 7,
+              "offset": 42
+            }
+          }
+        }
+      ],
+      "expectedDiagnostics": [],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    },
+    {
+      "id": "source-port-field-duplicates",
+      "category": "invalid",
+      "source": "source/source-port-field-duplicates.coral",
+      "entryPoint": "saved-source-029",
+      "edition": "0.2.9",
+      "representation": "source-document",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging"
+      ],
+      "typescript": "supported",
+      "treeSitter": "not-asserted",
+      "llmSafeSubset": false,
+      "evidence": "packages/language/test/language-1-conformance.test.ts",
+      "exactSource": true,
+      "requirements": [
+        "R-065-AC5"
+      ],
+      "expectedHeaderDiagnostics": [],
+      "expectedDiagnostics": [
+        {
+          "code": "coral.syntax.port.label.duplicate",
+          "line": 6,
+          "column": 47,
+          "range": {
+            "start": {
+              "line": 6,
+              "column": 47,
+              "offset": 133
+            },
+            "end": {
+              "line": 6,
+              "column": 61,
+              "offset": 147
+            }
+          }
+        },
+        {
+          "code": "coral.syntax.port.max-connections.duplicate",
+          "line": 12,
+          "column": 49,
+          "range": {
+            "start": {
+              "line": 12,
+              "column": 49,
+              "offset": 264
+            },
+            "end": {
+              "line": 12,
+              "column": 66,
+              "offset": 281
+            }
+          }
+        }
+      ],
+      "coverage": [
+        "saved-source-symbol-diagnostics"
+      ],
+      "staging": "withheld"
+    }
+  ],
+  "entryPoints": {
+    "saved-source": {
+      "exports": [
+        "@coral-viz/language#parse",
+        "@coral-viz/language#parseDocument028"
+      ],
+      "edition": "0.2.8",
+      "grammar": "grammar-028.ebnf",
+      "grammarSha256": "93626a780a79e4654d3aaf98ee67f91797d31df06ab608c34acbe620e0d5905d",
+      "representation": "source-document",
+      "runtime": "HeaderRuntime028: installed manifest, currentVersion, and trusted catalog digests are required",
+      "guarantee": "Exact authored bytes and recovered syntax; optional GraphIR 3 staging is not portable successor validation."
+    },
+    "source-format": {
+      "exports": [
+        "@coral-viz/language#formatDocument028"
+      ],
+      "edition": "0.2.8",
+      "grammar": "grammar-028.ebnf",
+      "representation": "source-document",
+      "guarantee": "Expand leading tabs to two spaces only; retain authored tokens and LF/CRLF; refuse invalid source."
+    },
+    "graph-interchange": {
+      "exports": [
+        "@coral-viz/language/parser#parse"
+      ],
+      "edition": "graph-interchange-v1",
+      "grammar": "grammar.ebnf",
+      "representation": "graphir-3",
+      "guarantee": "Explicit @graph interchange; graph semantic validation and canonical replay are tested separately from saved source.",
+      "runtime": "ParseOptions.edition omitted: graph-interchange-v1 describes the default contract, not a runtime option. Explicit edition 0.2.8-preview is a bounded compatibility reader for staging, not saved @diagram source."
+    },
+    "graph-print": {
+      "exports": [
+        "@coral-viz/language#print",
+        "@coral-viz/language#printWithDiagnostics",
+        "@coral-viz/language/printer#printWithDiagnostics",
+        "@coral-viz/language#prettyPrint",
+        "@coral-viz/language/printer#print",
+        "@coral-viz/language/printer#prettyPrint"
+      ],
+      "edition": "graph-interchange-v1",
+      "grammar": "grammar.ebnf",
+      "representation": "graphir-3",
+      "guarantee": "printWithDiagnostics returns canonical graph interchange and every loss finding. print and prettyPrint throw on error findings and discard warning/info findings. No graph writer reconstructs exact saved source."
+    },
+    "saved-source-029": {
+      "exports": [
+        "@coral-viz/language#parse",
+        "@coral-viz/language#parseDocument028",
+        "@coral-viz/language#parseSymbolDefinitions029"
+      ],
+      "edition": "0.2.9",
+      "grammar": "grammar-028.ebnf",
+      "representation": "source-document",
+      "runtime": "HeaderRuntime028: the same installed manifest, currentVersion, and trusted catalog digests; @coralVersion \"0.2.9\" selects the edition",
+      "guarantee": "Edition 0.2.9 @symbol definitions and port label and maxConnections: exact authored bytes including raw artwork, which only the header scanner delimits; GraphIR 3 staging is withheld. Resolution, admission and geometry are later checks."
+    }
+  }
+}

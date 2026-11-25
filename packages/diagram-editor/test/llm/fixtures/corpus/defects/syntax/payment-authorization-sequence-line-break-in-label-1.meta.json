@@ -1,0 +1,16 @@
+{
+  "originalFilename": "payment-authorization-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nCustomer actor as \"Customer\"\nCheckout participant as \"Checkout Service\"\nGateway participant as \"Payment Gateway\"\nFraud participant as \"Fraud Service\"\nNetwork participant as \"Card Network\"\nBank participant as \"Bank\"\n\nmsg_1 = Customer -#> Checkout as \"submit payment details\"\nmsg_2 = Checkout -#> Gateway as \"authorize(amount, card token)\"\nmsg_3 = Gateway -#> Fraud as \"check transaction risk\"\nmsg_4 = Fraud -.-> Gateway as \"risk score: low\"\nmsg_5 = Gateway -#> Network as \"request authorization\"\nmsg_6 = Network -#> Bank as \"verify funds\"\nmsg_7 = Bank -.-> Network as \"funds available\"\nmsg_8 = Network -.-> Gateway as \"authorization code\"\nmsg_9 = Gateway -.-> Checkout as \"payment authorized\"\nmsg_10 = Checkout -.-> Customer as \"order confirmed\"",
+  "injectedDefects": [
+    {
+      "defectType": "line-break-in-label",
+      "location": {
+        "line": 4,
+        "column": 31,
+        "charOffset": 125
+      },
+      "description": "inserted a line break inside label \"Payment Gateway\""
+    }
+  ],
+  "outputFilename": "payment-authorization-sequence-line-break-in-label-1.coral"
+}

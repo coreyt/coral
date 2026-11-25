@@ -1,0 +1,8 @@
+{
+  "caseId": "008-notation-flowchart",
+  "caseType": "notation",
+  "notationId": "flowchart",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "Tests only the flowchart notation's process/decision/terminal vocabulary, not its layout profile or edge styles"
+}

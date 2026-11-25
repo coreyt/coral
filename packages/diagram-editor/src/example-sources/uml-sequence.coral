@@ -1,0 +1,15 @@
+@diagram uml-sequence
+user actor as "User"
+app participant as "App"
+auth participant as "Auth"
+signIn = user -#> app [sync] as "sign in"
+verify = app -#> auth [sync] as "verify"
+work = activation auth {
+  choice = alt "valid" {
+    granted = auth -.-> app [return] as "token"
+  } else "invalid" {
+    denied = auth -.-> app [return] as "denied"
+  }
+}
+notify = app -> user [async] as "result"
+note "Passwords are never logged" on auth

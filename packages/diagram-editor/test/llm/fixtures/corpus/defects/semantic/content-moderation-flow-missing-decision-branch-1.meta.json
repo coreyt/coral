@@ -1,0 +1,8 @@
+{
+  "originalFilename": "content-moderation-flow.coral",
+  "defectType": "missing-decision-branch",
+  "affectedNodeIds": ["PolicyEngine", "NotifyService"],
+  "affectedEdgeIds": ["edge_8"],
+  "explanation": "The description says the Policy Engine either approves the post to the Publish Service or rejects it to the Notification Service, but the \"reject\" branch (edge_8) has been removed, leaving the Policy Engine with only an \"approve\" outcome and no way for a rejected post to be reported.",
+  "outputFilename": "content-moderation-flow-missing-decision-branch-1.coral"
+}

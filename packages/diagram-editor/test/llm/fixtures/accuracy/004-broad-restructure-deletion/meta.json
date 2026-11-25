@@ -1,0 +1,15 @@
+{
+  "caseId": "004-broad-restructure-deletion",
+  "caseType": "restructure",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), the 'broad restructure/deletion' case from ai-editing-exploration.md",
+  "limitations": "Tests deletion of two nodes plus a reconnection; expected change entries are permissions, not proof of fulfillment, so the retained candidate needs manual review.",
+  "requiresManualReview": true,
+  "expectedChangedNodeIds": [],
+  "expectedRemovedEdges": [
+    { "source": "ingestion", "target": "legacy_importer" },
+    { "source": "legacy_importer", "target": "legacy_queue" },
+    { "source": "legacy_queue", "target": "warehouse" }
+  ],
+  "expectedNewEdges": [{ "source": "ingestion", "target": "warehouse" }]
+}

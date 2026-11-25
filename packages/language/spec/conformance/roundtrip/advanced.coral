@@ -1,0 +1,9 @@
+group "Backend" as backend {
+  service "API" as api label below offset 8 above orders
+  database "Orders" as orders
+}
+
+constraint api_above_orders: api above orders [required, gap: 24, alignment: center]
+constraint backend_row: arrange api, orders as row [preferred, gap: 16]
+
+api -> orders as writes [label: "writes"] label below at 0.25 offset 8 via waypoint approach relative to target offset (-20, 0)

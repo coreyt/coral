@@ -1,0 +1,194 @@
+name: Publish Coral packages
+run-name: publish version=${{ inputs.version }} sha=${{ inputs.commit }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact package version to publish
+        required: true
+        type: string
+      commit:
+        description: Full release commit SHA to publish
+        required: true
+        type: string
+      candidate_run_id:
+        description: Successful exact-SHA final-candidate CI run ID
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  # CRO100-8: the token-free verify job checks the selected final-candidate
+  # proof against the live run, the six retained package bytes, the current
+  # registry state and a fresh workspace audit before any registry mutation.
+  # The candidate was fully verified once by CI; nothing is rebuilt or
+  # re-verified here. Only the publish job can mint the OIDC token; it installs
+  # dependencies without lifecycle scripts and runs only the gates and the
+  # package publication steps.
+  verify:
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit }}
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: final-candidate-proof
+          path: candidate-proof
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify the exact-SHA final-candidate proof before mutation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+        run: node scripts/release-final-candidate.mjs candidate-proof/final-candidate-proof.json candidate-artifacts/candidate-manifest.json
+      - name: Verify retained candidate package bytes
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Inspect registry publication state for the audit policy
+        id: registry-state
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_PRIVATE_REPOSITORY: ${{ github.event.repository.private }}
+          RELEASE_CANDIDATE_MANIFEST: candidate-artifacts/candidate-manifest.json
+        run: node scripts/release-registry.mjs preflight
+      - name: Audit the workspace, blocking before any publication
+        env:
+          REGISTRY_START_INDEX: ${{ steps.registry-state.outputs.start-index }}
+        run: node scripts/workspace-audit.mjs
+
+  publish:
+    if: ${{ needs.verify.result == 'success' }}
+    needs: verify
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit }}
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: final-candidate-proof
+          path: candidate-proof
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify exact-SHA final-candidate proof and retained bytes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+        run: |
+          node scripts/release-final-candidate.mjs candidate-proof/final-candidate-proof.json candidate-artifacts/candidate-manifest.json
+          node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Verify immutable release identity
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+        run: node scripts/release-guard.mjs --publish
+      - name: Inspect registry publication state
+        id: registry
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_PRIVATE_REPOSITORY: ${{ github.event.repository.private }}
+          RELEASE_CANDIDATE_MANIFEST: candidate-artifacts/candidate-manifest.json
+        run: node scripts/release-registry.mjs preflight
+      - name: Publish @coral-viz/language
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 0 }}
+        run: npm publish ./candidate-artifacts/coral-viz-language-0.2.12.tgz --access public
+      - name: Publish @coral-viz/render
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 1 }}
+        run: npm publish ./candidate-artifacts/coral-viz-render-0.2.12.tgz --access public
+      - name: Publish @coral-viz/browser
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 2 }}
+        run: npm publish ./candidate-artifacts/coral-viz-browser-0.2.12.tgz --access public
+      - name: Publish @coral-viz/viz
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 3 }}
+        run: npm publish ./candidate-artifacts/coral-viz-viz-0.2.12.tgz --access public
+      - name: Publish @coral-viz/mcp-server
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 4 }}
+        run: npm publish ./candidate-artifacts/coral-viz-mcp-server-0.2.12.tgz --access public
+      - name: Publish tree-sitter-coral
+        if: ${{ fromJSON(steps.registry.outputs.start-index) <= 5 }}
+        run: npm publish ./candidate-artifacts/tree-sitter-coral-0.2.12.tgz --access public
+
+  registry:
+    if: ${{ needs.publish.result == 'success' }}
+    needs: publish
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.commit }}
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.candidate_run_id }}
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify public registry artifacts
+        env:
+          RELEASE_VERSION: ${{ inputs.version }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
+          RELEASE_PRIVATE_REPOSITORY: ${{ github.event.repository.private }}
+          RELEASE_CANDIDATE_MANIFEST: candidate-artifacts/candidate-manifest.json
+        run: node scripts/release-registry.mjs verify

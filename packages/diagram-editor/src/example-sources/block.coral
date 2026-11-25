@@ -1,0 +1,4 @@
+@diagram block
+producer block as "Producer"
+consumer block as "Consumer"
+signal = producer -> consumer [flow]

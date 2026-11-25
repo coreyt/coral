@@ -1,0 +1,23 @@
+@diagram uml-sequence
+client participant
+server participant
+early = client -.-> monitor [create] as "Start monitor"
+before = client -> server
+choice = alt "valid" {
+  call = client -> server
+  retry = alt "again" {
+    nested = server -> client
+  } else "stop" {
+    stopped = client -> server
+  }
+} else "invalid" {
+  rejected = server -> client
+}
+spawn = server -.-> worker [create] as "Start worker"
+ready = worker -> server as "Ready"
+delivery = alt "persist" {
+  stored = worker -> server as "Stored"
+} else "skip" {
+  skipped = server -> worker as "Skip"
+}
+archive = server -.-> archiveWorker [create] as "Start archive"

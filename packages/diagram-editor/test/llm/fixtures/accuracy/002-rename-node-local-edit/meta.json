@@ -1,0 +1,13 @@
+{
+  "caseId": "002-rename-node-local-edit",
+  "caseType": "local-edit",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), the 'rename/local edit' case from ai-editing-exploration.md",
+  "limitations": "Tests a stable-ID label rename. The label-only permission does not prove fulfillment or exempt type/property changes or incident edges, so the retained candidate needs manual review.",
+  "requiresManualReview": true,
+  "expectedChangedNodeFields": {
+    "users": [
+      "label"
+    ]
+  }
+}

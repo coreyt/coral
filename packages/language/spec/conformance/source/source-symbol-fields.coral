@@ -1,0 +1,24 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol blank {
+  description "No name, size or artwork"
+}
+@symbol shield {
+  name "Shield"
+  name "Again"
+  size 48 by 56
+  outline circle
+  tags "a" "a"
+  colour red
+  artwork png """
+<svg/>
+"""
+}
+@symbol shield {
+  name "Duplicate"
+  size 1 x 1
+  artwork svg """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>
+"""
+}
+gate service

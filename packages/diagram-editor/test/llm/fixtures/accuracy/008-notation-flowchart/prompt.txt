@@ -1,0 +1,1 @@
+Create a flowchart for a simple approval process: a Start terminal, a decision point asking "Approved?", a process step "Notify Approver" reached when the answer is yes, a process step "Notify Rejection" reached when the answer is no, and an End terminal that both notification steps lead to.

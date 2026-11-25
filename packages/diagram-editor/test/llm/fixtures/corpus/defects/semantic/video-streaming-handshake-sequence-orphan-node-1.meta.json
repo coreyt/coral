@@ -1,0 +1,8 @@
+{
+  "originalFilename": "video-streaming-handshake-sequence.coral",
+  "defectType": "orphan-node",
+  "affectedNodeIds": ["LicenseServer"],
+  "affectedEdgeIds": ["msg_4", "msg_5"],
+  "explanation": "The description says the Player requests a DRM license from the License Server and receives a \"license granted\" reply before fetching segments, but both messages have been removed, leaving the License Server declared as a participant that never exchanges any message with anyone.",
+  "outputFilename": "video-streaming-handshake-sequence-orphan-node-1.coral"
+}

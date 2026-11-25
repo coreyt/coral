@@ -1,0 +1,41 @@
+classDiagram
+    class Customer {
+      +String name
+      +String email
+    }
+    class Cart {
+      +addItem()
+    }
+    class Order {
+      +Date placedAt
+      +calculateTotal()
+    }
+    class OrderItem {
+      +int quantity
+      +double price
+    }
+    class Product {
+      +String name
+      +double price
+    }
+    class Inventory {
+      +int stockLevel
+      +reserve()
+    }
+    class Payment {
+      +double amount
+      +process()
+    }
+    class ShippingAddress {
+      +String street
+      +String city
+    }
+
+    Customer --> Cart : owns
+    Cart o-- OrderItem
+    Customer --> Order : places
+    Order *-- OrderItem
+    OrderItem --> Product : references
+    Product --> Inventory : tracked by
+    Order --> Payment : paid by
+    Order --> ShippingAddress : ships to

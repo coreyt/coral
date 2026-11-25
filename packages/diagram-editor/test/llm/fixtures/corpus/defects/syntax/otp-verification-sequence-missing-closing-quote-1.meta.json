@@ -1,0 +1,16 @@
+{
+  "originalFilename": "otp-verification-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nUser actor as \"User\"\nApp participant as \"App\"\nAuthService participant as \"AuthService\"\nSMSGateway participant as \"SMSGateway\"\n\nmsg_1 = User -#> App as \"enter phone number\"\nmsg_2 = App -#> AuthService as \"request OTP\"\nmsg_3 = AuthService -#> SMSGateway as \"send OTP code\"\nmsg_4 = SMSGateway -.-> User as \"deliver OTP via SMS\"\nmsg_5 = User -#> App as \"enter OTP code\"\nmsg_6 = App -#> AuthService as \"verify OTP\"\nmsg_7 = AuthService -.-> App as \"OTP valid\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-quote",
+      "location": {
+        "line": 2,
+        "column": 19,
+        "charOffset": 41
+      },
+      "description": "removed closing quote on label \"User\""
+    }
+  ],
+  "outputFilename": "otp-verification-sequence-missing-closing-quote-1.coral"
+}

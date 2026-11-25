@@ -1,0 +1,51 @@
+@diagram uml-class
+Entity class {
+  attributes {
+    + id: UUID
+    + createdAt: DateTime
+  }
+}
+Customer class {
+  attributes {
+    + email: String
+    + status: CustomerStatus
+  }
+  operations {
+    + placeOrder(): Order
+  }
+}
+Order class {
+  attributes {
+    + total: Money
+    + state: OrderState
+  }
+  operations {
+    + submit(): Boolean
+    + cancel(): Void
+  }
+}
+LineItem class {
+  attributes {
+    + quantity: Int
+    + unitPrice: Money
+  }
+}
+Product class {
+  attributes {
+    + sku: String
+    + name: String
+  }
+}
+Payment class {
+  attributes {
+    + amount: Money
+    + capturedAt: DateTime
+  }
+}
+customerBase = Customer --|> Entity [inheritance]
+orderBase = Order --|> Entity [inheritance]
+paymentBase = Payment --|> Entity [inheritance]
+places = Customer -> Order [association] as "places"
+contains = Order -> LineItem [composition] as "contains"
+describes = LineItem -> Product [association] as "product"
+settles = Payment -> Order [association] as "settles"

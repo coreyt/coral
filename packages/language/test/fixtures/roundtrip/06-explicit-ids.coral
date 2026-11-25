@@ -1,0 +1,4 @@
+service "A" as "my node"
+service "B" as b
+
+"my node" -> b [uses]

@@ -1,0 +1,16 @@
+actor "Customer" as "customer"
+service "API Gateway" as "gateway"
+service "Order Service" as "orders"
+service "Inventory Service" as "inventory"
+service "Payment Service" as "payments"
+database "Order DB" as "orderdb"
+database "Inventory DB" as "inventorydb"
+external_api "Stripe" as "stripe"
+
+customer -> gateway [label: "checkout"]
+gateway -> orders [label: "create order"]
+orders -> orderdb [label: "persist"]
+orders -> inventory [label: "reserve stock"]
+inventory -> inventorydb [label: "query"]
+orders -> payments [label: "charge"]
+payments -> orderdb [label: "charge card"]

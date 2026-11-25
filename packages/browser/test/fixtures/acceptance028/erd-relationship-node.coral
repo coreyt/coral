@@ -1,0 +1,7 @@
+@diagram erd
+customer entity
+order entity
+places relationship
+reference attribute as "Long customer reference number"
+customer -- places
+places -- order

@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Sender
+    participant ChatService as Chat Service
+    participant Queue as Message Queue
+    participant Presence as Presence Service
+    participant PushService as Push Notification Service
+    participant Recipient as Recipient Device
+
+    Sender->>ChatService: send message
+    ChatService->>Queue: enqueue message
+    ChatService->>Presence: check recipient status
+    Presence-->>ChatService: recipient offline
+    ChatService->>PushService: send push notification
+    PushService-->>ChatService: notification queued
+    Queue->>Recipient: deliver message
+    Recipient-->>Queue: delivery ack
+    Queue-->>ChatService: message delivered
+    ChatService-->>Sender: delivery receipt

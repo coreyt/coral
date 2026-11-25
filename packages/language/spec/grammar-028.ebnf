@@ -1,0 +1,342 @@
+(* Coral Language 1.3.0 saved-source edition 0.2.8, implemented by header028 + candidate028.
+   This describes recognized syntax, not error recovery. A field's
+   uniqueness, reference validity, profile vocabulary, catalog pin, and
+   capability are separate checks; recognized reserved attributes still
+   fail until assigned meaning. grammar.ebnf describes the separate graph-interchange-v1 contract.
+   Alt/else, par/and, and single-operand loop/opt/critical/break fragments,
+   notes, activation blocks, and sequence regions are recognized. Entry-point and
+   operation guarantees are recorded in the conformance and behavior matrices.
+   Productions marked "edition 0.2.9" are a version-gated extension of this
+   reader family: they require @coralVersion "0.2.9", and an edition 0.2.8
+   document that uses them is diagnosed, never reinterpreted. *)
+
+document        = { trivia_line }, diagram_line, line_end,
+                  { trivia_line | directive_line },
+                  { trivia_line | symbol_definition },
+                  { trivia_line | statement_line | route_block | sequence_fragment |
+                    sequence_activation | sequence_region | sequence_group_line } ;
+diagram_line    = spacing, "@diagram", hspace, diagram_type,
+                  [ hspace, diagram_attributes ], spacing ;
+diagram_type    = letter, { letter | digit | "-" } ;
+diagram_attributes = "[", spacing, diagram_attribute,
+                     { spacing, ",", spacing, diagram_attribute }, spacing, "]" ;
+diagram_attribute  = identifier, spacing, ":", spacing, ( identifier | quoted ) ;
+(* Every diagram attribute key is reserved/unsupported in this edition. *)
+
+directive_line  = spacing, ( "@coralVersion" | "@profileVersion" |
+                  "@catalogVersion" ), hspace, quoted, spacing, line_end
+                | spacing, "@conformanceLevel", hspace,
+                  ( "none" | "typical" | "strict" ), spacing, line_end ;
+(* Directives may occur in any order before the first definition and body statement only. *)
+
+(* Edition 0.2.9: document-local symbol definitions. Definitions follow the
+   directives and precede the first body statement; authored order is kept.
+   The header scanner owns each region, from "@symbol" through its closing
+   brace, and masks it from the body. name, size and artwork_block are
+   required; every other line except symbol_anchor and port appears at most
+   once. Nodes select a definition with [symbol: "local.<id>"]. *)
+symbol_definition = spacing, "@symbol", hspace, identifier, spacing, "{", spacing, [ comment ], line_end,
+                    { trivia_line | spacing, symbol_line, spacing, [ comment ], line_end | artwork_block },
+                    spacing, "}", spacing, [ comment ], line_end ;
+symbol_line     = ( "name" | "description" | "source" | "license" ), hspace, quoted
+                | "tags", hspace, quoted, { hspace, quoted }
+                | "size", hspace, coordinate, hspace, "x", hspace, coordinate
+                | "label", hspace, ( "above" | "below" | "left" | "right" | "center" )
+                | "outline", hspace, ( "rectangle" | "rounded" | "ellipse" | "diamond" )
+                | "tint", hspace, ( "none" | "stroke" )
+                | symbol_anchor
+                | port ;
+(* Defaults are label below, outline rectangle and tint none. Size values are
+   finite positive diagram units; name is nonempty; tags are nonempty and
+   distinct. *)
+symbol_anchor   = "anchor", hspace, identifier, spacing, "[", spacing,
+                  anchor_field, { spacing, ",", spacing, anchor_field }, spacing, "]" ;
+anchor_field    = ( "side" | "exit" ), spacing, ":", spacing, ( "N" | "E" | "S" | "W" )
+                | ( "at" | "x" | "y" ), spacing, ":", spacing, coordinate ;
+(* A boundary anchor has exactly side and at; an interior anchor has exactly
+   x, y and exit. at, x and y lie in 0..1. Anchor IDs are unique and never a
+   generic anchor spelling (auto, side, corner, N, S, E, W, NE, NW, SE, SW,
+   up, down, left, right). Whether an interior point lies inside the outline
+   and its exit is strictly outward is a geometry check. *)
+artwork_block   = spacing, "artwork", hspace, "svg", hspace, '"""', spacing, line_end,
+                  { raw_line }, '"""', line_end ;
+raw_line        = ? any physical line other than one consisting of exactly three double quotes ?, line_end ;
+(* Raw content is every byte between the opening and closing lines. It is
+   never tokenized by a line-oriented reader; artwork admission owns it. The
+   closing line is exactly three double quotes before its line ending. *)
+
+statement_line  = spacing, ( node | edge | arrangement | spatial_constraint | layout | sequence_note ), spacing,
+                  [ comment ], line_end ;
+(* Sequence blocks are admitted only for @diagram uml-sequence. Their bodies
+   admit messages, notes, nested fragments, and nested activations. *)
+sequence_fragment = alt_fragment | par_fragment | guarded_fragment ;
+alt_fragment    = spacing, [ identifier, spacing, "=", spacing ],
+                  "alt", hspace, quoted, spacing, "{", spacing,
+                  [ comment ], line_end, sequence_items,
+                  spacing, "}", hspace, "else", hspace, quoted, spacing,
+                  "{", spacing, [ comment ], line_end, sequence_items,
+                  { spacing, "}", hspace, "else", hspace, quoted, spacing,
+                    "{", spacing, [ comment ], line_end, sequence_items },
+                  spacing, "}", spacing, [ comment ], line_end ;
+guarded_fragment = spacing, [ identifier, spacing, "=", spacing ],
+                  ( ( "opt" | "break" ), hspace, quoted
+                  | ( "loop" | "critical" ), hspace, [ quoted ] ),
+                  spacing, "{", spacing, [ comment ], line_end,
+                  sequence_items, spacing, "}", spacing, [ comment ], line_end ;
+par_fragment    = spacing, [ identifier, spacing, "=", spacing ],
+                  "par", hspace, [ quoted ], spacing, "{", spacing,
+                  [ comment ], line_end, sequence_items,
+                  spacing, "}", hspace, "and", hspace, [ quoted ], spacing,
+                  "{", spacing, [ comment ], line_end, sequence_items,
+                  { spacing, "}", hspace, "and", hspace, [ quoted ], spacing,
+                    "{", spacing, [ comment ], line_end, sequence_items },
+                  spacing, "}", spacing, [ comment ], line_end ;
+(* An omitted loop, critical, or par guard is absent meaning, not an empty
+   quoted guard. Opt and break require nonempty quoted guards. *)
+sequence_items  = { trivia_line | sequence_message_line | sequence_note_line |
+                    sequence_fragment | sequence_activation | sequence_region } ;
+sequence_activation = spacing, [ identifier, spacing, "=", spacing ],
+                  "activation", hspace, identifier, spacing, "{", spacing,
+                  [ comment ], line_end, sequence_items,
+                  spacing, "}", spacing, [ comment ], line_end ;
+sequence_region = spacing, [ identifier, spacing, "=", spacing ],
+                  "region", hspace, [ quoted ], spacing, "{", spacing,
+                  [ comment ], line_end, sequence_items,
+                  spacing, "}", spacing, [ comment ], line_end ;
+(* A sequence region owns its nested item order. Its optional quoted text is
+   a rendered region label, not an `as` label or a guard. *)
+sequence_group_line = spacing, [ identifier, spacing, "=", spacing ],
+                  "participants", hspace, identifier,
+                  { spacing, ",", spacing, identifier },
+                  [ spacing, "[", spacing, "label", spacing, ":", spacing,
+                    quoted, spacing, "]" ], spacing, [ comment ], line_end ;
+(* Participant groups are root declarations, not timeline items. Their
+   membership does not change participantOrder. `as` remains only for node
+   and edge labels; the group caption uses a keyed `label`. *)
+sequence_message_line = spacing, edge, spacing, [ comment ], line_end ;
+sequence_note_line = spacing, sequence_note, spacing, [ comment ], line_end ;
+sequence_note   = [ identifier, spacing, "=", spacing ], "note", hspace,
+                  quoted, hspace, "on", hspace, identifier,
+                  { spacing, ",", spacing, identifier } ;
+(* A note with one target may name one participant or one explicitly named
+   message. A note with several targets names participants only. A name shared
+   by a participant and message is ambiguous. Target resolution, participant
+   lifetime, and operand scope are semantic checks. The quoted body uses the
+   same escape rule as labels and guards. *)
+(* In UML sequence, a keyed [destroy] message has a known directed receiver
+   and closes that participant's lifetime. It belongs in the root timeline;
+   later messages, notes, or activations on that participant, or an activation
+   whose body destroys its own participant, receive a located finding.
+   The source and successor meaning remain portable even
+   when a consumer cannot draw destruction. Lost/found remain reserved
+   successor records, not two-endpoint Coral source-authoring forms. *)
+node            = identifier, ( hspace, node_kind | spacing, "=", spacing, node_kind ),
+                  [ spacing, node_fields ], [ hspace, label ],
+                  [ hspace, node_label_placement ],
+                  [ hspace, node_position ], [ hspace, "pinned" ],
+                  [ spacing, "{", spacing, "}" |
+                    spacing, "{", spacing, [ comment ], line_end, node_body,
+                    spacing, "}" ] ;
+node_kind       = identifier ;
+node_position   = "@", spacing, "(", spacing, coordinate, spacing, ",",
+                  spacing, coordinate, spacing, ")" ;
+coordinate      = [ "-" ], ( "0" | nonzero_digit, { digit } ),
+                  [ ".", digit, { digit } ],
+                  [ ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ] ;
+(* Coordinates must be finite. A pin without authored coordinates is a
+   located semantic error; malformed text remains saveable. Child positions
+   use their parent content box as the coordinate frame. *)
+node_fields     = "[", spacing, node_field,
+                  { spacing, ",", spacing, node_field }, spacing, "]" ;
+node_field      = ( "symbol" | "variant" | "conformanceException" ),
+                  spacing, ":", spacing, quoted ;
+label           = "as", hspace, quoted ;
+placement_side  = "above" | "below" | "left" | "right" | "center" ;
+node_label_placement = "label", hspace, placement_side,
+                  [ hspace, "offset", hspace, coordinate ] ;
+edge_label_placement = "label", hspace, placement_side,
+                  [ hspace, "at", hspace, coordinate ],
+                  [ hspace, "offset", hspace, coordinate ] ;
+(* Edge `at` is a finite route fraction 0..1; label offset is non-negative,
+   and center requires zero offset. Source ranges locate invalid values. *)
+node_body       = { trivia_line | route_block | spacing,
+                    ( port | node | edge | arrangement | spatial_constraint | compartment ),
+                    spacing, [ comment ], line_end } ;
+(* A non-group, non-classifier node body admits ports only. A group admits
+   node, edge, arrangement, and direct port lines; a UML class or interface
+   admits compartments. Enum literal bodies remain outside this edition. *)
+port            = identifier, hspace, "port", spacing, "[", spacing,
+                  port_field, { spacing, ",", spacing, port_field }, spacing, "]" ;
+port_field      = "direction", spacing, ":", spacing, ( "in" | "out" | "inout" )
+                | "anchor", spacing, ":", spacing, identifier
+                | "label", spacing, ":", spacing, quoted
+                | "maxConnections", spacing, ":", spacing, positive_integer ;
+(* Exactly one direction is required; anchor is optional and appears at most
+   once. Anchor validity depends on the selected symbol and catalog. label and
+   maxConnections are edition 0.2.9, each optional and at most once, on every
+   port line; canonical order is direction, anchor, label, maxConnections. *)
+positive_integer = nonzero_digit, { digit } ;
+
+edge            = [ identifier, spacing, "=", spacing ], endpoint, hspace,
+                  connector, hspace, endpoint, [ spacing, edge_fields ],
+                  [ hspace, label ], [ hspace, edge_label_placement ] ;
+route_block     = spacing, "route", hspace, "edge", hspace, node_reference,
+                  spacing, "{", spacing, [ comment ], line_end,
+                  { trivia_line | route_waypoint_line },
+                  spacing, "}", spacing, [ comment ], line_end ;
+route_waypoint_line = spacing, identifier, spacing, "=", spacing,
+                  "waypoint", hspace,
+                  ( "at" | "relative", hspace, "to", hspace,
+                    ( "first" | "second" | "node", hspace, node_reference
+                    | "port", hspace, port_reference | "waypoint", hspace, identifier ),
+                    hspace, "offset" ),
+                  spacing, "(", spacing, coordinate, spacing, ",",
+                  spacing, coordinate, spacing, ")",
+                  spacing, [ comment ], line_end ;
+(* A route names an existing, named edge in its lexical group scope and has
+   at least one waypoint. First/second refer to the written edge endpoints
+   even when its arrow points backward. IDs are unique within that route. Nonfinite points,
+   duplicate routes, and unresolved edge references block projection; source
+   text remains saveable. A port anchor names a semantic port on its qualified
+   node; catalog and node-local ports share that identity. *)
+endpoint        = node_reference, [ spacing, ":", spacing, identifier ] ;
+port_reference  = node_reference, spacing, ":", spacing, identifier ;
+node_reference  = identifier, { ".", identifier } ;
+(* A declaration spells only its local identifier. Within a group the actual
+   ID of a node, named edge, or named arrangement is each enclosing group ID
+   joined by dots with that local ID. Same-spelled declarations in different
+   groups therefore have distinct identities; repetition within one group
+   receives a duplicate-identity finding.
+   A bare reference searches the current group, then each enclosing group,
+   then document root; the nearest match wins. A dotted reference names an
+   absolute qualified ID. Port IDs remain node-local. *)
+edge_fields     = "[", spacing, ( bare_type, [ spacing, ",", spacing, keyed_edge_field,
+                  { spacing, ",", spacing, keyed_edge_field } ]
+                | keyed_edge_field, { spacing, ",", spacing, keyed_edge_field } ),
+                  spacing, "]" ;
+bare_type       = identifier ;
+keyed_edge_field = "type", spacing, ":", spacing, identifier
+                 | "label", spacing, ":", spacing, quoted
+                 | ( "firstPort" | "secondPort" ), spacing, ":", spacing, identifier
+                 | ( "firstEnd" | "secondEnd" ), spacing, ":", spacing, end_name
+                 | "style", spacing, ":", spacing, style_value ;
+style_value     = identifier | rgb_hex | double_quoted ;
+rgb_hex         = "#", hex_digit, hex_digit, hex_digit,
+                  hex_digit, hex_digit, hex_digit ;
+double_quoted   = '"', { double_text | "\\\"" | "\\\\" | "\\n" }, '"' ;
+hex_digit       = digit | "A" | "B" | "C" | "D" | "E" | "F"
+                       | "a" | "b" | "c" | "d" | "e" | "f" ;
+end_name        = "none" | "arrow" | "filledArrow" | "triangle" |
+                  "filledTriangle" | "diamond" | "filledDiamond" |
+                  "circle" | "filledCircle" | "bar" | "crowFoot" |
+                  "zeroOrOne" | "one" | "zeroOrMany" | "oneOrMany" |
+                  "zeroToMany" ;
+(* zeroToMany is a semantic cardinality name bound to the canonical
+   zero-or-many GraphIR mark. It is a selected author spelling, not a
+   compatibility alias. Further semantic names need explicit mark entries. *)
+(* One leading bare type OR one keyed type; as and keyed label name the same
+   field and cannot coexist. A bare second item is never an implicit label.
+   A keyed end may fill an unspecified operator end. An equal keyed restatement
+   of the operator's same-end mark is accepted. A different same-end mark
+   conflicts when the operator has shorthand there; a marker without shorthand
+   on that end may be assigned by key. The operator retains semantic direction.
+   In GraphIR, an unspecified end is absent; a written shaft or keyed none
+   projects an explicit none marker. *)
+(* ERD cardinality uses keyed firstEnd/secondEnd as its primary 0.2.8 form.
+   Inline and adjacent numeric cardinalities and compound crow-foot operators
+   remain author-trial spellings, not recognized production syntax. *)
+(* style accepts one bare term or RGB color, or a double-quoted comma recipe.
+   Known dimensions are line pattern (solid/dashed/dotted), RGB color,
+   weight (regular/thick), and motion (static/animated or quoted
+   animated:auto/forward/reverse). Repeating a dimension is an error, even
+   when the terms are equal. A dashed operator also owns the pattern.
+   These dimensions compile to typed successor fields. Named colors map to
+   exact RGB: black #000000, gray #808080, red #FF0000, orange #FFA500,
+   yellow #FFFF00, green #008000, blue #0000FF, purple #800080. Equal
+   named/hex colors repeat the same dimension. Unknown terms warn and block projection
+   until meaning can be preserved. Unsupported display meaning is diagnosed
+   and withheld, but source saves exactly. *)
+
+connector       = solid_connector | dashed_connector | reverse_connector ;
+solid_connector = dashes, [ second_end ] ;
+dashes          = "-" | "--" | "---" | "----" | "-----" | "------" ;
+second_end      = ">" | "#>" | ">#" | "|>" | "#|>" | "|#>" | "|>#"
+                | "<>" | "#<>" | "<#>" | "<>#" | "|" | "o" | "#o" | "o#" | "{" ;
+dashed_connector = dashed_shaft, [ second_end ] ;
+dashed_shaft   = "-.-" | "-.--" | "-.---" | "-.----" ;
+(* The period replaces the second of three to six shaft positions; it counts
+   toward the soft proximity tier. No other dot position or second dot is valid. *)
+reverse_connector = "<", dashes, [ ">" ] ;
+
+arrangement     = [ identifier, spacing, "=", spacing ], "arrange", hspace,
+                  ( "row" | "column" ), spacing, ":", spacing,
+                  rectangle_member, spacing, ",", spacing, rectangle_member,
+                  { spacing, ",", spacing, rectangle_member }, [ spacing, constraint_parameters ] ;
+
+compartment     = [ identifier, spacing, "=", spacing ],
+                  ( "attributes", spacing, compartment_body_attribute
+                  | "operations", spacing, compartment_body_operation ) ;
+compartment_body_attribute = "{", spacing, "}"
+                  | "{", spacing, [ comment ], line_end,
+                    { trivia_line | spacing, attribute, spacing, [ comment ], line_end },
+                    spacing, "}" ;
+compartment_body_operation = "{", spacing, "}"
+                  | "{", spacing, [ comment ], line_end,
+                    { trivia_line | spacing, operation, spacing, [ comment ], line_end },
+                    spacing, "}" ;
+attribute       = "+", hspace, identifier, spacing, ":", spacing, identifier
+                | identifier, spacing, "=", spacing,
+                  ( "public" | "private" | "protected" | "package" ), hspace,
+                  "attribute", hspace, identifier, spacing, ":", spacing, identifier ;
+(* A named operation uses a visibility word, never a symbolic sign. *)
+operation       = ( "+" | "-" | "#" | "~" ), hspace, operation_signature
+                | identifier, spacing, "=", spacing,
+                  ( "public" | "private" | "protected" | "package" ), hspace,
+                  "operation", hspace, operation_signature ;
+operation_signature = identifier, spacing, "(", spacing,
+                      [ operation_parameter,
+                        { spacing, ",", spacing, operation_parameter } ],
+                      spacing, ")", [ spacing, ":", spacing, identifier ] ;
+operation_parameter = identifier, spacing, ":", spacing, identifier ;
+
+identifier      = ( letter | "_" ), { letter | digit | "_" } ;
+quoted          = '"', { double_text | "\\\"" | "\\\\" | "\\n" }, '"'
+                | "'", { single_text | "\\'" | "\\\\" | "\\n" }, "'" ;
+double_text     = ? Unicode scalar except double quote, backslash, control, U+2028, and U+2029 ? ;
+single_text     = ? Unicode scalar except single quote, backslash, control, U+2028, and U+2029 ? ;
+comment         = "//", { character_except_line_end } ;
+trivia_line     = spacing, [ comment ], line_end ;
+line_end        = "\n" | "\r\n" | end_of_input ;
+hspace          = ( " " | "\t" ), { " " | "\t" } ;
+spacing         = { " " | "\t" } ;
+letter          = ? ASCII A-Z or a-z ? ;
+digit           = ? ASCII 0-9 ? ;
+nonzero_digit   = ? ASCII 1-9 ? ;
+character_except_line_end = ? any Unicode scalar except CR and LF ? ;
+
+(* Slice 30 human-approved finite spatial notation. Typed members preserve
+   role and exact semantic identity; bare arrangement members mean nodes. *)
+typed_rectangle = ( "node" | "group" | "edge" ), hspace, node_reference
+                | "label", hspace, ( "node" | "edge" ), hspace, node_reference ;
+rectangle_member = typed_rectangle | node_reference ;
+spatial_constraint = "constraint", hspace, identifier, spacing, ":", spacing,
+                    typed_rectangle, hspace,
+                    ( ( "above" | "below" | "left of" | "right of" ), hspace, typed_rectangle
+                    | "at the", hspace, ( "top" | "bottom" | "left" | "right" ),
+                      hspace, "of", hspace, ( "diagram" | "group", hspace, node_reference ) ),
+                    [ spacing, constraint_parameters ] ;
+constraint_parameters = "[", spacing, constraint_parameter,
+                        { spacing, ",", spacing, constraint_parameter }, spacing, "]" ;
+constraint_parameter = "required" | "preferred"
+                     | ( "gap" | "inset" ), spacing, ":", spacing, coordinate
+                     | "alignment", spacing, ":", spacing, ( "start" | "center" | "end" )
+                     | "direction", spacing, ":", spacing, ( "forward" | "reverse" ) ;
+layout = "layout", spacing, "[", spacing, layout_parameter,
+         { spacing, ",", spacing, layout_parameter }, spacing, "]" ;
+layout_parameter = "algorithm", spacing, ":", spacing, ( "layered" | "mrtree" | "stress" | "force" | "radial" | "box" | "fixed" )
+                 | "direction", spacing, ":", spacing, ( "UP" | "DOWN" | "LEFT" | "RIGHT" )
+                 | "edgeRouting", spacing, ":", spacing, ( "ORTHOGONAL" | "POLYLINE" | "SPLINES" )
+                 | ( "nodeNode" | "nodeEdge" | "edgeEdge" | "layerSpacing" ), spacing, ":", spacing, coordinate ;
+(* Layout is document-level, unique, with finite positive spacing. Constraint
+   parameters are operation-specific, nonnegative and unique. Route relative
+   anchors additionally admit "waypoint", hspace, identifier in their own route. *)

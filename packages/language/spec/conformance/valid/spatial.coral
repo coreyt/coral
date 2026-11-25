@@ -1,0 +1,6 @@
+service "API" as api above orders
+database "Orders" as orders @ (320, 80)
+service "Ingress" as ingress at the top
+
+arrange ingress, api, orders as row
+api -> orders as writes [label: "writes"] via (240, 80)

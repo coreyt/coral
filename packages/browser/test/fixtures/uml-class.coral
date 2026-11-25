@@ -1,0 +1,14 @@
+@diagram uml-class
+order class as "Order" {
+  attributes {
+    orderId = private attribute id: UUID
+  }
+}
+repository interface as "Repository" {
+  operations {
+    saveOp = public operation save(order: Order): Void
+  }
+}
+state enum as "State"
+orderRepository = order -- repository [realization]
+orderState = order -- state [association]

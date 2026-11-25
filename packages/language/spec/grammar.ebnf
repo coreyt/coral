@@ -1,0 +1,191 @@
+(* Coral Language 1.3.0 explicit graph-interchange-v1 contract.
+   Saved-source edition 0.2.8 is defined by grammar-028.ebnf. *)
+
+document             = { blank_line },
+                       [ spacing, graph_header, line_end, { blank_line } ],
+                       { spacing, declaration, line_end, { blank_line } }, spacing ;
+declaration          = node | edge | concise_arrangement | required_constraint
+                     | identified_constraint | sequence_statement | comment ;
+
+(* UML sequence statements (Slice 70), recognized only when the @graph header
+   selects metadata.notation "uml-sequence"; elsewhere these lines keep their
+   ordinary meaning. Participants are node declarations of type participant or
+   actor; messages are edges whose first attribute is sync, async, or return. *)
+sequence_statement   = sequence_fragment | sequence_activation | sequence_note ;
+sequence_fragment    = ( "loop" | "alt" | "opt" ), [ hspace, string ],
+                       [ hspace, "as", hspace, reference ], spacing, "{", line_end,
+                       { blank_line | spacing, ( edge | comment ), line_end },
+                       { spacing, "}", spacing, "else", [ hspace, string ], spacing, "{", line_end,
+                         { blank_line | spacing, ( edge | comment ), line_end } },
+                       spacing, "}" ;
+sequence_activation  = "activation", hspace, reference, hspace, "from", hspace, reference,
+                       hspace, "to", hspace, reference, [ hspace, "as", hspace, reference ] ;
+sequence_note        = "note", hspace, string, hspace, "on", hspace, reference,
+                       { spacing, ",", spacing, reference },
+                       [ hspace, "as", hspace, reference ] ;
+
+graph_header         = "@graph", hspace, json_object ;
+
+node                 = node_type,
+                       ( hspace, string, [ hspace, "as", hspace, reference ]
+                       | hspace, "as", hspace, reference ),
+                       [ hspace, classifier_modifiers ],
+                       [ hspace, node_label_placement ],
+                       [ hspace, inline_node_constraint ],
+                       [ hspace, position ],
+                       [ hspace, "pinned" ],
+                       [ hspace, "data", hspace, json_object ],
+                       [ hspace, node_body ] ;
+node_body            = "{", line_end,
+                       { blank_line | spacing, ( property | node | classifier_compartment | comment ), line_end },
+                       spacing, "}" | "{", spacing, "}" ;
+property             = key, spacing, ":", spacing, json_value ;
+
+classifier_modifiers = "modifiers", hspace, "{", spacing,
+                       ( "abstract", [ spacing, ",", spacing, "static" ] | "static" ),
+                       spacing, "}" ;
+classifier_compartment = classifier_compartment_kind,
+                         [ hspace, "as", hspace, reference ], hspace, "{", line_end,
+                         { blank_line | spacing, classifier_member, line_end },
+                         spacing, "}" ;
+classifier_compartment_kind = "attributes" | "operations" | "literals" ;
+classifier_member    = classifier_attribute | classifier_operation | classifier_literal ;
+classifier_attribute = ( visibility | "attribute" ), hspace, identifier,
+                       [ spacing, ":", spacing, member_type ],
+                       [ hspace, "as", hspace, reference ],
+                       [ hspace, member_modifiers ] ;
+classifier_operation = ( visibility | "operation" ), hspace, identifier, spacing, "(", spacing,
+                       [ classifier_parameter, { spacing, ",", spacing, classifier_parameter } ],
+                       spacing, ")", [ spacing, ":", spacing, member_type ],
+                       [ hspace, "as", hspace, reference ],
+                       [ hspace, member_modifiers ] ;
+classifier_parameter = identifier, [ spacing, ":", spacing, member_type ] ;
+classifier_literal   = "literal", hspace, identifier,
+                       [ spacing, "=", spacing, string ],
+                       [ hspace, "as", hspace, reference ] ;
+visibility           = "+" | "-" | "#" | "~" ;
+member_type          = bare_node_type ;
+member_modifiers     = "{", spacing, identifier,
+                       { spacing, ",", spacing, identifier }, spacing, "}" ;
+
+edge                 = reference, [ spacing, relationship_end ], spacing, "->", spacing,
+                       reference, [ spacing, relationship_end ],
+                       [ hspace, "as", hspace, reference ],
+                       [ spacing, attributes ],
+                       [ hspace, edge_label_placement ],
+                       [ hspace, "data", hspace, json_object ],
+                       [ hspace, route ] ;
+(* Parts appear at most once, in this canonical order. Equal bounds are
+   written as one bound, and a bound is at most 9007199254740991. *)
+relationship_end     = "(", spacing, end_parts, spacing, ")" ;
+end_parts            = multiplicity, [ hspace, string ], [ hspace, end_marker ],
+                       [ hspace, navigability ]
+                     | string, [ hspace, end_marker ], [ hspace, navigability ]
+                     | end_marker, [ hspace, navigability ]
+                     | navigability ;
+multiplicity         = bound, [ "..", ( bound | "*" ) ] ;
+bound                = "0" | nonzero_digit, { digit } ;
+navigability         = "nav" | "nonav" ;
+end_marker           = fillable_marker, [ "-" | "+" ] | fixed_marker ;
+fillable_marker      = "arrow" | "triangle" | "diamond" | "circle" ;
+fixed_marker         = "none" | "bar" | "crow-foot" | "zero-or-one"
+                     | "one" | "zero-or-many" | "one-or-many" ;
+attributes           = "[", spacing,
+                       ( quoted_relation_type,
+                         [ spacing, ",", spacing, line_style ],
+                         [ spacing, ",", spacing, named_attribute,
+                           { spacing, ",", spacing, named_attribute } ]
+                       | bare_relation_type,
+                         [ spacing, ",", spacing,
+                           ( line_style,
+                             [ spacing, ",", spacing, named_attribute,
+                               { spacing, ",", spacing, named_attribute } ]
+                           | named_attribute,
+                             { spacing, ",", spacing, named_attribute } ) ]
+                       | line_style,
+                         [ spacing, ",", spacing, named_attribute,
+                           { spacing, ",", spacing, named_attribute } ]
+                       | named_attribute, { spacing, ",", spacing, named_attribute } ),
+                       spacing, "]" ;
+named_attribute      = key, spacing, ":", spacing, scalar ;
+
+node_label_placement = "label", hspace, placement_side, [ hspace, "offset", hspace, nonnegative_number ] ;
+edge_label_placement = "label", hspace, placement_side,
+                       [ hspace, "at", hspace, fraction ],
+                       [ hspace, "offset", hspace, nonnegative_number ] ;
+placement_side       = "above" | "below" | "left" | "right" | "center" ;
+
+inline_node_constraint = relative | boundary ;
+relative             = ( "above" | "below" ), hspace, reference
+                     | ( "left" | "right" ), hspace, "of", hspace, reference ;
+boundary             = "at", hspace, "the", hspace, boundary_side,
+                       [ hspace, "of", hspace, reference ] ;
+boundary_side        = "top" | "bottom" | "left" | "right" ;
+arrangement_expression = "arrange", hspace, reference_list, hspace, "as", hspace, axis ;
+concise_arrangement  = arrangement_expression, [ spacing, value_parameters ] ;
+required_constraint  = "require", hspace,
+                       ( relative_subject | boundary_subject | arrangement_expression ),
+                       [ spacing, value_parameters ] ;
+relative_subject     = reference, hspace, relative ;
+boundary_subject     = reference, hspace, boundary ;
+identified_constraint = "constraint", hspace, reference, spacing, ":", spacing,
+                        ( relative_subject | boundary_subject | arrangement_expression ),
+                        [ spacing, constraint_parameters ] ;
+(* A strength flag belongs only to identified constraints; each parameter is stated once. *)
+value_parameters     = "[", spacing, value_parameter,
+                       { spacing, ",", spacing, value_parameter }, spacing, "]" ;
+constraint_parameters = "[", spacing, constraint_parameter,
+                        { spacing, ",", spacing, constraint_parameter }, spacing, "]" ;
+constraint_parameter = "required" | "preferred" | value_parameter ;
+value_parameter      = "gap", spacing, ":", spacing, nonnegative_number
+                     | "inset", spacing, ":", spacing, nonnegative_number
+                     | "alignment", spacing, ":", spacing, ( "start" | "center" | "end" )
+                     | "direction", spacing, ":", spacing, ( "forward" | "reverse" ) ;
+axis                 = "row" | "column" ;
+reference_list       = reference, spacing, ",", spacing, reference,
+                       { spacing, ",", spacing, reference } ;
+
+position             = "@", spacing, point ;
+route                = "via", hspace, ( point, { hspace, point } | waypoint, { spacing, ",", spacing, waypoint } ) ;
+waypoint             = "waypoint", hspace, reference, hspace,
+                       ( "at", hspace, point
+                       | "relative", hspace, "to", hspace, route_anchor,
+                         hspace, "offset", hspace, point ) ;
+route_anchor         = "source" | "target" | route_node_reference
+                     | "port", hspace, reference, ".", reference ;
+route_node_reference = string | ? identifier other than source or target ? ;
+point                = "(", spacing, number, spacing, ",", spacing, number, spacing, ")" ;
+
+node_type            = bare_node_type | string ;
+reference            = identifier | string ;
+quoted_relation_type = string ;
+bare_relation_type   = ? identifier other than solid, dashed, or dotted ? ;
+line_style           = "solid" | "dashed" | "dotted" ;
+key                  = identifier | string ;
+identifier           = ( letter | "_" ), { letter | digit | "_" } ;
+bare_node_type       = ( letter | "_" ), { letter | digit | "_" | "-" } ;
+string               = '"', { json_string_character | json_escape }, '"' ;
+json_escape          = "\\", ( '"' | "\\" | "/" | "b" | "f" | "n" | "r" | "t" | unicode_escape ) ;
+unicode_escape       = "u", hex, hex, hex, hex ;
+number               = [ "-" ], ( "0" | nonzero_digit, { digit } ),
+                       [ ".", digit, { digit } ], [ ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ] ;
+nonnegative_number   = ( "0" | nonzero_digit, { digit } ),
+                       [ ".", digit, { digit } ], [ ( "e" | "E" ), [ "+" | "-" ], digit, { digit } ] ;
+fraction             = number ;
+scalar               = string | number | "true" | "false" | "null" ;
+comment              = "//", { character_except_line_end } ;
+
+json_object          = ? strict RFC 8259 JSON object containing finite numbers ? ;
+json_value           = ? strict RFC 8259 JSON value containing finite numbers ? ;
+json_string_character = ? any Unicode scalar except quote, reverse solidus, or control character ? ;
+letter               = "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M"
+                     | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
+                     | "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m"
+                     | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z" ;
+digit                = "0" | nonzero_digit ;
+nonzero_digit        = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+hex                  = digit | "a" | "b" | "c" | "d" | "e" | "f" | "A" | "B" | "C" | "D" | "E" | "F" ;
+hspace               = ( " " | "\t" ), { " " | "\t" } ;
+spacing              = { " " | "\t" } ;
+blank_line           = spacing, ( "\n" | "\r\n" ) ;
+line_end             = spacing, ( "\n" | "\r\n" | end_of_input ) ;

@@ -1,0 +1,8 @@
+@diagram block
+producer block {
+  telemetry port [direction: out, anchor: side]
+}
+consumer block {
+  receive port [direction: in, anchor: side]
+}
+transfer = producer:telemetry -> consumer:receive as "Data"

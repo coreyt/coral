@@ -1,0 +1,129 @@
+{
+  "schemaVersion": 1,
+  "id": "S100-HITL-braces-2026-10-16",
+  "releaseVersion": "0.2.8",
+  "decision": "accepted-risk",
+  "authorization": {
+    "kind": "HITL conversation",
+    "date": "2026-10-16",
+    "quote": "for now, Coral will use the existing braces library in 0.2.8. Authorized by HITL. I will review the agent's findings and determine an approach.",
+    "auditGateApproval": "Approve the exact 0.2.8 audit exception"
+  },
+  "advisory": "GHSA-vfj7-8cjw-p6xm",
+  "package": "braces",
+  "packageVersion": "3.0.3",
+  "highFindings": {
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "nodes": [
+        "node_modules/braces"
+      ],
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=3.0.3"
+        }
+      ]
+    },
+    "fast-glob": {
+      "name": "fast-glob",
+      "severity": "high",
+      "isDirect": false,
+      "range": "*",
+      "nodes": [
+        "node_modules/fast-glob"
+      ],
+      "via": [
+        "micromatch"
+      ]
+    },
+    "globby": {
+      "name": "globby",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=8.0.0",
+      "nodes": [
+        "node_modules/globby"
+      ],
+      "via": [
+        "fast-glob",
+        "micromatch"
+      ]
+    },
+    "markdownlint-cli2": {
+      "name": "markdownlint-cli2",
+      "severity": "high",
+      "isDirect": true,
+      "range": ">=0.0.5",
+      "nodes": [
+        "node_modules/markdownlint-cli2"
+      ],
+      "via": [
+        "globby",
+        "markdownlint",
+        "micromatch",
+        "smol-toml"
+      ]
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "high",
+      "isDirect": false,
+      "range": ">=0.2.0",
+      "nodes": [
+        "node_modules/micromatch"
+      ],
+      "via": [
+        "braces"
+      ]
+    }
+  },
+  "lockedNodes": {
+    "node_modules/braces": {
+      "version": "3.0.3",
+      "resolved": "https://registry.npmjs.org/braces/-/braces-3.0.3.tgz",
+      "integrity": "sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==",
+      "dev": true
+    },
+    "node_modules/fast-glob": {
+      "version": "3.3.3",
+      "resolved": "https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz",
+      "integrity": "sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==",
+      "dev": true
+    },
+    "node_modules/globby": {
+      "version": "16.2.4",
+      "resolved": "https://registry.npmjs.org/globby/-/globby-16.2.4.tgz",
+      "integrity": "sha512-c8B/VNLmxRcmqqenRA9t+9IyOjf9+V6lTxPaUJLqOCONdQkWZ0ETYgX0qbtJqPsgCNusT9MZ5Jeidw8Eb9tn2g==",
+      "dev": true
+    },
+    "node_modules/markdownlint-cli2": {
+      "version": "0.23.3",
+      "resolved": "https://registry.npmjs.org/markdownlint-cli2/-/markdownlint-cli2-0.23.3.tgz",
+      "integrity": "sha512-xAr5o/TGpC3v6lE6cKIW4b5eOFRrRX5u7Vtjae9ix3RALv8nNOd94XMkD/1OXXBtpMcJ4uQGbpSo3hv5UqS4uQ==",
+      "dev": true
+    },
+    "node_modules/micromatch": {
+      "version": "4.0.8",
+      "resolved": "https://registry.npmjs.org/micromatch/-/micromatch-4.0.8.tgz",
+      "integrity": "sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==",
+      "dev": true
+    }
+  },
+  "retirement": "Applies only to Coral 0.2.8 and the exact existing dev-only dependency graph. The owner will review Astra findings and decide any fork or patch approach."
+}

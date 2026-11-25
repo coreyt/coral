@@ -1,0 +1,22 @@
+@diagram uml-state
+start initial
+Queued state
+Validating state
+Review state
+Correct state
+Ready state
+Publish state
+Failed state
+finish final
+start -> Queued
+Queued -> Validating [label: "submit"]
+Validating -> Review [label: "manual"]
+Validating -> Ready [label: "valid"]
+Review -> Correct [label: "revise"]
+Review -> Ready [label: "approved"]
+Correct -> Validating [label: "retry"]
+Ready -> Publish [label: "release"]
+Publish -> Failed [label: "error"]
+Failed -> Ready [label: "recover"]
+Publish -> finish [label: "done"]
+Failed -> finish [label: "abort"]

@@ -1,0 +1,8 @@
+service "Ingestion Service" as "ingestion"
+service "Legacy Importer" as "legacy_importer"
+module "Legacy Queue" as "legacy_queue"
+warehouse "Data Warehouse" as "warehouse"
+
+ingestion -> legacy_importer [label: "hands off"]
+legacy_importer -> legacy_queue [label: "enqueues"]
+legacy_queue -> warehouse [label: "loads"]

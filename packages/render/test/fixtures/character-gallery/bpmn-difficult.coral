@@ -1,0 +1,23 @@
+@diagram bpmn
+begin startEvent as "Begin"
+intake task as "Intake"
+check task as "Check"
+choice exclusiveGateway as "Ready?"
+auto task as "Auto"
+manual task as "Manual"
+manualChoice exclusiveGateway as "Manual result?"
+publish task as "Publish"
+publishChoice exclusiveGateway as "Published?"
+done endEvent as "Done"
+begin -> intake
+intake -> check
+check -> choice
+choice -> auto [label: "eligible"]
+choice -> manual [label: "needs review"]
+manual -> manualChoice
+manualChoice -> check [label: "retry"]
+auto -> publish [label: "automated"]
+manualChoice -> publish [label: "approved"]
+publish -> publishChoice
+publishChoice -> done [label: "complete"]
+publishChoice -> manual [label: "reopen"]

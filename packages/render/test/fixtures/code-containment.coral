@@ -1,0 +1,8 @@
+@diagram code
+module module [symbol: "code-module"] as "renderer.ts"
+renderer class [symbol: "code-class", variant: "abstract"] as "Renderer"
+render function [symbol: "code-function"] as "render"
+version variable [symbol: "code-variable", variant: "static"] as "version"
+moduleClass = module -> renderer [contains]
+classRender = renderer -> render [contains]
+classVersion = renderer -> version [contains]

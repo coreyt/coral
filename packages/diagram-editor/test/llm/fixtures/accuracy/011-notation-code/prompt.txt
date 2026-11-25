@@ -1,0 +1,1 @@
+Create a code architecture diagram: an interface "PaymentProcessor", a class "StripeProcessor" that implements it, a function "chargeCard" that the class exposes, and an external module "stripe-sdk" that the class depends on.

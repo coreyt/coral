@@ -1,0 +1,13 @@
+# Collaboration and Hosting
+
+Coral is local-first and stays that way. A document is a file the user holds; the editor works with no network, no account and no server, and nothing in this design changes that for a user who wants none of it.
+
+Collaboration is therefore opt-in per document rather than a mode the application is in. A document gains a collaboration section only when a user asks for one, and a document without it is byte-identical to one saved today. That constraint decides the shape: the collaborative state cannot be a different representation that the local format is derived from, because then every local user pays for a feature they declined. It has to be an addition to the existing `.coral.json`, and the local file has to remain authoritative when the document is not shared.
+
+The unit of concurrency is the node and the edge, not the document and not the text. Two people editing one document are almost always touching different nodes, and a last-writer-wins merge at document granularity would lose one of them entirely; conversely a character-level merge over the DSL text would produce syntactically broken intermediate states, because Coral text is not commutative — an edge line is meaningless before its endpoints exist. Per-element last-writer-wins with a logical clock keeps merges explicable and keeps every intermediate state parseable, at the cost of losing one of two simultaneous edits to the same node's label. That trade is the right one for diagrams, where simultaneous edits to the same element are rare and a broken document is not recoverable by the user.
+
+Geometry is the exception that makes this workable. Now that positions, pinning and waypoints are expressible in the DSL and carried in GraphIR, a move is an edit to one node's position and merges like any other field. Before that, position lived only in a side table and a concurrent move was invisible to any merge over the document content.
+
+Hosting is deliberately not a Coral responsibility. Coral defines the document format, the merge rule and a transport-agnostic change feed; it does not run a server, hold accounts or store documents. An external host supplies transport and identity. This keeps the packages publishable and dependency-light, keeps the editor usable offline, and means a hosting decision can be made and remade without touching the language or the renderer.
+
+Nothing here is implemented. It records the constraints a future implementation has to satisfy: local-first by default, opt-in per document, per-element merge, geometry as ordinary state, and no server in Coral itself.

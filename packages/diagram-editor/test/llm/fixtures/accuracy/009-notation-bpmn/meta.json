@@ -1,0 +1,8 @@
+{
+  "caseId": "009-notation-bpmn",
+  "caseType": "notation",
+  "notationId": "bpmn",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "The bundled bpmn notation only maps 5 symbols (task/data-store/gateway-exclusive/start-event/pool, no end-event) -- this fixture's prompt stays within that vocabulary rather than assuming full BPMN 2.0 coverage"
+}

@@ -1,0 +1,8 @@
+{
+  "originalFilename": "chat-message-delivery-sequence.coral",
+  "defectType": "reversed-relationship-direction",
+  "affectedNodeIds": ["Queue", "Recipient"],
+  "affectedEdgeIds": ["msg_7"],
+  "explanation": "The description says the Message Queue delivers the message to the Recipient Device, which then acks back to the queue. Edge msg_7 has been reversed so the Recipient Device \"delivers\" the message to the Message Queue, making the recipient both deliver and acknowledge the same message while the queue never sends anything to the device.",
+  "outputFilename": "chat-message-delivery-sequence-reversed-relationship-direction-1.coral"
+}

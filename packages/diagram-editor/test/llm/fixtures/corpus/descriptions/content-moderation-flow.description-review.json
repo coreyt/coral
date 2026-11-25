@@ -1,0 +1,23 @@
+{
+  "slug": "content-moderation-flow",
+  "reviews": [
+    {
+      "descriptionFile": "content-moderation-flow.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 9 nodes and all 11 edges present, including the two edges into Policy Engine (from AI Content Classifier auto-approve and from Human Reviewer decision) and the two edges into Notification Service (from Policy Engine reject and from Publish Service notify author)."
+    },
+    {
+      "descriptionFile": "content-moderation-flow.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 9 nodes then all 11 edges. Cross-checked against the .mmd file; the Appeal Service loop back into Moderation Queue is correctly captured as a re-queue, not a new queue."
+    },
+    {
+      "descriptionFile": "content-moderation-flow.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Narrative from the end state (published/rejected/appealed). Re-verified all 9 nodes and 11 edges, including both branches out of AI Content Classifier and both edges into Notification Service."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "caseId": "003-add-connected-subgraph",
+  "caseType": "add-subgraph",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), the 'add connected subgraph' case from ai-editing-exploration.md",
+  "limitations": "Tests addition of a small (2-node) connected subgraph; expected edge entries are change permissions, not proof the requested topology was fulfilled, so the retained candidate needs manual review.",
+  "requiresManualReview": true,
+  "expectedNewEdges": [{ "source": "gateway", "target": "cache" }, { "source": "cache", "target": "cache_store" }]
+}

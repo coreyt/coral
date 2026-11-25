@@ -1,0 +1,8 @@
+{
+  "originalFilename": "e-commerce-domain-class.coral",
+  "defectType": "missing-expected-connector",
+  "affectedNodeIds": ["OrderItem", "Order"],
+  "affectedEdgeIds": ["rel_4"],
+  "explanation": "The description says Order is composed of OrderItem, but the composition edge rel_4 between OrderItem and Order has been deleted. Both classes remain connected elsewhere (OrderItem to Cart and Product, Order to Customer, Payment, and ShippingAddress), so the order now has no relationship to its own line items.",
+  "outputFilename": "e-commerce-domain-class-missing-expected-connector-1.coral"
+}

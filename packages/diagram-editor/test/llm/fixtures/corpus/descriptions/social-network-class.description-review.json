@@ -1,0 +1,23 @@
+{
+  "slug": "social-network-class",
+  "reviews": [
+    {
+      "descriptionFile": "social-network-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 14 classes and covers all 17 relationships, correctly distinguishing the two separate Post compositions (Comment and Like) and the two separate User-Conversation paths (via Message and directly)."
+    },
+    {
+      "descriptionFile": "social-network-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "States totals (14 classes, 17 relationships) then lists each relationship individually with exact labels. Matches the .mmd source line for line, including both User*--Album and Album*--Photo compositions."
+    },
+    {
+      "descriptionFile": "social-network-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Uses the components-then-connections structure requested. Verified all 14 classes and all 17 relationships are named, and the closing tally ('seventeen relationships') matches edgeCount."
+    }
+  ]
+}

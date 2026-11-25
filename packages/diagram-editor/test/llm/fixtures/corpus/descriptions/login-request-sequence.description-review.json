@@ -1,0 +1,23 @@
+{
+  "slug": "login-request-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "login-request-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 4 participants and all 9 messages present, including the self-message 'verify password hash' and both branch outcomes. No invented messages."
+    },
+    {
+      "descriptionFile": "login-request-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Grouped by participant rather than chronologically; verified all 9 messages are still individually named (checked off against the diagram one by one) despite the reorganization, including the self-message."
+    },
+    {
+      "descriptionFile": "login-request-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Leads with the branch outcome framing but still names all 4 participants and all 9 messages in order. Accurate; the two reply pairs (auth token/200 OK and authentication failed/401) are correctly kept as separate, mutually exclusive outcomes rather than implying both happen."
+    }
+  ]
+}

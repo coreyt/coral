@@ -1,0 +1,39 @@
+classDiagram
+    class Library {
+      +String name
+      +String address
+    }
+    class Branch {
+      +String location
+    }
+    class Catalog {
+      +search()
+    }
+    class Book {
+      +String title
+      +String isbn
+    }
+    class Author {
+      +String name
+    }
+    class Member {
+      +String name
+      +String memberId
+    }
+    class Loan {
+      +Date dueDate
+      +returnBook()
+    }
+    class Librarian {
+      +String employeeId
+      +checkOut()
+    }
+
+    Library *-- Branch
+    Branch *-- Catalog
+    Catalog o-- Book
+    Book --> Author : written by
+    Member --> Loan : borrows
+    Loan --> Book : references
+    Librarian --> Loan : processes
+    Branch o-- Librarian

@@ -1,0 +1,27 @@
+title = "Coral gitleaks policy"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "coral-synthetic-api-key"
+description = "Synthetic Coral credential used to prove the scanner gate"
+regex = '''CORAL_FAKE_[A-Z0-9]{24}'''
+keywords = ["CORAL_FAKE_"]
+
+[[allowlists]]
+description = "The committed synthetic fixture is scanned separately without this allowlist"
+paths = ['''scripts/fixtures/gitleaks/synthetic-secret\.txt''']
+
+[[allowlists]]
+description = "Credential-persistence browser tests use deliberately fake slice10-* values"
+targetRules = ["generic-api-key"]
+paths = ['''e2e/slice10-credential-persistence\.spec\.ts''']
+
+[[allowlists]]
+description = "Release compatibility labels and intercepted browser-test keys are non-credentials"
+targetRules = ["generic-api-key"]
+regexes = [
+  '''^published-0\.2\.4$''',
+  '''^intercepted-slice9[23]-key$''',
+]

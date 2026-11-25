@@ -1,0 +1,8 @@
+{
+  "originalFilename": "social-network-class.coral",
+  "defectType": "mislabeled-relationship",
+  "affectedNodeIds": ["NewsFeed", "User"],
+  "affectedEdgeIds": ["rel_17"],
+  "explanation": "The description says a User views a NewsFeed, with the NewsFeed-to-User association labeled \"views\". Here that label has been replaced with \"creates\" (the label that belongs on the Post-to-User association), so the diagram now claims a User authors the NewsFeed rather than consuming it.",
+  "outputFilename": "social-network-class-mislabeled-relationship-1.coral"
+}

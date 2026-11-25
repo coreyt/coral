@@ -1,0 +1,16 @@
+@diagram block
+producer block {
+  send port [direction: out, anchor: E]
+  receive port [direction: in, anchor: W]
+}
+processor block {
+  send port [direction: out, anchor: E]
+  receive port [direction: in, anchor: W]
+}
+sink block {
+  send port [direction: out, anchor: E]
+  receive port [direction: in, anchor: W]
+}
+producer:send -> processor:receive as "Work"
+processor:send -> sink:receive as "Output"
+sink:send -> producer:receive as "Feedback"

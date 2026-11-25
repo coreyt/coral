@@ -1,0 +1,8 @@
+@diagram bpmn
+begin startEvent
+work task as "Review"
+choice exclusiveGateway as "Approved?"
+done endEvent
+begin -> work
+work -> choice
+choice -> done [label: "Yes"]

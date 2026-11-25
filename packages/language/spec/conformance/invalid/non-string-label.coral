@@ -1,0 +1,4 @@
+service "API" as api
+database "Orders" as orders
+
+api -> orders [label: 3]

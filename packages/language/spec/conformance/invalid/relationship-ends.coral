@@ -1,0 +1,16 @@
+service "A"
+service "B"
+
+a -> b data {"sourceEnd":"bad"}
+a -> b data {"sourceEnd":{"label":"bad"}}
+a -> b data {"sourceEnd":{"role":""}}
+a -> b data {"sourceEnd":{"multiplicity":{"lower":1}}}
+a -> b data {"sourceEnd":{"multiplicity":{"lower":-1,"upper":1}}}
+a -> b data {"sourceEnd":{"multiplicity":{"lower":0,"upper":"many"}}}
+a -> b data {"sourceEnd":{"multiplicity":{"lower":2,"upper":1}}}
+a -> b data {"sourceEnd":{"navigability":"both"}}
+a -> b data {"sourceEnd":{"marker":{"kind":"arrow"}}}
+a -> b data {"sourceEnd":{"marker":{"fill":"open","kind":"dot"}}}
+a -> b data {"sourceEnd":{"marker":{"fill":"solid","kind":"arrow"}}}
+a -> b data {"sourceEnd":{"marker":{"fill":"filled","kind":"crow-foot"}}}
+a -> b data {"sourceEnd":{"marker":{"fill":"unspecified","kind":"one"},"multiplicity":{"lower":0,"upper":"*"}}}

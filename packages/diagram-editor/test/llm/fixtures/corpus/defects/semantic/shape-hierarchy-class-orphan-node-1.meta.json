@@ -1,0 +1,8 @@
+{
+  "originalFilename": "shape-hierarchy-class.coral",
+  "defectType": "orphan-node",
+  "affectedNodeIds": ["Triangle"],
+  "affectedEdgeIds": ["rel_3"],
+  "explanation": "The description states that Triangle is one of three subclasses that inherit from Shape, alongside Circle and Rectangle. Here the Triangle inheritance edge has been removed, leaving Triangle declared with its own area() override but disconnected from the hierarchy it is supposed to belong to.",
+  "outputFilename": "shape-hierarchy-class-orphan-node-1.coral"
+}

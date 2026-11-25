@@ -1,0 +1,8 @@
+{
+  "originalFilename": "payment-authorization-sequence.coral",
+  "defectType": "missing-expected-connector",
+  "affectedNodeIds": ["Bank", "Network"],
+  "affectedEdgeIds": ["msg_7"],
+  "explanation": "The description says the Card Network asks the Bank to verify funds and the Bank replies that funds are available before the Card Network sends back an authorization code; the 'funds available' reply (msg_7) is missing, so the Card Network issues an authorization code without ever hearing back from the Bank.",
+  "outputFilename": "payment-authorization-sequence-missing-expected-connector-1.coral"
+}

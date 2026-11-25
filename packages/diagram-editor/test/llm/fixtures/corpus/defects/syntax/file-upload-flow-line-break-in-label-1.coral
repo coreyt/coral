@@ -1,0 +1,16 @@
+@diagram architecture
+layout [direction: DOWN]
+User service as "User"
+UploadForm service as "File Upload Form"
+UploadAPI service as "Upload Service"
+VirusScanner service as "Virus Scanner Service"
+StorageBucket database as "Object Storage"
+NotifyService service as "Notification
+Service"
+
+edge_1 = User -> UploadForm as "selects file and submits"
+edge_2 = UploadForm -> UploadAPI as "send file"
+edge_3 = UploadAPI -> VirusScanner as "scan for malware"
+edge_4 = VirusScanner -> UploadAPI as "scan passed"
+edge_5 = UploadAPI -> StorageBucket as "store file"
+edge_6 = UploadAPI -> NotifyService as "send upload complete notice"

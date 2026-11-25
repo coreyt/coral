@@ -1,0 +1,8 @@
+@diagram architecture
+outer group {
+  api service {
+    output port [direction: out]
+  }
+  db database
+  send = api:output -> db
+}

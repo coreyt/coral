@@ -1,0 +1,1 @@
+Add a caching layer in front of the Product Service: a new "Cache" service that the API Gateway checks first, and a new "Cache Store" database that the Cache reads from. Keep the existing direct connection from the API Gateway to the Product Service as a fallback for cache misses.

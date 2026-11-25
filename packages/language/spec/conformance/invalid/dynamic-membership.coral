@@ -1,0 +1,6 @@
+group "Backend" as backend {
+  service "API" as api
+  service "Worker" as worker
+}
+
+arrange children of backend as row

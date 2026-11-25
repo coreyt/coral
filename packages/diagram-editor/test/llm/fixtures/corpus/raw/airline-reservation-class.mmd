@@ -1,0 +1,72 @@
+classDiagram
+class Airline {
+  +String name
+  +String iataCode
+}
+class Flight {
+  +String flightNumber
+  +DateTime departureTime
+}
+class Aircraft {
+  +String tailNumber
+  +String model
+}
+class Route {
+  +String routeCode
+  +int distanceKm
+}
+class Airport {
+  +String code
+  +String city
+}
+class Passenger {
+  +String name
+  +String passportNumber
+}
+class Reservation {
+  +String confirmationCode
+  +String status
+}
+class Ticket {
+  +String ticketNumber
+  +Decimal fare
+}
+class Seat {
+  +String seatNumber
+  +String cabinClass
+}
+class BoardingPass {
+  +String gate
+  +DateTime boardingTime
+}
+class Payment {
+  +Decimal amount
+  +String method
+}
+class Itinerary {
+  +String itineraryId
+  +int legCount
+}
+class CrewMember {
+  +String name
+  +String role
+}
+class LoyaltyAccount {
+  +String memberId
+  +int pointsBalance
+}
+Airline *-- Flight
+Flight --> Aircraft : uses
+Flight --> Route : follows
+Route --> Airport : origin
+Route --> Airport : destination
+Passenger --> Reservation : makes
+Reservation --> Flight : booked on
+Reservation *-- Ticket
+Ticket --> Seat : assigned
+Ticket --> BoardingPass : generates
+Reservation --> Payment : paid via
+Passenger --> Itinerary : receives
+Itinerary *-- Reservation
+Flight o-- CrewMember
+Passenger --> LoyaltyAccount : enrolled in

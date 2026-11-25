@@ -1,0 +1,27 @@
+classDiagram
+    class Shape {
+      +String color
+      +area()
+    }
+    class Circle {
+      +double radius
+      +area()
+    }
+    class Rectangle {
+      +double width
+      +double height
+      +area()
+    }
+    class Triangle {
+      +double base
+      +double height
+      +area()
+    }
+    class Canvas {
+      +addShape()
+    }
+
+    Shape <|-- Circle
+    Shape <|-- Rectangle
+    Shape <|-- Triangle
+    Canvas o-- Shape

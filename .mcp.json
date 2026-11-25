@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "coral": {
+      "command": "node",
+      "args": ["packages/mcp-server/dist/index.js"],
+      "description": "Coral diagram generation, validation, conversion, layout, and rendering"
+    }
+  }
+}

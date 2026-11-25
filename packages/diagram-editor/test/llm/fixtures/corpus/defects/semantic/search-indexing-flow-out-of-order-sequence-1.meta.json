@@ -1,0 +1,8 @@
+{
+  "originalFilename": "search-indexing-flow.coral",
+  "defectType": "out-of-order-sequence",
+  "affectedNodeIds": ["Crawler", "ParserService", "Tokenizer", "IndexBuilder"],
+  "affectedEdgeIds": ["edge_2", "edge_3", "edge_4"],
+  "explanation": "The description says the Crawler sends raw content to the Parser Service, which extracts text for the Tokenizer, which then emits tokens to the Index Builder. Here the Tokenizer and Parser Service are swapped in the indexing chain, so raw content is tokenized before any text has been extracted and the Parser Service is the one emitting tokens.",
+  "outputFilename": "search-indexing-flow-out-of-order-sequence-1.coral"
+}

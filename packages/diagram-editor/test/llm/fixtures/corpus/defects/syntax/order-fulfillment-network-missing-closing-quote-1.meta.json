@@ -1,0 +1,16 @@
+{
+  "originalFilename": "order-fulfillment-network.coral",
+  "originalDsl": "@diagram architecture\nlayout [direction: DOWN]\nCustomer service as \"Customer\"\nStoreFront service as \"Storefront App\"\nOrderService service as \"Order Service\"\nInventoryService service as \"Inventory Service\"\nWarehouseDB database as \"Warehouse Database\"\nPaymentService service as \"Payment Service\"\nFraudCheck service as \"Fraud Check Service\"\nPaymentGateway service as \"Payment Gateway\"\nWarehouseSystem service as \"Warehouse Management System\"\nPickPack service as \"Pick and Pack Station\"\nShippingService service as \"Shipping Service\"\nCarrier service as \"Carrier API\"\nTrackingService service as \"Tracking Service\"\nNotifyService service as \"Notification Service\"\nReturnsService service as \"Returns Service\"\nRefundService service as \"Refund Service\"\n\nedge_1 = Customer -> StoreFront as \"places order\"\nedge_2 = StoreFront -> OrderService as \"submit order\"\nedge_3 = OrderService -> InventoryService as \"check stock\"\nedge_4 = InventoryService -> WarehouseDB as \"read/write stock levels\"\nedge_5 = OrderService -> PaymentService as \"charge customer\"\nedge_6 = PaymentService -> FraudCheck as \"screen transaction\"\nedge_7 = PaymentService -> PaymentGateway as \"process payment\"\nedge_8 = OrderService -> WarehouseSystem as \"send fulfillment request\"\nedge_9 = WarehouseSystem -> PickPack as \"assign pick task\"\nedge_10 = PickPack -> ShippingService as \"package ready\"\nedge_11 = ShippingService -> Carrier as \"book shipment\"\nedge_12 = Carrier -> TrackingService as \"provide tracking number\"\nedge_13 = TrackingService -> NotifyService as \"send updates\"\nedge_14 = OrderService -> NotifyService as \"send confirmation\"\nedge_15 = Customer -> ReturnsService as \"request return\"\nedge_16 = ReturnsService -> RefundService as \"approve refund\"\nedge_17 = RefundService -> PaymentGateway as \"refund via\"\nedge_18 = ReturnsService -> InventoryService as \"restock item\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-quote",
+      "location": {
+        "line": 11,
+        "column": 55,
+        "charOffset": 437
+      },
+      "description": "removed closing quote on label \"Warehouse Management System\""
+    }
+  ],
+  "outputFilename": "order-fulfillment-network-missing-closing-quote-1.coral"
+}

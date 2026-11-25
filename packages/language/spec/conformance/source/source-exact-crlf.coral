@@ -1,0 +1,5 @@
+@diagram architecture
+// Keep authored comments and quotes
+api service as 'API'
+db database
+reads = api -> db [reads]

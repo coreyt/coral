@@ -1,0 +1,21 @@
+# Diamond - Rotated square for decisions/relationships
+id: diamond
+name: Diamond
+type: polygon
+viewBox: "0 0 100 100"
+path: "M 50,0 L 100,50 L 50,100 L 0,50 Z"
+defaultSize:
+  width: 100
+  height: 100
+parameters:
+  aspectRatio:
+    type: number
+    default: 1.0
+    min: 0.5
+    max: 2.0
+    description: Width to height ratio
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

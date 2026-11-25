@@ -1,0 +1,6 @@
+@diagram flowchart
+start terminal [variant: "start"]
+process process as "Validate input"
+finish terminal [variant: "end"]
+start -> process
+process -> finish

@@ -1,0 +1,107 @@
+name: Restore retained Coral Pages artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Exact Coral version embedded in the retained payload
+        required: true
+        type: string
+      commit:
+        description: Full source commit embedded in the retained payload
+        required: true
+        type: string
+      source_run_id:
+        description: Successful original pages.yml run ID
+        required: true
+        type: string
+      source_attempt:
+        description: Successful original pages.yml run attempt
+        required: true
+        type: string
+      source_artifact_id:
+        description: Exact retained github-pages artifact ID
+        required: true
+        type: string
+      source_artifact_digest:
+        description: Exact retained outer artifact sha256 digest
+        required: true
+        type: string
+      payload_sha256:
+        description: Exact retained artifact.tar sha256 digest
+        required: true
+        type: string
+
+permissions: {}
+
+concurrency:
+  group: coral-pages
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Validate retained source run and artifact
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RESTORE_VERSION: ${{ inputs.version }}
+          RESTORE_COMMIT: ${{ inputs.commit }}
+          RESTORE_SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          RESTORE_SOURCE_ATTEMPT: ${{ inputs.source_attempt }}
+          RESTORE_SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          RESTORE_SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+        run: node scripts/pages-restore.mjs source
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          repository: coreyt/coral
+          run-id: ${{ inputs.source_run_id }}
+          artifact-ids: ${{ inputs.source_artifact_id }}
+          merge-multiple: true
+          path: retained-pages
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify retained Pages payload without extraction
+        env:
+          RESTORE_VERSION: ${{ inputs.version }}
+          RESTORE_COMMIT: ${{ inputs.commit }}
+          RESTORE_PAYLOAD_SHA256: ${{ inputs.payload_sha256 }}
+        run: node scripts/pages-restore.mjs payload retained-pages/artifact.tar
+      - name: Relay exact retained Pages payload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: github-pages
+          path: retained-pages/artifact.tar
+          if-no-files-found: error
+          retention-days: 90
+          compression-level: 0
+
+  deploy:
+    if: ${{ needs.prepare.result == 'success' }}
+    needs: prepare
+    permissions:
+      actions: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: github-pages
+          path: relayed-pages
+      - name: Verify relayed payload bytes
+        env:
+          EXPECTED_SHA256: ${{ inputs.payload_sha256 }}
+        run: >-
+          node -e "const fs=require('node:fs');const c=require('node:crypto');
+          const d=c.createHash('sha256').update(fs.readFileSync('relayed-pages/artifact.tar')).digest('hex');
+          if(d!==process.env.EXPECTED_SHA256)throw new Error('Relayed Pages payload digest mismatch');"
+      - name: Deploy exact retained artifact
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

@@ -1,0 +1,23 @@
+{
+  "slug": "airline-reservation-class",
+  "reviews": [
+    {
+      "descriptionFile": "airline-reservation-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 14 classes and covers all 15 relationships, explicitly calling out that Route has two distinct labeled associations to Airport (origin and destination) rather than collapsing them into one."
+    },
+    {
+      "descriptionFile": "airline-reservation-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "States totals (14 classes, 15 relationships) then enumerates each relationship with its label, explicitly flagging the Route->Airport pair as two separate relationships to the same target class. Matches the .mmd exactly."
+    },
+    {
+      "descriptionFile": "airline-reservation-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from LoyaltyAccount and traces backward through Reservation/Ticket/Flight/Route/Airline. Verified all 14 classes and all 15 relationships are present, including both Route->Airport edges and the closing tally."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+service "A" {
+  port: 8080
+  ratio: 1e-7
+  enabled: true
+  "content-type": "json"
+}

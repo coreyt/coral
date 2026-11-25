@@ -1,0 +1,10 @@
+service "A" as a
+service "B" as b
+a (1) -> b data {"sourceEnd":{"multiplicity":{"lower":1,"upper":1}}}
+a -> b ("items") data {"targetEnd":{"marker":{"kind":"arrow","fill":"open"}}}
+a (diamond+ diamond- diamond) -> b
+a (1) (2) -> b
+a -> b data {"sourceEnd":{"marker":{"kind":"diamond","fill":"unspecified"}}}
+a -> b data {"targetEnd":{"role":"items"}}
+a (-1) (1) -> b
+a (1) -> b data {"sourceEnd":{"role":""}}

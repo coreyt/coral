@@ -1,0 +1,8 @@
+{
+  "caseId": "010-notation-erd",
+  "caseType": "notation",
+  "notationId": "erd",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "The bundled erd notation only maps 2 symbols (entity -> service, attribute -> module) -- this fixture stays within that vocabulary rather than assuming a full crow's-foot ER symbol set"
+}

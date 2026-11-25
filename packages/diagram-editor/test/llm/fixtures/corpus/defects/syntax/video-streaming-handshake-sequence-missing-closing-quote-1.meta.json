@@ -1,0 +1,16 @@
+{
+  "originalFilename": "video-streaming-handshake-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nViewer actor as \"Viewer\"\nPlayer participant as \"Client Player\"\nManifestService participant as \"Manifest Service\"\nLicenseServer participant as \"License Server\"\nCDNEdge participant as \"CDN Edge Node\"\nOriginServer participant as \"Origin Server\"\nAnalytics participant as \"Analytics Service\"\n\nmsg_1 = Viewer -#> Player as \"press play\"\nmsg_2 = Player -#> ManifestService as \"request manifest\"\nmsg_3 = ManifestService -.-> Player as \"manifest (available renditions)\"\nmsg_4 = Player -#> LicenseServer as \"request DRM license\"\nmsg_5 = LicenseServer -.-> Player as \"license granted\"\nmsg_6 = Player -#> CDNEdge as \"request video segment\"\nmsg_7 = CDNEdge -#> OriginServer as \"fetch segment (cache miss)\"\nmsg_8 = OriginServer -.-> CDNEdge as \"segment data\"\nmsg_9 = CDNEdge -.-> Player as \"segment data\"\nmsg_10 = Player -#> Analytics as \"report playback started\"\nmsg_11 = Player -#> CDNEdge as \"request next segment\"\nmsg_12 = CDNEdge -.-> Player as \"segment data (cache hit)\"\nmsg_13 = Player -#> Analytics as \"report buffering event\"\nmsg_14 = Player -.-> Viewer as \"render video frame\"\nmsg_15 = Player -#> Analytics as \"report playback progress\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-quote",
+      "location": {
+        "line": 7,
+        "column": 42,
+        "charOffset": 262
+      },
+      "description": "removed closing quote on label \"Origin Server\""
+    }
+  ],
+  "outputFilename": "video-streaming-handshake-sequence-missing-closing-quote-1.coral"
+}

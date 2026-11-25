@@ -1,0 +1,4 @@
+@diagram bpmn
+received startEvent
+work task
+received -> work

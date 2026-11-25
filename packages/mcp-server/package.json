@@ -1,0 +1,67 @@
+{
+  "name": "@coral-viz/mcp-server",
+  "version": "0.2.12",
+  "description": "MCP server for Coral diagram parsing, conversion, and layout",
+  "homepage": "https://coreyt.github.io/coral/",
+  "bugs": {
+    "url": "https://github.com/coreyt/coral/issues"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "coral-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "node ../../scripts/clean.mjs dist && tsc",
+    "prepack": "npm run build",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "mcp",
+    "coral",
+    "diagram",
+    "graph-ir",
+    "mermaid",
+    "graphviz",
+    "elk"
+  ],
+  "author": "",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyt/coral.git",
+    "directory": "packages/mcp-server"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "@coral-viz/language": "0.2.12",
+    "@coral-viz/render": "0.2.12",
+    "@graph-ir/core": "0.2.4",
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "elkjs": "0.12.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.5",
+    "@vitest/coverage-v8": "5.0.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

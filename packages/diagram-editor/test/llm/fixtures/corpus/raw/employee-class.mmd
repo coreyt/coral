@@ -1,0 +1,24 @@
+classDiagram
+    class Company {
+      +String name
+    }
+    class Department {
+      +String name
+    }
+    class Employee {
+      +String name
+      +String id
+      +calculatePay()
+    }
+    class Manager {
+      +manageTeam()
+    }
+    class Project {
+      +String title
+    }
+
+    Company *-- Department
+    Department o-- Employee
+    Employee <|-- Manager
+    Manager --> Department : leads
+    Employee --> Project : assigned to

@@ -1,0 +1,70 @@
+{
+  "version": "3.0.0",
+  "id": "uml-structured",
+  "metadata": { "notation": "uml-class" },
+  "profile": { "id": "uml", "kind": "class", "version": "1.0.0" },
+  "nodes": [
+    {
+      "id": "Order",
+      "type": "class",
+      "symbol": "uml-class",
+      "label": "Order",
+      "classifier": {
+        "kind": "class",
+        "name": "Order",
+        "modifiers": ["abstract"],
+        "compartments": [
+          { "id": "name", "kind": "name" },
+          { "id": "attributes", "kind": "attributes", "items": [
+            { "id": "attribute-1", "kind": "attribute", "visibility": "public", "name": "id", "type": "UUID", "modifiers": ["readonly"] }
+          ] },
+          { "id": "behavior", "kind": "operations", "items": [
+            { "id": "add-item", "kind": "operation", "visibility": "public", "name": "add", "parameters": [
+              { "name": "item", "type": "LineItem" },
+              { "name": "count", "type": "Int" }
+            ], "returnType": "Void" }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "Repository",
+      "type": "interface",
+      "symbol": "uml-interface",
+      "label": "Repository",
+      "classifier": {
+        "kind": "interface",
+        "name": "Repository",
+        "modifiers": ["abstract"],
+        "compartments": [
+          { "id": "name", "kind": "name" },
+          { "id": "operations", "kind": "operations", "items": [
+            { "id": "operation-1", "kind": "operation", "visibility": "public", "name": "save", "parameters": [
+              { "name": "order", "type": "Order" }
+            ], "returnType": "Void" }
+          ] }
+        ]
+      }
+    },
+    {
+      "id": "State",
+      "type": "enum",
+      "symbol": "uml-enum",
+      "label": "State",
+      "classifier": {
+        "kind": "enum",
+        "name": "State",
+        "compartments": [
+          { "id": "name", "kind": "name" },
+          { "id": "literals", "kind": "literals", "items": [
+            { "id": "literal-1", "kind": "literal", "name": "OPEN", "value": "open" },
+            { "id": "literal-2", "kind": "literal", "name": "CLOSED" }
+          ] }
+        ]
+      }
+    }
+  ],
+  "edges": [
+    { "id": "order_to_repository", "source": "Order", "target": "Repository", "type": "realization" }
+  ]
+}

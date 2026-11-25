@@ -1,0 +1,60 @@
+{
+  "version": "3.0.0",
+  "id": "field-spellings",
+  "nodes": [
+    {
+      "id": "api",
+      "type": "service",
+      "label": "API",
+      "position": {
+        "x": 10,
+        "y": 20
+      },
+      "pinned": true,
+      "description": "Entry point",
+      "dimensions": {
+        "height": 60,
+        "width": 120
+      },
+      "layoutOptions": {
+        "padding": {
+          "top": 4
+        }
+      },
+      "symbol": "gateway",
+      "variant": "primary"
+    },
+    {
+      "id": "orders",
+      "type": "database",
+      "label": "Orders"
+    }
+  ],
+  "edges": [
+    {
+      "id": "api_to_orders",
+      "source": "api",
+      "target": "orders",
+      "sourceEnd": { "multiplicity": { "lower": 1, "upper": 1 } },
+      "targetEnd": {},
+      "style": {
+        "lineStyle": "dashed"
+      },
+      "label": "writes",
+      "properties": {
+        "schema": {
+          "version": 2
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "author": "Coral",
+    "tags": [
+      "spelling"
+    ]
+  },
+  "layoutOptions": {
+    "direction": "RIGHT"
+  }
+}

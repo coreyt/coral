@@ -1,0 +1,51 @@
+@diagram architecture
+// Commerce network: source identities and group ownership stay exact.
+user actor as "Customer"
+admin actor as "Administrator"
+public_edge group as "Public edge" {
+  edge service as "Edge Gateway"
+  cdn service as "Content Delivery"
+  lb service as "Load Balancer"
+}
+application_tier group as "Application tier" {
+  api_a service as "Orders API"
+  api_b service as "Catalog API"
+  auth service as "Identity Service"
+  cache database as "Session Cache"
+  queue queue as "Work Queue"
+  worker service as "Fulfillment Worker"
+}
+object_store storage as "Object Storage"
+db_primary database as "Primary Database"
+db_replica database as "Read Replica"
+payments service as "Payments"
+audit database as "Audit Log"
+email service as "Email Service"
+metrics service as "Metrics"
+logs database as "Log Store"
+search service as "Search"
+
+customer_to_gateway = user -> public_edge.edge
+admin_to_gateway = admin -> public_edge.edge
+gateway_to_cdn = public_edge.edge -> public_edge.cdn
+gateway_to_lb = public_edge.edge -> public_edge.lb
+cdn_to_archive = public_edge.cdn -> object_store
+lb_to_orders = public_edge.lb -> application_tier.api_a
+lb_to_product = public_edge.lb -> application_tier.api_b
+orders_to_identity = application_tier.api_a -> application_tier.auth
+product_to_identity = application_tier.api_b -> application_tier.auth
+orders_to_cache = application_tier.api_a -> application_tier.cache
+product_to_cache = application_tier.api_b -> application_tier.cache
+orders_to_queue = application_tier.api_a -> application_tier.queue
+queue_to_worker = application_tier.queue -> application_tier.worker
+worker_to_primary = application_tier.worker -> db_primary
+primary_to_replica = db_primary -> db_replica
+worker_to_archive = application_tier.worker -> object_store
+orders_to_payments = application_tier.api_a -> payments
+payments_to_audit = payments -> audit
+worker_to_email = application_tier.worker -> email
+orders_to_metrics = application_tier.api_a -> metrics
+product_to_metrics = application_tier.api_b -> metrics
+worker_to_logs = application_tier.worker -> logs
+product_to_search = application_tier.api_b -> search
+search_to_replica = search -> db_replica

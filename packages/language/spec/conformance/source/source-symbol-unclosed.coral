@@ -1,0 +1,9 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol shield {
+  name "Shield"
+  size 48 x 56
+  artwork svg """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"/>
+}
+gate service [symbol: "local.shield"]

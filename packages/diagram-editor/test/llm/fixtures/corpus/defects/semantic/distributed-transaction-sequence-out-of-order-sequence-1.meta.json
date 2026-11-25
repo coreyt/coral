@@ -1,0 +1,8 @@
+{
+  "originalFilename": "distributed-transaction-sequence.coral",
+  "defectType": "out-of-order-sequence",
+  "affectedNodeIds": ["Coordinator", "OrderService"],
+  "affectedEdgeIds": ["msg_14"],
+  "explanation": "The description says the Coordinator only issues its \"commit\" instructions once all three services have voted commit, but msg_14 (\"commit\" to the Order Service) now occurs immediately after the Order Service's vote, before the Inventory and Payment services have even been sent their prepare messages, breaking the two-phase-commit ordering.",
+  "outputFilename": "distributed-transaction-sequence-out-of-order-sequence-1.coral"
+}

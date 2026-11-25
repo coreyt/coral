@@ -1,0 +1,67 @@
+{
+  "schema": "coral-on-device-model-manifest/1",
+  "modelId": "coralsmol-lfm230-r2f-q4",
+  "licence": "LFM Open License v1.0",
+  "source": {
+    "host": "huggingface.co",
+    "repository": "coreyt/coral-diagrams-lfm2.5-230m",
+    "revision": "bf57f7016a3c438d6fb1ac2a8f98430a19ce4b43"
+  },
+  "files": [
+    {
+      "path": "onnx/model_q4.onnx",
+      "bytes": 168413,
+      "sha256": "868bbf5bbf301e4f8ffd833b00ce11f0049cde1dafcec803e5c1972c3af36d20"
+    },
+    {
+      "path": "onnx/model_q4.onnx_data",
+      "bytes": 213651456,
+      "sha256": "7188ddeb38e09dc0ba83521259b3ccadc5dfec2258641f07eba63bf2e8f2d7d7"
+    },
+    {
+      "path": "tokenizer.json",
+      "bytes": 4733389,
+      "sha256": "df1d8d5ec5d091b460562ffd545e4a5e91d17d4a0db7ebe733be34ed374377bd"
+    },
+    {
+      "path": "tokenizer_config.json",
+      "bytes": 5521,
+      "sha256": "d3fb773637a9f403a3ced33b5e540023e04c72707650b3b54714e495521e53a1"
+    },
+    {
+      "path": "config.json",
+      "bytes": 1695,
+      "sha256": "f32262a6eee97f20668887c90e8efe609c0f5a539f42860085062a9b404207a5"
+    },
+    {
+      "path": "generation_config.json",
+      "bytes": 304,
+      "sha256": "5dc84e75f2e63831af022c7839bfeb2ac631e3ee07224db11f1bb0b97d46f56d"
+    },
+    {
+      "path": "chat_template.jinja",
+      "bytes": 4762,
+      "sha256": "c5b67247c9f736f6c40eaa91ae1ef27dc67f5b041eedaadb97a1bea5030fb0ff"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 10574,
+      "sha256": "30adf9d6478191fb87f2424f63ba0728598335aaf99cd2848ef17e8e545fe94b"
+    },
+    {
+      "path": "LICENSE.md",
+      "bytes": 306,
+      "sha256": "2f1c000105b4be9b76a8633e11d8ac6be78cf6bfe2dc9cc1b5eef9ac19e91dbb"
+    }
+  ],
+  "totalBytes": 218576420,
+  "contract": {
+    "format": "coralsmol-compact/3",
+    "plan": "coral-plan/1",
+    "sha256": "7551b5d8f5ce54a199e6600f8c0ce1d7e5f55a3513ecda1ca8e6ad88ac119181"
+  },
+  "tokenCaps": {
+    "input": 2048,
+    "output": 1024
+  }
+}

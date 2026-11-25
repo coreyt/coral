@@ -1,0 +1,23 @@
+@graph {"id":"slice92-erd","metadata":{"notation":"erd"},"name":"Publishing data"}
+
+database "USER" as USER {
+  attributes: ["int id PK","string username","string email"]
+}
+database "POST" as POST {
+  attributes: ["int id PK","string title","text body","datetime published_at"]
+}
+database "COMMENT" as COMMENT {
+  attributes: ["int id PK","text body","datetime created_at"]
+}
+database "REACTION" as REACTION {
+  attributes: ["int id PK","string emoji"]
+}
+database "CATEGORY" as CATEGORY {
+  attributes: ["int id PK","string name"]
+}
+
+USER -> POST as rel_1 [relationship, label: "authors", sourceCardinality: "||", targetCardinality: "o{"]
+USER -> COMMENT as rel_2 [relationship, label: "writes", sourceCardinality: "||", targetCardinality: "o{"]
+POST -> COMMENT as rel_3 [relationship, label: "receives", sourceCardinality: "||", targetCardinality: "o{"]
+POST -> REACTION as rel_4 [relationship, label: "receives", sourceCardinality: "||", targetCardinality: "o{"]
+POST -> CATEGORY as rel_5 [relationship, label: "belongs to", sourceCardinality: "}o", targetCardinality: "o{"]

@@ -1,0 +1,22 @@
+@diagram uml-class
+Customer class
+Order class {
+  fields = attributes {
+    orderId = public attribute id: String
+  }
+  actions = operations {
+    saveOp = public operation save(id: String): Boolean
+  }
+}
+LineItem class
+ExpressOrder class
+Payment class
+Shipment class
+customerOrders = Customer -- Order [association]
+orderItems = Order -- LineItem [composition, firstEnd: filledDiamond]
+inherits = ExpressOrder --|> Order [inheritance]
+paidBy = Order -- Payment [association]
+shipsAs = Order -- Shipment [association]
+customerPayment = Customer -- Payment [association]
+paymentShipment = Payment -- Shipment [association]
+itemShipment = LineItem -- Shipment [association]

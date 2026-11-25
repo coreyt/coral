@@ -1,0 +1,23 @@
+{
+  "slug": "search-indexing-flow",
+  "reviews": [
+    {
+      "descriptionFile": "search-indexing-flow.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 9 nodes and all 10 edges present, correctly splitting the diagram's two tracks: crawling/indexing (Crawler through Search Index) and querying (User through Query Service, Search Index, Ranking Service, back to User)."
+    },
+    {
+      "descriptionFile": "search-indexing-flow.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 9 nodes then all 10 edges in diagram order. Cross-checked; Search Index's dual role (written by Index Builder, read by Query Service) is correctly represented as two separate edges."
+    },
+    {
+      "descriptionFile": "search-indexing-flow.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Narrative explicitly separating the indexing track from the query track and ending at the User seeing results. Re-verified all 9 nodes and 10 edges are present with no fabricated connections."
+    }
+  ]
+}

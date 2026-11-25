@@ -1,0 +1,23 @@
+{
+  "slug": "ci-cd-pipeline",
+  "reviews": [
+    {
+      "descriptionFile": "ci-cd-pipeline.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 16 nodes and all 18 edges verified against the .mmd file, including the two easy-to-miss edges: the Container Registry pulling its image into the Integration Test Stage (parallel to the Security Scan Stage passing into it), and the CI Server reporting status directly to the Notification Service independent of the Monitoring Service alert path."
+    },
+    {
+      "descriptionFile": "ci-cd-pipeline.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 16 nodes up front, then all 18 edges in the same order as the diagram. Cross-checked; no omissions or fabricated stages."
+    },
+    {
+      "descriptionFile": "ci-cd-pipeline.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Narrative framing from the deployed/monitored end state. Re-verified the two dual-source edges into Integration Test Stage and the two independent paths into Notification Service are both preserved despite the non-enumerative prose."
+    }
+  ]
+}

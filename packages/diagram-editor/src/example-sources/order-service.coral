@@ -1,0 +1,9 @@
+@diagram architecture
+client service as "Web app" @ (0, 90)
+api service as "Orders API" @ (240, 90)
+orders database as "Orders" @ (480, 0)
+worker service as "Order worker" @ (480, 180)
+request = client -> api [sync] as "request"
+save = api -> orders [data] as "write"
+work = api -> worker [async] as "dispatch"
+update = worker -> orders [data] as "update"

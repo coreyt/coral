@@ -1,0 +1,23 @@
+{
+  "slug": "distributed-transaction-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "distributed-transaction-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological two-phase-commit walkthrough naming all 8 participants and all 17 messages in diagram order, correctly grouping the three parallel prepare/write/vote sub-sequences before the three commit instructions and final confirmation."
+    },
+    {
+      "descriptionFile": "distributed-transaction-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the final 'transaction committed' outcome and traces backward through all three prepare branches. Verified all 17 messages present: transaction committed, 3 commit instructions, 3 vote commits, 3 prepare instructions, 3 write-pending messages, 3 write ok replies, and begin transaction. All 8 participants named."
+    },
+    {
+      "descriptionFile": "distributed-transaction-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates the 8 components then describes each one's connections, grouping the three service-to-database pairs by their shared pattern. Cross-checked all 17 messages are represented (including all three vote commit messages, described collectively but accurately as occurring once per service before any commit). No invented messages."
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "name": "tree-sitter-coral",
+  "version": "0.2.12",
+  "description": "Tree-sitter grammar for Coral DSL",
+  "homepage": "https://coreyt.github.io/coral/",
+  "bugs": {
+    "url": "https://github.com/coreyt/coral/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyt/coral.git",
+    "directory": "packages/tree-sitter-coral"
+  },
+  "license": "Apache-2.0",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "keywords": [
+    "tree-sitter",
+    "parser",
+    "coral",
+    "diagram",
+    "dsl"
+  ],
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "bindings/node/*",
+    "queries/*",
+    "src/**",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "node-addon-api": "8.9.2",
+    "node-gyp-build": "4.8.4"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "0.27.0",
+    "prebuildify": "6.0.1"
+  },
+  "peerDependencies": {
+    "tree-sitter": "0.25.1"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "build": "tree-sitter generate && node-gyp rebuild && node ../../scripts/clean.mjs ../node_modules/node-addon-api",
+    "generate": "tree-sitter generate",
+    "prepack": "tree-sitter generate",
+    "test": "tree-sitter test",
+    "test:run": "npm run build && node ../../scripts/tree-sitter-test.mjs && npm run test:parity && npm run test:packed-028",
+    "test:parity": "node --test test/source-028-parity.test.mjs",
+    "test:packed-028": "node ../../scripts/verify-packed-tree-sitter.mjs",
+    "parse": "tree-sitter parse"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.coral",
+      "injection-regex": "^coral$",
+      "file-types": [
+        "coral"
+      ],
+      "highlights": "queries/highlights.scm"
+    }
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

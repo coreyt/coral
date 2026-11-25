@@ -1,0 +1,1 @@
+We are deprecating the legacy batch import path. Remove the "Legacy Importer" and "Legacy Queue" nodes entirely, and connect the Ingestion Service directly to the Data Warehouse instead.

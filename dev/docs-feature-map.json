@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "features": [
+    { "id": "install", "page": "docs/use/how-to/install-or-use-the-web-app.md", "evidence": "does not offer installation" },
+    { "id": "examples", "page": "docs/use/how-to/start-from-an-example.md", "evidence": "matching catalog edition" },
+    { "id": "create", "page": "docs/use/get-started.md", "evidence": "Create Node" },
+    { "id": "interface", "page": "docs/use/reference/interface-regions.md", "evidence": "DSL editor region" },
+    { "id": "edit", "page": "docs/use/how-to/place-and-edit-objects.md", "evidence": "Properties panel" },
+    { "id": "connect", "page": "docs/use/how-to/connect-and-route-objects.md", "evidence": "Create Edge" },
+    { "id": "layout", "page": "docs/use/how-to/lay-out-and-reflow.md", "evidence": "over 100 nodes" },
+    { "id": "history", "page": "docs/use/explain/history-and-undo.md", "evidence": "Source ownership boundaries" },
+    { "id": "notations", "page": "docs/use/reference/notations.md", "evidence": "## Data engineering {#data-engineering}" },
+    { "id": "dsl", "page": "docs/use/reference/coral-dsl.md", "evidence": "@diagram architecture" },
+    { "id": "keyboard", "page": "docs/use/how-to/use-coral-with-the-keyboard.md", "evidence": "Command palette" },
+    { "id": "preferences", "page": "docs/use/reference/preferences.md", "evidence":"Coral has no AI provider, transcript or voice settings." },
+    { "id": "files", "page": "docs/use/reference/file-and-export-formats.md", "evidence": ".coral.json" },
+    { "id": "recovery", "page": "docs/use/how-to/save-open-and-recover.md", "evidence": "Recover previous work" },
+    { "id": "export", "page": "docs/use/how-to/export-a-diagram.md", "evidence": "Non-Latin" },
+    { "id": "conversion", "page": "docs/use/reference/conversion-support.md", "evidence": "PlantUML" },
+    { "id": "ai", "page": "docs/use/how-to/generate-with-ai.md", "evidence":"available as an experimental release" },
+    { "id": "spatial", "page": "docs/use/how-to/lay-out-and-reflow.md", "evidence":"can also place and arrange" },
+    { "id": "voice", "page": "docs/use/how-to/use-voice-input.md", "evidence":"Composer voice input is not available." },
+    { "id": "privacy", "page": "docs/use/explain/privacy-and-storage.md", "evidence": "Network use" },
+    { "id": "accessibility", "page": "docs/use/explain/accessibility-status.md", "evidence": "experimental and untested" },
+    { "id": "support", "page": "docs/use/reference/troubleshooting.md", "evidence": "GitHub issues" },
+    { "id": "browser", "page": "docs/use/reference/browser-support.md", "evidence": "Coral is an online-hosted application" },
+    { "id": "troubleshooting", "page": "docs/use/reference/troubleshooting.md", "evidence": "Things that look wrong" }
+  ]
+}

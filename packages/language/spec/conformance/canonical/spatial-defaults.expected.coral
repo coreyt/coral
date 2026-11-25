@@ -1,0 +1,6 @@
+@graph {"id":"coral-graph"}
+
+service "API"
+database "Orders"
+
+constraint api_above: api above orders [preferred]

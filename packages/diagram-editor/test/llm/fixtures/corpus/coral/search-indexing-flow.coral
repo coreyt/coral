@@ -1,0 +1,22 @@
+@diagram architecture
+layout [direction: DOWN]
+ContentSource database as "Content Store"
+Crawler service as "Crawler Service"
+ParserService service as "Parser Service"
+Tokenizer service as "Tokenizer"
+IndexBuilder service as "Index Builder"
+SearchIndex database as "Search Index"
+User service as "User"
+QueryService service as "Query Service"
+RankingService service as "Ranking Service"
+
+edge_1 = Crawler -> ContentSource as "fetch documents"
+edge_2 = Crawler -> ParserService as "send raw content"
+edge_3 = ParserService -> Tokenizer as "extract text"
+edge_4 = Tokenizer -> IndexBuilder as "emit tokens"
+edge_5 = IndexBuilder -> SearchIndex as "write index"
+edge_6 = User -> QueryService as "submits search query"
+edge_7 = QueryService -> SearchIndex as "lookup terms"
+edge_8 = SearchIndex -> RankingService as "return matches"
+edge_9 = RankingService -> QueryService as "return ranked results"
+edge_10 = QueryService -> User as "display results"

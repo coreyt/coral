@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "boundaries": [
+    {
+      "id": "boundary-online",
+      "audiences": ["user", "contributor", "in-product", "release"],
+      "status": "supported",
+      "summary": "The application is online-hosted and has no installable or offline application mode.",
+      "limitations": ["The retained root sw.js only retires the 0.2.5 worker."],
+      "surfaces": [{
+        "name": "delivery",
+        "evidence": [
+          { "path": "scripts/offline-retirement.test.mjs", "caseId": "online delivery replaces active PWA" },
+          { "path": "e2e/slice30-online-delivery.spec.ts", "caseId": "production editor exposes online-only delivery" }
+        ]
+      }]
+    },
+    {
+      "id": "boundary-local-ownership",
+      "audiences": ["user", "in-product"],
+      "status": "supported",
+      "summary": "Documents, recovery state, and ordinary exports remain browser/file owned.",
+      "limitations": ["Clearing site data removes browser-owned recovery data."],
+      "surfaces": [{
+        "name": "local-ownership",
+        "evidence": [{ "path": "e2e/slice30-online-delivery.spec.ts", "caseId": "ordinary local save" }]
+      }]
+    },
+    {
+      "id": "boundary-network",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "LLM provider calls and first-load Whisper model loading require a network; ordinary editing does not upload a diagram.",
+      "limitations": ["Provider use sends explicitly submitted content to the selected provider.", "Whisper voice processing is local only after its model loads for that session."],
+      "surfaces": [{
+        "name": "network",
+        "evidence": [
+          { "path": "packages/diagram-editor/test/llm/generate.test.ts", "caseId": "calls fetch with correct provider request" },
+          { "path": "packages/diagram-editor/test/speech/whisperBackend.test.ts", "caseId": "creates worker and sends load message on start()" },
+          { "path": "packages/diagram-editor/test/speech/whisperCacheBoundary.test.ts", "caseId": "disables Transformers browser and WASM caching before pipeline creation" }
+        ]
+      }]
+    },
+    {
+      "id": "boundary-retired-offline",
+      "audiences": ["user", "contributor", "release"],
+      "status": "unsupported",
+      "summary": "Installing the app, restarting it offline, and downloading an application ZIP/checksum are not supported.",
+      "limitations": ["This does not remove local diagram files or SVG/PNG/JPEG/HTML exports."],
+      "surfaces": []
+    }
+  ],
+  "notations": [
+    {
+      "id": "notation-flowchart",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Request review example tests terminal, process, decision, start/end variants, and flow edges on canvas and SVG.",
+      "limitations": ["The tested example subset is smaller than the catalog."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-bpmn",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Approve invoice example tests start/end events, task, exclusive gateway, user glyph, and sequence edges.",
+      "limitations": ["This is not complete BPMN conformance."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-erd",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Customer orders example tests entity, relationship, attribute, primary-key variant, and endpoint multiplicity.",
+      "limitations": ["This is not a complete logical or physical data-modeling system."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-code",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Render call graph example tests module, class, function, variable, abstract/static variants, and containment.",
+      "limitations": ["It is a diagram vocabulary, not source-code analysis."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-architecture",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Service and database example tests actor, service, database, API glyph, sync, and data edges.",
+      "limitations": ["C4 and vendor-specific cloud icon sets are unsupported."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-aiml",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Model training example tests dataset, training, model, inference, and their training/inference edges.",
+      "limitations": ["The notation does not execute or inspect ML systems."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-data-engineering",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Batch pipeline example tests source, transform, quality, warehouse, sink, batch-flow, and quality edges.",
+      "limitations": ["The notation does not connect to data platforms or run pipelines."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-sketch",
+      "audiences": ["user", "in-product"],
+      "status": "partial",
+      "summary": "The Idea sketch example tests cloud, decision, step, and flow edges.",
+      "limitations": ["UI wireframes and freehand drawing are unsupported."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+    },
+    {
+      "id": "notation-uml-class",
+      "audiences": ["user", "in-product", "embedder"],
+      "status": "partial",
+      "summary": "Structured class, interface, enum, members, finite relationships, Mermaid import, canvas, SVG, and browser rendering are tested.",
+      "limitations": ["Complete UML 2.5, packages/templates, association classes, arbitrary stereotypes, UML export, and AI UML generation are unsupported."],
+      "surfaces": [{ "name": "coral-source", "evidence": [{ "path": "packages/language/test/uml-class.test.ts", "caseId": "parses structured classifiers and derives the profile" }] }, { "name": "import", "evidence": [{ "path": "packages/language/test/uml-class.test.ts", "caseId": "imports aliases, later declarations" }] }, { "name": "svg", "evidence": [{ "path": "packages/render/test/uml-class.test.ts", "caseId": "projects one classifier presentation into scene and SVG" }] }, { "name": "browser", "evidence": [{ "path": "packages/browser/test/render.test.ts", "caseId": "renders class and sequence notation through their shared scenes" }] }]
+    },
+    {
+      "id": "notation-uml-sequence",
+      "audiences": ["user", "in-product", "embedder"],
+      "status": "partial",
+      "summary": "Participants/actors, sync/async/return messages, activations, notes, flat loop/alt/opt fragments, Mermaid import, SVG, and browser rendering are tested.",
+      "limitations": ["Nested fragments, par/critical/break, groups, creation/destruction, authored note side/timeline placement, and complete Mermaid sequence compatibility are unsupported."],
+      "surfaces": [{ "name": "coral-source", "evidence": [{ "path": "packages/language/test/uml-sequence.test.ts", "caseId": "parses every supported entity into the GraphIR 3 interaction" }] }, { "name": "import", "evidence": [{ "path": "packages/language/test/mermaid-sequence.test.ts", "caseId": "maps the supported subset to the same structured interaction as Coral" }] }, { "name": "svg", "evidence": [{ "path": "packages/render/test/uml-sequence.test.ts", "caseId": "emits one accessible group per scene element" }] }, { "name": "browser", "evidence": [{ "path": "packages/browser/test/render.test.ts", "caseId": "renders class and sequence notation through their shared scenes" }] }]
+    }
+  ],
+  "packages": [
+    { "id": "package-language", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/language owns runtime Coral parsing, printing, import, diagnostics, and repair.", "limitations": ["Tree-sitter is separate syntax tooling."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/language" }] }] },
+    { "id": "package-render", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/render owns DOM-free layout and SVG/HTML rendering.", "limitations": ["Root renderSvg/renderHtml require supplied geometry; the svg-layout entry performs layout."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/render" }] }] },
+    { "id": "package-browser", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/browser renders Coral source through ESM/IIFE, DOM helpers, and a custom element without React/editor or implicit network use.", "limitations": ["Input is Coral source only; nothing scans or registers automatically."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/browser/test/bundle.test.ts", "caseId": "declares a complete, publishable manifest" }] }, { "name": "browser", "evidence": [{ "path": "e2e/slice80-browser-package.spec.ts", "caseId": "renderTo, scan, and the element render accessibly" }] }] },
+    { "id": "package-viz", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/viz supplies React 18/19 editing components and GraphIR/view helpers.", "limitations": ["The host owns file loading, persistence, layout orchestration, and sizing."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/viz" }] }] },
+    { "id": "package-mcp", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/mcp-server supplies six general diagram tools over MCP stdio.", "limitations": ["It is not a repository-indexing or codebase-specific server."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/mcp-server/test/stdio.test.ts", "caseId": "starts on stdio and identifies itself as Coral" }] }] },
+    { "id": "package-tree-sitter", "audiences": ["embedder"], "status": "partial", "summary": "tree-sitter-coral supplies native syntax tooling for the documented Language 1 subset.", "limitations": ["It compiles from source and does not own semantic validation, canonicalization, or repair."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "tree-sitter-coral" }] }] }
+  ],
+  "platforms": [
+    {"id": "platform-chrome-desktop", "audiences": ["user", "release"], "status": "supported", "summary": "Chrome desktop is the supported browser for the hosted web application; current source-owned Chromium journeys run with zero retries before publication.", "limitations": ["Web application only; no installation or offline shell."], "surfaces": [{"name": "platform", "evidence": [{"path": "e2e/acceptance028-source-owned.spec.ts", "caseId": "saved-header source owns a real editor edit, history, save, reopen, and exports"}, {"path": "e2e/acceptance028-network-source.spec.ts", "caseId": "twenty-node network keeps qualified identities through source edits and reopen"}]}]},
+    { "id": "platform-edge", "audiences": ["user", "release"], "status": "experimental", "summary": "Microsoft Edge desktop is experimental.", "limitations": ["No Edge-specific test evidence; no support claim is made."], "surfaces": [] },
+    { "id": "platform-safari", "audiences": ["user", "release"], "status": "experimental", "summary": "Safari desktop is experimental.", "limitations": ["Playwright WebKit is not Safari evidence; no support claim is made."], "surfaces": [] },
+    { "id": "platform-firefox", "audiences": ["user", "release"], "status": "experimental", "summary": "Firefox desktop is experimental as a web application.", "limitations": ["No Firefox test evidence; Coral cannot be installed from Firefox."], "surfaces": [] },
+    { "id": "platform-accessibility", "audiences": ["user", "release"], "status": "experimental", "summary": "Keyboard operation and NVDA/Windows and VoiceOver/Safari screen-reader compatibility are experimental.", "limitations": ["Keyboard paths are tested in Chromium; no real screen-reader evidence has been collected."], "surfaces": [] },
+    { "id": "platform-voice-input", "audiences": ["user", "release"], "status": "unsupported", "summary": "Composer voice is deferred to 0.2.10.", "limitations": ["Voice entry points are absent in 0.2.9."], "surfaces": [] },
+    { "id": "platform-native-packages", "audiences": ["embedder", "release"], "status": "supported", "summary": "The six packages install and load from the candidate tarballs on Linux x64, Windows x64, and macOS arm64 under Node.js 24.19.0 and 26.8.2.", "limitations": ["tree-sitter-coral compiles its native binding from source."], "surfaces": [{ "name": "platform", "evidence": [{ "path": "scripts/native-smoke.mjs", "caseId": "CORAL_EXPECT_PLATFORM" }] }] },
+    { "id": "platform-mobile", "audiences": ["user", "release"], "status": "unsupported", "summary": "Mobile browsers are unsupported.", "limitations": ["Desktop layout only."], "surfaces": [] }
+  ]
+}

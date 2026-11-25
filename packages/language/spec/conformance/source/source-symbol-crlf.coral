@@ -1,0 +1,11 @@
+@diagram flowchart
+@coralVersion "0.2.9"
+@symbol tick {
+  name "Tick"
+  size 16 x 16
+  outline ellipse
+  artwork svg """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><!-- // { } @symbol "x" --><path d="M2 8 L6 12 L14 4"/></svg>
+"""
+}
+check process [symbol: "local.tick"] as "Check"

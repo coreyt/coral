@@ -1,0 +1,8 @@
+{
+  "caseId": "014-notation-dataeng",
+  "caseType": "notation",
+  "notationId": "data-engineering",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2). notationId is 'data-engineering' (kebab-case), matching packages/render/src/notations/data-engineering.ts's real id -- an earlier draft of this fixture used the wrong camelCase id and was caught by design review",
+  "limitations": "Tests source/transform/warehouse/quality/dashboard vocabulary, not the data-engineering notation's full symbol set"
+}

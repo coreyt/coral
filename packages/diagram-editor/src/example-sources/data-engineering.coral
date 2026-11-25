@@ -1,0 +1,10 @@
+@diagram data-engineering
+source source [symbol: "data-source"] as "Source"
+transform transform [symbol: "data-transform"] as "Transform"
+quality quality [symbol: "data-quality"] as "Quality gate"
+warehouse warehouse [symbol: "data-warehouse"] as "Warehouse"
+sink sink [symbol: "data-sink"] as "Quarantine"
+sourceTransform = source -> transform [batchFlow]
+transformQuality = transform -> quality [batchFlow]
+qualityWarehouse = quality -> warehouse [quality] as "Pass"
+qualitySink = quality -> sink [quality] as "Fail"

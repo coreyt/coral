@@ -1,0 +1,9 @@
+@diagram uml-sequence
+client participant
+server participant
+cache participant
+request = client -#> server as "load()"
+retry = server -> server as "retry"
+lookup = server -> cache as "read"
+hit = cache -.-> server as "value"
+reply = server -.-> client as "done"

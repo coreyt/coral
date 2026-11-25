@@ -1,0 +1,100 @@
+@diagram uml-class
+User class as "User” {
+  attributes = attributes {
+    attribute_1 = public attribute username: String
+    attribute_2 = public attribute email: String
+  }
+}
+Profile class as "Profile" {
+  attributes = attributes {
+    attribute_1 = public attribute bio: String
+    attribute_2 = public attribute avatarUrl: String
+  }
+}
+Post class as "Post" {
+  attributes = attributes {
+    attribute_1 = public attribute text: String
+    attribute_2 = public attribute postedAt: DateTime
+  }
+}
+Comment class as "Comment" {
+  attributes = attributes {
+    attribute_1 = public attribute text: String
+    attribute_2 = public attribute postedAt: DateTime
+  }
+}
+Like class as "Like" {
+  attributes = attributes {
+    attribute_1 = public attribute likedAt: DateTime
+  }
+}
+Friendship class as "Friendship" {
+  attributes = attributes {
+    attribute_1 = public attribute connectedAt: DateTime
+    attribute_2 = public attribute status: String
+  }
+}
+Message class as "Message" {
+  attributes = attributes {
+    attribute_1 = public attribute text: String
+    attribute_2 = public attribute sentAt: DateTime
+  }
+}
+Conversation class as "Conversation" {
+  attributes = attributes {
+    attribute_1 = public attribute conversationId: String
+    attribute_2 = public attribute lastActivity: DateTime
+  }
+}
+Group class as "Group" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute description: String
+  }
+}
+GroupMembership class as "GroupMembership" {
+  attributes = attributes {
+    attribute_1 = public attribute joinedAt: DateTime
+    attribute_2 = public attribute role: String
+  }
+}
+Notification class as "Notification" {
+  attributes = attributes {
+    attribute_1 = public attribute message: String
+    attribute_2 = public attribute read: Boolean
+  }
+}
+Photo class as "Photo" {
+  attributes = attributes {
+    attribute_1 = public attribute url: String
+    attribute_2 = public attribute uploadedAt: DateTime
+  }
+}
+Album class as "Album" {
+  attributes = attributes {
+    attribute_1 = public attribute title: String
+  }
+}
+NewsFeed class as "NewsFeed" {
+  attributes = attributes {
+    attribute_1 = public attribute lastRefreshed: DateTime
+  }
+}
+
+rel_1 = User -- Profile [composition, firstEnd: filledDiamond]
+rel_2 = User --> Post [association] as "creates"
+rel_3 = Post -- Comment [composition, firstEnd: filledDiamond]
+rel_4 = Post -- Like [composition, firstEnd: filledDiamond]
+rel_5 = User --> Comment [association] as "writes"
+rel_6 = User --> Like [association] as "gives"
+rel_7 = User --> Friendship [association] as "initiates"
+rel_8 = Friendship --> User [association] as "connects to"
+rel_9 = User --> Message [association] as "sends"
+rel_10 = Message --> Conversation [association] as "belongs to"
+rel_11 = User --> Conversation [association] as "participates in"
+rel_12 = User --> GroupMembership [association] as "holds"
+rel_13 = GroupMembership --> Group [association] as "membership in"
+rel_14 = User --> Notification [association] as "receives"
+rel_15 = User -- Album [composition, firstEnd: filledDiamond]
+rel_16 = Album -- Photo [composition, firstEnd: filledDiamond]
+rel_17 = User --> NewsFeed [association] as "views"

@@ -1,0 +1,7 @@
+@diagram uml-class
+
+whole class as "Whole"
+part class as "Part"
+
+whole -- part [aggregation, firstEnd: diamond] as "owns"
+part -> whole [secondEnd: arrow] as "reports to"

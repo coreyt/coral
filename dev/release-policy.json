@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 3,
+  "protectedBranch": "main",
+  "requiredChecks": [
+    "classify",
+    "source-checks",
+    "candidate-packages",
+    "candidate-site",
+    "windows-risk",
+    "contracts",
+    "consumers",
+    "baseline-consumer",
+    "react-consumers",
+    "native-smoke",
+    "browser-smoke",
+    "unit",
+    "windows-product",
+    "e2e",
+    "online-delivery"
+  ],
+  "expectedPackages": [
+    "@coral-viz/language",
+    "@coral-viz/render",
+    "@coral-viz/browser",
+    "@coral-viz/viz",
+    "@coral-viz/mcp-server",
+    "tree-sitter-coral"
+  ],
+  "releaseRuntime": {
+    "node": "26.8.2",
+    "npm": "12.0.2"
+  },
+  "minimumRuntimeControl": {
+    "node": "24.19.0",
+    "npm": "12.0.2",
+    "artifactProducer": "candidate-packages"
+  },
+  "delivery": {
+    "target": "online-only",
+    "currentCheck": "online-delivery",
+    "finalCheck": "online-delivery",
+    "forbiddenOutputs": [
+      "manifest.webmanifest",
+      "registered-service-worker",
+      "offline-archive",
+      "archive-checksum"
+    ],
+    "sunsetWorker": { "path": "sw.js" }
+  },
+  "pages": {
+    "url": "https://coreyt.github.io/coral/",
+    "buildType": "workflow",
+    "repositoryVisibility": "public",
+    "siteVisibility": "public",
+    "httpsEnforced": true,
+    "environment": "github-pages",
+    "deploymentBranch": "main",
+    "artifactRetentionDays": 90
+  },
+  "npmPublisher": {
+    "workflow": ".github/workflows/publish.yml",
+    "accountMutationAuthorized": false
+  },
+  "githubReleaseJob": {
+    "permissions": { "contents": "write" },
+    "forbiddenPermissions": ["id-token: write", "pages: write"],
+    "requiresVerifiedNpmAndPagesResults": true,
+    "requiresImmutableReleaseSettingProof": true,
+    "requiresIndependentAssetDigests": true
+  },
+  "guardedMain": {
+    "state": "deferred",
+    "expectedChecks": [
+      "final-candidate"
+    ]
+  },
+  "ci": {
+    "aggregateContext": "final-candidate",
+    "candidateRef": "refs/heads/release/0.2.12",
+    "pathTiers": {
+      "docsAndReleaseRecords": {
+        "paths": ["dev/releases/**/*.md", "dev/archive/releases/**/*.md", "*.md"],
+        "excludedPaths": ["PLAN.md", "CLAUDE.md", "dev/releases/*/plan.md"],
+        "fullMatrix": false,
+        "requiredChecks": ["source-checks"]
+      }
+    },
+    "unknownBase": {
+      "events": ["workflow_dispatch", "new-branch-push", "base-outside-history"],
+      "fullMatrix": true
+    },
+    "finalCandidate": {
+      "exactSha": true,
+      "fullMatrix": true
+    },
+    "canaries": ["preview-origin", "performance-fixture-addressable"],
+    "retainedBrowserSmoke": ["escaped-source", "blank-diagram"]
+  },
+  "gitleaks": {
+    "version": "8.30.1",
+    "config": ".gitleaks.toml",
+    "fixture": "scripts/fixtures/gitleaks/synthetic-secret.txt"
+  }
+}

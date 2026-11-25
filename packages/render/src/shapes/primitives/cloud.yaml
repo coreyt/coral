@@ -1,0 +1,23 @@
+# Cloud - Cloud shape for external services
+id: cloud
+name: Cloud
+type: path
+viewBox: "0 0 120 80"
+# Cloud made of overlapping circles
+path: |
+  M 25,60
+  A 25,25 0 1 1 25,20
+  A 30,30 0 0 1 60,10
+  A 25,25 0 0 1 95,25
+  A 25,25 0 0 1 100,60
+  A 20,20 0 0 1 80,70
+  L 40,70
+  A 20,20 0 0 1 25,60 Z
+defaultSize:
+  width: 120
+  height: 80
+portAnchors:
+  - { side: NORTH, position: 0.5 }
+  - { side: SOUTH, position: 0.5 }
+  - { side: EAST, position: 0.5 }
+  - { side: WEST, position: 0.5 }

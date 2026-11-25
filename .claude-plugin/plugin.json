@@ -1,0 +1,8 @@
+{
+  "name": "coral",
+  "description": "Symbiotic diagramming toolchain - skills and agents for Coral DSL and Graph-IR",
+  "version": "0.1.0",
+  "author": {
+    "name": "Coral Team"
+  }
+}

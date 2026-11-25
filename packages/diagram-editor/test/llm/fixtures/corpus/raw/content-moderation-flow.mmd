@@ -1,0 +1,22 @@
+flowchart TD
+    User((User))
+    PostService[Post Service]
+    ModerationQueue[(Moderation Queue)]
+    AIClassifier[AI Content Classifier]
+    HumanReviewer((Human Reviewer))
+    PolicyEngine{Policy Engine}
+    PublishService[Publish Service]
+    NotifyService[Notification Service]
+    AppealService[Appeal Service]
+
+    User -->|submits post| PostService
+    PostService -->|enqueue for review| ModerationQueue
+    ModerationQueue -->|send to classifier| AIClassifier
+    AIClassifier -->|flag as uncertain| HumanReviewer
+    AIClassifier -->|auto-approve| PolicyEngine
+    HumanReviewer -->|submit decision| PolicyEngine
+    PolicyEngine -->|approve| PublishService
+    PolicyEngine -->|reject| NotifyService
+    PublishService -->|notify author| NotifyService
+    User -->|files appeal| AppealService
+    AppealService -->|re-queue for review| ModerationQueue

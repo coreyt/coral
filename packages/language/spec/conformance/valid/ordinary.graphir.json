@@ -1,0 +1,23 @@
+{
+  "version": "3.0.0",
+  "id": "orders",
+  "name": "Order flow",
+  "nodes": [
+    {
+      "id": "api",
+      "type": "service",
+      "label": "API",
+      "properties": { "technology": "TypeScript" }
+    },
+    { "id": "orders", "type": "database", "label": "Orders" }
+  ],
+  "edges": [
+    {
+      "id": "writes",
+      "source": "api",
+      "target": "orders",
+      "type": "data_flow",
+      "label": "writes"
+    }
+  ]
+}

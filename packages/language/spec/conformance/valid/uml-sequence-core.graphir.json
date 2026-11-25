@@ -1,0 +1,235 @@
+{
+  "version": "3.0.0",
+  "id": "sign-in",
+  "nodes": [
+    {
+      "id": "user",
+      "type": "actor",
+      "label": "User"
+    },
+    {
+      "id": "app",
+      "type": "participant",
+      "label": "App"
+    },
+    {
+      "id": "auth",
+      "type": "participant",
+      "label": "Auth"
+    }
+  ],
+  "edges": [
+    {
+      "id": "sign_in",
+      "source": "user",
+      "target": "app",
+      "type": "sync",
+      "label": "sign in"
+    },
+    {
+      "id": "verify",
+      "source": "app",
+      "target": "auth",
+      "type": "sync",
+      "label": "verify"
+    },
+    {
+      "id": "granted",
+      "source": "auth",
+      "target": "app",
+      "type": "return",
+      "label": "token"
+    },
+    {
+      "id": "denied",
+      "source": "auth",
+      "target": "app",
+      "type": "return",
+      "label": "denied"
+    },
+    {
+      "id": "render",
+      "source": "app",
+      "target": "app",
+      "type": "sync",
+      "label": "render"
+    },
+    {
+      "id": "notify",
+      "source": "app",
+      "target": "user",
+      "type": "async",
+      "label": "result"
+    }
+  ],
+  "metadata": {
+    "notation": "uml-sequence"
+  },
+  "profile": {
+    "id": "uml",
+    "kind": "sequence",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "participants": [
+      {
+        "id": "user",
+        "nodeId": "user"
+      },
+      {
+        "id": "app",
+        "nodeId": "app"
+      },
+      {
+        "id": "auth",
+        "nodeId": "auth"
+      }
+    ],
+    "participantOrder": [
+      "user",
+      "app",
+      "auth"
+    ],
+    "messages": [
+      {
+        "id": "sign_in",
+        "edgeId": "sign_in",
+        "sourceParticipantId": "user",
+        "targetParticipantId": "app",
+        "kind": "synchronous"
+      },
+      {
+        "id": "verify",
+        "edgeId": "verify",
+        "sourceParticipantId": "app",
+        "targetParticipantId": "auth",
+        "kind": "synchronous"
+      },
+      {
+        "id": "granted",
+        "edgeId": "granted",
+        "sourceParticipantId": "auth",
+        "targetParticipantId": "app",
+        "kind": "return"
+      },
+      {
+        "id": "denied",
+        "edgeId": "denied",
+        "sourceParticipantId": "auth",
+        "targetParticipantId": "app",
+        "kind": "return"
+      },
+      {
+        "id": "render",
+        "edgeId": "render",
+        "sourceParticipantId": "app",
+        "targetParticipantId": "app",
+        "kind": "synchronous"
+      },
+      {
+        "id": "notify",
+        "edgeId": "notify",
+        "sourceParticipantId": "app",
+        "targetParticipantId": "user",
+        "kind": "asynchronous"
+      }
+    ],
+    "messageOrder": [
+      "sign_in",
+      "verify",
+      "granted",
+      "denied",
+      "render",
+      "notify"
+    ],
+    "activations": [
+      {
+        "id": "busy",
+        "participantId": "app",
+        "startMessageId": "sign_in",
+        "endMessageId": "notify"
+      },
+      {
+        "participantId": "auth",
+        "startMessageId": "verify",
+        "endMessageId": "denied",
+        "id": "activation-2"
+      }
+    ],
+    "fragments": [
+      {
+        "id": "fragment-1",
+        "kind": "alt",
+        "operands": [
+          {
+            "id": "fragment-1-operand-1",
+            "guard": {
+              "id": "fragment-1-guard-1",
+              "text": "valid"
+            },
+            "messageIds": [
+              "granted"
+            ]
+          },
+          {
+            "id": "fragment-1-operand-2",
+            "guard": {
+              "id": "fragment-1-guard-2",
+              "text": "invalid"
+            },
+            "messageIds": [
+              "denied"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "pages",
+        "kind": "loop",
+        "operands": [
+          {
+            "id": "pages-operand-1",
+            "guard": {
+              "id": "pages-guard-1",
+              "text": "each page"
+            },
+            "messageIds": [
+              "render"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "fragment-3",
+        "kind": "opt",
+        "operands": [
+          {
+            "id": "fragment-3-operand-1",
+            "messageIds": [
+              "notify"
+            ]
+          }
+        ]
+      }
+    ],
+    "notes": [
+      {
+        "text": "Passwords are never logged",
+        "participantIds": [
+          "auth"
+        ],
+        "id": "note-1"
+      },
+      {
+        "text": "retried by the client",
+        "participantIds": [
+          "app"
+        ],
+        "messageIds": [
+          "verify"
+        ],
+        "id": "note-2"
+      }
+    ]
+  }
+}

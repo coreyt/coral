@@ -1,0 +1,27 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "backend",
+      "type": "group",
+      "label": "Backend",
+      "children": [
+        { "id": "api", "type": "service", "label": "API", "parent": "backend" },
+        { "id": "worker", "type": "service", "label": "Worker", "parent": "backend" },
+        { "id": "orders", "type": "database", "label": "Orders", "parent": "backend" }
+      ]
+    },
+    { "id": "ingress", "type": "service", "label": "Ingress" }
+  ],
+  "edges": [],
+  "constraints": [
+    { "id": "coral.constraint.relative.1", "kind": "relative", "strength": "required", "subject": { "kind": "node", "nodeId": "api" }, "relation": "left-of", "target": { "kind": "node", "nodeId": "orders" } },
+    { "id": "coral.constraint.boundary.2", "kind": "boundary", "strength": "required", "subject": { "kind": "node", "nodeId": "worker" }, "side": "bottom", "scope": { "kind": "node", "nodeId": "backend" } },
+    { "id": "coral.constraint.arrangement.3", "kind": "arrangement", "strength": "required", "subjects": [{ "kind": "node", "nodeId": "api" }, { "kind": "node", "nodeId": "worker" }, { "kind": "node", "nodeId": "orders" }], "axis": "column" },
+    { "id": "api_right", "kind": "relative", "strength": "preferred", "subject": { "kind": "node", "nodeId": "api" }, "relation": "right-of", "target": { "kind": "node", "nodeId": "worker" }, "gap": 12, "alignment": "end" },
+    { "id": "worker_below", "kind": "relative", "strength": "preferred", "subject": { "kind": "node", "nodeId": "worker" }, "relation": "below", "target": { "kind": "node", "nodeId": "api" } },
+    { "id": "ingress_top", "kind": "boundary", "strength": "preferred", "subject": { "kind": "node", "nodeId": "ingress" }, "side": "top", "scope": { "kind": "graph" }, "inset": 8 },
+    { "id": "worker_row", "kind": "arrangement", "strength": "preferred", "subjects": [{ "kind": "node", "nodeId": "api" }, { "kind": "node", "nodeId": "worker" }], "axis": "row", "direction": "reverse", "gap": 6, "alignment": "start" }
+  ]
+}

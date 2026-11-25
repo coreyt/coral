@@ -1,0 +1,40 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": [
+    "**/dist/**",
+    "**/coverage/**",
+    "packages/tree-sitter-coral/**"
+  ],
+  "workspaces": {
+    "packages/language": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "vitest": false
+    },
+    "packages/render": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "vitest": false
+    },
+    "packages/browser": {
+      "entry": ["src/index.ts", "scripts/build.mjs"],
+      "project": ["src/**/*.ts", "scripts/**/*.mjs"],
+      "vitest": false
+    },
+    "packages/viz": {
+      "entry": ["src/index.ts", "src/editor/index.ts", "src/layout/index.ts", "src/text-editor/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "vitest": false
+    },
+    "packages/diagram-editor": {
+      "entry": ["src/main.tsx", "src/speech/whisper.worker.ts", "src/onDeviceModel/index.ts", "src/onDeviceModel/model.worker.ts", "src/llm/plan/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"],
+      "vitest": false
+    },
+    "packages/mcp-server": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"],
+      "vitest": false
+    }
+  }
+}

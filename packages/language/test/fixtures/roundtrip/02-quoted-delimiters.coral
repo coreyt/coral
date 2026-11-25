@@ -1,0 +1,6 @@
+service as a
+service as b
+service as c
+service as d
+a -> b [http, label: "a, b"]
+c -> d [label: "x]y"]

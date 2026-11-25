@@ -1,0 +1,27 @@
+sequenceDiagram
+    actor Client
+    participant Coordinator as Transaction Coordinator
+    participant OrderService as Order Service
+    participant InventoryService as Inventory Service
+    participant PaymentService as Payment Service
+    participant OrderDB as Order Database
+    participant InventoryDB as Inventory Database
+    participant PaymentDB as Payment Database
+
+    Client->>Coordinator: begin transaction
+    Coordinator->>OrderService: prepare(order)
+    OrderService->>OrderDB: write pending order
+    OrderDB-->>OrderService: write ok
+    OrderService-->>Coordinator: vote commit
+    Coordinator->>InventoryService: prepare(reserve stock)
+    InventoryService->>InventoryDB: write pending reservation
+    InventoryDB-->>InventoryService: write ok
+    InventoryService-->>Coordinator: vote commit
+    Coordinator->>PaymentService: prepare(charge)
+    PaymentService->>PaymentDB: write pending charge
+    PaymentDB-->>PaymentService: write ok
+    PaymentService-->>Coordinator: vote commit
+    Coordinator->>OrderService: commit
+    Coordinator->>InventoryService: commit
+    Coordinator->>PaymentService: commit
+    Coordinator-->>Client: transaction committed

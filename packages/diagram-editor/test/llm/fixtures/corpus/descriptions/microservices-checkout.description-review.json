@@ -1,0 +1,23 @@
+{
+  "slug": "microservices-checkout",
+  "reviews": [
+    {
+      "descriptionFile": "microservices-checkout.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 11 nodes and all 11 edges accounted for, including both edges into User Database (from Auth Service and from User Service) which are easy to accidentally collapse into one. No invented components or connections."
+    },
+    {
+      "descriptionFile": "microservices-checkout.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 11 nodes up front then all 11 edges; cross-checked against the diagram, no omissions or fabrications. The dual User Database edges are again both present."
+    },
+    {
+      "descriptionFile": "microservices-checkout.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Narrative framing starting from the payment outcome. Verified all 11 nodes and all 11 edges are still named exactly once each despite the non-enumerative style; the 'four things happen off of' Order Service sentence correctly lists all four of its outgoing edges (Order Database, Inventory, Payment, Notification)."
+    }
+  ]
+}

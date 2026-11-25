@@ -1,0 +1,8 @@
+@diagram uml-sequence
+client participant
+api participant
+store participant
+request = client -#> api as "request"
+query = api -> store as "find"
+result = store -.-> api as "row"
+reply = api -.-> client as "done"

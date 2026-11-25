@@ -1,0 +1,8 @@
+{
+  "originalFilename": "ping-pong-sequence.coral",
+  "defectType": "orphan-node",
+  "affectedNodeIds": ["Logger"],
+  "affectedEdgeIds": ["msg_3", "msg_6"],
+  "explanation": "The description says that in each of the two rounds the Server also sends a message to the Logger recording the ping-pong latency; both of those messages (msg_3, msg_6) are gone, leaving the Logger declared as a participant but never sent or receiving anything.",
+  "outputFilename": "ping-pong-sequence-orphan-node-1.coral"
+}

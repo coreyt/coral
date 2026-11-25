@@ -1,0 +1,8 @@
+{
+  "originalFilename": "airline-reservation-class.coral",
+  "defectType": "mislabeled-relationship",
+  "affectedNodeIds": ["Airport", "Route"],
+  "affectedEdgeIds": ["rel_5"],
+  "explanation": "The description says Route has two separate associations to Airport, one labeled \"origin\" and one labeled \"destination\". Edge rel_5 has been relabeled from \"destination\" to \"origin\", so the diagram now shows two origin airports and no destination.",
+  "outputFilename": "airline-reservation-class-mislabeled-relationship-1.coral"
+}

@@ -1,0 +1,38 @@
+@diagram uml-class
+Vehicle class as "Vehicle" {
+  attributes = attributes {
+    attribute_1 = public attribute make: String
+    attribute_2 = public attribute model: String
+  }
+  operations = operations {
+    operation_1 = public operation start()
+  }
+}
+Car class as "Car" {
+  attributes = attributes {
+    attribute_1 = public attribute numDoors: int
+  }
+}
+Motorcycle class as "Motorcycle" {
+  attributes = attributes {
+    attribute_1 = public attribute hasSidecar: boolean
+  }
+}
+Engine class as "Engine" {
+  attributes = attributes {
+    attribute_1 = public attribute horsepower: int
+  }
+  operations = operations {
+    operation_1 = public operation ignite()
+  }
+}
+Owner class as "Owner" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+  }
+}
+
+rel_1 = Car --|> Vehicle [inheritance]
+rel_2 = Motorcycle --|> Vehicle [inheritance]
+rel_3 = Vehicle -- Engine [composition, firstEnd: filledDiamond]
+rel_4 = Owner --> Vehicle [association] as "owns"

@@ -1,0 +1,1 @@
+Create an ER diagram with two entities, Customer and Order. Customer has an attribute "Email". Order has an attribute "Total". Customer places Order.

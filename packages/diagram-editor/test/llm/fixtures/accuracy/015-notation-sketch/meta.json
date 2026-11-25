@@ -1,0 +1,8 @@
+{
+  "caseId": "015-notation-sketch",
+  "caseType": "notation",
+  "notationId": "sketch",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2). The sketch notation has no notation-specific symbol vocabulary (composeNotationReference('sketch') returns an empty string, and getValidTypesForNotation('sketch') returns only the 6 base types) -- this fixture deliberately uses generic base-type language rather than inventing a sketch-specific prompt vocabulary that doesn't exist in the codebase",
+  "limitations": "Since sketch has no notation-specific vocabulary, this fixture mainly confirms lintAgainstNotation('sketch') never rejects ordinary base-type output rather than testing genuinely sketch-specific behavior"
+}

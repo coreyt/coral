@@ -1,0 +1,4 @@
+@diagram architecture
+alpha service as "Alpha Payment Processing Service"
+beta database as "Beta"
+alpha -> beta [data] as "Persists"

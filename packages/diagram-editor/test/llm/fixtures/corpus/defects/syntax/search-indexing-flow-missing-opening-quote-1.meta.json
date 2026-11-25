@@ -1,0 +1,16 @@
+{
+  "originalFilename": "search-indexing-flow.coral",
+  "originalDsl": "@diagram architecture\nlayout [direction: DOWN]\nContentSource database as \"Content Store\"\nCrawler service as \"Crawler Service\"\nParserService service as \"Parser Service\"\nTokenizer service as \"Tokenizer\"\nIndexBuilder service as \"Index Builder\"\nSearchIndex database as \"Search Index\"\nUser service as \"User\"\nQueryService service as \"Query Service\"\nRankingService service as \"Ranking Service\"\n\nedge_1 = Crawler -> ContentSource as \"fetch documents\"\nedge_2 = Crawler -> ParserService as \"send raw content\"\nedge_3 = ParserService -> Tokenizer as \"extract text\"\nedge_4 = Tokenizer -> IndexBuilder as \"emit tokens\"\nedge_5 = IndexBuilder -> SearchIndex as \"write index\"\nedge_6 = User -> QueryService as \"submits search query\"\nedge_7 = QueryService -> SearchIndex as \"lookup terms\"\nedge_8 = SearchIndex -> RankingService as \"return matches\"\nedge_9 = RankingService -> QueryService as \"return ranked results\"\nedge_10 = QueryService -> User as \"display results\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-quote",
+      "location": {
+        "line": 7,
+        "column": 24,
+        "charOffset": 225
+      },
+      "description": "removed opening quote on label \"Index Builder\""
+    }
+  ],
+  "outputFilename": "search-indexing-flow-missing-opening-quote-1.coral"
+}

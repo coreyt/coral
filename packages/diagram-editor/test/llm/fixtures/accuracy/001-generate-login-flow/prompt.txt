@@ -1,0 +1,1 @@
+Create a login flow diagram: a user submits credentials to a login form, which validates them against an auth service. If the credentials are valid, the user reaches a dashboard. If invalid, show an error message and let the user retry the login form.

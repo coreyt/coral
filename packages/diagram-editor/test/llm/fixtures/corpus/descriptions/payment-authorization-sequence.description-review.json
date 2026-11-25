@@ -1,0 +1,23 @@
+{
+  "slug": "payment-authorization-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "payment-authorization-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological walkthrough naming all 6 participants (Customer, Checkout Service, Payment Gateway, Fraud Service, Card Network, Bank) and all 10 messages in diagram order, including the risk check and fund verification steps. No invented content."
+    },
+    {
+      "descriptionFile": "payment-authorization-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the end state (order confirmed) and traces causally backward to the initial submission. Verified all 10 messages are named despite the reverse ordering: order confirmed, payment authorized, authorization code, verify funds/funds available, risk score: low, submit payment details, authorize(amount, card token). All 6 participants appear."
+    },
+    {
+      "descriptionFile": "payment-authorization-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates components first, then connections per participant. Cross-checked each of the 10 messages appears exactly once attached to the correct participant pair; no duplicated or invented messages. All 6 participants named."
+    }
+  ]
+}

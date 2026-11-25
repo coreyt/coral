@@ -1,0 +1,56 @@
+@diagram flowchart
+
+s1 process as "Step 1"
+s2 process as "Step 2"
+s3 process as "Step 3"
+s4 process as "Step 4"
+s5 process as "Step 5"
+s6 decision as "Step 6"
+s7 process as "Step 7"
+s8 process as "Step 8"
+s9 process as "Step 9"
+s10 process as "Step 10"
+s11 process as "Step 11"
+s12 decision as "Step 12"
+s13 process as "Step 13"
+s14 process as "Step 14"
+s15 process as "Step 15"
+s16 process as "Step 16"
+s17 process as "Step 17"
+s18 decision as "Step 18"
+s19 process as "Step 19"
+s20 process as "Step 20"
+s21 process as "Step 21"
+s22 process as "Step 22"
+s23 process as "Step 23"
+s24 decision as "Step 24"
+s25 process as "Step 25"
+
+s1 -> s2 [flow]
+s2 -> s3 [flow]
+s3 -> s4 [flow]
+s4 -> s5 [flow]
+s5 -> s6 [flow]
+s6 -> s7 [flow]
+s7 -> s8 [flow]
+s8 -> s9 [flow]
+s9 -> s10 [flow]
+s10 -> s11 [flow]
+s11 -> s12 [flow]
+s12 -> s13 [flow]
+s13 -> s14 [flow]
+s14 -> s15 [flow]
+s15 -> s16 [flow]
+s16 -> s17 [flow]
+s17 -> s18 [flow]
+s18 -> s19 [flow]
+s19 -> s20 [flow]
+s20 -> s21 [flow]
+s21 -> s22 [flow]
+s22 -> s23 [flow]
+s23 -> s24 [flow]
+s24 -> s25 [flow]
+s6 -> s2 [flow] as "retry"
+s12 -> s8 [flow] as "retry"
+s18 -> s14 [flow] as "retry"
+s24 -> s20 [flow] as "retry"

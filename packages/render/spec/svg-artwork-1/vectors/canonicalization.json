@@ -1,0 +1,171 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "canonical-design-example",
+      "description": "The approved design example artwork is admissible but not canonical.",
+      "covers": [
+        "canonical:noncanonical-input",
+        "canonical:design-example"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 28\">\n  <path d=\"M12 0 L24 4 L24 14 C24 21 18 26 12 28 C6 26 0 21 0 14 L0 4 Z\" fill=\"#2f6f4f\"/>\n</svg>\n",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 28\">\n  <path d=\"M 12 0 L 24 4 L 24 14 C 24 21 18 26 12 28 C 6 26 0 21 0 14 L 0 4 Z\" fill=\"#2f6f4f\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-idempotent",
+      "description": "Canonical text is admitted unchanged.",
+      "covers": [
+        "canonical:idempotent"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 28\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"0%\" y2=\"100%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#2f6f4f\" stop-opacity=\"1\"/>\n      <stop offset=\"1\" stop-color=\"#1b4030\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n      <circle cx=\"12\" cy=\"12\" r=\"11\"/>\n    </clipPath>\n  </defs>\n  <g transform=\"translate(0 1)\" clip-path=\"url(#c1)\" opacity=\"0.9\">\n    <path d=\"M 12 0 L 24 4 L 24 14 C 24 21 18 26 12 28 C 6 26 0 21 0 14 L 0 4 Z\" fill=\"url(#p1)\" stroke=\"#ffffff\" stroke-width=\"0.5\" stroke-linejoin=\"round\" opacity=\"1\"/>\n    <g/>\n  </g>\n</svg>\n",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": true,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 28\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"0%\" y2=\"100%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#2f6f4f\" stop-opacity=\"1\"/>\n      <stop offset=\"1\" stop-color=\"#1b4030\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n      <circle cx=\"12\" cy=\"12\" r=\"11\"/>\n    </clipPath>\n  </defs>\n  <g transform=\"translate(0 1)\" clip-path=\"url(#c1)\" opacity=\"0.9\">\n    <path d=\"M 12 0 L 24 4 L 24 14 C 24 21 18 26 12 28 C 6 26 0 21 0 14 L 0 4 Z\" fill=\"url(#p1)\" stroke=\"#ffffff\" stroke-width=\"0.5\" stroke-linejoin=\"round\" opacity=\"1\"/>\n    <g/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-hand-written",
+      "description": "Hand-written, admissible, noncanonical input: XML declaration, comment, single quotes, attribute order, root size attributes, ids, a character reference, px units, style declarations and lowercase z.",
+      "covers": [
+        "canonical:noncanonical-input",
+        "root:dimensions-removed",
+        "discard:comment",
+        "discard:xml-declaration",
+        "discard:ids",
+        "xml:character-reference",
+        "style:attribute"
+      ],
+      "input": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- Drawn by hand -->\n<svg width='48px' height=\"48\" viewBox=\" 0,0 24  28 \" preserveAspectRatio=\"none\" version=\"1.1\"\n     xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns=\"http://www.w3.org/2000/svg\">\n  <title>Shield &amp; key</title>\n  <g id=\"layer1\" fill=\"#2F6F4F\">\n    <path id=\"body\" style=\"stroke: #000 ; stroke-width:1.50\" d=\"M12,0 L24,4 L24,14 C24,21 18,26 12,28 C6,26 0,21 0,14 L0,4 z\" />\n    <circle r='2' cx=\"12\" cy=\"12.0\" fill=\"&#x23;ffffff\"/>\n  </g>\n</svg>\n",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 28\">\n  <g>\n    <path d=\"M 12 0 L 24 4 L 24 14 C 24 21 18 26 12 28 C 6 26 0 21 0 14 L 0 4 z\" fill=\"#2f6f4f\" stroke=\"#000000\" stroke-width=\"1.5\" opacity=\"1\"/>\n    <circle cx=\"12\" cy=\"12\" r=\"2\" fill=\"#ffffff\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-crlf-input",
+      "description": "CR LF and lone CR line ends, including inside an attribute value, are normalized.",
+      "covers": [
+        "canonical:crlf"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\r\n  <path d=\"M0 0\r\nL1 1\rL2 2\"/>\r\n</svg>\r\n",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 L 1 1 L 2 2\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-numbers",
+      "description": "Number formatting: sign, leading and trailing dot, exponents, negative zero and trailing zeros.",
+      "covers": [
+        "canonical:numbers"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M+3 .5L1e2 -0L0.10 1E-7L-.5e1 2.50L1. 0.000001L0.30000000000000004 123.456000\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 3 0.5 L 100 0 L 0.1 1e-7 L -5 2.5 L 1 0.000001 L 0.30000000000000004 123.456\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-initial-values-omitted",
+      "description": "Optional paint properties equal to their initial values are not written.",
+      "covers": [
+        "canonical:initial-values"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill-opacity=\"1\" fill-rule=\"NonZero\" stroke-opacity=\"1.0\" stroke-linecap=\"butt\" stroke-linejoin=\"miter\" stroke-miterlimit=\"4\" stroke-dasharray=\"none\" stroke-dashoffset=\"0\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-ids-renumbered",
+      "description": "IDs follow first reference (clip-path, fill, stroke per element), not declaration order; unreferenced servers and clips are dropped; one server used twice keeps one ID.",
+      "covers": [
+        "canonical:ids",
+        "discard:unreferenced"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><defs><linearGradient id=\"a\"><stop offset=\"0\" stop-color=\"#111\"/></linearGradient><linearGradient id=\"b\"><stop offset=\"0\" stop-color=\"#222\"/></linearGradient><linearGradient id=\"unused\"/><clipPath id=\"spare\"><circle r=\"1\"/></clipPath></defs><path id=\"first\" d=\"M0 0H1\" fill=\"url(#b)\" stroke=\"url(#a)\"/><path d=\"M0 0H2\" fill=\"url(#a)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#222222\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p2\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#111111\" stop-opacity=\"1\"/>\n    </linearGradient>\n  </defs>\n  <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"url(#p2)\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 2\" fill=\"url(#p2)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-defs-order",
+      "description": "Defs list paint servers before clip paths; a clip reference is visited before fill.",
+      "covers": [
+        "canonical:defs-order"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"k\"><rect width=\"10\" height=\"10\"/></clipPath><linearGradient id=\"g\"/><path d=\"M0 0H1\" clip-path=\"url(#k)\" fill=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\"/>\n    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"10\" height=\"10\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n  </defs>\n  <path d=\"M 0 0 H 1\" clip-path=\"url(#c1)\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-ids-numeric-order",
+      "description": "Eleven paint servers and eleven clip paths, declared in reverse, are written in ascending numeric ID order (p2 before p10), which is the order of first reference.",
+      "covers": [
+        "canonical:ids-numeric-order"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g11\"><stop offset=\"0\" stop-color=\"#00000b\"/></linearGradient><clipPath id=\"k11\"><rect width=\"11\" height=\"1\"/></clipPath><linearGradient id=\"g10\"><stop offset=\"0\" stop-color=\"#00000a\"/></linearGradient><clipPath id=\"k10\"><rect width=\"10\" height=\"1\"/></clipPath><linearGradient id=\"g9\"><stop offset=\"0\" stop-color=\"#000009\"/></linearGradient><clipPath id=\"k9\"><rect width=\"9\" height=\"1\"/></clipPath><linearGradient id=\"g8\"><stop offset=\"0\" stop-color=\"#000008\"/></linearGradient><clipPath id=\"k8\"><rect width=\"8\" height=\"1\"/></clipPath><linearGradient id=\"g7\"><stop offset=\"0\" stop-color=\"#000007\"/></linearGradient><clipPath id=\"k7\"><rect width=\"7\" height=\"1\"/></clipPath><linearGradient id=\"g6\"><stop offset=\"0\" stop-color=\"#000006\"/></linearGradient><clipPath id=\"k6\"><rect width=\"6\" height=\"1\"/></clipPath><linearGradient id=\"g5\"><stop offset=\"0\" stop-color=\"#000005\"/></linearGradient><clipPath id=\"k5\"><rect width=\"5\" height=\"1\"/></clipPath><linearGradient id=\"g4\"><stop offset=\"0\" stop-color=\"#000004\"/></linearGradient><clipPath id=\"k4\"><rect width=\"4\" height=\"1\"/></clipPath><linearGradient id=\"g3\"><stop offset=\"0\" stop-color=\"#000003\"/></linearGradient><clipPath id=\"k3\"><rect width=\"3\" height=\"1\"/></clipPath><linearGradient id=\"g2\"><stop offset=\"0\" stop-color=\"#000002\"/></linearGradient><clipPath id=\"k2\"><rect width=\"2\" height=\"1\"/></clipPath><linearGradient id=\"g1\"><stop offset=\"0\" stop-color=\"#000001\"/></linearGradient><clipPath id=\"k1\"><rect width=\"1\" height=\"1\"/></clipPath><path d=\"M0 0H1\" clip-path=\"url(#k1)\" fill=\"url(#g1)\"/><path d=\"M0 0H2\" clip-path=\"url(#k2)\" fill=\"url(#g2)\"/><path d=\"M0 0H3\" clip-path=\"url(#k3)\" fill=\"url(#g3)\"/><path d=\"M0 0H4\" clip-path=\"url(#k4)\" fill=\"url(#g4)\"/><path d=\"M0 0H5\" clip-path=\"url(#k5)\" fill=\"url(#g5)\"/><path d=\"M0 0H6\" clip-path=\"url(#k6)\" fill=\"url(#g6)\"/><path d=\"M0 0H7\" clip-path=\"url(#k7)\" fill=\"url(#g7)\"/><path d=\"M0 0H8\" clip-path=\"url(#k8)\" fill=\"url(#g8)\"/><path d=\"M0 0H9\" clip-path=\"url(#k9)\" fill=\"url(#g9)\"/><path d=\"M0 0H10\" clip-path=\"url(#k10)\" fill=\"url(#g10)\"/><path d=\"M0 0H11\" clip-path=\"url(#k11)\" fill=\"url(#g11)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000001\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p2\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000002\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p3\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000003\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p4\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000004\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p5\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000005\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p6\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000006\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p7\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000007\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p8\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000008\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p9\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000009\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p10\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#00000a\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <linearGradient id=\"p11\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#00000b\" stop-opacity=\"1\"/>\n    </linearGradient>\n    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"1\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c2\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"2\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c3\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"3\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c4\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"4\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c5\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"5\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c6\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"6\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c7\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"7\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c8\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"8\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c9\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"9\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c10\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"10\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n    <clipPath id=\"c11\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"11\" height=\"1\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n  </defs>\n  <path d=\"M 0 0 H 1\" clip-path=\"url(#c1)\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 2\" clip-path=\"url(#c2)\" fill=\"url(#p2)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 3\" clip-path=\"url(#c3)\" fill=\"url(#p3)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 4\" clip-path=\"url(#c4)\" fill=\"url(#p4)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 5\" clip-path=\"url(#c5)\" fill=\"url(#p5)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 6\" clip-path=\"url(#c6)\" fill=\"url(#p6)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 7\" clip-path=\"url(#c7)\" fill=\"url(#p7)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 8\" clip-path=\"url(#c8)\" fill=\"url(#p8)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 9\" clip-path=\"url(#c9)\" fill=\"url(#p9)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 10\" clip-path=\"url(#c10)\" fill=\"url(#p10)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 11\" clip-path=\"url(#c11)\" fill=\"url(#p11)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-empty-groups",
+      "description": "Empty groups are kept and self-closed; an empty transform list is omitted.",
+      "covers": [
+        "canonical:empty-group"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g></g><g transform=\"\"> </g><g><g/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g/>\n  <g/>\n  <g>\n    <g/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "canonical-empty-artwork",
+      "description": "An artwork with no content keeps a start and end root tag.",
+      "covers": [
+        "canonical:empty-artwork"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1 1\"/>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1 1\">\n</svg>\n"
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+@diagram uml-sequence
+client participant
+server participant
+before = client -> server
+choice = alt "valid" {
+  call = client -> server
+  retry = alt "again" {
+    nested = server -> client
+  } else "stop" {
+    stopped = client -> server
+  }
+} else "invalid" {
+  rejected = server -> client
+}
+after = server -> client

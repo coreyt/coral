@@ -1,0 +1,4 @@
+@diagram erd
+customer entity
+order entity
+orders = customer -- order [relationship, firstEnd: one, secondEnd: zeroOrMany] as "places"

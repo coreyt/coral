@@ -1,0 +1,18 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol early {
+  name "Early"
+  size 1 x 1
+  artwork svg """
+<svg viewBox="0 0 1 1"/>
+"""
+}
+@conformanceLevel strict
+gate service
+@symbol late {
+  name "Late"
+  size 1 x 1
+  artwork svg """
+<svg viewBox="0 0 1 1"/>
+"""
+}

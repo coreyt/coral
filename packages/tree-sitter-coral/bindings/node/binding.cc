@@ -1,0 +1,21 @@
+#include <napi.h>
+
+typedef struct TSLanguage TSLanguage;
+
+extern "C" TSLanguage *tree_sitter_coral();
+
+// Must match the language type tag used by tree-sitter's Node runtime.
+// Untagged externals are rejected by Parser#setLanguage on tree-sitter 0.25.
+const napi_type_tag LANGUAGE_TYPE_TAG = {
+    0x8AF2E5212AD58ABF, 0xD5006CAD83ABBA16
+};
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+    exports["name"] = Napi::String::New(env, "coral");
+    auto language = Napi::External<TSLanguage>::New(env, tree_sitter_coral());
+    language.TypeTag(&LANGUAGE_TYPE_TAG);
+    exports["language"] = language;
+    return exports;
+}
+
+NODE_API_MODULE(tree_sitter_coral_binding, Init)

@@ -1,0 +1,8 @@
+{
+  "originalFilename": "library-catalog-class.coral",
+  "defectType": "duplicate-relationship",
+  "affectedNodeIds": ["Author", "Book"],
+  "affectedEdgeIds": ["rel_4"],
+  "explanation": "The description specifies a single \"written by\" association between Book and Author. A second edge (newly added, with no id in the known-good diagram) with the same endpoints and direction as rel_4 has been added with the reworded label \"authored by\", redundantly expressing the same relationship twice.",
+  "outputFilename": "library-catalog-class-duplicate-relationship-1.coral"
+}

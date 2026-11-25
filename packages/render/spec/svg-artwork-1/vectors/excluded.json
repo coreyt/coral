@@ -1,0 +1,753 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "excluded-script",
+      "description": "Excluded: excluded:script.",
+      "covers": [
+        "excluded:script"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><script>alert(1)</script></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-style-element",
+      "description": "Excluded: excluded:style-element.",
+      "covers": [
+        "excluded:style-element"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><style>path{fill:red}</style></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-foreign-object",
+      "description": "Excluded: excluded:foreignObject.",
+      "covers": [
+        "excluded:foreignObject"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><foreignObject width=\"10\" height=\"10\"><div xmlns=\"http://www.w3.org/1999/xhtml\">x</div></foreignObject></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-image",
+      "description": "Excluded: excluded:image.",
+      "covers": [
+        "excluded:image"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><image href=\"icon.png\" width=\"10\" height=\"10\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-text",
+      "description": "Excluded: excluded:text.",
+      "covers": [
+        "excluded:text"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><text x=\"0\" y=\"10\">Label</text></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-use",
+      "description": "Excluded: excluded:use.",
+      "covers": [
+        "excluded:use"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path id=\"p\" d=\"M0 0H1\"/><use href=\"#p\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-symbol",
+      "description": "Excluded: excluded:symbol.",
+      "covers": [
+        "excluded:symbol"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><symbol id=\"s\"><path d=\"M0 0H1\"/></symbol></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-pattern",
+      "description": "Excluded: excluded:pattern.",
+      "covers": [
+        "excluded:pattern"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><pattern id=\"p\" width=\"1\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-mask-element",
+      "description": "Excluded: excluded:mask.",
+      "covers": [
+        "excluded:mask"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><mask id=\"m\"><rect width=\"1\" height=\"1\"/></mask></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-filter",
+      "description": "Excluded: excluded:filter.",
+      "covers": [
+        "excluded:filter"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><filter id=\"f\"><feGaussianBlur stdDeviation=\"2\"/></filter></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-animate",
+      "description": "Excluded: excluded:animation.",
+      "covers": [
+        "excluded:animation"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"><animate attributeName=\"opacity\" from=\"0\" to=\"1\" dur=\"1s\"/></path></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-animate-transform",
+      "description": "Excluded: excluded:animation.",
+      "covers": [
+        "excluded:animation"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g><animateTransform attributeName=\"transform\" type=\"rotate\" from=\"0\" to=\"360\" dur=\"1s\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-set",
+      "description": "Excluded: excluded:animation.",
+      "covers": [
+        "excluded:animation"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"><set attributeName=\"fill\" to=\"red\"/></path></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-anchor-element",
+      "description": "Excluded: excluded:a.",
+      "covers": [
+        "excluded:a"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><a href=\"https://example.com/\"><path d=\"M0 0H1\"/></a></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-marker",
+      "description": "Excluded: excluded:marker.",
+      "covers": [
+        "excluded:marker"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><marker id=\"m\"><path d=\"M0 0H1\"/></marker></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-metadata",
+      "description": "Excluded: excluded:metadata.",
+      "covers": [
+        "excluded:metadata"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><metadata>editor data</metadata></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-switch",
+      "description": "Excluded: excluded:switch.",
+      "covers": [
+        "excluded:switch"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><switch><path d=\"M0 0H1\"/></switch></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-nested-svg",
+      "description": "Excluded: excluded:nested-svg.",
+      "covers": [
+        "excluded:nested-svg"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><svg viewBox=\"0 0 1 1\"><path d=\"M0 0H1\"/></svg></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-foreign-namespace-element",
+      "description": "Excluded: excluded:foreign-namespace.",
+      "covers": [
+        "excluded:foreign-namespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><x:shape xmlns:x=\"urn:example\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-stop-outside-gradient",
+      "description": "Excluded: excluded:context.",
+      "covers": [
+        "excluded:context"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><stop offset=\"0\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-shape-in-defs",
+      "description": "Excluded: excluded:context.",
+      "covers": [
+        "excluded:context"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><defs><path d=\"M0 0H1\"/></defs></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-text-content",
+      "description": "Excluded: excluded:character-data.",
+      "covers": [
+        "excluded:character-data"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g>hello</g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-cdata-content",
+      "description": "Excluded: excluded:character-data.",
+      "covers": [
+        "excluded:character-data"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g><![CDATA[hello]]></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-class-attribute",
+      "description": "Excluded: excluded:class.",
+      "covers": [
+        "excluded:class"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path class=\"x\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-mask-attribute",
+      "description": "Excluded: excluded:mask.",
+      "covers": [
+        "excluded:mask"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path mask=\"url(#m)\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-filter-attribute",
+      "description": "Excluded: excluded:filter.",
+      "covers": [
+        "excluded:filter"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path filter=\"url(#f)\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-marker-attribute",
+      "description": "Excluded: excluded:marker.",
+      "covers": [
+        "excluded:marker"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path marker-end=\"url(#m)\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-display",
+      "description": "Excluded: excluded:display.",
+      "covers": [
+        "excluded:display"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path display=\"none\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-visibility",
+      "description": "Excluded: excluded:visibility.",
+      "covers": [
+        "excluded:visibility"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path visibility=\"hidden\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-font-property",
+      "description": "Excluded: excluded:property.",
+      "covers": [
+        "excluded:property"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g font-size=\"12\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-xml-space",
+      "description": "Excluded: excluded:xml-space, xml:prefix-implicit.",
+      "covers": [
+        "excluded:xml-space",
+        "xml:prefix-implicit"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" xml:space=\"preserve\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-xml-lang",
+      "description": "Excluded: excluded:xml-lang, xml:prefix-implicit.",
+      "covers": [
+        "excluded:xml-lang",
+        "xml:prefix-implicit"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path xml:lang=\"en\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-tabindex",
+      "description": "Excluded: excluded:tabindex.",
+      "covers": [
+        "excluded:tabindex"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path tabindex=\"0\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-aria",
+      "description": "Excluded: excluded:aria.",
+      "covers": [
+        "excluded:aria"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path aria-label=\"Shield\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-root-x",
+      "description": "Excluded: excluded:root-position.",
+      "covers": [
+        "excluded:root-position"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" x=\"0\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-root-opacity",
+      "description": "Excluded: excluded:root-non-inherited.",
+      "covers": [
+        "excluded:root-non-inherited"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" opacity=\"0.5\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-editor-namespace",
+      "description": "Excluded: excluded:foreign-namespace.",
+      "covers": [
+        "excluded:foreign-namespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\" viewBox=\"0 0 24 24\"><path inkscape:label=\"Layer\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-namespace-on-descendant",
+      "description": "Excluded: excluded:namespace-placement.",
+      "covers": [
+        "excluded:namespace-placement"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-opacity-in-clip",
+      "description": "Excluded: clip:bounded.",
+      "covers": [
+        "clip:bounded"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"k\"><rect width=\"1\" height=\"1\" opacity=\"0.5\"/></clipPath><path d=\"M0 0H1\" clip-path=\"url(#k)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "excluded-doctype",
+      "description": "A document type declaration is refused before anything is expanded.",
+      "covers": [
+        "excluded:dtd"
+      ],
+      "input": "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\"><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-entity-reference",
+      "description": "Entity references other than the five predefined are refused.",
+      "covers": [
+        "excluded:entity"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>a&nbsp;b</title><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-processing-instruction",
+      "description": "Processing instructions are refused.",
+      "covers": [
+        "excluded:processing-instruction"
+      ],
+      "input": "<?xml-stylesheet href=\"a.css\" type=\"text/css\"?><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-late-xml-declaration",
+      "description": "An XML declaration must be at offset 0.",
+      "covers": [
+        "xml:declaration"
+      ],
+      "input": " <?xml version=\"1.0\"?><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-xml-declaration-encoding",
+      "description": "Only UTF-8 is admitted.",
+      "covers": [
+        "xml:declaration"
+      ],
+      "input": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-missing-namespace",
+      "description": "The root must be in the SVG namespace.",
+      "covers": [
+        "xml:namespace"
+      ],
+      "input": "<svg viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-wrong-root",
+      "description": "The root must be svg.",
+      "covers": [
+        "xml:root"
+      ],
+      "input": "<g xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M0 0H1\"/></g>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-byte-order-mark",
+      "description": "A byte order mark is refused.",
+      "covers": [
+        "xml:bom"
+      ],
+      "input": "﻿<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-nul-character",
+      "description": "Characters that are not XML Char are refused.",
+      "covers": [
+        "xml:char"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"red\u0000\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-lone-surrogate",
+      "description": "An unpaired surrogate is refused.",
+      "covers": [
+        "xml:char"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>\ud800</title><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-unclosed-element",
+      "description": "Input that is not well-formed is refused.",
+      "covers": [
+        "xml:well-formed"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-repeated-attribute",
+      "description": "A repeated attribute is refused.",
+      "covers": [
+        "xml:well-formed"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" d=\"M0 0H2\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-comment-double-hyphen",
+      "description": "A comment containing -- is not well-formed.",
+      "covers": [
+        "xml:comment-double-hyphen"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><!-- a -- b --><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "excluded-unbound-prefix",
+      "description": "A prefix without a declaration is refused.",
+      "covers": [
+        "xml:namespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"a\"/><linearGradient id=\"g\" xlink:href=\"#a\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    }
+  ]
+}

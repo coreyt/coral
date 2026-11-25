@@ -1,0 +1,24 @@
+@graph {"id":"sign-in","metadata":{"notation":"uml-sequence"}}
+
+actor "User"
+participant "App"
+participant "Auth"
+
+user -> app as sign_in [sync, label: "sign in"]
+app -> auth as verify [sync, label: "verify"]
+alt "valid" {
+  auth -> app as granted [return, label: "token"]
+} else "invalid" {
+  auth -> app as denied [return, label: "denied"]
+}
+loop "each page" as pages {
+  app -> app as render [sync, label: "render"]
+}
+opt {
+  app -> user as notify [async, label: "result"]
+}
+
+activation app from sign_in to notify as busy
+activation auth from verify to denied
+note "Passwords are never logged" on auth
+note "retried by the client" on app, verify

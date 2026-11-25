@@ -1,0 +1,6 @@
+@graph {"id":"advanced-fields"}
+
+service as api data {"ports":[{"id":"out","side":"EAST"}]}
+database "Orders" as orders data {"ports":[{"id":"in","side":"WEST"}]}
+
+api -> orders (arrow) as writes [description: "Writes order data", latencyMs: 5] data {"sourcePort":"out","style":{"routing":"orthogonal"},"targetPort":"in"}

@@ -1,0 +1,12 @@
+@graph {"id":"noncanonical","extra":true,"name":1}
+
+service "A" as a data {"label":"A","dimensions":{"width":-1,"height":1}}
+service "B" as a
+service "C" as ""
+
+a -> b as e data {"label":"x","sourcePort":1,"style":{"lineStyle":"dotted","routing":"curvy"},"properties":{"weight":2}}
+a -> b as e
+a -> b [k: hello]
+
+arrange a, b as row [required]
+constraint quoted: a above b [alignment: "start"]

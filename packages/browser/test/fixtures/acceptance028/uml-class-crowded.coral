@@ -1,0 +1,14 @@
+@diagram uml-class
+Document class
+C0 class
+C1 class
+C2 class
+C3 class
+C4 class
+C5 class
+edge0 = C0 --|> Document [inheritance]
+edge1 = C1 --|> Document [inheritance]
+edge2 = C2 --|> Document [inheritance]
+edge3 = C3 --|> Document [inheritance]
+edge4 = C4 --|> Document [inheritance]
+edge5 = C5 --|> Document [inheritance]

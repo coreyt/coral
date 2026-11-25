@@ -1,0 +1,16 @@
+group "Backend" as backend {
+  service "API" as api
+  service "Worker" as worker
+  database "Orders" as orders
+}
+
+service "Ingress" as ingress
+
+require api left of orders
+require worker at the bottom of backend
+require arrange api, worker, orders as column
+
+constraint api_right: api right of worker [preferred, gap: 12, alignment: end]
+constraint worker_below: worker below api [preferred]
+constraint ingress_top: ingress at the top [preferred, inset: 8]
+constraint worker_row: arrange api, worker as row [preferred, direction: reverse, gap: 6, alignment: start]

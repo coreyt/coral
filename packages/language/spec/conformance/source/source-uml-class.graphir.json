@@ -1,0 +1,62 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "User",
+      "type": "class",
+      "label": "User",
+      "classifier": {
+        "kind": "class",
+        "name": "User",
+        "compartments": [
+          {
+            "id": "name",
+            "kind": "name"
+          },
+          {
+            "id": "attributes_1",
+            "kind": "attributes",
+            "items": [
+              {
+                "id": "attribute_1",
+                "kind": "attribute",
+                "visibility": "public",
+                "name": "name",
+                "type": "String"
+              }
+            ]
+          },
+          {
+            "id": "operations_2",
+            "kind": "operations",
+            "items": [
+              {
+                "id": "operation_2",
+                "kind": "operation",
+                "visibility": "public",
+                "name": "lookup",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "type": "String"
+                  }
+                ],
+                "returnType": "User"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "edges": [],
+  "metadata": {
+    "notation": "uml-class"
+  },
+  "profile": {
+    "id": "uml",
+    "kind": "class",
+    "version": "1.0.0"
+  }
+}

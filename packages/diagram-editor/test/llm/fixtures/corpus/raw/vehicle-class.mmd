@@ -1,0 +1,24 @@
+classDiagram
+    class Vehicle {
+      +String make
+      +String model
+      +start()
+    }
+    class Car {
+      +int numDoors
+    }
+    class Motorcycle {
+      +boolean hasSidecar
+    }
+    class Engine {
+      +int horsepower
+      +ignite()
+    }
+    class Owner {
+      +String name
+    }
+
+    Vehicle <|-- Car
+    Vehicle <|-- Motorcycle
+    Vehicle *-- Engine
+    Owner --> Vehicle : owns

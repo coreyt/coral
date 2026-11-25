@@ -1,0 +1,5 @@
+group "Platform" as plat {
+  region: "us-east-1"
+  service "Auth"
+  service "Auth"
+}

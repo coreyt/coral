@@ -1,0 +1,11 @@
+{
+  "slug": "otp-verification-sequence",
+  "sourceUrl": "synthetic-original",
+  "license": "synthetic-original",
+  "attribution": "authored for Slice 49 corpus scale-up",
+  "collectedDate": "2026-09-13",
+  "diagramType": "sequenceDiagram",
+  "complexity": "simple",
+  "nodeCount": 4,
+  "edgeCount": 7
+}

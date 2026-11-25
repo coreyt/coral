@@ -1,0 +1,1816 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://graph-ir.dev/schemas/3.0/graph-ir.schema.json",
+  "title": "GraphIR authored graph",
+  "description": "Canonical authored GraphIR schema 3.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "version": {
+      "const": "3.0.0"
+    },
+    "id": {
+      "$ref": "#/$defs/Identifier"
+    },
+    "name": {
+      "type": "string"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GraphNode"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/GraphEdge"
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/SpatialConstraint"
+      }
+    },
+    "metadata": {
+      "$ref": "#/$defs/GraphMetadata"
+    },
+    "layoutOptions": {
+      "$ref": "#/$defs/LayoutOptions"
+    },
+    "profile": {
+      "$ref": "#/$defs/NotationProfile"
+    },
+    "interaction": {
+      "$ref": "#/$defs/Interaction"
+    }
+  },
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "Position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "x",
+        "y"
+      ],
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "Dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": "number",
+          "minimum": 0
+        },
+        "height": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "PlacementSide": {
+      "type": "string",
+      "enum": [
+        "above",
+        "below",
+        "left",
+        "right",
+        "center"
+      ]
+    },
+    "NodeLabelPlacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "side"
+      ],
+      "properties": {
+        "side": {
+          "$ref": "#/$defs/PlacementSide"
+        },
+        "offset": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "side": {
+                "const": "center"
+              }
+            },
+            "required": [
+              "side"
+            ]
+          },
+          "then": {
+            "properties": {
+              "offset": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "EdgeLabelPlacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "side"
+      ],
+      "properties": {
+        "side": {
+          "$ref": "#/$defs/PlacementSide"
+        },
+        "at": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5
+        },
+        "offset": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "side": {
+                "const": "center"
+              }
+            },
+            "required": [
+              "side"
+            ]
+          },
+          "then": {
+            "properties": {
+              "offset": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Port": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "side"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "NORTH",
+            "SOUTH",
+            "EAST",
+            "WEST"
+          ]
+        },
+        "label": {
+          "type": "string"
+        },
+        "position": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "Padding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "top": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "right": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "bottom": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "left": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        }
+      }
+    },
+    "SpacingOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "nodeNode": {
+          "type": "number",
+          "minimum": 0
+        },
+        "nodeEdge": {
+          "type": "number",
+          "minimum": 0
+        },
+        "edgeEdge": {
+          "type": "number",
+          "minimum": 0
+        },
+        "layerSpacing": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "LayoutOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "enum": [
+            "layered",
+            "force",
+            "radial",
+            "tree",
+            "fixed"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "DOWN",
+            "UP",
+            "LEFT",
+            "RIGHT"
+          ]
+        },
+        "spacing": {
+          "$ref": "#/$defs/SpacingOptions"
+        },
+        "edgeRouting": {
+          "type": "string",
+          "enum": [
+            "orthogonal",
+            "polyline",
+            "spline"
+          ]
+        },
+        "hierarchyHandling": {
+          "type": "string",
+          "enum": [
+            "INCLUDE_CHILDREN",
+            "SEPARATE_CHILDREN"
+          ]
+        }
+      }
+    },
+    "NodeLayoutOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "portConstraints": {
+          "type": "string",
+          "enum": [
+            "FREE",
+            "FIXED_SIDE",
+            "FIXED_ORDER",
+            "FIXED_POS"
+          ]
+        },
+        "portAlignment": {
+          "type": "string",
+          "enum": [
+            "BEGIN",
+            "CENTER",
+            "END",
+            "JUSTIFIED"
+          ]
+        },
+        "sizeConstraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "MINIMUM_SIZE",
+              "NODE_LABELS",
+              "PORTS"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "minimumSize": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "padding": {
+          "$ref": "#/$defs/Padding"
+        }
+      }
+    },
+    "GraphNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "type": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GraphNode"
+          }
+        },
+        "parent": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Port"
+          }
+        },
+        "dimensions": {
+          "$ref": "#/$defs/Dimensions"
+        },
+        "position": {
+          "$ref": "#/$defs/Position"
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "labelPlacement": {
+          "$ref": "#/$defs/NodeLabelPlacement"
+        },
+        "layoutOptions": {
+          "$ref": "#/$defs/NodeLayoutOptions"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        },
+        "classifier": {
+          "$ref": "#/$defs/Classifier"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "pinned": {
+                "const": true
+              }
+            },
+            "required": [
+              "pinned"
+            ]
+          },
+          "then": {
+            "required": [
+              "position"
+            ]
+          }
+        }
+      ]
+    },
+    "EdgeStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lineStyle": {
+          "type": "string",
+          "enum": [
+            "solid",
+            "dashed",
+            "dotted"
+          ]
+        },
+        "routing": {
+          "type": "string",
+          "enum": [
+            "orthogonal",
+            "polyline",
+            "spline"
+          ]
+        }
+      }
+    },
+    "RouteAnchor": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "source"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "target"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "nodeId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "node"
+            },
+            "nodeId": {
+              "$ref": "#/$defs/Identifier"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "nodeId",
+            "portId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "port"
+            },
+            "nodeId": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "portId": {
+              "$ref": "#/$defs/Identifier"
+            }
+          }
+        }
+      ]
+    },
+    "WaypointPlacement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "position"
+          ],
+          "properties": {
+            "kind": {
+              "const": "absolute"
+            },
+            "position": {
+              "$ref": "#/$defs/Position"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "anchor",
+            "offset"
+          ],
+          "properties": {
+            "kind": {
+              "const": "relative"
+            },
+            "anchor": {
+              "$ref": "#/$defs/RouteAnchor"
+            },
+            "offset": {
+              "$ref": "#/$defs/Position"
+            }
+          }
+        }
+      ]
+    },
+    "RouteWaypoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "placement"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "placement": {
+          "$ref": "#/$defs/WaypointPlacement"
+        }
+      }
+    },
+    "RouteIntent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "waypoints"
+      ],
+      "properties": {
+        "waypoints": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/RouteWaypoint"
+          }
+        }
+      }
+    },
+    "GraphEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source",
+        "target"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "target": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "sourcePort": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "targetPort": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "type": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "labelPlacement": {
+          "$ref": "#/$defs/EdgeLabelPlacement"
+        },
+        "routeIntent": {
+          "$ref": "#/$defs/RouteIntent"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "style": {
+          "$ref": "#/$defs/EdgeStyle"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        },
+        "sourceEnd": {
+          "$ref": "#/$defs/RelationshipEnd"
+        },
+        "targetEnd": {
+          "$ref": "#/$defs/RelationshipEnd"
+        }
+      }
+    },
+    "ConstraintNodeReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "nodeId"
+      ],
+      "properties": {
+        "kind": {
+          "const": "node"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/Identifier"
+        }
+      }
+    },
+    "BoundaryScope": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind"
+          ],
+          "properties": {
+            "kind": {
+              "const": "graph"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "nodeId"
+          ],
+          "properties": {
+            "kind": {
+              "const": "node"
+            },
+            "nodeId": {
+              "$ref": "#/$defs/Identifier"
+            }
+          }
+        }
+      ]
+    },
+    "ConstraintBaseProperties": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "strength": {
+          "type": "string",
+          "enum": [
+            "required",
+            "preferred"
+          ],
+          "default": "required"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        }
+      }
+    },
+    "RelativeConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "subject",
+        "relation",
+        "target"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "relative"
+        },
+        "strength": {
+          "type": "string",
+          "enum": [
+            "required",
+            "preferred"
+          ],
+          "default": "required"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        },
+        "subject": {
+          "$ref": "#/$defs/ConstraintNodeReference"
+        },
+        "relation": {
+          "type": "string",
+          "enum": [
+            "above",
+            "below",
+            "left-of",
+            "right-of"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/ConstraintNodeReference"
+        },
+        "gap": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "alignment": {
+          "type": "string",
+          "enum": [
+            "start",
+            "center",
+            "end"
+          ],
+          "default": "center"
+        }
+      }
+    },
+    "BoundaryConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "subject",
+        "side",
+        "scope"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "boundary"
+        },
+        "strength": {
+          "type": "string",
+          "enum": [
+            "required",
+            "preferred"
+          ],
+          "default": "required"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        },
+        "subject": {
+          "$ref": "#/$defs/ConstraintNodeReference"
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "top",
+            "bottom",
+            "left",
+            "right"
+          ]
+        },
+        "scope": {
+          "$ref": "#/$defs/BoundaryScope"
+        },
+        "inset": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        }
+      }
+    },
+    "ArrangementConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "subjects",
+        "axis"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "arrangement"
+        },
+        "strength": {
+          "type": "string",
+          "enum": [
+            "required",
+            "preferred"
+          ],
+          "default": "required"
+        },
+        "sourceInfo": {
+          "$ref": "#/$defs/SourceInfo"
+        },
+        "subjects": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ConstraintNodeReference"
+          }
+        },
+        "axis": {
+          "type": "string",
+          "enum": [
+            "row",
+            "column"
+          ]
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "forward",
+            "reverse"
+          ],
+          "default": "forward"
+        },
+        "gap": {
+          "type": "number",
+          "minimum": 0,
+          "default": 0
+        },
+        "alignment": {
+          "type": "string",
+          "enum": [
+            "start",
+            "center",
+            "end"
+          ],
+          "default": "center"
+        }
+      }
+    },
+    "SpatialConstraint": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/RelativeConstraint"
+        },
+        {
+          "$ref": "#/$defs/BoundaryConstraint"
+        },
+        {
+          "$ref": "#/$defs/ArrangementConstraint"
+        }
+      ]
+    },
+    "SourcePosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "line",
+        "column"
+      ],
+      "properties": {
+        "line": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "SourceRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "startPosition": {
+          "$ref": "#/$defs/SourcePosition"
+        },
+        "endPosition": {
+          "$ref": "#/$defs/SourcePosition"
+        }
+      }
+    },
+    "Comment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "style"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "style": {
+          "type": "string",
+          "enum": [
+            "line",
+            "block"
+          ]
+        },
+        "range": {
+          "$ref": "#/$defs/SourceRange"
+        }
+      }
+    },
+    "SourceInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "range"
+      ],
+      "properties": {
+        "range": {
+          "$ref": "#/$defs/SourceRange"
+        },
+        "leadingComments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Comment"
+          }
+        },
+        "trailingComment": {
+          "$ref": "#/$defs/Comment"
+        },
+        "leadingWhitespace": {
+          "type": "string"
+        },
+        "modified": {
+          "type": "boolean"
+        },
+        "originalText": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modified": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notation": {
+          "type": "string"
+        },
+        "custom": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "NotationProfile": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "uml"
+            },
+            "kind": {
+              "const": "class"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "version"
+          ],
+          "properties": {
+            "id": {
+              "const": "uml"
+            },
+            "kind": {
+              "const": "sequence"
+            },
+            "version": {
+              "const": "1.0.0"
+            }
+          }
+        }
+      ]
+    },
+    "ClassifierParameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "type": {
+          "$ref": "#/$defs/Identifier"
+        }
+      }
+    },
+    "ClassifierAttribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "attribute"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "public",
+            "protected",
+            "private",
+            "package"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "type": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "modifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "abstract",
+              "static",
+              "readonly",
+              "derived"
+            ]
+          }
+        }
+      }
+    },
+    "ClassifierOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name",
+        "parameters"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "operation"
+        },
+        "visibility": {
+          "type": "string",
+          "enum": [
+            "public",
+            "protected",
+            "private",
+            "package"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ClassifierParameter"
+          }
+        },
+        "returnType": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "modifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "abstract",
+              "static",
+              "readonly",
+              "derived"
+            ]
+          }
+        }
+      }
+    },
+    "ClassifierLiteral": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "const": "literal"
+        },
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ClassifierCompartment": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "name"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "items"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "attributes"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ClassifierAttribute"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "items"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "operations"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ClassifierOperation"
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "kind",
+            "items"
+          ],
+          "properties": {
+            "id": {
+              "$ref": "#/$defs/Identifier"
+            },
+            "kind": {
+              "const": "literals"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ClassifierLiteral"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Classifier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "compartments"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "class",
+            "interface",
+            "enum"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "modifiers": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "abstract",
+              "static"
+            ]
+          }
+        },
+        "compartments": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ClassifierCompartment"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "properties": {
+            "compartments": {
+              "contains": {
+                "properties": { "kind": { "const": "name" } },
+                "required": ["kind"]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "kind": { "enum": ["class", "interface"] } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "compartments": {
+                "allOf": [
+                  {
+                    "contains": { "properties": { "kind": { "const": "attributes" } }, "required": ["kind"] },
+                    "minContains": 0,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": { "properties": { "kind": { "const": "operations" } }, "required": ["kind"] },
+                    "minContains": 0,
+                    "maxContains": 1
+                  },
+                  {
+                    "not": {
+                      "contains": { "properties": { "kind": { "const": "literals" } }, "required": ["kind"] }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "kind": { "const": "enum" } },
+            "required": ["kind"]
+          },
+          "then": {
+            "properties": {
+              "compartments": {
+                "allOf": [
+                  {
+                    "contains": { "properties": { "kind": { "const": "literals" } }, "required": ["kind"] },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": { "properties": { "kind": { "const": "operations" } }, "required": ["kind"] },
+                    "minContains": 0,
+                    "maxContains": 1
+                  },
+                  {
+                    "not": {
+                      "contains": { "properties": { "kind": { "const": "attributes" } }, "required": ["kind"] }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Multiplicity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lower",
+        "upper"
+      ],
+      "properties": {
+        "lower": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "upper": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "const": "*"
+            }
+          ]
+        }
+      }
+    },
+    "EndpointMarker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "fill"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "none",
+            "arrow",
+            "triangle",
+            "diamond",
+            "circle",
+            "bar",
+            "crow-foot",
+            "zero-or-one",
+            "one",
+            "zero-or-many",
+            "one-or-many"
+          ]
+        },
+        "fill": {
+          "type": "string",
+          "enum": [
+            "open",
+            "filled",
+            "unspecified"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "none",
+                  "bar",
+                  "crow-foot",
+                  "zero-or-one",
+                  "one",
+                  "zero-or-many",
+                  "one-or-many"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "fill": {
+                "const": "unspecified"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "RelationshipEnd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "multiplicity": {
+          "$ref": "#/$defs/Multiplicity"
+        },
+        "navigability": {
+          "type": "string",
+          "enum": [
+            "navigable",
+            "non-navigable",
+            "unspecified"
+          ]
+        },
+        "marker": {
+          "$ref": "#/$defs/EndpointMarker"
+        }
+      }
+    },
+    "InteractionParticipant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "nodeId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "nodeId": {
+          "$ref": "#/$defs/Identifier"
+        }
+      }
+    },
+    "InteractionMessage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "edgeId",
+        "sourceParticipantId",
+        "targetParticipantId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "edgeId": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "sourceParticipantId": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "targetParticipantId": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "synchronous",
+            "asynchronous",
+            "return",
+            "create",
+            "destroy"
+          ]
+        }
+      }
+    },
+    "InteractionActivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "participantId",
+        "startMessageId",
+        "endMessageId"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "participantId": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "startMessageId": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "endMessageId": {
+          "$ref": "#/$defs/Identifier"
+        }
+      }
+    },
+    "InteractionGuard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "text": {
+          "$ref": "#/$defs/Identifier"
+        }
+      }
+    },
+    "InteractionOperand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "messageIds"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "guard": {
+          "$ref": "#/$defs/InteractionGuard"
+        },
+        "messageIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        }
+      }
+    },
+    "InteractionFragment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "operands"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "loop",
+            "alt",
+            "opt"
+          ]
+        },
+        "operands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionOperand"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "loop",
+                  "opt"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operands": {
+                "minItems": 1,
+                "maxItems": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "alt"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "operands": {
+                "minItems": 2
+              }
+            }
+          }
+        }
+      ]
+    },
+    "InteractionNote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "text": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "participantIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "messageIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "participantIds"
+          ]
+        },
+        {
+          "required": [
+            "messageIds"
+          ]
+        }
+      ]
+    },
+    "Interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "participants",
+        "participantOrder",
+        "messages",
+        "messageOrder"
+      ],
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionParticipant"
+          }
+        },
+        "participantOrder": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionMessage"
+          }
+        },
+        "messageOrder": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          }
+        },
+        "activations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionActivation"
+          }
+        },
+        "fragments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionFragment"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/InteractionNote"
+          }
+        }
+      }
+    }
+  }
+}

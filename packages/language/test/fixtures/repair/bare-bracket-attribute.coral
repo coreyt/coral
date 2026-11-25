@@ -1,0 +1,3 @@
+a -> b [Yes]
+service as a
+service as b

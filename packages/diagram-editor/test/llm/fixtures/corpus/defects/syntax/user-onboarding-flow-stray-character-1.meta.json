@@ -1,0 +1,16 @@
+{
+  "originalFilename": "user-onboarding-flow.coral",
+  "originalDsl": "@diagram architecture\nlayout [direction: DOWN]\nUser service as \"New User\"\nSignupForm service as \"Signup Form\"\nAuthService service as \"Auth Service\"\nUserDB database as \"User Database\"\nEmailService service as \"Email Verification Service\"\nProfileWizard service as \"Profile Setup Wizard\"\nWelcomeService service as \"Welcome Email Service\"\nDashboard service as \"User Dashboard\"\nAnalyticsService service as \"Analytics Service\"\n\nedge_1 = User -> SignupForm as \"submits signup form\"\nedge_2 = SignupForm -> AuthService as \"create account\"\nedge_3 = AuthService -> UserDB as \"store credentials\"\nedge_4 = AuthService -> EmailService as \"send verification email\"\nedge_5 = EmailService -> User as \"deliver verification link\"\nedge_6 = User -> AuthService as \"clicks verification link\"\nedge_7 = AuthService -> ProfileWizard as \"redirect to\"\nedge_8 = ProfileWizard -> UserDB as \"save profile data\"\nedge_9 = ProfileWizard -> WelcomeService as \"trigger\"\nedge_10 = WelcomeService -> Dashboard as \"redirect to\"\nedge_11 = Dashboard -> AnalyticsService as \"log activity\"",
+  "injectedDefects": [
+    {
+      "defectType": "stray-character",
+      "location": {
+        "line": 3,
+        "column": 7,
+        "charOffset": 54
+      },
+      "description": "inserted stray character \"~\" after \"service\""
+    }
+  ],
+  "outputFilename": "user-onboarding-flow-stray-character-1.coral"
+}

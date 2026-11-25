@@ -1,0 +1,5 @@
+@diagram architecture
+// tabs in comments	remain
+outer group {
+	api service as 'API'
+}

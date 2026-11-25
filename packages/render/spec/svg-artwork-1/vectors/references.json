@@ -1,0 +1,388 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "reference-gradient-template-chain",
+      "description": "A three-gradient template chain resolves attributes from the nearest template and stops from the base; templates are not written.",
+      "covers": [
+        "reference:template",
+        "reference:xlink-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 24 24\"><linearGradient id=\"base\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\" spreadMethod=\"repeat\"><stop offset=\"0\" stop-color=\"#000\"/><stop offset=\"1\" stop-color=\"#fff\"/></linearGradient><linearGradient id=\"mid\" xlink:href=\"#base\" x2=\"1\"/><linearGradient id=\"top\" href=\"#mid\" gradientUnits=\"userSpaceOnUse\"/><rect width=\"24\" height=\"24\" fill=\"url(#top)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"userSpaceOnUse\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\" spreadMethod=\"repeat\">\n      <stop offset=\"0\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n      <stop offset=\"1\" stop-color=\"#ffffff\" stop-opacity=\"1\"/>\n    </linearGradient>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"24\" height=\"24\" rx=\"0\" ry=\"0\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "reference-radial-from-linear-template",
+      "description": "A radial gradient inherits stops and shared attributes, but not coordinates, from a linear template.",
+      "covers": [
+        "reference:template-cross-kind"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"l\" x1=\"0.2\" gradientTransform=\"rotate(90)\"><stop offset=\".5\" stop-color=\"#abcdef\"/></linearGradient><radialGradient id=\"r\" href=\"#l\" r=\"40%\"/><circle cx=\"5\" cy=\"5\" r=\"5\" fill=\"url(#r)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <radialGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" cx=\"50%\" cy=\"50%\" r=\"40%\" fx=\"50%\" fy=\"50%\" fr=\"0%\" spreadMethod=\"pad\" gradientTransform=\"rotate(90)\">\n      <stop offset=\"0.5\" stop-color=\"#abcdef\" stop-opacity=\"1\"/>\n    </radialGradient>\n  </defs>\n  <circle cx=\"5\" cy=\"5\" r=\"5\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "reference-inherited-paint-url",
+      "description": "A gradient fill inherited from a group is written on each primitive with the same ID.",
+      "covers": [
+        "reference:inherited-url"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"><stop offset=\"0\" stop-color=\"#000\"/></linearGradient><g fill=\"url(#g)\"><path d=\"M0 0H1\"/><path d=\"M0 0H2\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n    </linearGradient>\n  </defs>\n  <g>\n    <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n    <path d=\"M 0 0 H 2\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "reference-url-function-case",
+      "description": "The url function name matches case-insensitively and is written in lowercase.",
+      "covers": [
+        "reference:url-case"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"/><path d=\"M0 0H1\" fill=\"URL(#g)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\"/>\n  </defs>\n  <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "reference-url-inner-whitespace",
+      "description": "Whitespace inside url() makes the URL part non-local.",
+      "covers": [
+        "reference:url-inner-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"/><path d=\"M0 0H1\" fill=\"url( #g )\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-gradient-default-kinds",
+      "description": "Defaults are written as their SVG percentage tokens even beside numeric user-space coordinates.",
+      "covers": [
+        "gradient:default-kinds"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" gradientUnits=\"userSpaceOnUse\" x1=\"2\"/><radialGradient id=\"r\" gradientUnits=\"userSpaceOnUse\" cx=\"4\" r=\"3\"/><path d=\"M0 0H1\" fill=\"url(#g)\" stroke=\"url(#r)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"userSpaceOnUse\" x1=\"2\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\"/>\n    <radialGradient id=\"p2\" gradientUnits=\"userSpaceOnUse\" cx=\"4\" cy=\"50%\" r=\"3\" fx=\"4\" fy=\"50%\" fr=\"0%\" spreadMethod=\"pad\"/>\n  </defs>\n  <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"url(#p2)\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "reference-offset-out-of-range",
+      "description": "A stop offset above 1 is refused rather than clamped.",
+      "covers": [
+        "range:offset-out-of-range"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"><stop offset=\"1.5\"/></linearGradient></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-offset-percent-out-of-range",
+      "description": "A stop offset below 0% is refused.",
+      "covers": [
+        "range:offset-out-of-range"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"><stop offset=\"-10%\"/></linearGradient></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-offset-percent-space",
+      "description": "Whitespace between a stop offset and % fails the percentage grammar.",
+      "covers": [
+        "unit:interior-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"><stop offset=\"50 %\"/></linearGradient></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-offset-out-of-order",
+      "description": "A stop offset below the previous one is refused, comparing percentages as fractions.",
+      "covers": [
+        "range:offset-order"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"><stop offset=\"50%\"/><stop offset=\"0.4\"/></linearGradient></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-missing-target",
+      "description": "A paint URL that names no element is refused.",
+      "covers": [
+        "reference:missing"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"url(#nope)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-wrong-kind-paint",
+      "description": "A paint URL must name a gradient.",
+      "covers": [
+        "reference:wrong-kind"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"k\"><rect width=\"1\" height=\"1\"/></clipPath><path d=\"M0 0H1\" fill=\"url(#k)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-wrong-kind-clip",
+      "description": "A clip-path URL must name a clip path.",
+      "covers": [
+        "reference:wrong-kind"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"/><path d=\"M0 0H1\" clip-path=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-href-to-shape",
+      "description": "A gradient template must be a gradient.",
+      "covers": [
+        "reference:wrong-kind"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path id=\"p\" d=\"M0 0H1\"/><linearGradient id=\"g\" href=\"#p\"/><path d=\"M0 0H2\" fill=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-other-document",
+      "description": "A fragment of another document is refused.",
+      "covers": [
+        "reference:external"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"url(other.svg#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-quoted-url",
+      "description": "Quoted URLs are refused; only the exact local form is admitted.",
+      "covers": [
+        "reference:syntax"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"/><path d=\"M0 0H1\" fill=\"url('#g')\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-duplicate-id",
+      "description": "Two elements with the same ID are refused.",
+      "covers": [
+        "reference:duplicate-id"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"a\"/><linearGradient id=\"a\"/><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-unreferenced-check",
+      "description": "Every reference is checked, even on clip geometry whose paint is discarded.",
+      "covers": [
+        "reference:discarded-still-checked"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"k\"><rect width=\"1\" height=\"1\" fill=\"url(#missing)\"/></clipPath><path d=\"M0 0H1\" clip-path=\"url(#k)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-cycle-self",
+      "description": "A gradient that is its own template is refused.",
+      "covers": [
+        "reference:cycle"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" href=\"#g\"/><path d=\"M0 0H1\" fill=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.cycle"
+        ]
+      }
+    },
+    {
+      "id": "reference-cycle-pair",
+      "description": "A two-gradient template cycle is refused once.",
+      "covers": [
+        "reference:cycle"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"a\" href=\"#b\"/><linearGradient id=\"b\" href=\"#a\"/><path d=\"M0 0H1\" fill=\"url(#a)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.cycle"
+        ]
+      }
+    },
+    {
+      "id": "reference-cycle-unreferenced",
+      "description": "A cycle is refused even when nothing references it.",
+      "covers": [
+        "reference:cycle"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"a\" href=\"#b\"/><linearGradient id=\"b\" href=\"#a\"/><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.cycle"
+        ]
+      }
+    },
+    {
+      "id": "reference-clip-on-clip-path",
+      "description": "Clip paths cannot themselves be clipped.",
+      "covers": [
+        "clip:bounded"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"a\"><rect width=\"1\" height=\"1\"/></clipPath><clipPath id=\"b\" clip-path=\"url(#a)\"><rect width=\"2\" height=\"2\"/></clipPath><path d=\"M0 0H1\" clip-path=\"url(#b)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-clip-on-clip-geometry",
+      "description": "Clip geometry cannot carry clip-path.",
+      "covers": [
+        "clip:bounded"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"a\"><rect width=\"1\" height=\"1\"/></clipPath><clipPath id=\"b\"><rect width=\"2\" height=\"2\" clip-path=\"url(#a)\"/></clipPath><path d=\"M0 0H1\" clip-path=\"url(#b)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-group-in-clip-path",
+      "description": "A clip path admits primitives only.",
+      "covers": [
+        "clip:content"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"k\"><g><rect width=\"1\" height=\"1\"/></g></clipPath><path d=\"M0 0H1\" clip-path=\"url(#k)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-href-on-path",
+      "description": "href is admitted only on gradients.",
+      "covers": [
+        "reference:href-placement"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" href=\"#x\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-both-href-forms",
+      "description": "A gradient cannot carry both href and xlink:href.",
+      "covers": [
+        "reference:href-placement"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 24 24\"><linearGradient id=\"a\"/><linearGradient id=\"g\" href=\"#a\" xlink:href=\"#a\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "reference-malformed-id",
+      "description": "An ID must match the id grammar.",
+      "covers": [
+        "reference:id-grammar"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path id=\"1 2\" d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    }
+  ]
+}

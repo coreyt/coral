@@ -1,0 +1,11 @@
+@diagram bpmn
+received startEvent
+check task
+approved exclusiveGateway
+revise task
+completed endEvent
+received -> check
+check -> approved
+approved -> revise
+revise -> check
+approved -> completed

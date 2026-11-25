@@ -1,0 +1,8 @@
+{
+  "originalFilename": "vehicle-class.coral",
+  "defectType": "reversed-relationship-direction",
+  "affectedNodeIds": ["Car", "Vehicle"],
+  "affectedEdgeIds": ["rel_1"],
+  "explanation": "The description says Car inherits from Vehicle, but the inheritance edge has been reversed so that Vehicle now inherits from Car, making the general base class a subclass of one of its own specializations while Motorcycle still correctly inherits from Vehicle.",
+  "outputFilename": "vehicle-class-reversed-relationship-direction-1.coral"
+}

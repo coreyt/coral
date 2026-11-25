@@ -1,0 +1,15 @@
+service "A" as a {
+  owner: "team"
+  owner: "other"
+}
+service "B" as b
+
+a -> b [k: 1] data {"properties":{"k":[2]}}
+a -> b [dashed, dotted]
+a -> b [label: "x", label: "y"]
+
+constraint gaps: a above b [gap: 8, gap: 12]
+constraint flags: a below b [required, preferred]
+require a left of b [preferred]
+require a at the top [preferred]
+require arrange a, b as row [preferred]

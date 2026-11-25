@@ -1,0 +1,16 @@
+{
+  "originalFilename": "vehicle-class.coral",
+  "originalDsl": "@diagram uml-class\nVehicle class as \"Vehicle\" {\n  attributes = attributes {\n    attribute_1 = public attribute make: String\n    attribute_2 = public attribute model: String\n  }\n  operations = operations {\n    operation_1 = public operation start()\n  }\n}\nCar class as \"Car\" {\n  attributes = attributes {\n    attribute_1 = public attribute numDoors: int\n  }\n}\nMotorcycle class as \"Motorcycle\" {\n  attributes = attributes {\n    attribute_1 = public attribute hasSidecar: boolean\n  }\n}\nEngine class as \"Engine\" {\n  attributes = attributes {\n    attribute_1 = public attribute horsepower: int\n  }\n  operations = operations {\n    operation_1 = public operation ignite()\n  }\n}\nOwner class as \"Owner\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n  }\n}\n\nrel_1 = Car --|> Vehicle [inheritance]\nrel_2 = Motorcycle --|> Vehicle [inheritance]\nrel_3 = Vehicle -- Engine [composition, firstEnd: filledDiamond]\nrel_4 = Owner --> Vehicle [association] as \"owns\"\n",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-brace",
+      "location": {
+        "line": 11,
+        "column": 19,
+        "charOffset": 273
+      },
+      "description": "removed opening brace from node \"Car\" (line 11)"
+    }
+  ],
+  "outputFilename": "vehicle-class-missing-opening-brace-1.coral"
+}

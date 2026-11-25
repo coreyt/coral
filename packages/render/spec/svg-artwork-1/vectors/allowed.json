@@ -1,0 +1,260 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "allowed-path-minimal",
+      "description": "A single path gets explicit initial paint.",
+      "covers": [
+        "element:svg",
+        "element:path",
+        "paint:initial"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0L24 24\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 L 24 24\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-rect",
+      "description": "Rectangle defaults and radius resolution: a lone rx copies to ry; no radius writes 0 0.",
+      "covers": [
+        "element:rect",
+        "geometry:rect-radius"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><rect x=\"2\" y=\"3\" width=\"10\" height=\"8\" rx=\"2\"/><rect width=\"4\" height=\"4\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <rect x=\"2\" y=\"3\" width=\"10\" height=\"8\" rx=\"2\" ry=\"2\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  <rect x=\"0\" y=\"0\" width=\"4\" height=\"4\" rx=\"0\" ry=\"0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-circle",
+      "description": "Circle with a named fill color.",
+      "covers": [
+        "element:circle",
+        "color:named"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"5\" fill=\"red\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <circle cx=\"12\" cy=\"12\" r=\"5\" fill=\"#ff0000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-ellipse",
+      "description": "Ellipse with defaulted centre.",
+      "covers": [
+        "element:ellipse"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><ellipse rx=\"6\" ry=\"3\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <ellipse cx=\"0\" cy=\"0\" rx=\"6\" ry=\"3\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-line",
+      "description": "Line with a short hexadecimal stroke.",
+      "covers": [
+        "element:line",
+        "color:hex3"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><line x1=\"0\" y1=\"0\" x2=\"24\" y2=\"24\" stroke=\"#000\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <line x1=\"0\" y1=\"0\" x2=\"24\" y2=\"24\" fill=\"#000000\" stroke=\"#000000\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-polyline",
+      "description": "Polyline points are written space-separated.",
+      "covers": [
+        "element:polyline"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><polyline points=\"0,0 10,5 20,0\" fill=\"none\" stroke=\"#123456\" stroke-width=\"2\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <polyline points=\"0 0 10 5 20 0\" fill=\"none\" stroke=\"#123456\" stroke-width=\"2\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-polygon",
+      "description": "Polygon with mixed comma and space separators.",
+      "covers": [
+        "element:polygon"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><polygon points=\"12 2,22 22 2 22\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <polygon points=\"12 2 22 22 2 22\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-group-transforms",
+      "description": "Every transform function; translate and scale gain their implicit argument; group opacity stays on the group.",
+      "covers": [
+        "element:g",
+        "transform:translate",
+        "transform:scale",
+        "transform:rotate",
+        "transform:rotate-center",
+        "transform:skewX",
+        "transform:skewY",
+        "transform:matrix",
+        "property:opacity"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g transform=\"translate(5) scale(2) rotate(45) rotate(10, 12, 12) skewX(10) skewY(-5) matrix(1,0,0,1,3,4)\" opacity=\"0.5\"><path d=\"M0 0H4\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g transform=\"translate(5 0) scale(2 2) rotate(45) rotate(10 12 12) skewX(10) skewY(-5) matrix(1 0 0 1 3 4)\" opacity=\"0.5\">\n    <path d=\"M 0 0 H 4\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-path-all-commands",
+      "description": "Every path command, implicit repetitions, abutting numbers and compact arc flags; case and relativity are kept.",
+      "covers": [
+        "path:all-commands",
+        "path:implicit-repeat",
+        "path:compact-numbers"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M1 1 2 2m1-1 1 1L3 3l1 1H5h1V6v1C1 1 2 2 3 3c1 1 2 2 3 3 1 1 2 2 3 3S4 4 5 5s1 1 2 2Q1 1 2 2q1 1 2 2T3 3t1 1A5 5 0 0 1 10 10a5,5,30,10.5.5Zz\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 1 1 L 2 2 m 1 -1 l 1 1 L 3 3 l 1 1 H 5 h 1 V 6 v 1 C 1 1 2 2 3 3 c 1 1 2 2 3 3 c 1 1 2 2 3 3 S 4 4 5 5 s 1 1 2 2 Q 1 1 2 2 q 1 1 2 2 T 3 3 t 1 1 A 5 5 0 0 1 10 10 a 5 5 30 1 0 0.5 0.5 Z z\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-paint-properties",
+      "description": "Every paint property with a non-initial value, given in arbitrary order.",
+      "covers": [
+        "property:fill",
+        "property:fill-opacity",
+        "property:fill-rule",
+        "property:stroke",
+        "property:stroke-opacity",
+        "property:stroke-width",
+        "property:stroke-linecap",
+        "property:stroke-linejoin",
+        "property:stroke-miterlimit",
+        "property:stroke-dasharray",
+        "property:stroke-dashoffset",
+        "unit:px"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path opacity=\"0.75\" stroke-dashoffset=\"1px\" stroke-dasharray=\"4,2 1\" stroke-miterlimit=\"10\" stroke-linejoin=\"bevel\" stroke-linecap=\"round\" stroke-width=\"2px\" stroke-opacity=\".5\" stroke=\"#00f\" fill-rule=\"evenodd\" fill-opacity=\"0.25\" fill=\"#0F0\" d=\"M0 0H10V10Z\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 10 V 10 Z\" fill=\"#00ff00\" fill-opacity=\"0.25\" fill-rule=\"evenodd\" stroke=\"#0000ff\" stroke-opacity=\"0.5\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"bevel\" stroke-miterlimit=\"10\" stroke-dasharray=\"4 2 1\" stroke-dashoffset=\"1\" opacity=\"0.75\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-linear-gradient",
+      "description": "Linear gradient in defs gets explicit defaults and the canonical ID p1.",
+      "covers": [
+        "element:defs",
+        "element:linearGradient",
+        "element:stop",
+        "property:stop-color",
+        "property:stop-opacity",
+        "reference:paint"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><defs><linearGradient id=\"sky\"><stop offset=\"0\" stop-color=\"#fff\"/><stop offset=\"1\" stop-color=\"navy\" stop-opacity=\".8\"/></linearGradient></defs><rect width=\"24\" height=\"24\" fill=\"url(#sky)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#ffffff\" stop-opacity=\"1\"/>\n      <stop offset=\"1\" stop-color=\"#000080\" stop-opacity=\"0.8\"/>\n    </linearGradient>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"24\" height=\"24\" rx=\"0\" ry=\"0\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-radial-gradient",
+      "description": "Radial gradient outside defs, referenced before it is declared, moves into defs; fx and fy default to cx and cy; rgb() becomes hexadecimal.",
+      "covers": [
+        "element:radialGradient",
+        "reference:forward",
+        "color:rgb",
+        "transform:gradientTransform",
+        "gradient:default-kinds"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"url(#glow)\"/><radialGradient id=\"glow\" cx=\"12\" cy=\"12\" r=\"10\" gradientUnits=\"userSpaceOnUse\" spreadMethod=\"reflect\" gradientTransform=\"scale(1 0.5)\"><stop offset=\"0%\" stop-color=\"rgb(255, 128, 0)\"/><stop offset=\"100%\" stop-color=\"#000\"/></radialGradient></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <radialGradient id=\"p1\" gradientUnits=\"userSpaceOnUse\" cx=\"12\" cy=\"12\" r=\"10\" fx=\"12\" fy=\"12\" fr=\"0%\" spreadMethod=\"reflect\" gradientTransform=\"scale(1 0.5)\">\n      <stop offset=\"0%\" stop-color=\"#ff8000\" stop-opacity=\"1\"/>\n      <stop offset=\"100%\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n    </radialGradient>\n  </defs>\n  <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-clip-path",
+      "description": "User-space clip path on a primitive; clip geometry carries no paint.",
+      "covers": [
+        "element:clipPath",
+        "property:clip-path",
+        "reference:clip"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><clipPath id=\"half\"><rect width=\"12\" height=\"24\"/></clipPath><circle cx=\"12\" cy=\"12\" r=\"10\" clip-path=\"url(#half)\" fill=\"#c00\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n      <rect x=\"0\" y=\"0\" width=\"12\" height=\"24\" rx=\"0\" ry=\"0\"/>\n    </clipPath>\n  </defs>\n  <circle cx=\"12\" cy=\"12\" r=\"10\" clip-path=\"url(#c1)\" fill=\"#cc0000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-clip-object-bounding-box",
+      "description": "Bounding-box clip path with a transform and evenodd clip-rule on a group; paint on clip geometry is validated and discarded.",
+      "covers": [
+        "property:clip-rule",
+        "clip:object-bounding-box",
+        "clip:on-group"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><defs><clipPath id=\"k\" clipPathUnits=\"objectBoundingBox\" transform=\"translate(0.1 0.1)\"><path d=\"M0 0H.5V.5Z\" clip-rule=\"evenodd\" fill=\"red\"/></clipPath></defs><g clip-path=\"url(#k)\"><rect width=\"24\" height=\"24\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <clipPath id=\"c1\" clipPathUnits=\"objectBoundingBox\" transform=\"translate(0.1 0.1)\">\n      <path d=\"M 0 0 H 0.5 V 0.5 Z\" clip-rule=\"evenodd\"/>\n    </clipPath>\n  </defs>\n  <g clip-path=\"url(#c1)\">\n    <rect x=\"0\" y=\"0\" width=\"24\" height=\"24\" rx=\"0\" ry=\"0\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "allowed-title-desc-discarded",
+      "description": "Title and desc, including entity references in their text, are admitted and not written.",
+      "covers": [
+        "element:title",
+        "element:desc",
+        "discard:metadata-text"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>Shield &amp; key</title><desc>Line one\n\"\"\"\nline three</desc><path d=\"M0 0H1\"><title>edge</title></path></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    }
+  ]
+}

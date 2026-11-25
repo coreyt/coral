@@ -1,0 +1,1 @@
+Create two separate service nodes: one labeled "User Service" and another labeled "user service" (note the different capitalization). They are two distinct services and must remain two distinct nodes, not merged into one.

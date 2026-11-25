@@ -1,0 +1,23 @@
+{
+  "slug": "chat-message-delivery-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "chat-message-delivery-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological account naming all 6 participants and all 10 messages in order, correctly attributing the push-notification branch to the offline presence check. No invented content."
+    },
+    {
+      "descriptionFile": "chat-message-delivery-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the final delivery receipt and works backward through the causal chain. Checked off all 10 messages against the diagram: delivery receipt, message delivered, delivery ack, deliver message, recipient offline/check status, notification queued/push notification, send message/enqueue. All 6 participants present."
+    },
+    {
+      "descriptionFile": "chat-message-delivery-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates the 6 components then lists each one's connections. All 10 messages verified present exactly once each, correctly grouped by the Chat Service's four counterparts and the Message Queue's direct link to the Recipient Device."
+    }
+  ]
+}

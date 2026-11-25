@@ -1,0 +1,49 @@
+{
+  "name": "@coral-viz/diagram-editor",
+  "version": "0.2.12",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "node ../../scripts/online-delivery.mjs editor",
+    "build:vite": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "typecheck:manual": "tsc --noEmit -p tsconfig.manual.json",
+    "clean": "node ../../scripts/clean.mjs dist"
+  },
+  "dependencies": {
+    "@coral-viz/language": "0.2.12",
+    "@coral-viz/render": "0.2.12",
+    "@coral-viz/viz": "0.2.12",
+    "@graph-ir/core": "0.2.4",
+    "@huggingface/transformers": "4.3.2",
+    "@resvg/resvg-wasm": "2.6.2",
+    "@xyflow/react": "12.11.6",
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0",
+    "radix-ui": "1.6.7",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-resizable-panels": "4.13.1"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.13.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.1",
+    "@vitest/coverage-v8": "5.0.5",
+    "jsdom": "30.1.0",
+    "typescript": "6.0.3",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  }
+}

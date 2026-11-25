@@ -1,0 +1,39 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "api",
+      "type": "service",
+      "label": "API"
+    },
+    {
+      "id": "db",
+      "type": "database",
+      "label": "db"
+    }
+  ],
+  "edges": [
+    {
+      "id": "reads",
+      "source": "api",
+      "target": "db",
+      "type": "reads",
+      "sourceEnd": {
+        "marker": {
+          "kind": "none",
+          "fill": "unspecified"
+        }
+      },
+      "targetEnd": {
+        "marker": {
+          "kind": "arrow",
+          "fill": "open"
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "notation": "architecture"
+  }
+}

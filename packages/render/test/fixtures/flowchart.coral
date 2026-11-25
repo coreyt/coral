@@ -1,0 +1,24 @@
+@diagram flowchart
+start terminal as "Request received"
+complete decision as "Details complete?"
+collect process as "Collect missing details"
+check process as "Check eligibility"
+eligible decision as "Eligible?"
+manual process as "Request manual review"
+reviewed decision as "Review approved?"
+approve process as "Approve request"
+decline process as "Send decline notice"
+end terminal as "Close request"
+start -> complete
+complete -> collect as "No"
+collect -> complete as "Updated"
+complete -> check as "Yes"
+check -> eligible
+eligible -> approve as "Yes"
+eligible -> manual as "Unclear"
+eligible -> decline as "No"
+manual -> reviewed
+reviewed -> approve as "Yes"
+reviewed -> decline as "No"
+approve -> end
+decline -> end

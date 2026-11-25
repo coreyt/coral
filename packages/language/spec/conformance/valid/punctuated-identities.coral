@@ -1,0 +1,6 @@
+@graph {"id":"punctuated-identities"}
+
+service "API" as "api.v1"
+database "Orders" as "orders-db"
+
+"api.v1" -> "orders-db"

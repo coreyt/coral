@@ -1,0 +1,18 @@
+@diagram uml-sequence
+Client actor
+WebServer participant as "Web Server"
+AuthService participant as "Auth Service"
+Database participant
+
+msg_1 = Client -#> WebServer as "POST /login (username, password)"
+msg_2 = WebServer -#> AuthService as "validateCredentials(username, password)"
+msg_3 = Database -#> AuthService as "SELECT user WHERE username = ?"
+msg_4 = Database -.-> AuthService as "user record"
+msg_5 = AuthService -#> AuthService as "verify password hash"
+alt "credentials valid" {
+  msg_6 = AuthService -.-> WebServer as "auth token"
+  msg_7 = WebServer -.-> Client as "200 OK + session token"
+} else "credentials invalid" {
+  msg_8 = AuthService -.-> WebServer as "authentication failed"
+  msg_9 = WebServer -.-> Client as "401 Unauthorized"
+}

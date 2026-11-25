@@ -1,0 +1,30 @@
+{
+  "version": "3.0.0",
+  "id": "advanced-fields",
+  "nodes": [
+    {
+      "id": "api",
+      "type": "service",
+      "ports": [{ "id": "out", "side": "EAST" }]
+    },
+    {
+      "id": "orders",
+      "type": "database",
+      "label": "Orders",
+      "ports": [{ "id": "in", "side": "WEST" }]
+    }
+  ],
+  "edges": [
+    {
+      "id": "writes",
+      "source": "api",
+      "target": "orders",
+      "sourcePort": "out",
+      "targetPort": "in",
+      "description": "Writes order data",
+      "properties": { "latencyMs": 5 },
+      "style": { "routing": "orthogonal" },
+      "targetEnd": { "marker": { "kind": "arrow", "fill": "unspecified" } }
+    }
+  ]
+}

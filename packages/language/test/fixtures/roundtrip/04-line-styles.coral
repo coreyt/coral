@@ -1,0 +1,9 @@
+service as a
+service as b
+service as c
+service as d
+service as e
+service as f
+a -> b [solid]
+c -> d [dashed]
+e -> f [dotted]

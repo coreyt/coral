@@ -1,0 +1,8 @@
+{
+  "originalFilename": "banking-system-class.coral",
+  "defectType": "orphan-node",
+  "affectedNodeIds": ["InterestRate"],
+  "affectedEdgeIds": ["rel_14"],
+  "explanation": "The description states that a SavingsAccount accrues an InterestRate. The only edge touching InterestRate (rel_14) has been removed, leaving the InterestRate class declared but disconnected from every other class in the banking system.",
+  "outputFilename": "banking-system-class-orphan-node-1.coral"
+}

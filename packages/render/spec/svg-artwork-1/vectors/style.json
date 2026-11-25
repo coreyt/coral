@@ -1,0 +1,335 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "style-inherited-through-groups",
+      "description": "Inherited properties resolve onto each primitive; group opacity is not inherited and stays on its group.",
+      "covers": [
+        "style:inherited",
+        "style:opacity-not-inherited"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g fill=\"#f00\" stroke=\"#00f\" stroke-width=\"3\" opacity=\"0.5\"><g stroke-width=\"2\" fill-rule=\"evenodd\"><path d=\"M0 0H10V10Z\"/><path d=\"M0 0H5V5Z\" fill=\"none\" opacity=\"0.25\"/></g><rect width=\"4\" height=\"4\" stroke=\"none\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g opacity=\"0.5\">\n    <g>\n      <path d=\"M 0 0 H 10 V 10 Z\" fill=\"#ff0000\" fill-rule=\"evenodd\" stroke=\"#0000ff\" stroke-width=\"2\" opacity=\"1\"/>\n      <path d=\"M 0 0 H 5 V 5 Z\" fill=\"none\" fill-rule=\"evenodd\" stroke=\"#0000ff\" stroke-width=\"2\" opacity=\"0.25\"/>\n    </g>\n    <rect x=\"0\" y=\"0\" width=\"4\" height=\"4\" rx=\"0\" ry=\"0\" fill=\"#ff0000\" stroke=\"none\" stroke-width=\"3\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-root-inherited",
+      "description": "Inherited properties on the root reach primitives and are not written on the root.",
+      "covers": [
+        "style:root-inherited"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" fill=\"#123\" stroke=\"#456\" stroke-linecap=\"round\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#112233\" stroke=\"#445566\" stroke-width=\"1\" stroke-linecap=\"round\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-attribute-precedence",
+      "description": "A style declaration overrides the presentation attribute on the same element, and the result inherits.",
+      "covers": [
+        "style:attribute-precedence"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g fill=\"#f00\" style=\"fill:#0f0\"><path d=\"M0 0H1\"/><path d=\"M0 0H2\" fill=\"#00f\" style=\"fill: #fff\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g>\n    <path d=\"M 0 0 H 1\" fill=\"#00ff00\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n    <path d=\"M 0 0 H 2\" fill=\"#ffffff\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-currentcolor-resolved",
+      "description": "currentColor resolves to the computed color of each element, including a stop that takes color from its gradient.",
+      "covers": [
+        "currentcolor:resolved",
+        "property:color"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" color=\"#ff0\"><stop offset=\"0\" stop-color=\"currentColor\"/></linearGradient><g color=\"#336699\"><path d=\"M0 0H1\" fill=\"currentColor\" stroke=\"currentcolor\"/><path d=\"M0 0H2\" style=\"color: teal\" fill=\"currentColor\"/><path d=\"M0 0H3\" stroke=\"url(#g)\"/></g></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#ffff00\" stop-opacity=\"1\"/>\n    </linearGradient>\n  </defs>\n  <g>\n    <path d=\"M 0 0 H 1\" fill=\"#336699\" stroke=\"#336699\" stroke-width=\"1\" opacity=\"1\"/>\n    <path d=\"M 0 0 H 2\" fill=\"#008080\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n    <path d=\"M 0 0 H 3\" fill=\"#000000\" stroke=\"url(#p1)\" stroke-width=\"1\" opacity=\"1\"/>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-color-forms",
+      "description": "Named colors match case-insensitively; rgb() integers and uppercase hexadecimal become lowercase #rrggbb.",
+      "covers": [
+        "color:named",
+        "color:rgb",
+        "color:hex6"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"RebeccaPurple\" stroke=\"rgb(0,128 , 255)\"/><path d=\"M0 0H2\" fill=\"#ABCDEF\" stroke=\"#ABC\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#663399\" stroke=\"#0080ff\" stroke-width=\"1\" opacity=\"1\"/>\n  <path d=\"M 0 0 H 2\" fill=\"#abcdef\" stroke=\"#aabbcc\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-currentcolor-unresolved",
+      "description": "currentColor with no color in scope is refused.",
+      "covers": [
+        "currentcolor:unresolved"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"currentColor\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-color-currentcolor",
+      "description": "The color property cannot itself be currentColor.",
+      "covers": [
+        "currentcolor:color-property"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><g color=\"currentColor\"><path d=\"M0 0H1\"/></g></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-css-variable",
+      "description": "CSS variables are refused.",
+      "covers": [
+        "excluded:css-variable"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill: var(--brand)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-custom-property",
+      "description": "Custom property declarations are refused.",
+      "covers": [
+        "excluded:css-variable"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"--brand: red\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-important",
+      "description": "Priority annotations are refused.",
+      "covers": [
+        "excluded:css-important"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:red !important\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-unknown-property",
+      "description": "Properties outside the allowlist are refused in style.",
+      "covers": [
+        "excluded:property"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"font-family: serif\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-transform-declaration",
+      "description": "transform is an attribute only, never a style declaration.",
+      "covers": [
+        "excluded:style-transform"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"transform: rotate(45deg)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-duplicate-declaration",
+      "description": "A property declared twice in one style attribute is refused.",
+      "covers": [
+        "style:duplicate"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:red;fill:blue\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-inherit-keyword",
+      "description": "CSS-wide keywords are refused.",
+      "covers": [
+        "excluded:css-wide-keyword"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"inherit\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-hsl-color",
+      "description": "hsl() colors are refused.",
+      "covers": [
+        "excluded:color-function"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"hsl(120, 100%, 50%)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-alpha-color",
+      "description": "Colors with alpha are refused.",
+      "covers": [
+        "excluded:alpha-color"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"#ff000080\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-transparent",
+      "description": "transparent is refused.",
+      "covers": [
+        "excluded:alpha-color"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"transparent\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-rgb-percent",
+      "description": "rgb() percentages are refused.",
+      "covers": [
+        "excluded:color-function"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"rgb(100%, 0%, 0%)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-paint-fallback",
+      "description": "A paint fallback after a URL is refused by the paint grammar.",
+      "covers": [
+        "excluded:paint-fallback"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\"/><path d=\"M0 0H1\" fill=\"url(#g) red\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-opacity-out-of-range",
+      "description": "Opacity outside 0..1 is refused rather than clamped.",
+      "covers": [
+        "range:opacity"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" opacity=\"1.5\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-dasharray-zero-allowed",
+      "description": "Zero dash lengths are admitted; only negative lengths are refused.",
+      "covers": [
+        "range:dasharray-zero"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-dasharray=\"0, 2\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"#000000\" stroke-width=\"1\" stroke-dasharray=\"0 2\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "style-dashoffset-unit-space",
+      "description": "Whitespace between the dash offset and px fails the length grammar.",
+      "covers": [
+        "unit:interior-whitespace"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke=\"#000\" stroke-dashoffset=\"1 px\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "style-dasharray-negative",
+      "description": "A negative dash length is refused.",
+      "covers": [
+        "range:dasharray"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" stroke-dasharray=\"4 -1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    }
+  ]
+}

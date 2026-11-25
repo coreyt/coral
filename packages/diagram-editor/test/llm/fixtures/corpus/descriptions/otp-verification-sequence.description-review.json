@@ -1,0 +1,23 @@
+{
+  "slug": "otp-verification-sequence",
+  "reviews": [
+    {
+      "descriptionFile": "otp-verification-sequence.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 4 participants and all 7 messages are named in exact diagram order, including both directions of the AuthService/SMSGateway hop and the final AuthService-to-App confirmation reply."
+    },
+    {
+      "descriptionFile": "otp-verification-sequence.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 4 participants then all 7 messages as sender-to-receiver pairs. Cross-checked against the .mmd file; no omissions."
+    },
+    {
+      "descriptionFile": "otp-verification-sequence.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Ends-first framing (OTP validity confirmed). Re-verified all 4 participants and all 7 messages are present, including the final AuthService-to-App reply that completes the loop."
+    }
+  ]
+}

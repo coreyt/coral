@@ -1,0 +1,85 @@
+{
+  "name": "@coral-viz/render",
+  "version": "0.2.12",
+  "description": "Shape, symbol and notation definitions plus deterministic text measurement and SVG serialization, with no browser or React dependency",
+  "homepage": "https://coreyt.github.io/coral/",
+  "bugs": {
+    "url": "https://github.com/coreyt/coral/issues"
+  },
+  "keywords": [
+    "coral",
+    "diagram",
+    "diagrams-as-code",
+    "svg",
+    "layout",
+    "flowchart",
+    "sequence-diagram",
+    "bpmn",
+    "uml",
+    "elk"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyt/coral.git",
+    "directory": "packages/render"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./layout": {
+      "import": "./dist/layout/index.js",
+      "types": "./dist/layout/index.d.ts"
+    },
+    "./svg-layout": {
+      "import": "./dist/svg/layout.js",
+      "types": "./dist/svg/layout.d.ts"
+    },
+    "./artwork-import": {
+      "import": "./dist/artwork/svgIconImport029.js",
+      "types": "./dist/artwork/svgIconImport029.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "third_party",
+    "spec",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "node ../../scripts/clean.mjs dist",
+    "build": "node ../../scripts/clean.mjs dist && tsc",
+    "prepack": "npm run build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage --exclude test/layout-performance.test.ts",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p type-tests/tsconfig.json"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "dependencies": {
+    "@coral-viz/language": "0.2.12",
+    "@graph-ir/core": "0.2.4",
+    "elkjs": "0.12.0",
+    "libavoided-js": "0.1.3",
+    "saxes": "6.0.0",
+    "string-width": "8.2.1",
+    "svgo": "4.1.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "5.0.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

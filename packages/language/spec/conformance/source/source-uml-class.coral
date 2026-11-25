@@ -1,0 +1,9 @@
+@diagram uml-class
+User class {
+  attributes {
+    + name: String
+  }
+  operations {
+    + lookup(id: String): User
+  }
+}

@@ -1,0 +1,17 @@
+@diagram uml-sequence
+client participant as "Mobile App"
+gateway participant
+auth participant
+service participant
+store participant
+begin = client -#> gateway as "begin"
+token = gateway -> auth as "token"
+grant = auth -.-> gateway as "grant"
+execute = gateway -#> service as "execute"
+lookup = service -#> store as "lookup"
+record = store -.-> service as "record"
+notify = service -#> gateway as "notify"
+done = service -.-> gateway as "done"
+reply = gateway -.-> client as "reply"
+audit = store -> client as "audit"
+ack = client -.-> store as "ack"

@@ -1,0 +1,71 @@
+classDiagram
+class User {
+  +String username
+  +String email
+}
+class Profile {
+  +String bio
+  +String avatarUrl
+}
+class Post {
+  +String text
+  +DateTime postedAt
+}
+class Comment {
+  +String text
+  +DateTime postedAt
+}
+class Like {
+  +DateTime likedAt
+}
+class Friendship {
+  +DateTime connectedAt
+  +String status
+}
+class Message {
+  +String text
+  +DateTime sentAt
+}
+class Conversation {
+  +String conversationId
+  +DateTime lastActivity
+}
+class Group {
+  +String name
+  +String description
+}
+class GroupMembership {
+  +DateTime joinedAt
+  +String role
+}
+class Notification {
+  +String message
+  +Boolean read
+}
+class Photo {
+  +String url
+  +DateTime uploadedAt
+}
+class Album {
+  +String title
+}
+class NewsFeed {
+  +DateTime lastRefreshed
+}
+User *-- Profile
+User --> Post : creates
+Post *-- Comment
+Post *-- Like
+User --> Comment : writes
+User --> Like : gives
+User --> Friendship : initiates
+Friendship --> User : connects to
+User --> Message : sends
+Message --> Conversation : belongs to
+User --> Conversation : participates in
+User --> GroupMembership : holds
+GroupMembership --> Group : membership in
+User --> Notification : receives
+User *-- Album
+Album *-- Photo
+User --> NewsFeed : views

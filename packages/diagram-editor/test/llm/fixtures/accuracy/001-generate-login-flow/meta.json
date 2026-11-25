@@ -1,0 +1,7 @@
+{
+  "caseId": "001-generate-login-flow",
+  "caseType": "generate",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), modeled on ai-editing-exploration.md's required 'generate' case",
+  "limitations": "Tests fresh generation from a plain-language prompt only; does not test editing an existing diagram"
+}

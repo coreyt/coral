@@ -1,0 +1,16 @@
+{
+  "originalFilename": "content-moderation-flow.coral",
+  "originalDsl": "@diagram architecture\n@coralVersion \"0.2.8\"\n@profileVersion \"1.0.0\"\n@catalogVersion \"1.0.0\"\n@conformanceLevel typical\nlayout [direction: DOWN]\n\nUser service as \"User\"\nPostService service as \"Post Service\"\nModerationQueue database as \"Moderation Queue\"\nAIClassifier service as \"AI Content Classifier\"\nHumanReviewer service as \"Human Reviewer\"\nPolicyEngine module as \"Policy Engine\"\nPublishService service as \"Publish Service\"\nNotifyService service as \"Notification Service\"\nAppealService service as \"Appeal Service\"\nedge_1 = User -> PostService [secondEnd: arrow] as \"submits post\"\nedge_2 = PostService -> ModerationQueue [secondEnd: arrow] as \"enqueue for review\"\nedge_3 = ModerationQueue -> AIClassifier [secondEnd: arrow] as \"send to classifier\"\nedge_4 = AIClassifier -> HumanReviewer [secondEnd: arrow] as \"flag as uncertain\"\nedge_5 = AIClassifier -> PolicyEngine [secondEnd: arrow] as \"auto-approve\"\nedge_6 = HumanReviewer -> PolicyEngine [secondEnd: arrow] as \"submit decision\"\nedge_7 = PolicyEngine -> PublishService [secondEnd: arrow] as \"approve\"\nedge_8 = PolicyEngine -> NotifyService [secondEnd: arrow] as \"reject\"\nedge_9 = PublishService -> NotifyService [secondEnd: arrow] as \"notify author\"\nedge_10 = User -> AppealService [secondEnd: arrow] as \"files appeal\"\nedge_11 = AppealService -> ModerationQueue [secondEnd: arrow] as \"re-queue for review\"\n",
+  "injectedDefects": [
+    {
+      "defectType": "unicode-lookalike-quote",
+      "location": {
+        "line": 10,
+        "column": 45,
+        "charOffset": 250
+      },
+      "description": "replaced closing quote on label \"Moderation Queue\" with Unicode look-alike U+201D"
+    }
+  ],
+  "outputFilename": "content-moderation-flow-unicode-lookalike-quote-1.coral"
+}

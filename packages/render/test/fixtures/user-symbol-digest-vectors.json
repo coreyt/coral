@@ -1,0 +1,714 @@
+{
+  "format": "coral.user-symbol-digest-vectors",
+  "formatVersion": 1,
+  "description": "Shared digest vectors for GraphIR 4 document-symbol definitions (Coral Slice 60 step C0a). See user-symbol-digest-vectors.md beside this file.",
+  "vectors": [
+    {
+      "name": "minimal",
+      "covers": ["baseline"],
+      "description": "Required members only.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "stale-digest-member-removed",
+      "covers": ["digest-member"],
+      "description": "The digest member never enters the digest input, whatever its value.",
+      "sameDigestAs": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "default-label-side-present",
+      "covers": ["default-labelSide"],
+      "description": "labelSide \"below\" equals its default and is removed.",
+      "sameDigestAs": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "labelSide": "below",
+        "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "default-outline-present",
+      "covers": ["default-outline", "outline-rectangle"],
+      "description": "outline \"rectangle\" equals its default and is removed.",
+      "sameDigestAs": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "outline": "rectangle",
+        "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "default-tint-present",
+      "covers": ["default-tint"],
+      "description": "tint \"none\" equals its default and is removed.",
+      "sameDigestAs": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tint": "none",
+        "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "all-defaults-present",
+      "covers": ["default-labelSide", "default-outline", "default-tint"],
+      "description": "All three defaults present at once are all removed.",
+      "sameDigestAs": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tint": "none",
+        "outline": "rectangle",
+        "labelSide": "below",
+        "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:135a3d8d59d8a6f954b826fd061a687b3eec071cbce9d6ab9586939065ac0924"
+    },
+    {
+      "name": "label-side-above",
+      "covers": ["non-default-labelSide"],
+      "description": "A non-default labelSide is kept.",
+      "differentDigestFrom": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "labelSide": "above",
+        "digest": "sha256:cf42f7368f0b553c2a033f1d746353a23d08c7039a64c971d8418f514d5306a8"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"labelSide\":\"above\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:cf42f7368f0b553c2a033f1d746353a23d08c7039a64c971d8418f514d5306a8"
+    },
+    {
+      "name": "outline-rounded",
+      "covers": ["outline-rounded"],
+      "description": "A non-default outline is kept.",
+      "differentDigestFrom": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "outline": "rounded",
+        "digest": "sha256:6407292bfeb4f5d127fe1076b380be6ea45c509050ed5edcd43fa1abe971e5da"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"outline\":\"rounded\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:6407292bfeb4f5d127fe1076b380be6ea45c509050ed5edcd43fa1abe971e5da"
+    },
+    {
+      "name": "outline-ellipse",
+      "covers": ["outline-ellipse"],
+      "description": "A non-default outline is kept.",
+      "differentDigestFrom": "outline-rounded",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "outline": "ellipse",
+        "digest": "sha256:418eeb6437cade4230af0db28e8b25a446cd2402c5de93c2fd462e8facca8f7b"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"outline\":\"ellipse\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:418eeb6437cade4230af0db28e8b25a446cd2402c5de93c2fd462e8facca8f7b"
+    },
+    {
+      "name": "outline-diamond",
+      "covers": ["outline-diamond"],
+      "description": "A non-default outline is kept.",
+      "differentDigestFrom": "outline-ellipse",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "outline": "diamond",
+        "digest": "sha256:c03fefca7f902bafa7c004101e48b8d45bf74057726fadc10d6a27f0c76c8698"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"outline\":\"diamond\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:c03fefca7f902bafa7c004101e48b8d45bf74057726fadc10d6a27f0c76c8698"
+    },
+    {
+      "name": "tint-stroke",
+      "covers": ["non-default-tint"],
+      "description": "A non-default tint is kept.",
+      "differentDigestFrom": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tint": "stroke",
+        "digest": "sha256:c68f0c9776913627f8dcaf767133401922baadd9b41c924d4661b7f63b750095"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24},\"tint\":\"stroke\"}",
+      "digest": "sha256:c68f0c9776913627f8dcaf767133401922baadd9b41c924d4661b7f63b750095"
+    },
+    {
+      "name": "full",
+      "covers": ["description", "tags", "provenance", "anchor-boundary", "anchor-interior", "port-label", "port-max-connections", "port-anchor-symbol"],
+      "description": "Every member, already in sorted order.",
+      "definition": {
+        "id": "local.gateway",
+        "name": "Gateway",
+        "description": "Edge gateway",
+        "tags": ["edge", "network"],
+        "size": {"width": 48, "height": 32},
+        "labelSide": "left",
+        "outline": "rounded",
+        "tint": "stroke",
+        "provenance": {"source": "Drawn for Coral tests", "license": "CC0-1.0"},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "anchors": [
+          {"id": "core", "kind": "interior", "x": 0.5, "y": 0.5, "exit": "E"},
+          {"id": "top", "kind": "boundary", "side": "N", "at": 0.25}
+        ],
+        "ports": [
+          {"id": "in", "direction": "in", "anchor": {"kind": "symbol", "id": "top"}, "label": "Ingress", "maxConnections": 1},
+          {"id": "out", "direction": "out", "anchor": {"kind": "exact", "position": "E"}, "properties": {"protocol": "https"}}
+        ],
+        "digest": "sha256:6be88426a84892e79ed6def2bac04d6eb5fa1b08832636c60ced430ba883f0ae"
+      },
+      "canonicalInput": "{\"anchors\":[{\"exit\":\"E\",\"id\":\"core\",\"kind\":\"interior\",\"x\":0.5,\"y\":0.5},{\"at\":0.25,\"id\":\"top\",\"kind\":\"boundary\",\"side\":\"N\"}],\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"description\":\"Edge gateway\",\"id\":\"local.gateway\",\"labelSide\":\"left\",\"name\":\"Gateway\",\"outline\":\"rounded\",\"ports\":[{\"anchor\":{\"id\":\"top\",\"kind\":\"symbol\"},\"direction\":\"in\",\"id\":\"in\",\"label\":\"Ingress\",\"maxConnections\":1},{\"anchor\":{\"kind\":\"exact\",\"position\":\"E\"},\"direction\":\"out\",\"id\":\"out\",\"properties\":{\"protocol\":\"https\"}}],\"provenance\":{\"license\":\"CC0-1.0\",\"source\":\"Drawn for Coral tests\"},\"size\":{\"height\":32,\"width\":48},\"tags\":[\"edge\",\"network\"],\"tint\":\"stroke\"}",
+      "digest": "sha256:6be88426a84892e79ed6def2bac04d6eb5fa1b08832636c60ced430ba883f0ae"
+    },
+    {
+      "name": "full-permuted",
+      "covers": ["permutation-members", "permutation-tags", "permutation-anchors", "permutation-ports"],
+      "description": "The full vector with member order reversed at every level and tags, anchors and ports reversed.",
+      "sameDigestAs": "full",
+      "definition": {
+        "digest": "sha256:6be88426a84892e79ed6def2bac04d6eb5fa1b08832636c60ced430ba883f0ae",
+        "ports": [
+          {"properties": {"protocol": "https"}, "anchor": {"position": "E", "kind": "exact"}, "direction": "out", "id": "out"},
+          {"maxConnections": 1, "label": "Ingress", "anchor": {"id": "top", "kind": "symbol"}, "direction": "in", "id": "in"}
+        ],
+        "anchors": [
+          {"at": 0.25, "side": "N", "kind": "boundary", "id": "top"},
+          {"exit": "E", "y": 0.5, "x": 0.5, "kind": "interior", "id": "core"}
+        ],
+        "artwork": {"text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>", "profile": {"version": "1", "id": "coral.svg-artwork"}, "mediaType": "image/svg+xml"},
+        "provenance": {"license": "CC0-1.0", "source": "Drawn for Coral tests"},
+        "tint": "stroke",
+        "outline": "rounded",
+        "labelSide": "left",
+        "size": {"height": 32, "width": 48},
+        "tags": ["network", "edge"],
+        "description": "Edge gateway",
+        "name": "Gateway",
+        "id": "local.gateway"
+      },
+      "canonicalInput": "{\"anchors\":[{\"exit\":\"E\",\"id\":\"core\",\"kind\":\"interior\",\"x\":0.5,\"y\":0.5},{\"at\":0.25,\"id\":\"top\",\"kind\":\"boundary\",\"side\":\"N\"}],\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"description\":\"Edge gateway\",\"id\":\"local.gateway\",\"labelSide\":\"left\",\"name\":\"Gateway\",\"outline\":\"rounded\",\"ports\":[{\"anchor\":{\"id\":\"top\",\"kind\":\"symbol\"},\"direction\":\"in\",\"id\":\"in\",\"label\":\"Ingress\",\"maxConnections\":1},{\"anchor\":{\"kind\":\"exact\",\"position\":\"E\"},\"direction\":\"out\",\"id\":\"out\",\"properties\":{\"protocol\":\"https\"}}],\"provenance\":{\"license\":\"CC0-1.0\",\"source\":\"Drawn for Coral tests\"},\"size\":{\"height\":32,\"width\":48},\"tags\":[\"edge\",\"network\"],\"tint\":\"stroke\"}",
+      "digest": "sha256:6be88426a84892e79ed6def2bac04d6eb5fa1b08832636c60ced430ba883f0ae"
+    },
+    {
+      "name": "port-anchor-omitted",
+      "covers": ["port-anchor-omitted"],
+      "description": "A port without an anchor.",
+      "differentDigestFrom": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in"}],
+        "digest": "sha256:f69733601ee36e7bc1f06298c5b5c301f030e64dd7acd4804175684adc07aeab"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"in\"}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:f69733601ee36e7bc1f06298c5b5c301f030e64dd7acd4804175684adc07aeab"
+    },
+    {
+      "name": "port-anchor-explicit-auto",
+      "covers": ["port-anchor-explicit-auto"],
+      "description": "An explicit {\"kind\": \"auto\"} anchor keeps its presence, so the digest differs from omission.",
+      "differentDigestFrom": "port-anchor-omitted",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in", "anchor": {"kind": "auto"}}],
+        "digest": "sha256:6d65a8b601661b80ebe80bd79857380022461fc99676b489bad40f99cd839e2f"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"anchor\":{\"kind\":\"auto\"},\"direction\":\"in\",\"id\":\"in\"}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:6d65a8b601661b80ebe80bd79857380022461fc99676b489bad40f99cd839e2f"
+    },
+    {
+      "name": "port-properties-default-looking-keys",
+      "covers": ["port-properties"],
+      "description": "Members inside port properties that look like defaults, digests or sortable arrays are never removed or reordered.",
+      "differentDigestFrom": "port-anchor-omitted",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in", "properties": {"tint": "none", "outline": "rectangle", "labelSide": "below", "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "anchor": {"kind": "auto"}, "tags": ["b", "a"], "ports": [{"id": "z"}, {"id": "a"}]}}],
+        "digest": "sha256:d0e6fdddf5bd4f5e8f143ceb986d42935c55b304caaaa2eef31ebe2d94d67d12"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"in\",\"properties\":{\"anchor\":{\"kind\":\"auto\"},\"digest\":\"sha256:0000000000000000000000000000000000000000000000000000000000000000\",\"labelSide\":\"below\",\"outline\":\"rectangle\",\"ports\":[{\"id\":\"z\"},{\"id\":\"a\"}],\"tags\":[\"b\",\"a\"],\"tint\":\"none\"}}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:d0e6fdddf5bd4f5e8f143ceb986d42935c55b304caaaa2eef31ebe2d94d67d12"
+    },
+    {
+      "name": "port-properties-proto-key",
+      "covers": ["port-properties"],
+      "description": "A \"__proto__\" member is ordinary JSON data and is kept and sorted like any other member.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in", "properties": {"a": 1, "__proto__": {"polluted": true}}}],
+        "digest": "sha256:5c4b4c1f8074900278bb523b2d1e48bc0e95368e35e59e9535f0d335ee7e3cb3"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"in\",\"properties\":{\"__proto__\":{\"polluted\":true},\"a\":1}}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:5c4b4c1f8074900278bb523b2d1e48bc0e95368e35e59e9535f0d335ee7e3cb3"
+    },
+    {
+      "name": "member-names-sorted-by-utf16-code-units",
+      "covers": ["key-order"],
+      "description": "RFC 8785 sorts member names by UTF-16 code units, so U+1F600 sorts before U+FB33.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in", "properties": {"\u20ac": "Euro Sign", "\r": "Carriage Return", "\ufb33": "Hebrew Letter Dalet With Dagesh", "1": "One", "\ud83d\ude00": "Emoji: Grinning Face", "\u0080": "Control", "\u00f6": "Latin Small Letter O With Diaeresis"}}],
+        "digest": "sha256:e7a370759ffdb0f7bdf6630939e759f2f520690881ef45fb2917f729e3c72f61"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"in\",\"properties\":{\"\\r\":\"Carriage Return\",\"1\":\"One\",\"\u0080\":\"Control\",\"\u00f6\":\"Latin Small Letter O With Diaeresis\",\"\u20ac\":\"Euro Sign\",\"\ud83d\ude00\":\"Emoji: Grinning Face\",\"\ufb33\":\"Hebrew Letter Dalet With Dagesh\"}}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:e7a370759ffdb0f7bdf6630939e759f2f520690881ef45fb2917f729e3c72f61"
+    },
+    {
+      "name": "tags-sorted-by-code-point",
+      "covers": ["tags", "tag-code-point-order"],
+      "description": "Tags sort by code point, so U+FB33 sorts before U+1F600, unlike member names.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tags": ["\ud83d\ude00", "\ufb33", "a"],
+        "digest": "sha256:8d3b7272f6632238065f65b13eae6fa68e8302a5a2693a1b03d77ea65a2cb0da"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24},\"tags\":[\"a\",\"\ufb33\",\"\ud83d\ude00\"]}",
+      "digest": "sha256:8d3b7272f6632238065f65b13eae6fa68e8302a5a2693a1b03d77ea65a2cb0da"
+    },
+    {
+      "name": "tags-permuted",
+      "covers": ["permutation-tags", "tag-code-point-order"],
+      "description": "The same tags in UTF-16 code unit order give the code point order digest.",
+      "sameDigestAs": "tags-sorted-by-code-point",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tags": ["a", "\ud83d\ude00", "\ufb33"],
+        "digest": "sha256:8d3b7272f6632238065f65b13eae6fa68e8302a5a2693a1b03d77ea65a2cb0da"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24},\"tags\":[\"a\",\"\ufb33\",\"\ud83d\ude00\"]}",
+      "digest": "sha256:8d3b7272f6632238065f65b13eae6fa68e8302a5a2693a1b03d77ea65a2cb0da"
+    },
+    {
+      "name": "port-ids-sorted-by-code-point",
+      "covers": ["permutation-ports", "id-code-point-order"],
+      "description": "Ports sort by id code point, so U+FB33 sorts before U+1F600.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "\ud83d\ude00", "direction": "out"}, {"id": "\ufb33", "direction": "in"}],
+        "digest": "sha256:bdbfcf187fc987ffce9a991599080619e519f748fdf18d732eb720d00324d1f2"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"\ufb33\"},{\"direction\":\"out\",\"id\":\"\ud83d\ude00\"}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:bdbfcf187fc987ffce9a991599080619e519f748fdf18d732eb720d00324d1f2"
+    },
+    {
+      "name": "ports-permuted",
+      "covers": ["permutation-ports"],
+      "description": "Ports given in reverse id order.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "out", "direction": "out"}, {"id": "in", "direction": "in"}],
+        "digest": "sha256:a5de9e1e8a87e617df0e95eda73fb9ef6f81160f97b0260094b6597057faec33"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"in\",\"id\":\"in\"},{\"direction\":\"out\",\"id\":\"out\"}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:a5de9e1e8a87e617df0e95eda73fb9ef6f81160f97b0260094b6597057faec33"
+    },
+    {
+      "name": "anchors-boundary-and-interior",
+      "covers": ["anchor-boundary", "anchor-interior"],
+      "description": "One boundary and one interior anchor in id order.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "anchors": [{"id": "core", "kind": "interior", "x": 0.5, "y": 0.5, "exit": "S"}, {"id": "west", "kind": "boundary", "side": "W", "at": 0.5}],
+        "digest": "sha256:77f7753a9049aa26c17ad934b0cb622ac39362bda459220fc973e99762911ef7"
+      },
+      "canonicalInput": "{\"anchors\":[{\"exit\":\"S\",\"id\":\"core\",\"kind\":\"interior\",\"x\":0.5,\"y\":0.5},{\"at\":0.5,\"id\":\"west\",\"kind\":\"boundary\",\"side\":\"W\"}],\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:77f7753a9049aa26c17ad934b0cb622ac39362bda459220fc973e99762911ef7"
+    },
+    {
+      "name": "anchors-permuted",
+      "covers": ["permutation-anchors", "anchor-boundary", "anchor-interior"],
+      "description": "The same anchors in reverse id order.",
+      "sameDigestAs": "anchors-boundary-and-interior",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "anchors": [{"id": "west", "kind": "boundary", "side": "W", "at": 0.5}, {"id": "core", "kind": "interior", "x": 0.5, "y": 0.5, "exit": "S"}],
+        "digest": "sha256:77f7753a9049aa26c17ad934b0cb622ac39362bda459220fc973e99762911ef7"
+      },
+      "canonicalInput": "{\"anchors\":[{\"exit\":\"S\",\"id\":\"core\",\"kind\":\"interior\",\"x\":0.5,\"y\":0.5},{\"at\":0.5,\"id\":\"west\",\"kind\":\"boundary\",\"side\":\"W\"}],\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:77f7753a9049aa26c17ad934b0cb622ac39362bda459220fc973e99762911ef7"
+    },
+    {
+      "name": "provenance-license-only",
+      "covers": ["provenance"],
+      "description": "Provenance with one member.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "provenance": {"license": "MIT"},
+        "digest": "sha256:19f081a33ef0a64a25ad5a73d6296b7997d6790106b9a5230b08cc4d41a73393"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"provenance\":{\"license\":\"MIT\"},\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:19f081a33ef0a64a25ad5a73d6296b7997d6790106b9a5230b08cc4d41a73393"
+    },
+    {
+      "name": "unicode-non-bmp",
+      "covers": ["unicode-non-bmp"],
+      "description": "Non-BMP characters, one written raw and one as an escaped surrogate pair, serialize as raw UTF-8.",
+      "definition": {
+        "id": "local.server",
+        "name": "𝔸 Rocket \ud83d\ude80",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:71abec5b7861d6e93f6f6eaf307f7e49b5fd3d4be9cfdfac1b4446771a317011"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"\ud835\udd38 Rocket \ud83d\ude80\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:71abec5b7861d6e93f6f6eaf307f7e49b5fd3d4be9cfdfac1b4446771a317011"
+    },
+    {
+      "name": "unicode-nfc",
+      "covers": ["unicode-normalization"],
+      "description": "Precomposed U+00E9.",
+      "definition": {
+        "id": "local.server",
+        "name": "Caf\u00e9",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:c5f02489b75b82764b040f38074912b82402e4b65aa76e8faf464e012b9d6de1"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Caf\u00e9\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:c5f02489b75b82764b040f38074912b82402e4b65aa76e8faf464e012b9d6de1"
+    },
+    {
+      "name": "unicode-nfd",
+      "covers": ["unicode-normalization", "unicode-combining"],
+      "description": "Decomposed e plus U+0301 is not normalized, so it differs from the precomposed form.",
+      "differentDigestFrom": "unicode-nfc",
+      "definition": {
+        "id": "local.server",
+        "name": "Cafe\u0301",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:413587ddd7d486a0474b6fa536ba40f9813016e527cc820fe7d593be120aefa9"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Cafe\u0301\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:413587ddd7d486a0474b6fa536ba40f9813016e527cc820fe7d593be120aefa9"
+    },
+    {
+      "name": "unicode-stacked-combining-marks",
+      "covers": ["unicode-combining"],
+      "description": "A base letter with several combining marks keeps their authored order.",
+      "differentDigestFrom": "minimal",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "description": "a\u0323\u0308 versus a\u0308\u0323",
+        "digest": "sha256:fbcb270d622e3c8259575bc6860d0b826cb90168917d1146e9803c5f1d39dc10"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"description\":\"a\u0323\u0308 versus a\u0308\u0323\",\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:fbcb270d622e3c8259575bc6860d0b826cb90168917d1146e9803c5f1d39dc10"
+    },
+    {
+      "name": "string-escapes",
+      "covers": ["string-escapes"],
+      "description": "RFC 8785 string escaping: short escapes, lowercase \\u00XX controls, solidus and DEL, U+2028, U+2029 and U+FEFF raw.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "description": "quote \" backslash \\ slash \/ tab \t newline \n return \r backspace \b formfeed \f nul \u0000 unit-separator \u001F delete \u007f line-separator \u2028 paragraph-separator \u2029 bom \ufeff",
+        "digest": "sha256:33e7f1049906fffe92a6cc200d4c04a487f4be97d44b56fa09f5c6f6bedcab89"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"description\":\"quote \\\" backslash \\\\ slash / tab \\t newline \\n return \\r backspace \\b formfeed \\f nul \\u0000 unit-separator \\u001f delete \u007f line-separator \u2028 paragraph-separator \u2029 bom \ufeff\",\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:33e7f1049906fffe92a6cc200d4c04a487f4be97d44b56fa09f5c6f6bedcab89"
+    },
+    {
+      "name": "control-characters-all",
+      "covers": ["string-escapes", "control-characters"],
+      "description": "Every control character U+0000 to U+001F, each written as a \\u escape: five use short escapes, the rest lowercase \\u00XX.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "description": "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008\u0009\u000A\u000B\u000C\u000D\u000E\u000F\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001A\u001B\u001C\u001D\u001E\u001F",
+        "digest": "sha256:d2b3cb16826cc9c047550a9b3a89351dc062cd3666d9aa59ffd6b783dc0c5de7"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"description\":\"\\u0000\\u0001\\u0002\\u0003\\u0004\\u0005\\u0006\\u0007\\b\\t\\n\\u000b\\f\\r\\u000e\\u000f\\u0010\\u0011\\u0012\\u0013\\u0014\\u0015\\u0016\\u0017\\u0018\\u0019\\u001a\\u001b\\u001c\\u001d\\u001e\\u001f\",\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:d2b3cb16826cc9c047550a9b3a89351dc062cd3666d9aa59ffd6b783dc0c5de7"
+    },
+    {
+      "name": "control-characters-in-name",
+      "covers": ["string-escapes", "control-characters"],
+      "description": "Tab, newline, escape and unit separator in name serialize as \\t, \\n, \\u001b and \\u001f.",
+      "definition": {
+        "id": "local.server",
+        "name": "Tab\there\nnext\u001Bline\u001f",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:fca077034317bdcce9be319cdcdefe698657006dea26a7e87c88e61291e2fd2b"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Tab\\there\\nnext\\u001bline\\u001f\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:fca077034317bdcce9be319cdcdefe698657006dea26a7e87c88e61291e2fd2b"
+    },
+    {
+      "name": "numbers-size",
+      "covers": ["numbers-integer", "numbers-fraction"],
+      "description": "Exponent and trailing-zero spellings of size serialize in shortest form.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 1.0E1, "height": 24.50},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:5711f6c3fc8a7e1c6e7183207a84f16bd1b88e3c049afba5b50c12a056d6a184"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24.5,\"width\":10}}",
+      "digest": "sha256:5711f6c3fc8a7e1c6e7183207a84f16bd1b88e3c049afba5b50c12a056d6a184"
+    },
+    {
+      "name": "numbers-large-size",
+      "covers": ["numbers-exponent", "numbers-extreme"],
+      "description": "1e20 serializes as digits and 1e21 switches to exponent form.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 1E21, "height": 1e20},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:ba9c95d92bccec438b2d313f74909ade67564c6298a4203369c8c994b661e6eb"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":100000000000000000000,\"width\":1e+21}}",
+      "digest": "sha256:ba9c95d92bccec438b2d313f74909ade67564c6298a4203369c8c994b661e6eb"
+    },
+    {
+      "name": "numbers-anchors",
+      "covers": ["numbers-negative-zero", "numbers-exponent", "anchor-boundary", "anchor-interior"],
+      "description": "Negative zero serializes as 0 and exponent spellings of fractions serialize in decimal form.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "anchors": [{"id": "left_mid", "kind": "boundary", "side": "W", "at": -0}, {"id": "tap", "kind": "interior", "x": 1E-1, "y": 75e-2, "exit": "S"}],
+        "digest": "sha256:47bc251b9262d97ed25a1d70f31e46977f1c8315e5e6c6b9d303fe7ee1a1098a"
+      },
+      "canonicalInput": "{\"anchors\":[{\"at\":0,\"id\":\"left_mid\",\"kind\":\"boundary\",\"side\":\"W\"},{\"exit\":\"S\",\"id\":\"tap\",\"kind\":\"interior\",\"x\":0.1,\"y\":0.75}],\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:47bc251b9262d97ed25a1d70f31e46977f1c8315e5e6c6b9d303fe7ee1a1098a"
+    },
+    {
+      "name": "numbers-port-properties",
+      "covers": ["numbers-integer", "numbers-fraction", "numbers-exponent", "numbers-negative-zero", "numbers-extreme", "port-max-connections", "port-properties"],
+      "description": "JCS number formatting inside port properties, including the RFC 8785 examples.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "p", "direction": "inout", "maxConnections": 2.0, "properties": {"zero": 0, "negZero": -0, "int": 9007199254740993, "tenth": 0.1, "sum": 0.30000000000000004, "big": 1e21, "bigInt": 1E20, "ninetyNine": 999999999999999999999, "rfcLarge": 295147905179352825856, "ratio": 333333333.33333329, "max": 1.7976931348623157e308, "min": 5e-324, "small": 0.000001, "smaller": 1e-7, "neg": -1.5E+3, "exp": 4.50, "minusExp": -2e-3, "mixed": [1.0, 100e-2]}}],
+        "digest": "sha256:4cef95fdaebf6d5e411f536b926cc3fb16fb18cf41bcd9ec022242b2a6517e5f"
+      },
+      "canonicalInput": "{\"artwork\":{\"mediaType\":\"image/svg+xml\",\"profile\":{\"id\":\"coral.svg-artwork\",\"version\":\"1\"},\"text\":\"<svg xmlns=\\\"http://www.w3.org/2000/svg\\\" viewBox=\\\"0 0 24 24\\\"><path d=\\\"M2 2h20v20H2z\\\"/></svg>\"},\"id\":\"local.server\",\"name\":\"Server\",\"ports\":[{\"direction\":\"inout\",\"id\":\"p\",\"maxConnections\":2,\"properties\":{\"big\":1e+21,\"bigInt\":100000000000000000000,\"exp\":4.5,\"int\":9007199254740992,\"max\":1.7976931348623157e+308,\"min\":5e-324,\"minusExp\":-0.002,\"mixed\":[1,1],\"neg\":-1500,\"negZero\":0,\"ninetyNine\":1e+21,\"ratio\":333333333.3333333,\"rfcLarge\":295147905179352830000,\"small\":0.000001,\"smaller\":1e-7,\"sum\":0.30000000000000004,\"tenth\":0.1,\"zero\":0}}],\"size\":{\"height\":24,\"width\":24}}",
+      "digest": "sha256:4cef95fdaebf6d5e411f536b926cc3fb16fb18cf41bcd9ec022242b2a6517e5f"
+    },
+    {
+      "name": "lone-high-surrogate-in-name",
+      "covers": ["lone-surrogate"],
+      "description": "A lone high surrogate cannot be canonicalized.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server \ud800",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_UNCOMPUTABLE"
+    },
+    {
+      "name": "lone-low-surrogate-in-tag",
+      "covers": ["lone-surrogate"],
+      "description": "A lone low surrogate in a tag cannot be canonicalized.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tags": ["ok", "\udc00"],
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_UNCOMPUTABLE"
+    },
+    {
+      "name": "reversed-surrogate-pair-in-artwork",
+      "covers": ["lone-surrogate"],
+      "description": "A low surrogate before a high surrogate in artwork text is two lone surrogates.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/><!-- \ude00\ud83d --></svg>"},
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_UNCOMPUTABLE"
+    },
+    {
+      "name": "lone-surrogate-in-port-property-name",
+      "covers": ["lone-surrogate", "port-properties"],
+      "description": "A lone surrogate in a member name inside port properties cannot be canonicalized.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [{"id": "in", "direction": "in", "properties": {"\udbff": 1}}],
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_UNCOMPUTABLE"
+    },
+    {
+      "name": "empty-tags-refused",
+      "covers": ["refused-empty-tags"],
+      "description": "An empty tags array is schema-invalid and is refused before any digest is computed.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "tags": [],
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_INPUT_INVALID",
+      "path": "/tags"
+    },
+    {
+      "name": "empty-anchors-refused",
+      "covers": ["refused-empty-anchors"],
+      "description": "An empty anchors array is schema-invalid and is refused before any digest is computed.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "anchors": [],
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_INPUT_INVALID",
+      "path": "/anchors"
+    },
+    {
+      "name": "empty-ports-refused",
+      "covers": ["refused-empty-ports"],
+      "description": "An empty ports array is schema-invalid and is refused before any digest is computed.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "ports": [],
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_INPUT_INVALID",
+      "path": "/ports"
+    },
+    {
+      "name": "empty-provenance-refused",
+      "covers": ["refused-empty-provenance"],
+      "description": "An empty provenance object is schema-invalid and is refused before any digest is computed.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "provenance": {},
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_INPUT_INVALID",
+      "path": "/provenance"
+    },
+    {
+      "name": "empty-provenance-refused-before-lone-surrogate",
+      "covers": ["refused-empty-provenance", "lone-surrogate"],
+      "description": "Refusal of a schema-invalid input comes before canonicalization, so a lone surrogate elsewhere does not change the result.",
+      "definition": {
+        "id": "local.server",
+        "name": "Server \ud800",
+        "size": {"width": 24, "height": 24},
+        "artwork": {"mediaType": "image/svg+xml", "profile": {"id": "coral.svg-artwork", "version": "1"}, "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M2 2h20v20H2z\"/></svg>"},
+        "provenance": {},
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "error": "DOCUMENT_SYMBOL_DIGEST_INPUT_INVALID",
+      "path": "/provenance"
+    }
+  ]
+}

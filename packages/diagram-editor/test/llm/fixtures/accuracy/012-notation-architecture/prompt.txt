@@ -1,0 +1,1 @@
+Create a cloud architecture diagram: an actor "End User", a service "Web App", a database "Postgres DB", an external API "Stripe API", and a group "VPC" containing the Web App and the Postgres DB.

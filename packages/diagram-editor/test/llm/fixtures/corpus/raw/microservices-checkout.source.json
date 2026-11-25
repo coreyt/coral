@@ -1,0 +1,11 @@
+{
+  "slug": "microservices-checkout",
+  "sourceUrl": "synthetic-original",
+  "license": "synthetic-original",
+  "attribution": "authored for Slice 49 pilot corpus",
+  "collectedDate": "2026-09-13",
+  "diagramType": "flowchart",
+  "complexity": "complex",
+  "nodeCount": 11,
+  "edgeCount": 11
+}

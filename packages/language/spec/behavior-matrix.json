@@ -1,0 +1,784 @@
+{
+  "languageVersion": "1.3.0",
+  "behaviors": [
+    {
+      "id": "graph-header",
+      "syntax": "@graph <strict JSON object>",
+      "graphir": [
+        "version",
+        "id",
+        "name",
+        "metadata",
+        "layoutOptions"
+      ],
+      "referenceImplementation": "supported for GraphIR 3; removed algorithmOptions and unaccepted or wrong-shaped keys are errors",
+      "parser": "supported",
+      "printer": "supported canonical Language 1 header; invalid programmatic fields are omitted with print loss",
+      "fixtures": [
+        "valid-ordinary",
+        "valid-field-spellings",
+        "invalid-noncanonical-spellings",
+        "invalid-legacy-spellings",
+        "invalid-duplicate-json-keys"
+      ],
+      "diagnosticCodes": [
+        "coral.graph.unparsed",
+        "coral.graph.version.unsupported",
+        "coral.graph.data-field.unsupported",
+        "coral.graph.data-field.invalid",
+        "coral.json.key.duplicate"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "node-declaration",
+      "syntax": "type label [as id] or type as id",
+      "graphir": [
+        "nodes",
+        "GraphNode.id",
+        "GraphNode.type",
+        "GraphNode.label"
+      ],
+      "referenceImplementation": "supported",
+      "parser": "supported including absent-label form",
+      "printer": "supported with absent-label preservation",
+      "fixtures": [
+        "valid-ordinary",
+        "valid-advanced-fields",
+        "roundtrip-fixed-membership-edit"
+      ],
+      "diagnosticCodes": [
+        "coral.node.id.degraded",
+        "coral.node.type.unparsed"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "ordinary-v1",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "partial fixed type vocabulary"
+    },
+    {
+      "id": "containment",
+      "syntax": "node body nesting",
+      "graphir": [
+        "GraphNode.children",
+        "GraphNode.parent"
+      ],
+      "referenceImplementation": "supported",
+      "parser": "supported baseline",
+      "printer": "supported baseline",
+      "fixtures": [
+        "valid-ordinary",
+        "roundtrip-fixed-membership-edit"
+      ],
+      "diagnosticCodes": [
+        "coral.brace.unparsed"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "ordinary-v1",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported subset"
+    },
+    {
+      "id": "node-properties",
+      "syntax": "one key: JSON value per body line",
+      "graphir": [
+        "GraphNode.properties"
+      ],
+      "referenceImplementation": "supported",
+      "parser": "supported baseline",
+      "printer": "supported baseline",
+      "fixtures": [
+        "valid-ordinary",
+        "invalid-reserved-and-empty-attributes",
+        "invalid-spelling-collisions",
+        "invalid-duplicate-json-keys"
+      ],
+      "diagnosticCodes": [
+        "coral.node.reserved-key.invalid",
+        "coral.node.field.duplicate",
+        "coral.json.key.duplicate"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "ordinary-v1-scalars",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "string-only subset"
+    },
+    {
+      "id": "node-data",
+      "syntax": "data <strict JSON object>",
+      "graphir": [
+        "GraphNode.description",
+        "GraphNode.symbol",
+        "GraphNode.variant",
+        "GraphNode.ports",
+        "GraphNode.dimensions",
+        "GraphNode.layoutOptions"
+      ],
+      "referenceImplementation": "supported for the approved GraphIR 3 closed field set",
+      "parser": "supported",
+      "printer": "supported total authored projection",
+      "fixtures": [
+        "roundtrip-route-anchors",
+        "valid-field-spellings",
+        "invalid-noncanonical-spellings",
+        "invalid-duplicate-json-keys"
+      ],
+      "diagnosticCodes": [
+        "coral.node.data.unparsed",
+        "coral.node.data-field.unsupported",
+        "coral.node.data-field.invalid",
+        "coral.node.id.invalid",
+        "coral.json.key.duplicate"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "ordinary-v1-symbol",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "exact-node-geometry",
+      "syntax": "@ (x, y) [pinned]",
+      "graphir": [
+        "GraphNode.position",
+        "GraphNode.pinned"
+      ],
+      "referenceImplementation": "supported with pinned-position implication enforced",
+      "parser": "supported",
+      "printer": "supported with shortest round-tripping binary64 output",
+      "fixtures": [
+        "valid-spatial",
+        "invalid-pinned-without-position"
+      ],
+      "diagnosticCodes": [
+        "coral.node.pin.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "uml-classifier",
+      "syntax": "class|interface|enum name [as id] [modifiers {...}] with attributes, operations, or literals blocks",
+      "graphir": [
+        "GraphIR.profile",
+        "GraphNode.classifier",
+        "GraphNode.symbol"
+      ],
+      "referenceImplementation": "supported finite UML class subset under metadata.notation uml-class",
+      "parser": "derives uml/class/1.0.0 profile and rejects invalid kinds, compartments, members, modifiers, and identities",
+      "printer": "exact structured round-trip for the supported subset; unsupported programmatic values produce attributable loss",
+      "fixtures": [
+        "uml-class-structured"
+      ],
+      "diagnosticCodes": [
+        "coral.uml.classifier.modifier.invalid",
+        "coral.uml.classifier.name.invalid",
+        "coral.uml.compartment.duplicate",
+        "coral.uml.compartment.kind.invalid",
+        "coral.uml.compartment.required",
+        "coral.uml.compartment.unparsed",
+        "coral.uml.member.id.invalid",
+        "coral.uml.member.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "uml-class-v1",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "uml-sequence",
+      "syntax": "participant|actor declarations, edges with a sync|async|return token, flat loop|alt|opt blocks with else operands, activation and note statements",
+      "graphir": [
+        "GraphIR.profile",
+        "GraphIR.interaction",
+        "GraphNode.type",
+        "GraphEdge.type"
+      ],
+      "referenceImplementation": "supported GraphIR 3 core sequence subset under metadata.notation uml-sequence",
+      "parser": "derives uml/sequence/1.0.0 profile and the interaction from declaration order; rejects nested fragments, 0.2.7 constructs, fields outside the closed lists, and invalid references",
+      "printer": "exact canonical round-trip for the supported subset with one canonical activation/note/fragment order; out-of-subset programmatic values are blocking coral.sequence.print.unsupported",
+      "fixtures": [
+        "uml-sequence-core"
+      ],
+      "diagnosticCodes": [
+        "coral.sequence.activation.invalid",
+        "coral.sequence.construct.unsupported",
+        "coral.sequence.field.unsupported",
+        "coral.sequence.fragment.invalid",
+        "coral.sequence.fragment.nested.unsupported",
+        "coral.sequence.fragment.unparsed",
+        "coral.sequence.identity.duplicate",
+        "coral.sequence.message.invalid",
+        "coral.sequence.note.invalid",
+        "coral.sequence.participant.invalid",
+        "coral.sequence.reference.ambiguous.invalid",
+        "coral.sequence.reference.unresolved.invalid",
+        "coral.sequence.statement.invalid",
+        "coral.sequence.statement.misplaced.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "edge-declaration",
+      "syntax": "source -> target [as id] [attributes]",
+      "graphir": [
+        "edges",
+        "GraphEdge.id",
+        "GraphEdge.source",
+        "GraphEdge.target",
+        "GraphEdge.type",
+        "GraphEdge.label",
+        "GraphEdge.properties",
+        "GraphEdge.style.lineStyle"
+      ],
+      "referenceImplementation": "supported; colon is the only attribute separator and an attribute value is a quoted string, number, true, false, or null",
+      "parser": "supported baseline plus semantic tightening deltas; each field is stated once per edge",
+      "printer": "supported baseline with canonical colon; empty or duplicate programmatic edge ids are renamed",
+      "fixtures": [
+        "valid-ordinary",
+        "valid-punctuated-identities",
+        "invalid-legacy-spellings",
+        "invalid-non-string-label",
+        "invalid-reserved-and-empty-attributes",
+        "invalid-spelling-collisions",
+        "invalid-noncanonical-spellings"
+      ],
+      "diagnosticCodes": [
+        "coral.attribute.empty.unparsed",
+        "coral.attribute.label.invalid",
+        "coral.attribute.description.invalid",
+        "coral.attribute.value.unparsed",
+        "coral.attribute.equals.unsupported",
+        "coral.attribute.relation.invalid",
+        "coral.edge.field.duplicate",
+        "coral.edge.id.invalid",
+        "coral.edge.reserved-key.invalid",
+        "coral.edge.id.degraded"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": "ordinary-v1",
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset with the colon separator only"
+    },
+    {
+      "id": "compact-relationship-ends",
+      "syntax": "reference (multiplicity quoted-role marker navigability)",
+      "graphir": [
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd"
+      ],
+      "referenceImplementation": "supported: one endpoint-local annotation, required canonical part order, canonical safe-integer bounds, nav/nonav navigability, no inferred fields",
+      "parser": "nonempty ends with absent, navigable, or non-navigable navigability and safe-integer bounds require compact syntax; empty, unspecified-navigability, and beyond-safe-integer ends use data in full; out-of-order parts and noncanonical bounds are errors",
+      "printer": "chooses one whole-end spelling independently per endpoint; compact bounds are plain digits",
+      "fixtures": [
+        "valid-relationship-ends",
+        "valid-field-spellings",
+        "canonical-relationship-end-normalization",
+        "invalid-compact-end-collisions",
+        "invalid-compact-end-canonical"
+      ],
+      "diagnosticCodes": [
+        "coral.edge.end.compact.required",
+        "coral.edge.end.invalid",
+        "coral.edge.end.order.invalid",
+        "coral.edge.field.duplicate"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "compact tokens in canonical order with plain-digit bounds supported; repeated parts, out-of-order parts, and repeated whole annotations are syntax errors; equal-bound, safe-integer, and end validation are semantic"
+    },
+    {
+      "id": "edge-data",
+      "syntax": "data <strict JSON object>",
+      "graphir": [
+        "GraphEdge.sourcePort",
+        "GraphEdge.targetPort",
+        "GraphEdge.properties",
+        "GraphEdge.style.routing",
+        "GraphEdge.sourceEnd",
+        "GraphEdge.targetEnd"
+      ],
+      "referenceImplementation": "supported for sourcePort, targetPort, style.routing, sourceEnd, targetEnd, and non-scalar or label/description properties",
+      "parser": "supported; description, legacy style arrows, readable fields, and scalar properties are errors",
+      "printer": "supported; expressible relationship ends print compactly; empty/navigability ends print whole through data and style prints only routing",
+      "fixtures": [
+        "valid-advanced-fields",
+        "valid-relationship-ends",
+        "invalid-relationship-ends",
+        "canonical-relationship-end-normalization",
+        "invalid-legacy-spellings",
+        "invalid-noncanonical-spellings",
+        "invalid-duplicate-json-keys"
+      ],
+      "diagnosticCodes": [
+        "coral.edge.data.unparsed",
+        "coral.edge.data-field.unsupported",
+        "coral.edge.data-field.invalid",
+        "coral.edge.legacy-arrow.unsupported",
+        "coral.json.key.duplicate",
+        "coral.edge.end.invalid",
+        "coral.edge.field.duplicate",
+        "coral.edge.source-end.dropped",
+        "coral.edge.target-end.dropped",
+        "coral.print.field.unsupported"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "label-placement",
+      "syntax": "label side [at fraction] [offset distance]",
+      "graphir": [
+        "GraphNode.labelPlacement",
+        "GraphEdge.labelPlacement"
+      ],
+      "referenceImplementation": "supported for authored preservation; execution may refuse explicitly",
+      "parser": "supported",
+      "printer": "supported",
+      "fixtures": [
+        "roundtrip-advanced",
+        "invalid-ranges-and-parameters"
+      ],
+      "diagnosticCodes": [
+        "coral.label-placement.range.invalid",
+        "coral.capability.label-placement.unsupported"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "concise-relative",
+      "syntax": "node ... above|below|left of|right of reference",
+      "graphir": [
+        "constraints.relative"
+      ],
+      "referenceImplementation": "supported",
+      "parser": "supported",
+      "printer": "supported",
+      "fixtures": [
+        "valid-spatial",
+        "valid-required-forms",
+        "roundtrip-advanced"
+      ],
+      "diagnosticCodes": [
+        "coral.constraint.reference.unresolved.invalid",
+        "coral.constraint.preferred.rejected",
+        "coral.constraint.required.unsatisfied"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "concise-boundary",
+      "syntax": "node ... at the side [of ancestor]",
+      "graphir": [
+        "constraints.boundary"
+      ],
+      "referenceImplementation": "supported",
+      "parser": "supported",
+      "printer": "supported",
+      "fixtures": [
+        "valid-spatial",
+        "valid-required-forms",
+        "invalid-references-and-scope"
+      ],
+      "diagnosticCodes": [
+        "coral.constraint.scope.invalid",
+        "coral.constraint.parameter.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "concise-arrangement",
+      "syntax": "[require] arrange explicit subject list as row|column [value parameters]",
+      "graphir": [
+        "constraints.arrangement"
+      ],
+      "referenceImplementation": "supported with explicit fixed membership; a strength flag belongs only to constraint id: lines",
+      "parser": "supported; require with a strength flag is a collision and arrange with a flag is an error",
+      "printer": "supported",
+      "fixtures": [
+        "valid-spatial",
+        "valid-required-forms",
+        "roundtrip-fixed-membership-edit",
+        "invalid-dynamic-membership",
+        "invalid-spelling-collisions",
+        "invalid-noncanonical-spellings"
+      ],
+      "diagnosticCodes": [
+        "coral.constraint.dynamic-membership.unsupported",
+        "coral.constraint.subjects.invalid",
+        "coral.constraint.field.duplicate",
+        "coral.constraint.parameter.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "identified-constraint",
+      "syntax": "constraint id: expression [one strength flag and value parameters]",
+      "graphir": [
+        "SpatialConstraint"
+      ],
+      "referenceImplementation": "supported; alignment and direction take bare keywords",
+      "parser": "supported; each parameter is stated once",
+      "printer": "supported; invalid or inapplicable programmatic parameters are omitted with print loss",
+      "fixtures": [
+        "roundtrip-advanced",
+        "canonical-spatial-defaults",
+        "valid-required-forms",
+        "invalid-spelling-collisions",
+        "invalid-noncanonical-spellings",
+        "invalid-legacy-spellings"
+      ],
+      "diagnosticCodes": [
+        "coral.constraint.id.invalid",
+        "coral.constraint.distance.invalid",
+        "coral.constraint.parameter.invalid",
+        "coral.constraint.field.duplicate",
+        "coral.attribute.equals.unsupported"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "route-intent",
+      "syntax": "via absolute points or identified absolute/relative waypoints",
+      "graphir": [
+        "GraphEdge.routeIntent"
+      ],
+      "referenceImplementation": "supported as routeIntent without canonical routingPoints emission",
+      "parser": "supported",
+      "printer": "supported for absolute and identified absolute/relative waypoints",
+      "fixtures": [
+        "valid-spatial",
+        "roundtrip-advanced",
+        "roundtrip-route-anchors"
+      ],
+      "diagnosticCodes": [
+        "coral.route.anchor.invalid",
+        "coral.route.waypoint.id.invalid",
+        "coral.capability.route-intent.unsupported"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "supported syntax subset"
+    },
+    {
+      "id": "diagnostics-and-partial-graph",
+      "syntax": "not applicable",
+      "graphir": [
+        "SourceInfo"
+      ],
+      "referenceImplementation": "supported baseline",
+      "parser": "supported with Language 1 diagnostic catalog",
+      "printer": "supported with GraphIR 3 field diagnostics",
+      "fixtures": [
+        "invalid-references-and-scope",
+        "invalid-ranges-and-parameters"
+      ],
+      "diagnosticCodes": [
+        "coral.line.unparsed",
+        "coral.reference.unresolved.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "independent syntax errors only"
+    },
+    {
+      "id": "spelling-collisions",
+      "syntax": "each GraphIR field stated once per object; one spelling per field",
+      "graphir": [
+        "all spelled authored fields"
+      ],
+      "referenceImplementation": "supported: every collision, repeat, duplicate JSON key, and duplicate or empty explicit id is one positioned error per group with exact related locations, and the first occurrence is kept",
+      "parser": "supported; every store goes through a recorded assign checked against the field-matrix spellings",
+      "printer": "supported: one printed spelling per field, validated through the shared field validators",
+      "fixtures": [
+        "invalid-spelling-collisions",
+        "invalid-duplicate-json-keys",
+        "invalid-noncanonical-spellings",
+        "invalid-legacy-spellings",
+        "valid-field-spellings"
+      ],
+      "diagnosticCodes": [
+        "coral.edge.field.duplicate",
+        "coral.node.field.duplicate",
+        "coral.constraint.field.duplicate",
+        "coral.json.key.duplicate",
+        "coral.node.id.invalid",
+        "coral.edge.id.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "syntax only; duplicates are semantic"
+    },
+    {
+      "id": "canonical-printing",
+      "syntax": "deterministic authored projection",
+      "graphir": [
+        "all canonical authored fields"
+      ],
+      "referenceImplementation": "supported for the approved GraphIR 3 authored projection",
+      "parser": "not applicable",
+      "printer": "supported deterministic GraphIR 3 fixpoint",
+      "fixtures": [
+        "canonical-spatial-defaults",
+        "roundtrip-advanced",
+        "valid-field-spellings"
+      ],
+      "diagnosticCodes": [
+        "coral.print.field.unsupported",
+        "coral.node.id.degraded",
+        "coral.edge.id.degraded",
+        "coral.node.type.degraded"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language/parser",
+        "language/printer"
+      ],
+      "entryPoint": "graph-interchange",
+      "edition": "graph-interchange-v1",
+      "currentStatus": "supported",
+      "treeSitterHistory": "not a printer"
+    },
+    {
+      "id": "saved-source-header",
+      "syntax": "@diagram with optional version and conformance directives",
+      "graphir": [
+        "profile",
+        "catalog",
+        "conformanceLevel"
+      ],
+      "referenceImplementation": "Exact text and located header findings; HeaderRuntime028 required.",
+      "parser": "saved-source header admission",
+      "printer": "exact source save; prepareHeaderForSave028 can explicitly pin resolved defaults",
+      "fixtures": [
+        "source-exact-crlf",
+        "source-header-unavailable"
+      ],
+      "diagnosticCodes": [
+        "header.version.unavailable"
+      ],
+      "treeSitter": "syntax-only independent corpus",
+      "llmSubset": null,
+      "consumers": [
+        "language"
+      ],
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "currentStatus": "supported"
+    },
+    {
+      "id": "saved-source-ownership",
+      "syntax": "ID-first nodes, connectors, ports, classes, sequence and spatial declarations",
+      "graphir": [
+        "source-document",
+        "GraphIR3-staging",
+        "successor-candidate"
+      ],
+      "referenceImplementation": "Recovered syntax is independently observable; successor-only meaning withholds GraphIR3 graph.",
+      "parser": "exact text retained even for malformed drafts",
+      "printer": "formatDocument028 expands leading tabs only; graph print is explicit interchange",
+      "fixtures": [
+        "source-unresolved-reference",
+        "source-port-scope",
+        "source-uml-class",
+        "source-uml-sequence",
+        "source-spatial",
+        "source-successor-only-style"
+      ],
+      "diagnosticCodes": [
+        "coral.reference.target.unresolved"
+      ],
+      "treeSitter": "syntax-only independent corpus",
+      "llmSubset": null,
+      "consumers": [
+        "language"
+      ],
+      "entryPoint": "saved-source",
+      "edition": "0.2.8",
+      "currentStatus": "limited"
+    },
+    {
+      "id": "saved-source-format",
+      "syntax": "existing saved-source token spellings and line endings",
+      "graphir": [
+        "source-document"
+      ],
+      "referenceImplementation": "Formatting is bounded and idempotent; invalid drafts refuse.",
+      "parser": "header and syntax findings gate formatting",
+      "printer": "leading tab becomes two spaces; every other byte is retained",
+      "fixtures": [
+        "source-format-tabs",
+        "source-invalid-spacing"
+      ],
+      "diagnosticCodes": [
+        "coral.syntax.spacing.invalid"
+      ],
+      "treeSitter": "not-asserted",
+      "llmSubset": null,
+      "consumers": [
+        "language"
+      ],
+      "entryPoint": "source-format",
+      "edition": "0.2.8",
+      "currentStatus": "supported"
+    }
+  ],
+  "llmSafeSubsets": {
+    "ordinary-v1": "Graph header omitted, labeled nodes, nesting, scalar body properties, and edges with at most relation/style/string label; canonical colon attributes only.",
+    "ordinary-v1-scalars": "The ordinary-v1 node-body subset with one scalar property per line.",
+    "ordinary-v1-symbol": "ordinary-v1 plus node data containing only a symbol string listed by the active notation reference.",
+    "uml-class-v1": "An uml-class graph header, class/interface/enum declarations, bounded classifier modifiers, typed attribute/operation/literal compartments, and the six core relationship tokens."
+  },
+  "namedConsumerDeltas": [
+    "Tree-sitter is a declared syntax-only subset; semantic reference resolution and capability checks remain in @coral-viz/language.",
+    "Production LLM notation references use enabled saved-source headers; named graph-interchange subsets do not imply production saved-source or operation support.",
+    "MCP explain delegates parsing and diagnostics to the shared @coral-viz/language implementation.",
+    "The editor node-type allowlist is consumer policy and must not narrow the core language.",
+    "No compatibility spelling remains: equals attributes, legacy style arrows, algorithmOptions, and edge data.description are errors that name their replacement.",
+    "Editor validation may impose consumer-safe type policy without changing core syntax."
+  ],
+  "llmSafeSubsetsScope": "Named ordinary-v1 and uml-class-v1 subsets classify explicit graph-interchange fixtures only. Production editor prompts use saved-source edition 0.2.8 notation references; their syntax and operation limits are separately tested."
+}

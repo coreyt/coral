@@ -1,0 +1,63 @@
+@diagram uml-class
+Hospital class as "Hospital" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute address: String
+  }
+}
+Department class as "Department" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute specialty: String
+  }
+}
+Doctor class as "Doctor" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute specialization: String
+  }
+  operations = operations {
+    operation_1 = public operation examinePatient()
+  }
+}
+Nurse~ class as "Nurse" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute shift: String
+  }
+}
+Patient class as "Patient" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute age: int
+    attribute_3 = public attribute insuranceId: String
+  }
+}
+Appointment class as "Appointment" {
+  attributes = attributes {
+    attribute_1 = public attribute scheduledTime: DateTime
+    attribute_2 = public attribute status: String
+  }
+}
+MedicalRecord class as "MedicalRecord" {
+  attributes = attributes {
+    attribute_1 = public attribute diagnosis: String
+    attribute_2 = public attribute notes: String
+  }
+}
+Prescription class as "Prescription" {
+  attributes = attributes {
+    attribute_1 = public attribute medication: String
+    attribute_2 = public attribute dosage: String
+  }
+}
+
+rel_1 = Hospital -- Department [composition, firstEnd: filledDiamond]
+rel_2 = Department -- Doctor [aggregation, firstEnd: diamond]
+rel_3 = Department -- Nurse [aggregation, firstEnd: diamond]
+rel_4 = Patient --> Appointment [association] as "books"
+rel_5 = Doctor --> Appointment [association] as "conducts"
+rel_6 = Appointment --> MedicalRecord [association] as "generates"
+rel_7 = Doctor --> Prescription [association] as "issues"
+rel_8 = Patient -- MedicalRecord [composition, firstEnd: filledDiamond]
+rel_9 = Prescription --> Patient [association] as "dispensed to"

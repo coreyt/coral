@@ -1,0 +1,6 @@
+@diagram bpmn
+a task as "Alpha"
+b task as "Beta"
+g exclusiveGateway as "Join"
+a -> g [label: "alpha"]
+b -> g [label: "beta"]

@@ -1,0 +1,15 @@
+{
+  "version": "3.0.0",
+  "id": "punctuated-identities",
+  "nodes": [
+    { "id": "api.v1", "type": "service", "label": "API" },
+    { "id": "orders-db", "type": "database", "label": "Orders" }
+  ],
+  "edges": [
+    {
+      "id": "api_v1_to_orders_db",
+      "source": "api.v1",
+      "target": "orders-db"
+    }
+  ]
+}

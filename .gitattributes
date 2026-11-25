@@ -1,0 +1,28 @@
+* text=auto eol=lf
+packages/render/third_party/fonts/*.txt text eol=lf
+docs/*.md text eol=lf
+docs/**/*.md text eol=lf
+docs/public/figures/coral-overview.svg text eol=lf
+docs/figures/coral-overview.coral text eol=lf
+packages/language/**/*.coral text eol=lf
+dev/**/*.md text eol=lf
+packages/tree-sitter-coral/**/*.c text eol=lf
+packages/tree-sitter-coral/**/*.cc text eol=lf
+packages/tree-sitter-coral/**/*.h text eol=lf
+packages/tree-sitter-coral/**/*.js text eol=lf
+packages/tree-sitter-coral/**/*.mjs text eol=lf
+packages/tree-sitter-coral/**/*.cjs text eol=lf
+packages/tree-sitter-coral/**/*.ts text eol=lf
+packages/tree-sitter-coral/**/*.json text eol=lf
+packages/tree-sitter-coral/**/*.scm text eol=lf
+packages/tree-sitter-coral/**/*.gyp text eol=lf
+packages/tree-sitter-coral/**/*.md text eol=lf
+packages/tree-sitter-coral/**/*.txt text eol=lf
+packages/tree-sitter-coral/LICENSE text eol=lf
+.github/**/*.yml text eol=lf
+
+# These conformance fixtures test exact CRLF retention across checkouts.
+packages/language/spec/conformance/source/source-exact-crlf.coral -text whitespace=cr-at-eol
+packages/language/spec/conformance/source/source-format-tabs.coral -text whitespace=cr-at-eol
+packages/language/spec/conformance/source/source-format-tabs.expected.coral -text whitespace=cr-at-eol
+packages/language/spec/conformance/source/source-symbol-crlf.coral -text whitespace=cr-at-eol

@@ -1,0 +1,4 @@
+service "API" as api data {"ports":[{"id":"out","side":"EAST"}]}
+database "Orders" as orders data {"ports":[{"id":"in","side":"WEST"}]}
+
+api -> orders as routed via waypoint fixed at (1e2, 80), waypoint from_source relative to source offset (10, 0), waypoint toward_target relative to target offset (-10, 0), waypoint beside_orders relative to orders offset (-20, 0), waypoint port_entry relative to port orders.in offset (-4, 0)

@@ -1,0 +1,281 @@
+// Coral Markdown authoring — Profile P (Portable).
+//
+// Contract: dev/releases/0.2.5/slice-60/authoring-format.md, "Profile P".
+// Requirements, design, and the review record that produced this file:
+// dev/releases/0.2.5/slice-60/markdownlint-portable.md.
+//
+// This is the base of the configuration tree and therefore also reaches
+// docs/**, where the VitePress profile layers its additions in
+// docs/.markdownlint-cli2.jsonc. There are no docs-specific carve-outs here.
+//
+// Every enabled rule below names the Portable requirement it serves. `default`
+// is false, so nothing is enabled by inheritance and the enabled set is exactly
+// the 22 rules that are justified.
+{
+  // A pattern that can never match, so a frontmatter block is NOT stripped and
+  // MD041 can see it. SP-R8. markdownlint-cli2 compiles this with `new
+  // RegExp(pattern, "u")` and offers no way to express `null`.
+  "frontMatter": "(?!)",
+
+  // An HTML comment must not be able to disable a rule from inside a file.
+  // That would both violate SP-R2 and produce a false green. Note that this
+  // does NOT stop a nested .markdownlint* file from overriding these rules;
+  // tools/markdownlint/portable.test.mjs asserts that no unsanctioned one
+  // exists.
+  "noInlineConfig": true,
+
+  // Scope is every non-ignored *.md. Without this the run enumerates
+  // node_modules/** and every other ignored tree.
+  "gitignore": true,
+
+  // SCOPE. Two kinds of exclusion live here, and neither is an excuse for
+  // non-conforming content:
+  //
+  //  1. tools/markdownlint/fixtures/** is intentionally non-conforming test
+  //     data. It sits in `globs` rather than `ignores` because
+  //     markdownlint-cli2 appends `ignores` as glob negations on EVERY
+  //     invocation, including one that names a file explicitly, so an ignored
+  //     fixture could never be linted by its own test. `globs` is skipped
+  //     entirely under --no-globs, which is how portable.test.mjs reaches the
+  //     fixtures with this very configuration and no second copy of the rule
+  //     set.
+  //
+  //  2. agents/**, .claude/**, skills/**, and any SKILL.md are agent-coding
+  //     surfaces, not documentation. They instruct tooling and agents; they
+  //     are not read by a documentation audience and are published to no
+  //     renderer. The documentation rule system therefore has no jurisdiction
+  //     over them: not this linter, not the authoring profiles, and not the
+  //     documentation style rules. This is a permanent scope decision and not
+  //     a deferral, so it is expressed here as scope rather than as an
+  //     accommodation. See decision-summary item 3 and Appendix A3a of
+  //     dev/releases/0.2.5/slice-60/authoring-format.md.
+  "globs": [
+    "**/*.md",
+    "!tools/markdownlint/fixtures/**",
+    "!agents/**",
+    "!.claude/**",
+    "!skills/**",
+    "!**/SKILL.md"
+  ],
+
+  // Historical records, excluded exactly as scripts/check-markdown-links.mjs
+  // excludes them. This is the ONLY whole-file exclusion in this file.
+  //
+  // There is deliberately no itemised list of legacy files here. A whole-file
+  // `ignores` entry exempts a file from all 22 rules merely to excuse the one
+  // it fails, which is how a green run came to certify 67 of 133 files. Legacy
+  // accommodations are expressed as per-rule `overrides` below instead.
+  "ignores": [
+    "dev/archive/**"
+  ],
+
+  // LEGACY ACCOMMODATIONS.
+  //
+  // Each block below exempts a named set of files from exactly the rules they
+  // currently fail, and from nothing else. `combine: "merge"` layers the block
+  // onto the full rule set, so every other rule stays live on these files: a
+  // file excused for line length is still checked for raw HTML, reference
+  // links, bare URLs, frontmatter, hard tabs, and the rest.
+  //
+  // Verified empirically before adoption: with `combine: "merge"` and
+  // `{ "MD013": false }`, a filtered file reported no MD013 and still reported
+  // MD004. `filter` globs resolve against the directory holding the
+  // configuration file, which for this file is the repository root. That is
+  // also the run directory, so the two coincide here and only here: the
+  // docs/ configuration filters on bare page names with no `docs/` prefix.
+  // Bare names do not recurse into subdirectories.
+  //
+  // A file appears in exactly one block; markdownlint-cli2 removes a file from
+  // the pool once an override matches it, so a second match would be ignored.
+  //
+  // No rule is relaxed globally (authoring-format.md, Appendix A9). An entry is
+  // deleted, not widened, when its owning slice normalises the file. Measured
+  // 2026-09-12 against markdownlint-cli2 0.23.2 / markdownlint 0.41.1:
+  // 470 violations in 44 files, out of 114 files in scope.
+  //
+  // docs/** files are NOT here: those are VitePress profile and are carried by
+  // docs/.markdownlint-cli2.jsonc.
+  "overrides": [
+    {
+      // Line length only. Owners: Slice 60 (README.md), Slice 65 (packages/**),
+      // Slice 70 (dev/**).
+      "filter": [
+        "README.md", // MD013(4) — Slice 60
+        "packages/mcp-server/README.md", // MD013(2) — Slice 65
+        "packages/tree-sitter-coral/README.md", // MD013(1) — Slice 65
+        "dev/ARCHITECTURE.md", // MD013(3) — Slice 70
+        "dev/designs/canonical-ir.md", // MD013(3) — Slice 70
+        "dev/designs/canvas-precision-interactions.md", // MD013(7) — Slice 70
+        "dev/designs/collaboration-hosting.md", // MD013(6) — Slice 70
+        "dev/designs/consolidated-layout.md", // MD013(3) — Slice 70
+        "dev/designs/editor-state.md", // MD013(2) — Slice 70
+        "dev/designs/generation-retry-transport.md", // MD013(1) — Slice 70
+        "dev/designs/language-roundtrip.md", // MD013(10) — Slice 70
+        "dev/designs/mcp-layout-security.md", // MD013(3) — Slice 70
+        "dev/designs/pointer-free-authoring.md", // MD013(1) — Slice 70
+        "dev/designs/public-api-compatibility.md", // MD013(4) — Slice 70
+        "dev/designs/pwa-lifecycle.md", // MD013(2) — Slice 70; authored in Slice 20 before this gate existed
+        "dev/designs/runtime-parser.md", // MD013(5) — Slice 70
+        "dev/designs/spatial-generation-integration.md" // MD013(3) — Slice 70
+      ],
+      "config": { "MD013": false },
+      "combine": "merge"
+    },
+    {
+      // Line length and fence language tags. Owner: Slice 70.
+      "filter": [
+        "dev/DOMAIN.md", // MD013(7) MD040(22)
+        "dev/designs/node-26-upgrade.md" // MD013(16) MD040(1)
+      ],
+      "config": { "MD013": false, "MD040": false },
+      "combine": "merge"
+    },
+    {
+      // Missing space after the hash. Owner: Slice 70.
+      "filter": [
+        "dev/designs/release-0.2.4-closure.md" // MD018(1)
+      ],
+      "config": { "MD018": false },
+      "combine": "merge"
+    },
+    {
+      // Trailing spaces and line length. Owner: Slice 70.
+      "filter": [
+        "dev/designs/diagram-fonts.md" // MD009(2) MD013(4)
+      ],
+      "config": { "MD009": false, "MD013": false },
+      "combine": "merge"
+    },
+    {
+      // Bare URLs and line length. Owner: Slice 65.
+      "filter": [
+        "packages/language/src/formats/SPECS.md" // MD013(1) MD034(6)
+      ],
+      "config": { "MD013": false, "MD034": false },
+      "combine": "merge"
+    },
+    {
+      // Reference-style links. Owner: Slice 70.
+      "filter": [
+        "dev/designs/spatial-command-core.md" // MD054(6)
+      ],
+      "config": { "MD054": false },
+      "combine": "merge"
+    },
+    {
+      // NOT a legacy accommodation. This is the mechanism's self-test: the
+      // fixture violates MD013 and MD004, and only MD013 is exempted here, so
+      // tools/markdownlint/portable.test.mjs can assert that MD004 still fires.
+      // Without it, "combine: merge keeps the other rules live" would be a
+      // claim in a document rather than a tested property of this file.
+      //
+      // The fixture tree is outside `globs`, so this block matches nothing in
+      // an ordinary repository-wide run.
+      "filter": [
+        "tools/markdownlint/fixtures/portable/override/md013-exempt.md"
+      ],
+      "config": { "MD013": false },
+      "combine": "merge"
+    }
+  ],
+
+  "config": {
+    "default": false,
+
+    // --- SP-R1: ATX headings, exactly one level-one heading, on line one ---
+    "MD003": { "style": "atx" },
+    "MD025": { "level": 1, "front_matter_title": "" },
+    // MD018 is here because "##Heading" is not parsed as a heading at all, so
+    // MD003 and MD025 never see it.
+    "MD018": true,
+
+    // --- SP-R1 and SP-R8: first-line heading, and the frontmatter detector ---
+    "MD041": { "level": 1, "allow_preamble": false, "front_matter_title": "" },
+
+    // --- SP-R2: no raw HTML, including inside table cells ---
+    // MD033 reports elements only. HTML comments are NOT detected; that gap is
+    // recorded in markdownlint-portable.md.
+    "MD033": { "allowed_elements": [], "table_allowed_elements": [] },
+
+    // --- SP-R3 and SP-R9: fenced, backtick, bare language tag ---
+    "MD046": { "style": "fenced" },
+    "MD048": { "style": "backtick" },
+    // `language_only` rejects a space-separated info string ("ts {1,3}").
+    // `allowed_languages` is what rejects the spellings VitePress actually
+    // uses ("ts{1,3}", "ts:line-numbers"), because those parse as a single
+    // info token and emit no meta token. Both are required; neither alone is
+    // sufficient.
+    //
+    // ACCEPTED TRADE: the allowlist is stricter than Profile P rule 3 as
+    // written, which asks only that a fence be language-tagged. Introducing a
+    // new language is therefore a reviewable configuration change rather than
+    // an author's decision. That cost was accepted deliberately, because
+    // `allowed_languages` is the only built-in mechanism that rejects the
+    // VitePress fence spellings SP-R9 prohibits.
+    "MD040": {
+      "language_only": true,
+      "allowed_languages": [
+        "bash",
+        "coral",
+        "javascript",
+        "json",
+        "markdown",
+        "mermaid",
+        "sh",
+        "text",
+        "ts",
+        "tsx",
+        "typescript",
+        "yaml"
+      ]
+    },
+
+    // --- SP-R4: table pipes and column count ---
+    "MD055": { "style": "leading_and_trailing" },
+    "MD056": true,
+
+    // --- SP-R5: list markers ---
+    "MD004": { "style": "dash" },
+    "MD029": { "style": "ordered" },
+
+    // --- SP-R6: eighty-column prose wrap, with Profile P's four exemptions ---
+    "MD013": {
+      "line_length": 80,
+      "headings": false,
+      "tables": false,
+      "code_blocks": false,
+      "strict": false,
+      "stern": false
+    },
+
+    // --- SP-R7: inline links only ---
+    // `url_inline` is deliberately absent: markdownlint 0.41.1 gates that check
+    // behind `autolink`, so it is inert here (md054.mjs:64-71). Profile P does
+    // not prohibit the form anyway.
+    "MD054": {
+      "inline": true,
+      "autolink": false,
+      "full": false,
+      "collapsed": false,
+      "shortcut": false
+    },
+    "MD034": true,
+    // Each of the next three catches a construct that is not a link node, and
+    // is therefore invisible to both MD054 and scripts/check-markdown-links.mjs.
+    "MD011": true,
+    "MD042": true,
+    "MD052": true,
+    // Contract-adjacent rather than SP-R7: the "Link portability" section of
+    // the design note names same-file fragments as the half of anchor checking
+    // that is expressible. Zero measured violations.
+    "MD051": true,
+
+    // --- SP-R10: whitespace and file termination ---
+    // MD047 detects only a MISSING trailing newline. A file ending in extra
+    // blank lines is not reported; that gap is recorded in
+    // markdownlint-portable.md.
+    "MD047": true,
+    "MD010": { "code_blocks": true },
+    "MD009": { "br_spaces": 0, "code_blocks": true }
+  }
+}

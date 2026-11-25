@@ -1,0 +1,27 @@
+sequenceDiagram
+    actor User
+    participant ClientApp as Client App
+    participant AuthServer as Authorization Server
+    participant IdentityProvider as Identity Provider
+    participant ConsentService as Consent Service
+    participant TokenStore as Token Store
+    participant ResourceServer as Resource Server
+
+    User->>ClientApp: click login
+    ClientApp->>AuthServer: authorization request
+    AuthServer->>IdentityProvider: redirect for authentication
+    User->>IdentityProvider: submit credentials
+    IdentityProvider-->>AuthServer: identity confirmed
+    AuthServer->>ConsentService: request user consent
+    User->>ConsentService: approve scopes
+    ConsentService-->>AuthServer: consent granted
+    AuthServer->>TokenStore: store authorization code
+    AuthServer-->>ClientApp: authorization code
+    ClientApp->>AuthServer: exchange code for token
+    AuthServer->>TokenStore: validate code
+    TokenStore-->>AuthServer: code valid
+    AuthServer-->>ClientApp: access token
+    ClientApp->>ResourceServer: request resource with token
+    ResourceServer->>AuthServer: validate token
+    AuthServer-->>ResourceServer: token valid
+    ResourceServer-->>ClientApp: protected resource

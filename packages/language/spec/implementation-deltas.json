@@ -1,0 +1,294 @@
+{
+  "languageVersion": "1.3.0",
+  "referenceBaseline": "Coral package 0.2.9; Language 1.3.0 entry-point-specific conformance",
+  "deltas": [
+    {
+      "id": "graphir-version",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: parses and canonically prints authored GraphIR 3.0.0; GraphIR 2 enters only through the named upstream migration.",
+      "history": {
+        "status": "slice-20",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "route-intent",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: round-trips absolute and identified absolute/relative routeIntent waypoints without emitting retired routingPoints.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "constraints",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: supports relative, boundary, arrangement, required/preferred, and identified constraint forms.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "label-placement",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: preserves node and edge label placement and reports explicit execution refusal where placement is unsupported.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "graphir-3-fields",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: retains the prior portable authored field set on GraphIR 3, prints expressible relationship ends compactly (including nav/nonav) and empty, unspecified-navigability, or beyond-safe-integer ends through data.sourceEnd/targetEnd, and emits attributable diagnostics for successor semantics not expressible by graph-interchange-v1 syntax.",
+      "history": {
+        "status": "slice-20",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "uml-class-profile",
+      "surface": "TypeScript parser/printer and Mermaid importer",
+      "status": "supported",
+      "detail": "Implemented: uml-class notation derives the exact GraphIR UML class profile and round-trips structured class, interface, and enum classifiers with bounded compartments, members, modifiers, and identities; Mermaid class input maps through the same canonical model.",
+      "history": {
+        "status": "slice-60",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "uml-sequence-profile",
+      "surface": "TypeScript parser/printer and Mermaid importer",
+      "status": "supported",
+      "detail": "Implemented: uml-sequence notation derives the exact GraphIR UML sequence profile and interaction from declaration order and round-trips participants, sync/async/return messages, activations, target-associated notes, and flat loop/alt/opt fragments in one canonical order; the finite coral-mermaid-sequence@0.2.6 subset maps to the same model and refuses everything else.",
+      "history": {
+        "status": "slice-70",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "absent-node-label",
+      "surface": "TypeScript parser/printer",
+      "status": "supported",
+      "detail": "Implemented: preserves an absent label instead of synthesizing the node id.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "semantic-references",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: resolves exact IDs before unique labels and diagnoses unresolved or ambiguous references at exact authored UTF-16 token ranges independently of sourceInfo.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "accidental-attribute-acceptance",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: rejects non-string labels, extra relation tokens, and empty attribute entries.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "coordinate-exponents",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: accepts finite JSON exponent notation for node positions and waypoints.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "coordinate-precision",
+      "surface": "TypeScript printer",
+      "status": "supported",
+      "detail": "Implemented: uses exact ECMAScript NumberToString-compatible coordinate serialization with normalized exponents.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "null-edge-attribute",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: parses bare null edge attributes as JSON null.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "reserved-keys",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented removal: a reserved underscore key in a node body, an edge attribute, or edge data.properties is a positioned error and is not stored.",
+      "history": {
+        "status": "slice-53",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "pin-without-position",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: rejects pinned nodes that lack an authored position.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "unknown-string-escape",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: rejects unknown escapes consistently in ordinary strings and body properties.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "duplicate-explicit-id",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented: an empty or duplicate explicit node or edge ID is a positioned error; the derived ID is kept only so later references resolve.",
+      "history": {
+        "status": "slice-53",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "equals-attributes",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented removal: the Language 0.2 equals separator in an edge attribute or constraint parameter is a positioned error that names the colon spelling.",
+      "history": {
+        "status": "slice-53",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "raw-algorithm-options",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented removal: @graph layoutOptions.algorithmOptions is a positioned error and layoutOptions is not stored; the printer keeps reporting a programmatic value as coral.print.field.unsupported.",
+      "history": {
+        "status": "slice-53",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "tree-sitter-subset",
+      "surface": "Tree-sitter",
+      "status": "limited",
+      "detail": "Syntax-only declared subsets have their own corpus; graph fixtures do not assert native support or semantic/operation capability.",
+      "history": {
+        "status": "slice-70",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "saved-source",
+      "evidence": "packages/tree-sitter-coral/test/source-028-parity.test.mjs"
+    },
+    {
+      "id": "llm-reference",
+      "surface": "editor LLM prompt",
+      "status": "limited",
+      "detail": "The production notation reference advertises only enabled saved-source edition 0.2.8 headers and bounded declarations; tests read its UML class example through the installed reader. It does not certify arbitrary generated source, full language coverage or operation support.",
+      "history": {
+        "status": "slice-52",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "saved-source",
+      "evidence": "packages/diagram-editor/test/llm/notationRef.test.ts"
+    },
+    {
+      "id": "mcp-explain",
+      "surface": "MCP explain",
+      "status": "limited",
+      "detail": "MCP uses operation-specific source and interchange adapters; no universal semantic or export claim follows from parser admission.",
+      "history": {
+        "status": "slice-20",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "packages/mcp-server/test"
+    },
+    {
+      "id": "runtime-unicode-spacing",
+      "surface": "TypeScript parser",
+      "status": "supported",
+      "detail": "Implemented on the 0.2.8 branch: the saved-source header and body scanners and the graph-only interchange reader accept only ASCII space or tab as token separators. Unicode whitespace and invisible format characters outside quoted text and comments receive exact UTF-16 coral.syntax.spacing.invalid or header.spacing.invalid findings. Runtime/native Tree-sitter parity, editor save/reopen, and MCP source-validation checks cover this boundary; Unicode inside quoted text remains valid except for literal line separators and control characters.",
+      "history": {
+        "status": "resolved-0.2.8",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "saved-source",
+      "evidence": "packages/language/test/language-1-conformance.test.ts"
+    },
+    {
+      "id": "editor-type-policy",
+      "surface": "diagram editor",
+      "status": "policy",
+      "detail": "Editor notation allowlists are consumer validation and do not narrow core language syntax.",
+      "history": {
+        "status": "approved-policy",
+        "referenceBaseline": "@coral-viz/language@0.2.5 with Slice 52"
+      },
+      "entryPoint": "graph-interchange",
+      "evidence": "dev/designs/language-design-and-evolution.md"
+    }
+  ]
+}

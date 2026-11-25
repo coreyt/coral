@@ -1,0 +1,36 @@
+flowchart TD
+    Customer((Customer))
+    StoreFront[Storefront App]
+    OrderService[Order Service]
+    InventoryService[Inventory Service]
+    WarehouseDB[(Warehouse Database)]
+    PaymentService[Payment Service]
+    FraudCheck[Fraud Check Service]
+    PaymentGateway[Payment Gateway]
+    WarehouseSystem[Warehouse Management System]
+    PickPack[Pick and Pack Station]
+    ShippingService[Shipping Service]
+    Carrier[Carrier API]
+    TrackingService[Tracking Service]
+    NotifyService[Notification Service]
+    ReturnsService[Returns Service]
+    RefundService[Refund Service]
+
+    Customer -->|places order| StoreFront
+    StoreFront -->|submit order| OrderService
+    OrderService -->|check stock| InventoryService
+    InventoryService -->|read/write stock levels| WarehouseDB
+    OrderService -->|charge customer| PaymentService
+    PaymentService -->|screen transaction| FraudCheck
+    PaymentService -->|process payment| PaymentGateway
+    OrderService -->|send fulfillment request| WarehouseSystem
+    WarehouseSystem -->|assign pick task| PickPack
+    PickPack -->|package ready| ShippingService
+    ShippingService -->|book shipment| Carrier
+    Carrier -->|provide tracking number| TrackingService
+    TrackingService -->|send updates| NotifyService
+    OrderService -->|send confirmation| NotifyService
+    Customer -->|request return| ReturnsService
+    ReturnsService -->|approve refund| RefundService
+    RefundService -->|refund via| PaymentGateway
+    ReturnsService -->|restock item| InventoryService

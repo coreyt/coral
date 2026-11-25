@@ -1,0 +1,64 @@
+@graph {"id":"slice92-uml","metadata":{"notation":"uml-class"},"name":"Commerce domain"}
+
+class "Customer" as Customer {
+  attributes {
+    + name: String
+    + email: String
+  }
+}
+class "Cart" as Cart {
+  operations {
+    + addItem()
+  }
+}
+class "Order" as Order {
+  attributes {
+    + placedAt: Date
+  }
+  operations {
+    + calculateTotal()
+  }
+}
+class "OrderItem" as OrderItem {
+  attributes {
+    + quantity: int
+    + price: double
+  }
+}
+class "Product" as Product {
+  attributes {
+    + name: String
+    + price: double
+  }
+}
+class "Inventory" as Inventory {
+  attributes {
+    + stockLevel: int
+  }
+  operations {
+    + reserve()
+  }
+}
+class "Payment" as Payment {
+  attributes {
+    + amount: double
+  }
+  operations {
+    + process()
+  }
+}
+class "ShippingAddress" as ShippingAddress {
+  attributes {
+    + street: String
+    + city: String
+  }
+}
+
+Customer -> Cart (arrow-) as rel_1 [association, label: "owns"]
+Cart (diamond-) -> OrderItem as rel_2 [aggregation]
+Customer -> Order (arrow-) as rel_3 [association, label: "places"]
+Order (diamond+) -> OrderItem as rel_4 [composition]
+OrderItem -> Product (arrow-) as rel_5 [association, label: "references"]
+Product -> Inventory (arrow-) as rel_6 [association, label: "tracked by"]
+Order -> Payment (arrow-) as rel_7 [association, label: "paid by"]
+Order -> ShippingAddress (arrow-) as rel_8 [association, label: "ships to"]

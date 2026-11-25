@@ -1,0 +1,12 @@
+flowchart TD
+    User((User))
+    LoginForm[Login Form]
+    Valid{Valid Credentials?}
+    Dashboard[Dashboard]
+    ErrorMsg[Error Message]
+
+    User --> LoginForm
+    LoginForm --> Valid
+    Valid -->|Yes| Dashboard
+    Valid -->|No| ErrorMsg
+    ErrorMsg --> LoginForm

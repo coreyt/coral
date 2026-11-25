@@ -1,0 +1,26 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "backend",
+      "type": "group",
+      "label": "Backend",
+      "children": [
+        { "id": "api", "type": "service", "label": "API", "parent": "backend" },
+        { "id": "worker", "type": "service", "label": "Worker", "parent": "backend" },
+        { "id": "queue", "type": "service", "label": "Queue added later", "parent": "backend" }
+      ]
+    }
+  ],
+  "edges": [],
+  "constraints": [
+    {
+      "id": "coral.constraint.arrangement.1",
+      "kind": "arrangement",
+      "strength": "preferred",
+      "subjects": [{ "kind": "node", "nodeId": "api" }, { "kind": "node", "nodeId": "worker" }],
+      "axis": "row"
+    }
+  ]
+}

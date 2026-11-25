@@ -1,0 +1,13 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol gate {
+  name "Gate"
+  size 8 x 8
+  login port [direction: in, label: "Sign-in", label: "Again"]
+  artwork svg """
+<svg viewBox="0 0 8 8"/>
+"""
+}
+vault database {
+  ingest port [direction: in, maxConnections: 1, maxConnections: 2]
+}

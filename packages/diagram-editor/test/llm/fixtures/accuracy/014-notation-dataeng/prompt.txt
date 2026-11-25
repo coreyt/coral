@@ -1,0 +1,1 @@
+Create a data pipeline diagram: a source "Kafka Topic", a transform "Cleaning Job" that reads from it, a quality gate that checks the cleaned data, a warehouse "Snowflake" that the quality gate feeds into, and a dashboard "Sales Dashboard" that reads from the warehouse.

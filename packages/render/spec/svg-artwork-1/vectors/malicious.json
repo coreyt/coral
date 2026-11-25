@@ -1,0 +1,458 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "malicious-script",
+      "description": "Inline script.",
+      "covers": [
+        "malicious:script"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><script>alert(1)</script><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-script-cdata",
+      "description": "Script hidden in CDATA.",
+      "covers": [
+        "malicious:script"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><script><![CDATA[alert(document.cookie)]]></script></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-script-uppercase",
+      "description": "Element names are case-sensitive; SCRIPT is still refused.",
+      "covers": [
+        "malicious:script"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><SCRIPT>alert(1)</SCRIPT></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-script-xhtml-namespace",
+      "description": "A script element in the XHTML namespace.",
+      "covers": [
+        "malicious:script"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><html:script xmlns:html=\"http://www.w3.org/1999/xhtml\">alert(1)</html:script></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-onload",
+      "description": "An event handler on the root.",
+      "covers": [
+        "malicious:event-handler"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" onload=\"alert(1)\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-onclick",
+      "description": "An event handler on a primitive.",
+      "covers": [
+        "malicious:event-handler"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" onclick=\"alert(1)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-external-gradient-href",
+      "description": "A gradient template on another host.",
+      "covers": [
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" xlink:href=\"https://evil.example/x.svg#g\"/><path d=\"M0 0H1\" fill=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-data-url-href",
+      "description": "A data URL gradient template.",
+      "covers": [
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" href=\"data:image/svg+xml;base64,PHN2Zy8+\"/><path d=\"M0 0H1\" fill=\"url(#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-external-paint",
+      "description": "A paint server on another host.",
+      "covers": [
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"url(https://evil.example/p.svg#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-javascript-paint",
+      "description": "A javascript: URL in paint.",
+      "covers": [
+        "malicious:javascript-url"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"url(javascript:alert(1))\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-javascript-href",
+      "description": "A javascript: URL as a gradient template.",
+      "covers": [
+        "malicious:javascript-url"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g\" href=\"javascript:alert(1)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-javascript-link",
+      "description": "A link element with a javascript: URL.",
+      "covers": [
+        "malicious:javascript-url"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><a href=\"javascript:alert(1)\"><path d=\"M0 0H1\"/></a></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-billion-laughs",
+      "description": "Nested entity expansion is refused before any expansion.",
+      "covers": [
+        "malicious:entity-expansion"
+      ],
+      "input": "<!DOCTYPE svg [<!ENTITY a \"lol\"><!ENTITY b \"&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;\"><!ENTITY c \"&b;&b;&b;&b;&b;&b;&b;&b;&b;&b;\">]><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>&c;</title><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "malicious-external-entity",
+      "description": "An external entity is never read.",
+      "covers": [
+        "malicious:entity-expansion"
+      ],
+      "input": "<!DOCTYPE svg [<!ENTITY x SYSTEM \"file:///etc/passwd\">]><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>&x;</title></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "malicious-undeclared-entity",
+      "description": "An undeclared entity without a DTD.",
+      "covers": [
+        "malicious:entity-expansion"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><title>&x;</title></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "malicious-foreign-object-html",
+      "description": "HTML inside foreignObject.",
+      "covers": [
+        "malicious:foreign-object"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><foreignObject width=\"24\" height=\"24\"><iframe xmlns=\"http://www.w3.org/1999/xhtml\" src=\"https://evil.example/\"/></foreignObject></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-breakout",
+      "description": "A style value that tries to close a rule and open markup.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:red}&lt;/style&gt;&lt;script&gt;alert(1)&lt;/script&gt;\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-import",
+      "description": "An @import in a style attribute.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"@import url(https://evil.example/a.css)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-external-url",
+      "description": "A remote URL in a style declaration.",
+      "covers": [
+        "malicious:css-injection",
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:url(https://evil.example/p.svg#g)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.reference.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-expression",
+      "description": "A legacy expression() value.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:expression(alert(1))\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-escape",
+      "description": "A CSS escape in a property name.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fi\\6c l:red\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-css-comment",
+      "description": "A CSS comment hiding a declaration.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" style=\"fill:red/**/;stroke:blue\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-style-element-import",
+      "description": "A style element importing remote CSS.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><style>@import url(https://evil.example/a.css);</style></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-xml-stylesheet",
+      "description": "A stylesheet processing instruction.",
+      "covers": [
+        "malicious:css-injection"
+      ],
+      "input": "<?xml-stylesheet href=\"https://evil.example/a.css\"?><svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "malicious-image-external",
+      "description": "A remote raster image.",
+      "covers": [
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><image href=\"https://evil.example/track.png\" width=\"1\" height=\"1\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-use-external",
+      "description": "A use element pointing at another host.",
+      "covers": [
+        "malicious:external-href"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><use href=\"https://evil.example/s.svg#x\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-set-href",
+      "description": "Animation that rewrites a link.",
+      "covers": [
+        "malicious:javascript-url"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><set attributeName=\"href\" to=\"javascript:alert(1)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.element.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-attribute-quote-breakout",
+      "description": "An escaped quote inside a value cannot add an attribute.",
+      "covers": [
+        "malicious:attribute-breakout"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"&quot; onload=&quot;alert(1)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.attribute.unsupported"
+        ]
+      }
+    },
+    {
+      "id": "malicious-nul-in-attribute",
+      "description": "A NUL character in an attribute.",
+      "covers": [
+        "malicious:control-character"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><path d=\"M0 0H1\" fill=\"red\u0000; onload=alert(1)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.parse"
+        ]
+      }
+    },
+    {
+      "id": "malicious-deep-nesting",
+      "description": "5,000 nested groups stop at depth 33 while parsing.",
+      "covers": [
+        "malicious:deep-nesting"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<g>",
+          "count": 5000
+        },
+        {
+          "repeat": "</g>",
+          "count": 5000
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "nesting"
+        ]
+      }
+    },
+    {
+      "id": "malicious-raw-block-terminator",
+      "description": "A line of exactly three double quotes in a comment and in desc text never reaches canonical text.",
+      "covers": [
+        "malicious:raw-block-terminator"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n<!--\n\"\"\"\n-->\n<desc>\n\"\"\"\n</desc>\n<path d=\"M0 0H1\"/>\n</svg>\n",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    }
+  ]
+}

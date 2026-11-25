@@ -1,0 +1,17 @@
+@diagram architecture
+@coralVersion "0.2.8"
+@profileVersion "1.0.0"
+@catalogVersion "1.0.0"
+@conformanceLevel typical
+layout [direction: DOWN]
+
+User service as "User"
+LoginForm service as "Login Form"
+Valid module as Valid Credentials?"
+Dashboard service as "Dashboard"
+ErrorMsg service as "Error Message"
+edge_1 = User -> LoginForm [secondEnd: arrow]
+edge_2 = LoginForm -> Valid [secondEnd: arrow]
+edge_3 = Valid -> Dashboard [secondEnd: arrow] as "Yes"
+edge_4 = Valid -> ErrorMsg [secondEnd: arrow] as "No"
+edge_5 = ErrorMsg -> LoginForm [secondEnd: arrow]

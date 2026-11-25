@@ -1,0 +1,257 @@
+/**
+ * AI/ML Symbols (AI, Machine Learning, LLM, GenAI diagrams)
+ */
+
+import type { SymbolLibrary } from '../types.js';
+
+export const aimlSymbols: SymbolLibrary = {
+  id: 'aiml',
+  name: 'AI/ML Symbols',
+  version: '1.0.0',
+  description: 'Symbols for AI/ML pipelines, LLM architectures, and GenAI systems',
+  symbols: [
+    {
+      id: 'aiml-model',
+      name: 'ML Model',
+      description: 'A machine learning model',
+      shape: 'brain',
+      tags: ['model', 'ml', 'ai'],
+      variants: {
+        foundation: { name: 'Foundation Model', defaults: { fill: '#e8eaf6' } },
+        'fine-tuned': { name: 'Fine-Tuned Model', defaults: { fill: '#ede7f6' } },
+        classifier: { name: 'Classifier', defaults: { fill: '#e3f2fd' } },
+        regression: { name: 'Regression Model', defaults: { fill: '#e0f2f1' } },
+      },
+      defaults: { fill: '#e8eaf6', stroke: '#3949ab', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-llm',
+      name: 'Large Language Model',
+      description: 'A large language model',
+      shape: 'brain',
+      tags: ['llm', 'language-model', 'ai', 'genai'],
+      variants: {
+        chat: { name: 'Chat Model', defaults: { fill: '#e8eaf6' } },
+        completion: { name: 'Completion Model', defaults: { fill: '#ede7f6' } },
+        multimodal: { name: 'Multimodal Model', defaults: { fill: '#fce4ec' } },
+      },
+      defaults: { fill: '#c5cae9', stroke: '#1a237e', strokeWidth: 2 },
+      ports: [
+        { id: 'prompt', anchor: 'WEST', direction: 'in' },
+        { id: 'response', anchor: 'EAST', direction: 'out' },
+        { id: 'tools', anchor: 'SOUTH', direction: 'inout' },
+      ],
+    },
+    {
+      id: 'aiml-dataset',
+      name: 'Dataset',
+      description: 'Training, validation, or test dataset',
+      shape: 'cylinder',
+      tags: ['dataset', 'data', 'training'],
+      variants: {
+        training: { name: 'Training Data', defaults: { fill: '#e8f5e9' } },
+        validation: { name: 'Validation Data', defaults: { fill: '#fff8e1' } },
+        test: { name: 'Test Data', defaults: { fill: '#fce4ec' } },
+      },
+      defaults: { fill: '#e8f5e9', stroke: '#388e3c', strokeWidth: 2 },
+      ports: [{ id: 'out', anchor: 'EAST', direction: 'out' }],
+    },
+    {
+      id: 'aiml-vector-store',
+      name: 'Vector Store',
+      description: 'Vector database for embeddings',
+      shape: 'cube',
+      tags: ['vector-store', 'database', 'embeddings', 'rag'],
+      defaults: { fill: '#ede7f6', stroke: '#6a1b9a', strokeWidth: 2 },
+      ports: [
+        { id: 'query', anchor: 'WEST', direction: 'in' },
+        { id: 'results', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-embedding',
+      name: 'Embedding',
+      description: 'Embedding model or transformation',
+      shape: 'neural-net',
+      tags: ['embedding', 'transform', 'vector'],
+      defaults: { fill: '#f3e5f5', stroke: '#7b1fa2', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-training',
+      name: 'Training Job',
+      description: 'Model training process',
+      shape: 'rectangle',
+      tags: ['training', 'compute', 'job'],
+      variants: {
+        distributed: { name: 'Distributed Training', defaults: { fill: '#fff3e0' } },
+        'fine-tune': { name: 'Fine-Tuning', defaults: { fill: '#fff8e1' } },
+      },
+      defaults: { fill: '#fff3e0', stroke: '#e65100', strokeWidth: 2 },
+      ports: [
+        { id: 'data', anchor: 'WEST', direction: 'in' },
+        { id: 'model', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-inference',
+      name: 'Inference Endpoint',
+      description: 'Model serving endpoint',
+      shape: 'hexagon',
+      tags: ['inference', 'serving', 'endpoint'],
+      variants: {
+        batch: { name: 'Batch Inference', defaults: { fill: '#e8f5e9' } },
+        realtime: { name: 'Realtime Inference', defaults: { fill: '#e0f2f1' } },
+        serverless: { name: 'Serverless Inference', defaults: { fill: '#fff8e1' } },
+      },
+      defaults: { fill: '#e8f5e9', stroke: '#2e7d32', strokeWidth: 2 },
+      ports: [
+        { id: 'request', anchor: 'WEST', direction: 'in' },
+        { id: 'response', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-feature-store',
+      name: 'Feature Store',
+      description: 'Feature management and serving',
+      shape: 'cylinder',
+      tags: ['feature-store', 'features', 'ml-ops'],
+      defaults: { fill: '#e0f2f1', stroke: '#00695c', strokeWidth: 2 },
+      ports: [
+        { id: 'ingest', anchor: 'WEST', direction: 'in' },
+        { id: 'serve', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-gpu',
+      name: 'GPU/Accelerator',
+      description: 'Compute accelerator hardware',
+      shape: 'chip',
+      tags: ['gpu', 'compute', 'hardware', 'accelerator'],
+      variants: {
+        gpu: { name: 'GPU', defaults: { fill: '#fff3e0' } },
+        tpu: { name: 'TPU', defaults: { fill: '#e3f2fd' } },
+        cluster: { name: 'GPU Cluster', defaults: { fill: '#fce4ec' } },
+      },
+      defaults: { fill: '#fff3e0', stroke: '#e65100', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-agent',
+      name: 'AI Agent',
+      description: 'An autonomous AI agent',
+      shape: 'actor',
+      tags: ['agent', 'autonomous', 'ai'],
+      defaults: { stroke: '#3949ab', strokeWidth: 2 },
+      ports: [
+        { id: 'interact', anchor: 'EAST', direction: 'out' },
+        { id: 'observe', anchor: 'WEST', direction: 'in' },
+      ],
+    },
+    {
+      id: 'aiml-prompt',
+      name: 'Prompt',
+      description: 'Prompt template or chain',
+      shape: 'chat-bubble',
+      tags: ['prompt', 'template', 'genai'],
+      variants: {
+        template: { name: 'Prompt Template', defaults: { fill: '#f3e5f5' } },
+        chain: { name: 'Prompt Chain', defaults: { fill: '#ede7f6' } },
+      },
+      defaults: { fill: '#f3e5f5', stroke: '#7b1fa2', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-guardrail',
+      name: 'Guardrail',
+      description: 'Safety or validation gate',
+      shape: 'shield',
+      tags: ['guardrail', 'safety', 'validation', 'gate'],
+      variants: {
+        input: { name: 'Input Guardrail', defaults: { fill: '#fce4ec' } },
+        output: { name: 'Output Guardrail', defaults: { fill: '#f3e5f5' } },
+      },
+      defaults: { fill: '#fce4ec', stroke: '#c2185b', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'NORTH', direction: 'in' },
+        { id: 'pass', anchor: 'SOUTH', direction: 'out' },
+        { id: 'fail', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-evaluator',
+      name: 'Evaluator',
+      description: 'Model evaluation component',
+      shape: 'diamond',
+      tags: ['evaluator', 'eval', 'metrics'],
+      defaults: { fill: '#fff8e1', stroke: '#ff8f00', strokeWidth: 2 },
+      ports: [
+        { id: 'in', anchor: 'WEST', direction: 'in' },
+        { id: 'out', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-retriever',
+      name: 'Retriever',
+      description: 'RAG retrieval component',
+      shape: 'parallelogram',
+      tags: ['retriever', 'rag', 'search'],
+      defaults: { fill: '#e3f2fd', stroke: '#1565c0', strokeWidth: 2 },
+      ports: [
+        { id: 'query', anchor: 'WEST', direction: 'in' },
+        { id: 'docs', anchor: 'EAST', direction: 'out' },
+        { id: 'store', anchor: 'SOUTH', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-memory',
+      name: 'Memory',
+      description: 'Agent or conversation memory',
+      shape: 'cylinder',
+      tags: ['memory', 'state', 'context'],
+      variants: {
+        'short-term': { name: 'Short-Term Memory', defaults: { fill: '#eceff1' } },
+        'long-term': { name: 'Long-Term Memory', defaults: { fill: '#cfd8dc' } },
+      },
+      defaults: { fill: '#eceff1', stroke: '#546e7a', strokeWidth: 2 },
+      ports: [
+        { id: 'read', anchor: 'NORTH', direction: 'out' },
+        { id: 'write', anchor: 'SOUTH', direction: 'in' },
+      ],
+    },
+    {
+      id: 'aiml-tool',
+      name: 'Tool',
+      description: 'Tool for agent use',
+      shape: 'gear',
+      tags: ['tool', 'function', 'action'],
+      defaults: { fill: '#eceff1', stroke: '#616161', strokeWidth: 2 },
+      ports: [
+        { id: 'invoke', anchor: 'WEST', direction: 'in' },
+        { id: 'result', anchor: 'EAST', direction: 'out' },
+      ],
+    },
+    {
+      id: 'aiml-annotation',
+      name: 'Annotation',
+      description: 'Text annotation on an AI/ML element',
+      shape: 'text-box',
+      tags: ['annotation', 'text', 'note'],
+      defaults: { fill: '#fafafa', stroke: '#bdbdbd', strokeWidth: 0.5 },
+      ports: [{ id: 'link', anchor: 'WEST', direction: 'inout' }],
+    },
+  ],
+};

@@ -1,0 +1,16 @@
+{
+  "originalFilename": "microservices-checkout.coral",
+  "originalDsl": "@diagram architecture\nlayout [direction: DOWN]\nClient service as \"Client App\"\nGateway service as \"API Gateway\"\nAuth service as \"Auth Service\"\nUsers service as \"User Service\"\nOrders service as \"Order Service\"\nPayments service as \"Payment Service\"\nInventory service as \"Inventory Service\"\nNotify service as \"Notification Service\"\nUserDB database as \"User Database\"\nOrderDB database as \"Order Database\"\nStripe service as \"Stripe API\"\n\nedge_1 = Client -> Gateway as \"HTTPS request\"\nedge_2 = Gateway -> Auth as \"authenticate\"\nedge_3 = Gateway -> Users as \"route user request\"\nedge_4 = Gateway -> Orders as \"route order request\"\nedge_5 = Auth -> UserDB as \"verify credentials\"\nedge_6 = Users -> UserDB as \"read/write profile\"\nedge_7 = Orders -> OrderDB as \"persist order\"\nedge_8 = Orders -> Inventory as \"check stock\"\nedge_9 = Orders -> Payments as \"charge customer\"\nedge_10 = Payments -> Stripe as \"process payment\"\nedge_11 = Orders -> Notify as \"send confirmation\"",
+  "injectedDefects": [
+    {
+      "defectType": "unicode-lookalike-quote",
+      "location": {
+        "line": 11,
+        "column": 33,
+        "charOffset": 361
+      },
+      "description": "replaced closing quote on label \"User Database\" with Unicode look-alike U+201D"
+    }
+  ],
+  "outputFilename": "microservices-checkout-unicode-lookalike-quote-1.coral"
+}

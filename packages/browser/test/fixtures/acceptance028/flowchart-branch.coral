@@ -1,0 +1,11 @@
+@diagram flowchart
+entry terminal
+check decision
+accept process
+reject process
+finish terminal
+entry -> check
+check -> accept as "Yes"
+check -> reject as "No"
+accept -> finish
+reject -> finish

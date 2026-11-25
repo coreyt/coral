@@ -1,0 +1,23 @@
+{
+  "slug": "login-flow",
+  "reviews": [
+    {
+      "descriptionFile": "login-flow.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 5 nodes (User, Login Form, Valid Credentials?, Dashboard, Error Message) and all 5 edges are covered. The yes/no edge labels are paraphrased ('if valid'/'if not valid') rather than quoted verbatim, but the semantic meaning matches the diagram exactly; no invented entities or relationships."
+    },
+    {
+      "descriptionFile": "login-flow.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 5 nodes and all 5 edges present, with edge labels quoted verbatim ('submits credentials', 'validate', 'yes', 'no', 'retry'). Accurate against the diagram."
+    },
+    {
+      "descriptionFile": "login-flow.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Written in reverse order (starting from the Dashboard) but still names all 5 nodes and all 5 edges (submits credentials, validate, yes, no, retry) without inventing anything. Completeness confirmed despite the non-linear presentation order."
+    }
+  ]
+}

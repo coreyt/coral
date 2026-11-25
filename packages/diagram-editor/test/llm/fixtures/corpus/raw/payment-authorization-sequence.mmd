@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Customer
+    participant Checkout as Checkout Service
+    participant Gateway as Payment Gateway
+    participant Fraud as Fraud Service
+    participant Network as Card Network
+    participant Bank
+
+    Customer->>Checkout: submit payment details
+    Checkout->>Gateway: authorize(amount, card token)
+    Gateway->>Fraud: check transaction risk
+    Fraud-->>Gateway: risk score: low
+    Gateway->>Network: request authorization
+    Network->>Bank: verify funds
+    Bank-->>Network: funds available
+    Network-->>Gateway: authorization code
+    Gateway-->>Checkout: payment authorized
+    Checkout-->>Customer: order confirmed

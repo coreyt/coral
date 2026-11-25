@@ -1,0 +1,13 @@
+sequenceDiagram
+    actor User
+    participant App
+    participant AuthService
+    participant SMSGateway
+
+    User->>App: enter phone number
+    App->>AuthService: request OTP
+    AuthService->>SMSGateway: send OTP code
+    SMSGateway-->>User: deliver OTP via SMS
+    User->>App: enter OTP code
+    App->>AuthService: verify OTP
+    AuthService-->>App: OTP valid

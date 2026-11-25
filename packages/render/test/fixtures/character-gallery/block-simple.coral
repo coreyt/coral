@@ -1,0 +1,6 @@
+@diagram block
+source block as "Input"
+worker block as "Transform"
+sink block as "Output"
+source -> worker [label: "payload"]
+worker -> sink [label: "result"]

@@ -1,0 +1,7 @@
+@diagram block
+unit block as "A long functional block" {
+  north port [direction: out, anchor: N]
+  flexible port [direction: out, anchor: side]
+  cornerPin port [direction: out, anchor: corner]
+  automatic port [direction: in, anchor: auto]
+}

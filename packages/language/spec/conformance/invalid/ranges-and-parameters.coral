@@ -1,0 +1,6 @@
+service "API" as api
+database "Orders" as orders
+
+api -> orders [label: "writes"] label center offset 2
+constraint negative_gap: api above orders [preferred, gap: -1]
+constraint wrong_parameter: api at the top [preferred, alignment: start]

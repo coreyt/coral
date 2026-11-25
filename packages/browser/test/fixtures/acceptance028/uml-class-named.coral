@@ -1,0 +1,8 @@
+@diagram uml-class
+Order class {
+  fields = attributes {
+    + id: String
+  }
+}
+Base class
+inheritance = Order --|> Base [inheritance]

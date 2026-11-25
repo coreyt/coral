@@ -1,0 +1,100 @@
+@diagram uml-class
+Bank class as "Bank" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute swiftCode: String
+  }
+}
+Branch class as "Branch" {
+  attributes = attributes {
+    attribute_1 = public attribute location: String
+    attribute_2 = public attribute branchCode: String
+  }
+}
+Account class as "Account” {
+  attributes = attributes {
+    attribute_1 = public attribute accountNumber: String
+    attribute_2 = public attribute balance: Decimal
+  }
+}
+CheckingAccount class as "CheckingAccount" {
+  attributes = attributes {
+    attribute_1 = public attribute overdraftLimit: Decimal
+  }
+}
+SavingsAccount class as "SavingsAccount" {
+  attributes = attributes {
+    attribute_1 = public attribute interestRate: Decimal
+  }
+}
+Customer class as "Customer" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute customerId: String
+  }
+}
+Transaction class as "Transaction" {
+  attributes = attributes {
+    attribute_1 = public attribute amount: Decimal
+    attribute_2 = public attribute timestamp: DateTime
+  }
+}
+Card class as "Card" {
+  attributes = attributes {
+    attribute_1 = public attribute cardNumber: String
+    attribute_2 = public attribute expiryDate: Date
+  }
+}
+Loan class as "Loan" {
+  attributes = attributes {
+    attribute_1 = public attribute principal: Decimal
+    attribute_2 = public attribute interestRate: Decimal
+  }
+}
+LoanApplication class as "LoanApplication" {
+  attributes = attributes {
+    attribute_1 = public attribute requestedAmount: Decimal
+    attribute_2 = public attribute status: String
+  }
+}
+Teller class as "Teller" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute employeeId: String
+  }
+}
+ATM class as "ATM" {
+  attributes = attributes {
+    attribute_1 = public attribute location: String
+    attribute_2 = public attribute serialNumber: String
+  }
+}
+Statement class as "Statement" {
+  attributes = attributes {
+    attribute_1 = public attribute periodStart: Date
+    attribute_2 = public attribute periodEnd: Date
+  }
+}
+InterestRate class as "InterestRate" {
+  attributes = attributes {
+    attribute_1 = public attribute rate: Decimal
+    attribute_2 = public attribute tier: String
+  }
+}
+
+rel_1 = Bank -- Branch [composition, firstEnd: filledDiamond]
+rel_2 = Branch -- Teller [aggregation, firstEnd: diamond]
+rel_3 = Branch -- ATM [aggregation, firstEnd: diamond]
+rel_4 = Customer --> Account [association] as "owns"
+rel_5 = CheckingAccount --|> Account [inheritance]
+rel_6 = SavingsAccount --|> Account [inheritance]
+rel_7 = Account -- Transaction [composition, firstEnd: filledDiamond]
+rel_8 = Customer --> Card [association] as "holds"
+rel_9 = Card --> Account [association] as "linked to"
+rel_10 = Customer --> LoanApplication [association] as "submits"
+rel_11 = LoanApplication --> Loan [association] as "approved as"
+rel_12 = Loan --> Customer [association] as "disbursed to"
+rel_13 = Account --> Statement [association] as "generates"
+rel_14 = SavingsAccount --> InterestRate [association] as "accrues"
+rel_15 = Teller --> Transaction [association] as "processes"
+rel_16 = ATM --> Transaction [association] as "processes"

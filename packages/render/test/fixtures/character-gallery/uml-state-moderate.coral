@@ -1,0 +1,14 @@
+@diagram uml-state
+start initial
+Idle state
+Checking state
+Approved state
+Rejected state
+finish final
+start -> Idle
+Idle -> Checking [label: "submit"]
+Checking -> Approved [label: "valid"]
+Checking -> Rejected [label: "invalid"]
+Rejected -> Checking [label: "retry"]
+Rejected -> Approved [label: "override"]
+Approved -> finish [label: "complete"]

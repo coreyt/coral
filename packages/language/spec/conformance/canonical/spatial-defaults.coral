@@ -1,0 +1,4 @@
+service "API" as api
+database "Orders" as orders
+
+constraint api_above: api above orders [preferred, gap: 0, alignment: center]

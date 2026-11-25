@@ -1,0 +1,11 @@
+@diagram uml-sequence
+Client actor as "Client"
+Server participant as "Server"
+Logger participant as "Logger”
+
+msg_1 = Client -#> Server as "ping"
+msg_2 = Server -.-> Client as "pong"
+msg_3 = Server -#> Logger as "record ping-pong latency"
+msg_4 = Client -#> Server as "ping"
+msg_5 = Server -.-> Client as "pong"
+msg_6 = Server -#> Logger as "record ping-pong latency"

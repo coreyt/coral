@@ -1,0 +1,733 @@
+{
+  "profile": {
+    "id": "coral.svg-artwork",
+    "version": "1"
+  },
+  "status": "final",
+  "vectors": [
+    {
+      "id": "budget-elements-standard-at",
+      "description": "256 expanded elements (root and 255 paths) is Standard.",
+      "covers": [
+        "budget:elements:standard-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 255
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          {
+            "repeat": "  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 255
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-elements-standard-over",
+      "description": "257 expanded elements is Detailed.",
+      "covers": [
+        "budget:elements:standard-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 256
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          {
+            "repeat": "  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 256
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-elements-detailed-at",
+      "description": "1,024 expanded elements is Detailed.",
+      "covers": [
+        "budget:elements:detailed-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 1023
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          {
+            "repeat": "  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 1023
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-elements-detailed-over",
+      "description": "1,025 expanded elements is refused.",
+      "covers": [
+        "budget:elements:detailed-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 1024
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "elements"
+        ]
+      }
+    },
+    {
+      "id": "budget-segments-standard-at",
+      "description": "4,096 expanded segments is Standard.",
+      "covers": [
+        "budget:segments:standard-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 4095
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " H 1",
+            "count": 4095
+          },
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-segments-standard-over",
+      "description": "4,097 expanded segments is Detailed.",
+      "covers": [
+        "budget:segments:standard-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 4096
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " H 1",
+            "count": 4096
+          },
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-segments-detailed-at",
+      "description": "16,384 expanded segments is Detailed.",
+      "covers": [
+        "budget:segments:detailed-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 16383
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " H 1",
+            "count": 16383
+          },
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-segments-detailed-over",
+      "description": "16,385 expanded segments is refused.",
+      "covers": [
+        "budget:segments:detailed-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 16384
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "segments"
+        ]
+      }
+    },
+    {
+      "id": "budget-bytes-standard-at",
+      "description": "Canonical text of exactly 65,536 bytes is Standard.",
+      "covers": [
+        "budget:bytes:standard-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+        "  <path d=\"M 0 0",
+        {
+          "repeat": " L 1.23456789012345 1.23456789012345",
+          "count": 1816
+        },
+        " H 1 H 1.03125",
+        "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+        "</svg>\n"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": true,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " L 1.23456789012345 1.23456789012345",
+            "count": 1816
+          },
+          " H 1 H 1.03125",
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ],
+        "bytes": 65536
+      }
+    },
+    {
+      "id": "budget-bytes-standard-over",
+      "description": "Canonical text of 65,537 bytes is Detailed.",
+      "covers": [
+        "budget:bytes:standard-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+        "  <path d=\"M 0 0",
+        {
+          "repeat": " L 1.23456789012345 1.23456789012345",
+          "count": 1816
+        },
+        " H 1 H 1.015625",
+        "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+        "</svg>\n"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": true,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " L 1.23456789012345 1.23456789012345",
+            "count": 1816
+          },
+          " H 1 H 1.015625",
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ],
+        "bytes": 65537
+      }
+    },
+    {
+      "id": "budget-bytes-detailed-at",
+      "description": "Canonical text of exactly 262,144 bytes is Detailed.",
+      "covers": [
+        "budget:bytes:detailed-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+        "  <path d=\"M 0 0",
+        {
+          "repeat": " L 1.23456789012345 1.23456789012345",
+          "count": 7277
+        },
+        " H 1.5 H 1.000030517578125",
+        "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+        "</svg>\n"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": true,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <path d=\"M 0 0",
+          {
+            "repeat": " L 1.23456789012345 1.23456789012345",
+            "count": 7277
+          },
+          " H 1.5 H 1.000030517578125",
+          "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+          "</svg>\n"
+        ],
+        "bytes": 262144
+      }
+    },
+    {
+      "id": "budget-bytes-detailed-over",
+      "description": "Canonical text of 262,145 bytes is refused.",
+      "covers": [
+        "budget:bytes:detailed-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+        "  <path d=\"M 0 0",
+        {
+          "repeat": " L 1.23456789012345 1.23456789012345",
+          "count": 7277
+        },
+        " H 1.25 H 1.000030517578125",
+        "\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+        "</svg>\n"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "bytes"
+        ]
+      }
+    },
+    {
+      "id": "budget-nesting-at",
+      "description": "A path at depth 32 (root, 30 groups, path) is admitted.",
+      "covers": [
+        "budget:nesting:at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<g>",
+          "count": 30
+        },
+        "<path d=\"M0 0H1\"/>",
+        {
+          "repeat": "</g>",
+          "count": 30
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <g>\n    <g>\n      <g>\n        <g>\n          <g>\n            <g>\n              <g>\n                <g>\n                  <g>\n                    <g>\n                      <g>\n                        <g>\n                          <g>\n                            <g>\n                              <g>\n                                <g>\n                                  <g>\n                                    <g>\n                                      <g>\n                                        <g>\n                                          <g>\n                                            <g>\n                                              <g>\n                                                <g>\n                                                  <g>\n                                                    <g>\n                                                      <g>\n                                                        <g>\n                                                          <g>\n                                                            <g>\n                                                              <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n                                                            </g>\n                                                          </g>\n                                                        </g>\n                                                      </g>\n                                                    </g>\n                                                  </g>\n                                                </g>\n                                              </g>\n                                            </g>\n                                          </g>\n                                        </g>\n                                      </g>\n                                    </g>\n                                  </g>\n                                </g>\n                              </g>\n                            </g>\n                          </g>\n                        </g>\n                      </g>\n                    </g>\n                  </g>\n                </g>\n              </g>\n            </g>\n          </g>\n        </g>\n      </g>\n    </g>\n  </g>\n</svg>\n"
+      }
+    },
+    {
+      "id": "budget-nesting-over",
+      "description": "An element at depth 33 is refused while parsing.",
+      "covers": [
+        "budget:nesting:over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<g>",
+          "count": 31
+        },
+        "<path d=\"M0 0H1\"/>",
+        {
+          "repeat": "</g>",
+          "count": 31
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "nesting"
+        ]
+      }
+    },
+    {
+      "id": "budget-reference-depth-at",
+      "description": "A template chain of 32 steps is admitted.",
+      "covers": [
+        "budget:reference-depth:at"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g0\" href=\"#g1\"/><linearGradient id=\"g1\" href=\"#g2\"/><linearGradient id=\"g2\" href=\"#g3\"/><linearGradient id=\"g3\" href=\"#g4\"/><linearGradient id=\"g4\" href=\"#g5\"/><linearGradient id=\"g5\" href=\"#g6\"/><linearGradient id=\"g6\" href=\"#g7\"/><linearGradient id=\"g7\" href=\"#g8\"/><linearGradient id=\"g8\" href=\"#g9\"/><linearGradient id=\"g9\" href=\"#g10\"/><linearGradient id=\"g10\" href=\"#g11\"/><linearGradient id=\"g11\" href=\"#g12\"/><linearGradient id=\"g12\" href=\"#g13\"/><linearGradient id=\"g13\" href=\"#g14\"/><linearGradient id=\"g14\" href=\"#g15\"/><linearGradient id=\"g15\" href=\"#g16\"/><linearGradient id=\"g16\" href=\"#g17\"/><linearGradient id=\"g17\" href=\"#g18\"/><linearGradient id=\"g18\" href=\"#g19\"/><linearGradient id=\"g19\" href=\"#g20\"/><linearGradient id=\"g20\" href=\"#g21\"/><linearGradient id=\"g21\" href=\"#g22\"/><linearGradient id=\"g22\" href=\"#g23\"/><linearGradient id=\"g23\" href=\"#g24\"/><linearGradient id=\"g24\" href=\"#g25\"/><linearGradient id=\"g25\" href=\"#g26\"/><linearGradient id=\"g26\" href=\"#g27\"/><linearGradient id=\"g27\" href=\"#g28\"/><linearGradient id=\"g28\" href=\"#g29\"/><linearGradient id=\"g29\" href=\"#g30\"/><linearGradient id=\"g30\" href=\"#g31\"/><linearGradient id=\"g31\" href=\"#g32\"/><linearGradient id=\"g32\"><stop offset=\"0\" stop-color=\"#000\"/><stop offset=\"1\" stop-color=\"#fff\"/></linearGradient><rect width=\"24\" height=\"24\" fill=\"url(#g0)\"/></svg>",
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <defs>\n    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n      <stop offset=\"0\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n      <stop offset=\"1\" stop-color=\"#ffffff\" stop-opacity=\"1\"/>\n    </linearGradient>\n  </defs>\n  <rect x=\"0\" y=\"0\" width=\"24\" height=\"24\" rx=\"0\" ry=\"0\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "budget-reference-depth-over",
+      "description": "A template chain of 33 steps is refused.",
+      "covers": [
+        "budget:reference-depth:over"
+      ],
+      "input": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><linearGradient id=\"g0\" href=\"#g1\"/><linearGradient id=\"g1\" href=\"#g2\"/><linearGradient id=\"g2\" href=\"#g3\"/><linearGradient id=\"g3\" href=\"#g4\"/><linearGradient id=\"g4\" href=\"#g5\"/><linearGradient id=\"g5\" href=\"#g6\"/><linearGradient id=\"g6\" href=\"#g7\"/><linearGradient id=\"g7\" href=\"#g8\"/><linearGradient id=\"g8\" href=\"#g9\"/><linearGradient id=\"g9\" href=\"#g10\"/><linearGradient id=\"g10\" href=\"#g11\"/><linearGradient id=\"g11\" href=\"#g12\"/><linearGradient id=\"g12\" href=\"#g13\"/><linearGradient id=\"g13\" href=\"#g14\"/><linearGradient id=\"g14\" href=\"#g15\"/><linearGradient id=\"g15\" href=\"#g16\"/><linearGradient id=\"g16\" href=\"#g17\"/><linearGradient id=\"g17\" href=\"#g18\"/><linearGradient id=\"g18\" href=\"#g19\"/><linearGradient id=\"g19\" href=\"#g20\"/><linearGradient id=\"g20\" href=\"#g21\"/><linearGradient id=\"g21\" href=\"#g22\"/><linearGradient id=\"g22\" href=\"#g23\"/><linearGradient id=\"g23\" href=\"#g24\"/><linearGradient id=\"g24\" href=\"#g25\"/><linearGradient id=\"g25\" href=\"#g26\"/><linearGradient id=\"g26\" href=\"#g27\"/><linearGradient id=\"g27\" href=\"#g28\"/><linearGradient id=\"g28\" href=\"#g29\"/><linearGradient id=\"g29\" href=\"#g30\"/><linearGradient id=\"g30\" href=\"#g31\"/><linearGradient id=\"g31\" href=\"#g32\"/><linearGradient id=\"g32\" href=\"#g33\"/><linearGradient id=\"g33\"><stop offset=\"0\" stop-color=\"#000\"/><stop offset=\"1\" stop-color=\"#fff\"/></linearGradient><rect width=\"24\" height=\"24\" fill=\"url(#g0)\"/></svg>",
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "reference-depth"
+        ]
+      }
+    },
+    {
+      "id": "budget-charge-inherited-gradient-at",
+      "description": "An inherited gradient is charged once per painted primitive: 2 + 63 × (1 + 3) + 2 = 256 elements is Standard.",
+      "covers": [
+        "budget:charge:gradient",
+        "budget:elements:standard-at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<linearGradient id=\"g\"><stop offset=\"0\" stop-color=\"#000\"/><stop offset=\"1\" stop-color=\"#fff\"/></linearGradient><g fill=\"url(#g)\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 63
+        },
+        "</g>",
+        {
+          "repeat": "<path d=\"M0 0H2\"/>",
+          "count": 2
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <defs>\n",
+          "    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n",
+          "      <stop offset=\"0\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n",
+          "      <stop offset=\"1\" stop-color=\"#ffffff\" stop-opacity=\"1\"/>\n",
+          "    </linearGradient>\n",
+          "  </defs>\n",
+          "  <g>\n",
+          {
+            "repeat": "    <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 63
+          },
+          "  </g>\n",
+          {
+            "repeat": "  <path d=\"M 0 0 H 2\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 2
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-charge-inherited-gradient-over",
+      "description": "The same artwork with one more path is 257 elements and Detailed.",
+      "covers": [
+        "budget:charge:gradient",
+        "budget:elements:standard-over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<linearGradient id=\"g\"><stop offset=\"0\" stop-color=\"#000\"/><stop offset=\"1\" stop-color=\"#fff\"/></linearGradient><g fill=\"url(#g)\">",
+        {
+          "repeat": "<path d=\"M0 0H1\"/>",
+          "count": 63
+        },
+        "</g>",
+        {
+          "repeat": "<path d=\"M0 0H2\"/>",
+          "count": 3
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <defs>\n",
+          "    <linearGradient id=\"p1\" gradientUnits=\"objectBoundingBox\" x1=\"0%\" y1=\"0%\" x2=\"100%\" y2=\"0%\" spreadMethod=\"pad\">\n",
+          "      <stop offset=\"0\" stop-color=\"#000000\" stop-opacity=\"1\"/>\n",
+          "      <stop offset=\"1\" stop-color=\"#ffffff\" stop-opacity=\"1\"/>\n",
+          "    </linearGradient>\n",
+          "  </defs>\n",
+          "  <g>\n",
+          {
+            "repeat": "    <path d=\"M 0 0 H 1\" fill=\"url(#p1)\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 63
+          },
+          "  </g>\n",
+          {
+            "repeat": "  <path d=\"M 0 0 H 2\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 3
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-charge-clip",
+      "description": "A 100-rectangle clip path used three times is charged three times: 1 + 3 + 3 × 101 = 307 elements is Detailed.",
+      "covers": [
+        "budget:charge:clip"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<clipPath id=\"k\">",
+        {
+          "repeat": "<rect width=\"1\" height=\"1\"/>",
+          "count": 100
+        },
+        "</clipPath>",
+        {
+          "repeat": "<circle cx=\"12\" cy=\"12\" r=\"10\" clip-path=\"url(#k)\"/>",
+          "count": 3
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "detailed",
+        "inputIsCanonical": false,
+        "canonicalParts": [
+          "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n",
+          "  <defs>\n",
+          "    <clipPath id=\"c1\" clipPathUnits=\"userSpaceOnUse\">\n",
+          {
+            "repeat": "      <rect x=\"0\" y=\"0\" width=\"1\" height=\"1\" rx=\"0\" ry=\"0\"/>\n",
+            "count": 100
+          },
+          "    </clipPath>\n",
+          "  </defs>\n",
+          {
+            "repeat": "  <circle cx=\"12\" cy=\"12\" r=\"10\" clip-path=\"url(#c1)\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n",
+            "count": 3
+          },
+          "</svg>\n"
+        ]
+      }
+    },
+    {
+      "id": "budget-input-bytes-at",
+      "description": "Input of exactly 2,097,152 bytes, mostly a comment, passes ingress and is admitted.",
+      "covers": [
+        "budget:input.bytes:at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><!--",
+        {
+          "repeat": "x",
+          "count": 2097061
+        },
+        "--><path d=\"M0 0H1\"/></svg>"
+      ],
+      "expect": {
+        "result": "admitted",
+        "tier": "standard",
+        "inputIsCanonical": false,
+        "canonical": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">\n  <path d=\"M 0 0 H 1\" fill=\"#000000\" stroke=\"none\" stroke-width=\"1\" opacity=\"1\"/>\n</svg>\n"
+      }
+    },
+    {
+      "id": "budget-input-bytes-over",
+      "description": "Input of 2,097,153 bytes is refused before parsing.",
+      "covers": [
+        "budget:input.bytes:over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\"><!--",
+        {
+          "repeat": "x",
+          "count": 2097062
+        },
+        "--><path d=\"M0 0H1\"/></svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "input.bytes"
+        ]
+      }
+    },
+    {
+      "id": "budget-input-elements-at",
+      "description": "10,000 input elements pass the parse ceiling and fail the expanded element budget.",
+      "covers": [
+        "budget:input.elements:at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<g/>",
+          "count": 9999
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "elements"
+        ]
+      }
+    },
+    {
+      "id": "budget-input-elements-over",
+      "description": "10,001 input elements are refused while parsing.",
+      "covers": [
+        "budget:input.elements:over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        {
+          "repeat": "<g/>",
+          "count": 10000
+        },
+        "</svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "input.elements"
+        ]
+      }
+    },
+    {
+      "id": "budget-input-segments-at",
+      "description": "100,000 raw segments pass the P3 ceiling and fail the bytes and segments budgets.",
+      "covers": [
+        "budget:input.segments:at"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 99999
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "bytes",
+          "segments"
+        ]
+      }
+    },
+    {
+      "id": "budget-input-segments-over",
+      "description": "100,001 raw segments are refused in P3.",
+      "covers": [
+        "budget:input.segments:over"
+      ],
+      "inputParts": [
+        "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\">",
+        "<path d=\"M0 0",
+        {
+          "repeat": "H1",
+          "count": 100000
+        },
+        "\"/></svg>"
+      ],
+      "expect": {
+        "result": "refused",
+        "codes": [
+          "coral.artwork.svg.budget.exceeded"
+        ],
+        "budgets": [
+          "input.segments"
+        ]
+      }
+    }
+  ]
+}

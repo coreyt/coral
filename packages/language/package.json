@@ -1,0 +1,94 @@
+{
+  "name": "@coral-viz/language",
+  "version": "0.2.12",
+  "description": "Coral DSL parser and printer",
+  "homepage": "https://coreyt.github.io/coral/",
+  "bugs": {
+    "url": "https://github.com/coreyt/coral/issues"
+  },
+  "keywords": [
+    "coral",
+    "diagram",
+    "diagrams-as-code",
+    "dsl",
+    "parser",
+    "printer",
+    "graph-ir",
+    "mermaid",
+    "graphviz"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyt/coral.git",
+    "directory": "packages/language"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./parser": {
+      "types": "./dist/parser/index.d.ts",
+      "import": "./dist/parser/index.js"
+    },
+    "./sequence": {
+      "types": "./dist/sequence.d.ts",
+      "import": "./dist/sequence.js"
+    },
+    "./printer": {
+      "types": "./dist/printer/index.d.ts",
+      "import": "./dist/printer/index.js"
+    },
+    "./formats": {
+      "types": "./dist/formats/index.d.ts",
+      "import": "./dist/formats/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "SPEC.md",
+    "spec/grammar.ebnf",
+    "spec/grammar-028.ebnf",
+    "spec/diagnostics.json",
+    "spec/behavior-matrix.json",
+    "spec/graphir-field-matrix.json",
+    "spec/implementation-deltas.json",
+    "spec/upstream/graph-ir.schema.json",
+    "spec/upstream/graph-ir-4.0.candidate.schema.json",
+    "spec/conformance",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/clean.mjs dist && tsc",
+    "prepack": "npm run build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:packed-028": "node ../../scripts/verify-packed-language.mjs",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@graph-ir/core": "0.2.4"
+  },
+  "optionalDependencies": {
+    "tree-sitter": "0.25.1"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.5",
+    "@vitest/coverage-v8": "5.0.5",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

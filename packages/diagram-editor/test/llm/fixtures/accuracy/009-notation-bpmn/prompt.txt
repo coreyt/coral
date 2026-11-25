@@ -1,0 +1,1 @@
+Create a BPMN diagram for an order process: a start event, a task "Process Order" that the start event triggers, an exclusive gateway checking payment status, a task "Ship Order" reached when payment succeeds, and a data store "Failed Payments" that records the order when payment fails.

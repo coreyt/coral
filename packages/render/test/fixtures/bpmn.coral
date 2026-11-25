@@ -1,0 +1,25 @@
+@diagram bpmn
+received startEvent as "Application received"
+validate task as "Validate application"
+complete exclusiveGateway as "Complete?"
+requestInfo task as "Request information"
+assess task as "Assess eligibility"
+eligible exclusiveGateway as "Eligible?"
+review task as "Manager review"
+approved exclusiveGateway as "Approved?"
+issue task as "Issue decision"
+decline task as "Send decline notice"
+finished endEvent as "Case closed"
+received -> validate
+validate -> complete
+complete -> requestInfo as "No"
+requestInfo -> validate
+complete -> assess as "Yes"
+assess -> eligible
+eligible -> review as "Yes"
+eligible -> decline as "No"
+review -> approved
+approved -> issue as "Yes"
+approved -> decline as "No"
+issue -> finished
+decline -> finished

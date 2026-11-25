@@ -1,0 +1,252 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=3.0.3"
+        }
+      ],
+      "effects": [
+        "micromatch"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/braces"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "fast-glob": {
+      "name": "fast-glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "effects": [
+        "globby"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/fast-glob"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "globby": {
+      "name": "globby",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "fast-glob",
+        "micromatch"
+      ],
+      "effects": [
+        "markdownlint-cli2"
+      ],
+      "range": ">=8.0.0",
+      "nodes": [
+        "node_modules/globby"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "katex": {
+      "name": "katex",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1241206,
+          "name": "katex",
+          "dependency": "katex",
+          "title": "KaTeX: Existing prototype pollution can bypass trust restrictions",
+          "url": "https://github.com/advisories/GHSA-238p-pmpm-9mq7",
+          "severity": "low",
+          "cwe": [
+            "CWE-807"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=0.11.0 <0.18.2"
+        }
+      ],
+      "effects": [
+        "micromark-extension-math"
+      ],
+      "range": "0.11.0 - 0.18.1",
+      "nodes": [
+        "node_modules/katex"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "markdownlint": {
+      "name": "markdownlint",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "micromark-extension-math"
+      ],
+      "effects": [
+        "markdownlint-cli2"
+      ],
+      "range": ">=0.37.0",
+      "nodes": [
+        "node_modules/markdownlint"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "markdownlint-cli2": {
+      "name": "markdownlint-cli2",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "globby",
+        "markdownlint",
+        "micromatch",
+        "smol-toml"
+      ],
+      "effects": [],
+      "range": ">=0.0.5",
+      "nodes": [
+        "node_modules/markdownlint-cli2"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "micromark-extension-math": {
+      "name": "micromark-extension-math",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "katex"
+      ],
+      "effects": [
+        "markdownlint"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/micromark-extension-math"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "braces"
+      ],
+      "effects": [
+        "fast-glob",
+        "globby",
+        "markdownlint-cli2"
+      ],
+      "range": ">=0.2.0",
+      "nodes": [
+        "node_modules/micromatch"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    },
+    "smol-toml": {
+      "name": "smol-toml",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1241205,
+          "name": "smol-toml",
+          "dependency": "smol-toml",
+          "title": "smol-toml: Quadratic-time parse() from parseKey rescanning to end of document on each key line",
+          "url": "https://github.com/advisories/GHSA-r4xh-jqrq-34v2",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L"
+          },
+          "range": "<=1.8.0"
+        }
+      ],
+      "effects": [
+        "markdownlint-cli2"
+      ],
+      "range": "<=1.8.0",
+      "nodes": [
+        "node_modules/smol-toml"
+      ],
+      "fixAvailable": {
+        "name": "markdownlint-cli2",
+        "version": "0.21.0",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 3,
+      "moderate": 1,
+      "high": 5,
+      "critical": 0,
+      "total": 9
+    },
+    "dependencies": {
+      "prod": 257,
+      "dev": 510,
+      "optional": 150,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 794
+    }
+  }
+}

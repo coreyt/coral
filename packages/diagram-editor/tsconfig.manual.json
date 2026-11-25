@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"]
+  },
+  "include": [
+    "test/llm/test-live.ts",
+    "test/llm/test-e2e.ts",
+    "test/llm/test-mermaid-adjust.ts",
+    "test/llm/accuracy-harness.ts",
+    "test/llm/accuracy-scoring.ts",
+    "test/llm/build-corpus.ts",
+    "test/llm/inject-corpus-defects.ts",
+    "test/llm/inject-syntax-defects.ts",
+    "test/llm/inject-vocabulary-defects.ts",
+    "test/llm/semantic-defects.ts",
+    "test/llm/validate-semantic-corpus.ts",
+    "test/llm/verify-corpus-repairs.ts",
+    "test/llm/semantic-defect-taxonomy.ts",
+    "test/llm/fixtures/accuracy/mermaid-allowlist.ts"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "originalFilename": "hospital-management-class.coral",
+  "originalDsl": "@diagram uml-class\nHospital class as \"Hospital\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute address: String\n  }\n}\nDepartment class as \"Department\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute specialty: String\n  }\n}\nDoctor class as \"Doctor\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute specialization: String\n  }\n  operations = operations {\n    operation_1 = public operation examinePatient()\n  }\n}\nNurse class as \"Nurse\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute shift: String\n  }\n}\nPatient class as \"Patient\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute age: int\n    attribute_3 = public attribute insuranceId: String\n  }\n}\nAppointment class as \"Appointment\" {\n  attributes = attributes {\n    attribute_1 = public attribute scheduledTime: DateTime\n    attribute_2 = public attribute status: String\n  }\n}\nMedicalRecord class as \"MedicalRecord\" {\n  attributes = attributes {\n    attribute_1 = public attribute diagnosis: String\n    attribute_2 = public attribute notes: String\n  }\n}\nPrescription class as \"Prescription\" {\n  attributes = attributes {\n    attribute_1 = public attribute medication: String\n    attribute_2 = public attribute dosage: String\n  }\n}\n\nrel_1 = Hospital -- Department [composition, firstEnd: filledDiamond]\nrel_2 = Department -- Doctor [aggregation, firstEnd: diamond]\nrel_3 = Department -- Nurse [aggregation, firstEnd: diamond]\nrel_4 = Patient --> Appointment [association] as \"books\"\nrel_5 = Doctor --> Appointment [association] as \"conducts\"\nrel_6 = Appointment --> MedicalRecord [association] as \"generates\"\nrel_7 = Doctor --> Prescription [association] as \"issues\"\nrel_8 = Patient -- MedicalRecord [composition, firstEnd: filledDiamond]\nrel_9 = Prescription --> Patient [association] as \"dispensed to\"\n",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-brace",
+      "location": {
+        "line": 12,
+        "column": 2,
+        "charOffset": 349
+      },
+      "description": "removed closing brace matching node \"Department\" opened at line 8"
+    }
+  ],
+  "outputFilename": "hospital-management-class-missing-closing-brace-1.coral"
+}

@@ -1,0 +1,76 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+dist-esbuild/
+/build/
+# Frozen CI candidate packages and site (scripts/ci.mjs)
+/candidate-artifacts/
+/candidate-site/
+build/
+
+# The root npm lockfile is part of the reproducible release.
+packages/*/package-lock.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+.env
+
+# Test coverage
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# SCIP indexes
+index.scip
+
+# Environment
+.env
+
+# Armada index
+.armada/
+
+# Local research and working data
+/data/
+/local/
+
+.wake/
+**/.wake/
+dev/experiments/coralsmol/
+dev/experiments/ai-0.2.10/
+.env.*
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# LLM accuracy harness local run output (Slice 49)
+packages/diagram-editor/test/llm/accuracy-harness-output/
+
+# Generated library reference
+/docs/public/api/
+
+# Generated full workspace audit and its release-policy disposition
+/workspace-audit.json
+/workspace-audit.raw.json

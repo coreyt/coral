@@ -1,0 +1,8 @@
+{
+  "originalFilename": "login-flow.coral",
+  "defectType": "missing-decision-branch",
+  "affectedNodeIds": ["Valid", "ErrorMsg"],
+  "affectedEdgeIds": ["edge_4"],
+  "explanation": "The description says the \"Valid Credentials?\" decision branches to the Dashboard on Yes and to the Error Message on No, but the No branch (Valid -> ErrorMsg) has been removed, leaving the decision with only a Yes outcome and the Error Message screen with no way to be reached.",
+  "outputFilename": "login-flow-missing-decision-branch-1.coral"
+}

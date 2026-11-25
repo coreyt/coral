@@ -1,0 +1,16 @@
+{
+  "originalFilename": "multi-service-oauth-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nUser actor as \"User\"\nClientApp participant as \"Client App\"\nAuthServer participant as \"Authorization Server\"\nIdentityProvider participant as \"Identity Provider\"\nConsentService participant as \"Consent Service\"\nTokenStore participant as \"Token Store\"\nResourceServer participant as \"Resource Server\"\n\nmsg_1 = User -#> ClientApp as \"click login\"\nmsg_2 = ClientApp -#> AuthServer as \"authorization request\"\nmsg_3 = AuthServer -#> IdentityProvider as \"redirect for authentication\"\nmsg_4 = User -#> IdentityProvider as \"submit credentials\"\nmsg_5 = IdentityProvider -.-> AuthServer as \"identity confirmed\"\nmsg_6 = AuthServer -#> ConsentService as \"request user consent\"\nmsg_7 = User -#> ConsentService as \"approve scopes\"\nmsg_8 = ConsentService -.-> AuthServer as \"consent granted\"\nmsg_9 = AuthServer -#> TokenStore as \"store authorization code\"\nmsg_10 = AuthServer -.-> ClientApp as \"authorization code\"\nmsg_11 = ClientApp -#> AuthServer as \"exchange code for token\"\nmsg_12 = AuthServer -#> TokenStore as \"validate code\"\nmsg_13 = TokenStore -.-> AuthServer as \"code valid\"\nmsg_14 = AuthServer -.-> ClientApp as \"access token\"\nmsg_15 = ClientApp -#> ResourceServer as \"request resource with token\"\nmsg_16 = ResourceServer -#> AuthServer as \"validate token\"\nmsg_17 = AuthServer -.-> ResourceServer as \"token valid\"\nmsg_18 = ResourceServer -.-> ClientApp as \"protected resource\"",
+  "injectedDefects": [
+    {
+      "defectType": "unicode-lookalike-quote",
+      "location": {
+        "line": 5,
+        "column": 50,
+        "charOffset": 180
+      },
+      "description": "replaced closing quote on label \"Identity Provider\" with Unicode look-alike U+201D"
+    }
+  ],
+  "outputFilename": "multi-service-oauth-sequence-unicode-lookalike-quote-1.coral"
+}

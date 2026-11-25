@@ -1,0 +1,4 @@
+@diagram uml-class
+Client class
+Service class
+uses = Client -- Service [association]

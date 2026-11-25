@@ -1,0 +1,8 @@
+{
+  "caseId": "012-notation-architecture",
+  "caseType": "notation",
+  "notationId": "architecture",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "Tests only service/database/external_api/actor/group vocabulary, which for the architecture notation are the same as the base types"
+}

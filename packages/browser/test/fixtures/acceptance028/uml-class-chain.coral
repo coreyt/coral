@@ -1,0 +1,14 @@
+@diagram uml-class
+Leaf class {
+  attributes {
+    + id: String
+  }
+}
+Middle class {
+  operations {
+    + validate(): Boolean
+  }
+}
+Root class
+leafParent = Leaf --|> Middle [inheritance]
+middleParent = Middle --|> Root [inheritance]

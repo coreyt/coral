@@ -1,0 +1,23 @@
+{
+  "slug": "user-onboarding-flow",
+  "reviews": [
+    {
+      "descriptionFile": "user-onboarding-flow.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "All 9 nodes and all 11 edges present, including the two separate edges into User Database (credential storage from Auth Service and profile data from Profile Setup Wizard), which are easy to conflate."
+    },
+    {
+      "descriptionFile": "user-onboarding-flow.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 9 nodes then all 11 edges in diagram order. Cross-checked; both User Database edges and the round-trip verification-link edges (Email Verification Service to User, then User back to Auth Service) are both captured."
+    },
+    {
+      "descriptionFile": "user-onboarding-flow.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Narrative from the end state (Dashboard plus Analytics). Re-verified all 9 nodes and 11 edges are named exactly once, no fabricated steps."
+    }
+  ]
+}

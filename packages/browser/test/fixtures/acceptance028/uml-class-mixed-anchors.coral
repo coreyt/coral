@@ -1,0 +1,12 @@
+@diagram uml-class
+Document class {
+  receive port [direction: in, anchor: W]
+}
+C0 class
+C1 class
+C2 class
+C3 class
+C0 --|> Document:receive [inheritance]
+C1 --|> Document [inheritance]
+C2 --|> Document [inheritance]
+C3 --|> Document [inheritance]

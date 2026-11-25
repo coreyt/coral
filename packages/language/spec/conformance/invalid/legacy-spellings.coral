@@ -1,0 +1,11 @@
+@graph {"id":"legacy","layoutOptions":{"algorithm":"layered","algorithmOptions":{"spacing":10}}}
+
+service "A"
+service "B"
+
+a -> b data {"style":{"sourceArrow":"diamond","targetArrow":"arrow"}}
+a -> b data {"sourceEnd":{"role":"authoritative"},"style":{"sourceArrow":"diamond"}}
+a -> b data {"targetEnd":{"role":"authoritative"},"style":{"targetArrow":"arrow"}}
+a -> b [data_flow, dashed, label = "writes"]
+a -> b data {"description":"Writes order data"}
+constraint spaced: a above b [gap = 8]

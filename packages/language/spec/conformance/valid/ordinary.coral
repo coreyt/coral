@@ -1,0 +1,8 @@
+@graph {"id":"orders","name":"Order flow"}
+
+service "API" as api {
+  technology: "TypeScript"
+}
+database "Orders" as orders
+
+api -> orders as writes [data_flow, label: "writes"]

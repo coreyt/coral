@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://coreyt.github.io/coral/docs/
+    about: Read user, embedder, and contributor guides.
+  - name: Security Vulnerability Report
+    url: https://github.com/coreyt/coral/security/advisories/new
+    about: Privately disclose a security issue.

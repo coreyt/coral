@@ -1,0 +1,18 @@
+@diagram bpmn
+begin startEvent as "Begin"
+receive task as "Receive"
+check exclusiveGateway as "Complete?"
+accept task as "Accept"
+revise task as "Revise"
+retryChoice exclusiveGateway as "Retry?"
+join exclusiveGateway as "Resolved"
+done endEvent as "Done"
+begin -> receive
+receive -> check
+check -> accept [label: "complete"]
+check -> revise [label: "missing"]
+revise -> retryChoice
+retryChoice -> check [label: "retry"]
+accept -> join [label: "approved"]
+retryChoice -> join [label: "resolved"]
+join -> done

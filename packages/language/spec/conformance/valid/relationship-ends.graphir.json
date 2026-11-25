@@ -1,0 +1,37 @@
+{
+  "version": "3.0.0",
+  "id": "relationship-ends",
+  "nodes": [
+    { "id": "a", "type": "service", "label": "A" },
+    { "id": "b", "type": "service", "label": "B" }
+  ],
+  "edges": [
+    {
+      "id": "a_to_b",
+      "source": "a",
+      "target": "b",
+      "sourceEnd": {
+        "role": "orders",
+        "multiplicity": { "lower": 1, "upper": "*" },
+        "navigability": "navigable",
+        "marker": { "kind": "one-or-many", "fill": "unspecified" }
+      },
+      "targetEnd": {
+        "role": "owner",
+        "navigability": "unspecified",
+        "marker": { "kind": "diamond", "fill": "filled" }
+      }
+    },
+    {
+      "id": "b_to_a",
+      "source": "b",
+      "target": "a",
+      "sourceEnd": { "navigability": "unspecified" },
+      "targetEnd": {
+        "role": "members",
+        "navigability": "non-navigable",
+        "marker": { "kind": "arrow", "fill": "open" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+@diagram flowchart
+start terminal [variant: "start"] as "Start"
+review process as "Review request"
+decision decision as "Approved?"
+revise process as "Revise request"
+end terminal [variant: "end"] as "Done"
+toReview = start -> review [flow]
+toDecision = review -> decision [flow]
+approved = decision -> end [flow] as "Yes"
+changes = decision -> revise [flow] as "No"
+resubmit = revise -> decision [flow]

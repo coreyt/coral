@@ -1,0 +1,10 @@
+<!-- Original Coral artwork authored for this repository; Apache-2.0. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Coral branching symbol</title>
+  <rect width="512" height="512" rx="96" fill="#081b2b"/>
+  <circle cx="256" cy="256" r="192" fill="none" stroke="#ffdbcc" stroke-width="8"/>
+  <g fill="none" stroke="#ff6f61" stroke-width="56" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 386V160M256 298L132 378M256 298L380 378"/>
+  </g>
+  <g fill="#ff6f61"><circle cx="256" cy="160" r="62"/><circle cx="132" cy="378" r="48"/><circle cx="380" cy="378" r="48"/></g>
+</svg>

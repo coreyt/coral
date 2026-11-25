@@ -1,0 +1,15 @@
+@diagram flowchart
+start terminal [variant: "start"]
+receive process as "Receive request"
+validate process as "Validate input"
+ready decision as "Ready?"
+review process as "Review request"
+ship process as "Ship result"
+finish terminal [variant: "end"]
+start -> receive
+receive -> validate
+validate -> ready
+ready -> review [label: "No"]
+review -> validate
+ready -> ship [label: "Yes"]
+ship -> finish

@@ -1,0 +1,18 @@
+@diagram uml-sequence
+Sender actor as "Sender
+ChatService participant as "Chat Service"
+Queue participant as "Message Queue"
+Presence participant as "Presence Service"
+PushService participant as "Push Notification Service"
+Recipient participant as "Recipient Device"
+
+msg_1 = Sender -#> ChatService as "send message"
+msg_2 = ChatService -#> Queue as "enqueue message"
+msg_3 = ChatService -#> Presence as "check recipient status"
+msg_4 = Presence -.-> ChatService as "recipient offline"
+msg_5 = ChatService -#> PushService as "send push notification"
+msg_6 = PushService -.-> ChatService as "notification queued"
+msg_7 = Queue -#> Recipient as "deliver message"
+msg_8 = Recipient -.-> Queue as "delivery ack"
+msg_9 = Queue -.-> ChatService as "message delivered"
+msg_10 = ChatService -.-> Sender as "delivery receipt"

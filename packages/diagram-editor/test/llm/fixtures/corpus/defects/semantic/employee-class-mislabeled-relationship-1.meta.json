@@ -1,0 +1,8 @@
+{
+  "originalFilename": "employee-class.coral",
+  "defectType": "mislabeled-relationship",
+  "affectedNodeIds": ["Project", "Employee"],
+  "affectedEdgeIds": ["rel_5"],
+  "explanation": "The description says Employee has an \"assigned to\" association with Project, while \"leads\" is the label Manager uses toward Department. Edge rel_5 has been relabeled from \"assigned to\" to \"leads\", so the diagram now claims a leadership relationship between Project and Employee that the description never mentions, and the assignment relationship is gone.",
+  "outputFilename": "employee-class-mislabeled-relationship-1.coral"
+}

@@ -1,0 +1,16 @@
+{
+  "originalFilename": "e-commerce-domain-class.coral",
+  "originalDsl": "@diagram uml-class\nCustomer class as \"Customer\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute email: String\n  }\n}\nCart class as \"Cart\" {\n  operations = operations {\n    operation_1 = public operation addItem()\n  }\n}\nOrder class as \"Order\" {\n  attributes = attributes {\n    attribute_1 = public attribute placedAt: Date\n  }\n  operations = operations {\n    operation_1 = public operation calculateTotal()\n  }\n}\nOrderItem class as \"OrderItem\" {\n  attributes = attributes {\n    attribute_1 = public attribute quantity: int\n    attribute_2 = public attribute price: double\n  }\n}\nProduct class as \"Product\" {\n  attributes = attributes {\n    attribute_1 = public attribute name: String\n    attribute_2 = public attribute price: double\n  }\n}\nInventory class as \"Inventory\" {\n  attributes = attributes {\n    attribute_1 = public attribute stockLevel: int\n  }\n  operations = operations {\n    operation_1 = public operation reserve()\n  }\n}\nPayment class as \"Payment\" {\n  attributes = attributes {\n    attribute_1 = public attribute amount: double\n  }\n  operations = operations {\n    operation_1 = public operation process()\n  }\n}\nShippingAddress class as \"ShippingAddress\" {\n  attributes = attributes {\n    attribute_1 = public attribute street: String\n    attribute_2 = public attribute city: String\n  }\n}\n\nrel_1 = Customer --> Cart [association] as \"owns\"\nrel_2 = Cart -- OrderItem [aggregation, firstEnd: diamond]\nrel_3 = Customer --> Order [association] as \"places\"\nrel_4 = Order -- OrderItem [composition, firstEnd: filledDiamond]\nrel_5 = OrderItem --> Product [association] as \"references\"\nrel_6 = Product --> Inventory [association] as \"tracked by\"\nrel_7 = Order --> Payment [association] as \"paid by\"\nrel_8 = Order --> ShippingAddress [association] as \"ships to\"\n",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-quote",
+      "location": {
+        "line": 13,
+        "column": 21,
+        "charOffset": 304
+      },
+      "description": "removed closing quote on label \"Order\""
+    }
+  ],
+  "outputFilename": "e-commerce-domain-class-missing-closing-quote-1.coral"
+}

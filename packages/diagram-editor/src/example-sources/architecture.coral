@@ -1,0 +1,6 @@
+@diagram architecture
+user actor as "User"
+service service [variant: "api"] as "API service"
+database database as "Database"
+serviceDatabase = service -> database [data]
+userService = user -> service [sync]

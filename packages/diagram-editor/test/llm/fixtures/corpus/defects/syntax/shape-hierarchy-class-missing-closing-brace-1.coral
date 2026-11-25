@@ -1,0 +1,44 @@
+@diagram uml-class
+Shape class as "Shape" {
+  attributes = attributes {
+    attribute_1 = public attribute color: String
+  }
+  operations = operations {
+    operation_1 = public operation area()
+  }
+}
+Circle class as "Circle" {
+  attributes = attributes {
+    attribute_1 = public attribute radius: double
+  }
+  operations = operations {
+    operation_1 = public operation area()
+  }
+}
+Rectangle class as "Rectangle" {
+  attributes = attributes {
+    attribute_1 = public attribute width: double
+    attribute_2 = public attribute height: double
+  }
+  operations = operations {
+    operation_1 = public operation area()
+  }
+}
+Triangle class as "Triangle" {
+  attributes = attributes {
+    attribute_1 = public attribute base: double
+    attribute_2 = public attribute height: double
+  }
+  operations = operations {
+    operation_1 = public operation area()
+  }
+}
+Canvas class as "Canvas" {
+  operations = operations {
+    operation_1 = public operation addShape()
+}
+
+rel_1 = Circle --|> Shape [inheritance]
+rel_2 = Rectangle --|> Shape [inheritance]
+rel_3 = Triangle --|> Shape [inheritance]
+rel_4 = Canvas -- Shape [aggregation, firstEnd: diamond]

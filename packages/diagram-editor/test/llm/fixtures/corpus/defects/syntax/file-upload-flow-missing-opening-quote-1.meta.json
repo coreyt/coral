@@ -1,0 +1,16 @@
+{
+  "originalFilename": "file-upload-flow.coral",
+  "originalDsl": "@diagram architecture\nlayout [direction: DOWN]\nUser service as \"User\"\nUploadForm service as \"File Upload Form\"\nUploadAPI service as \"Upload Service\"\nVirusScanner service as \"Virus Scanner Service\"\nStorageBucket database as \"Object Storage\"\nNotifyService service as \"Notification Service\"\n\nedge_1 = User -> UploadForm as \"selects file and submits\"\nedge_2 = UploadForm -> UploadAPI as \"send file\"\nedge_3 = UploadAPI -> VirusScanner as \"scan for malware\"\nedge_4 = VirusScanner -> UploadAPI as \"scan passed\"\nedge_5 = UploadAPI -> StorageBucket as \"store file\"\nedge_6 = UploadAPI -> NotifyService as \"send upload complete notice\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-opening-quote",
+      "location": {
+        "line": 7,
+        "column": 26,
+        "charOffset": 223
+      },
+      "description": "removed opening quote on label \"Object Storage\""
+    }
+  ],
+  "outputFilename": "file-upload-flow-missing-opening-quote-1.coral"
+}

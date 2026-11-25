@@ -1,0 +1,8 @@
+{
+  "caseId": "013-notation-aiml",
+  "caseType": "notation",
+  "notationId": "aiml",
+  "outputFormat": "coral",
+  "provenance": "Hand-authored for Slice 49 (Phase 3), one case per bundled notation library (R-049.2 AC-2)",
+  "limitations": "Tests dataset/embedding/vector_store/retriever/llm/guardrail vocabulary, not the aiml notation's full symbol set"
+}

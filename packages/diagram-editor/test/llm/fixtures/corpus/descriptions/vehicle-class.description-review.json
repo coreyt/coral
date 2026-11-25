@@ -1,0 +1,23 @@
+{
+  "slug": "vehicle-class",
+  "reviews": [
+    {
+      "descriptionFile": "vehicle-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Names all 5 classes with members and all 4 relationships (2 inheritance, 1 composition, 1 labeled association), correctly explaining composition as lifecycle ownership."
+    },
+    {
+      "descriptionFile": "vehicle-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from Owner (the outermost association) and works into the composition and inheritance edges. All 5 classes and all 4 relationships verified present; the 'owns' label is preserved."
+    },
+    {
+      "descriptionFile": "vehicle-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Lists all 5 classes with members first, then all 4 relationships separately with the association label intact. No invented members or edges."
+    }
+  ]
+}

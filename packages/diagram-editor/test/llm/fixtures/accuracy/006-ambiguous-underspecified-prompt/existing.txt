@@ -1,0 +1,4 @@
+service "API Gateway" as "gateway"
+service "Product Service" as "products"
+
+gateway -> products [label: "fetch"]

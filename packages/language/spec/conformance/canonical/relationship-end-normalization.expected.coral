@@ -1,0 +1,6 @@
+@graph {"id":"coral-graph"}
+
+service "A"
+service "B"
+
+a (1 "owner" diamond) -> b (0..* nav)

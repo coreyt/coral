@@ -1,0 +1,36 @@
+flowchart TD
+    Dev((Developer))
+    Repo[(Source Repository)]
+    CI[CI Server]
+    Lint[Lint Stage]
+    UnitTest[Unit Test Stage]
+    Build[Build Stage]
+    ImageRegistry[(Container Registry)]
+    SecurityScan[Security Scan Stage]
+    IntegrationTest[Integration Test Stage]
+    ArtifactStore[(Artifact Store)]
+    CD[CD Server]
+    StagingEnv[Staging Environment]
+    ApprovalGate{Manual Approval}
+    ProdEnv[Production Environment]
+    Monitoring[Monitoring Service]
+    NotifyService[Notification Service]
+
+    Dev -->|push commit| Repo
+    Repo -->|trigger webhook| CI
+    CI -->|run| Lint
+    Lint -->|passed| UnitTest
+    UnitTest -->|passed| Build
+    Build -->|push image| ImageRegistry
+    Build -->|trigger| SecurityScan
+    SecurityScan -->|passed| IntegrationTest
+    ImageRegistry -->|pull image| IntegrationTest
+    IntegrationTest -->|passed| ArtifactStore
+    ArtifactStore -->|trigger deploy| CD
+    CD -->|deploy| StagingEnv
+    StagingEnv -->|request promotion| ApprovalGate
+    ApprovalGate -->|approved| CD
+    CD -->|deploy| ProdEnv
+    ProdEnv -->|report health| Monitoring
+    Monitoring -->|alert on failure| NotifyService
+    CI -->|report status| NotifyService

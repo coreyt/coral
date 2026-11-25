@@ -1,0 +1,6 @@
+@diagram uml-sequence
+client participant as "Client"
+api participant as "API"
+worker participant as "Worker"
+submit = client -#> api as "submit"
+reply = api -.----> worker as "done"

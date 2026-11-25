@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "figures": [
+    {
+      "path": "figures/coral-overview.svg",
+      "class": "reviewed-svg",
+      "source": "docs/figures/coral-overview.coral",
+      "producer": "Coral 0.2.5 reviewed render",
+      "appVersion": "0.2.5",
+      "baselineCommit": "1d242e1",
+      "sourceSha256": "d3222404e11d30236a335dd3d04f411e43cfd43ef882217c0d4855698cee19f1",
+      "figureSha256": "8a1cafe5676e3078176ee40897185d82cf45f39bae3903782f96e8e61380e40b"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+@diagram architecture
+api service {
+  audit port [direction: out, anchor: side]
+}
+store database
+read = api:audit -> store:query [reads] as "Order IDs"

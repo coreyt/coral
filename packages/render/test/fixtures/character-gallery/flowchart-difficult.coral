@@ -1,0 +1,21 @@
+@diagram flowchart
+start terminal [variant: "start"]
+intake process as "Intake"
+valid decision as "Valid?"
+repair process as "Repair"
+queue process as "Queue"
+retry decision as "Retry?"
+approve process as "Approve"
+reject process as "Reject"
+finish terminal [variant: "end"]
+start -> intake
+intake -> valid
+valid -> repair [label: "Invalid"]
+repair -> intake
+valid -> queue [label: "Valid"]
+queue -> retry
+retry -> queue [label: "Again"]
+retry -> approve [label: "Approve"]
+retry -> reject [label: "Reject"]
+approve -> finish
+reject -> finish

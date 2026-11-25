@@ -1,0 +1,14 @@
+@diagram block
+input block as "Input"
+parse block as "Parse"
+validate block as "Validate"
+publish block as "Publish"
+viewer block as "Viewer"
+reject block as "Reject"
+raw = input -> parse [label: "raw"]
+parsed = parse -> validate [label: "parsed"]
+approved = validate -> publish [label: "ok"]
+output = publish -> viewer [label: "output"]
+invalid = validate -> reject [label: "bad"]
+fallback = reject -> publish [label: "fallback"]
+retry = reject -> parse [label: "retry"]

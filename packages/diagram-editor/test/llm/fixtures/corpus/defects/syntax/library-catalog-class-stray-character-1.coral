@@ -1,0 +1,59 @@
+@diagram uml-class
+Libra~ry class as "Library" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute address: String
+  }
+}
+Branch class as "Branch" {
+  attributes = attributes {
+    attribute_1 = public attribute location: String
+  }
+}
+Catalog class as "Catalog" {
+  operations = operations {
+    operation_1 = public operation search()
+  }
+}
+Book class as "Book" {
+  attributes = attributes {
+    attribute_1 = public attribute title: String
+    attribute_2 = public attribute isbn: String
+  }
+}
+Author class as "Author" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+  }
+}
+Member class as "Member" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute memberId: String
+  }
+}
+Loan class as "Loan" {
+  attributes = attributes {
+    attribute_1 = public attribute dueDate: Date
+  }
+  operations = operations {
+    operation_1 = public operation returnBook()
+  }
+}
+Librarian class as "Librarian" {
+  attributes = attributes {
+    attribute_1 = public attribute employeeId: String
+  }
+  operations = operations {
+    operation_1 = public operation checkOut()
+  }
+}
+
+rel_1 = Library -- Branch [composition, firstEnd: filledDiamond]
+rel_2 = Branch -- Catalog [composition, firstEnd: filledDiamond]
+rel_3 = Catalog -- Book [aggregation, firstEnd: diamond]
+rel_4 = Book --> Author [association] as "written by"
+rel_5 = Member --> Loan [association] as "borrows"
+rel_6 = Loan --> Book [association] as "references"
+rel_7 = Librarian --> Loan [association] as "processes"
+rel_8 = Branch -- Librarian [aggregation, firstEnd: diamond]

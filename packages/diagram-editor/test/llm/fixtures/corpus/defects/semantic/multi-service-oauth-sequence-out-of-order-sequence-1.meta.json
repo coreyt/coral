@@ -1,0 +1,8 @@
+{
+  "originalFilename": "multi-service-oauth-sequence.coral",
+  "defectType": "out-of-order-sequence",
+  "affectedNodeIds": ["AuthServer", "ClientApp", "TokenStore"],
+  "affectedEdgeIds": ["msg_12", "msg_13", "msg_14"],
+  "explanation": "The description says the Authorization Server validates the code with the Token Store (receiving \"code valid\") and only then returns an access token to the Client App, but the sequence now issues the access token (msg_14) before the validate code / code valid exchange (msg_12, msg_13), so the token is granted before the code has been checked.",
+  "outputFilename": "multi-service-oauth-sequence-out-of-order-sequence-1.coral"
+}

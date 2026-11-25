@@ -1,0 +1,6 @@
+service "API Gateway" as "gateway"
+service "Product Service" as "products"
+database "Product DB" as "productdb"
+
+gateway -> products [label: "fetch"]
+products -> productdb [label: "query"]

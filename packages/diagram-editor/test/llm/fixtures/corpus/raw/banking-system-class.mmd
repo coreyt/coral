@@ -1,0 +1,71 @@
+classDiagram
+class Bank {
+  +String name
+  +String swiftCode
+}
+class Branch {
+  +String location
+  +String branchCode
+}
+class Account {
+  +String accountNumber
+  +Decimal balance
+}
+class CheckingAccount {
+  +Decimal overdraftLimit
+}
+class SavingsAccount {
+  +Decimal interestRate
+}
+class Customer {
+  +String name
+  +String customerId
+}
+class Transaction {
+  +Decimal amount
+  +DateTime timestamp
+}
+class Card {
+  +String cardNumber
+  +Date expiryDate
+}
+class Loan {
+  +Decimal principal
+  +Decimal interestRate
+}
+class LoanApplication {
+  +Decimal requestedAmount
+  +String status
+}
+class Teller {
+  +String name
+  +String employeeId
+}
+class ATM {
+  +String location
+  +String serialNumber
+}
+class Statement {
+  +Date periodStart
+  +Date periodEnd
+}
+class InterestRate {
+  +Decimal rate
+  +String tier
+}
+Bank *-- Branch
+Branch o-- Teller
+Branch o-- ATM
+Customer --> Account : owns
+Account <|-- CheckingAccount
+Account <|-- SavingsAccount
+Account *-- Transaction
+Customer --> Card : holds
+Card --> Account : linked to
+Customer --> LoanApplication : submits
+LoanApplication --> Loan : approved as
+Loan --> Customer : disbursed to
+Account --> Statement : generates
+SavingsAccount --> InterestRate : accrues
+Teller --> Transaction : processes
+ATM --> Transaction : processes

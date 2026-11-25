@@ -1,0 +1,36 @@
+@diagram uml-class
+Company class as "Company" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+  }
+}
+Department class as "Department" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+  }
+}
+Employee class as "Employee" {
+  attributes = attributes {
+    attribute_1 = public attribute name: String
+    attribute_2 = public attribute id: String
+  }
+  operations = operations {
+    operation_1 = public operation calculatePay()
+  }
+}
+Manager class as "Manager" {
+  operations = operations {
+    operation_1 = public operation manageTeam()
+  }
+}
+Project class as "Project" {
+  attributes = attributes {
+    attribute_1 = public attribute title: String
+  }
+}
+
+rel_1 = Company -- Department [composition, firstEnd: filledDiamond]
+rel_2 = Department -- Employee [aggregation, firstEnd: diamond]
+rel_3 = Manager --|> Employee [inheritance]
+rel_4 = Manager --> Department [association] as "leads"
+rel_5 = Employee --> Project [association] as "leads"

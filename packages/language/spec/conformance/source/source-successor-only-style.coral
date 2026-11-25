@@ -1,0 +1,4 @@
+@diagram architecture
+a service
+b service
+flow = a -> b [style: "red,thick,animated:reverse"]

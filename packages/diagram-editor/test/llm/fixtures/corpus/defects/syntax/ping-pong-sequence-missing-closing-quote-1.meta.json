@@ -1,0 +1,16 @@
+{
+  "originalFilename": "ping-pong-sequence.coral",
+  "originalDsl": "@diagram uml-sequence\nClient actor as \"Client\"\nServer participant as \"Server\"\nLogger participant as \"Logger\"\n\nmsg_1 = Client -#> Server as \"ping\"\nmsg_2 = Server -.-> Client as \"pong\"\nmsg_3 = Server -#> Logger as \"record ping-pong latency\"\nmsg_4 = Client -#> Server as \"ping\"\nmsg_5 = Server -.-> Client as \"pong\"\nmsg_6 = Server -#> Logger as \"record ping-pong latency\"",
+  "injectedDefects": [
+    {
+      "defectType": "missing-closing-quote",
+      "location": {
+        "line": 2,
+        "column": 23,
+        "charOffset": 45
+      },
+      "description": "removed closing quote on label \"Client\""
+    }
+  ],
+  "outputFilename": "ping-pong-sequence-missing-closing-quote-1.coral"
+}

@@ -1,0 +1,27 @@
+@diagram architecture
+@coralVersion "0.2.8"
+@profileVersion "1.0.0"
+@catalogVersion "1.0.0"
+@conformanceLevel typical
+layout [direction: DOWN]
+
+User service as "User"
+PostService service as "Post Service"
+ModerationQueue database as "Moderation Queue"
+AIClassifier service as "AI Content Classifier"
+HumanReviewer service as "Human Reviewer"
+PolicyEngine module as "Policy Engine"
+PublishService service as "Publish Service"
+NotifyService service as "Notification Service"
+AppealService service as "Appeal Service"
+edge_1 = User -> PostService [secondEnd: arrow] as "submits post"
+edge_2 = PostService -> ModerationQueue [secondEnd: arrow] as "enqueue for review"
+edge_3 = ModerationQueue -> AIClassifier [secondEnd: arrow] as "send to classifier"
+edge_4 = AIClassifier -> HumanReviewer [secondEnd: arrow] as "flag as uncertain"
+edge_5 = AIClassifier -> PolicyEngine [secondEnd: arrow] as "auto-approve"
+edge_6 = HumanReviewer -> PolicyEngine [secondEnd: arrow] as "submit decision"
+edge_7 = PolicyEngine -> PublishService [secondEnd: arrow] as "approve"
+edge_8 = PolicyEngine -> NotifyService [secondEnd: arrow] as "reject"
+edge_9 = PublishService -> NotifyService [secondEnd: arrow] as "notify author"
+edge_10 = User -> AppealService [secondEnd: arrow] as "files appeal"
+edge_11 = AppealService -> ModerationQueue [secondEnd: arrow] as "re-queue for review"

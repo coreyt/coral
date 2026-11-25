@@ -1,0 +1,51 @@
+name: Bug Report
+description: Report a defect in the Coral editor, renderer, language parser, or packages
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Web editor (coreyt.github.io/coral)
+        - "@coral-viz/language"
+        - "@coral-viz/render"
+        - "@coral-viz/browser"
+        - "@coral-viz/viz"
+        - "@coral-viz/mcp-server"
+        - tree-sitter-coral
+        - Documentation
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Coral version
+      placeholder: "e.g. 0.2.12"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal Coral DSL or reproduction steps
+      render: text
+      placeholder: |
+        @diagram architecture
+        api service as "API"
+        db database as "Orders"
+        api -> db
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "OS, browser (e.g. Chrome 135), Node.js version"

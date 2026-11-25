@@ -1,0 +1,23 @@
+{
+  "slug": "library-catalog-class",
+  "reviews": [
+    {
+      "descriptionFile": "library-catalog-class.description-1.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Chronological/structural walkthrough naming all 8 classes with members and all 8 relationships (2 composition, 2 aggregation, 4 labeled associations), preserving all association labels correctly."
+    },
+    {
+      "descriptionFile": "library-catalog-class.description-2.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Starts from the Loan class at the center of the borrowing activity and works outward to the organizational containment structure. All 8 classes and all 8 relationships verified present with labels intact."
+    },
+    {
+      "descriptionFile": "library-catalog-class.description-3.txt",
+      "accurate": true,
+      "complete": true,
+      "notes": "Enumerates all 8 classes with members first, then lists all 8 relationships separately with labels. No invented fields or edges."
+    }
+  ]
+}

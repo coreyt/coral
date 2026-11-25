@@ -1,0 +1,8 @@
+{
+  "originalFilename": "ci-cd-pipeline.coral",
+  "defectType": "reversed-relationship-direction",
+  "affectedNodeIds": ["Repo", "CI"],
+  "affectedEdgeIds": ["edge_2"],
+  "explanation": "The description says the Source Repository triggers a webhook to the CI Server after the Developer's push, but edge_2 now points from the CI Server back to the Source Repository, so the pipeline has no path from the commit into CI and the webhook flows the wrong way.",
+  "outputFilename": "ci-cd-pipeline-reversed-relationship-direction-1.coral"
+}

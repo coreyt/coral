@@ -1,0 +1,8 @@
+{
+  "originalFilename": "order-fulfillment-network.coral",
+  "defectType": "reversed-relationship-direction",
+  "affectedNodeIds": ["Carrier", "TrackingService"],
+  "affectedEdgeIds": ["edge_12"],
+  "explanation": "The description says the Carrier API provides a tracking number to the Tracking Service, which then sends updates to the Notification Service; the edge now runs from Tracking Service to Carrier API, so the tracking number flows the wrong way and the Tracking Service has no input to base its updates on.",
+  "outputFilename": "order-fulfillment-network-reversed-relationship-direction-1.coral"
+}

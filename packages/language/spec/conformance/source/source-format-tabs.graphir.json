@@ -1,0 +1,23 @@
+{
+  "version": "3.0.0",
+  "id": "coral-graph",
+  "nodes": [
+    {
+      "id": "outer",
+      "type": "group",
+      "label": "outer",
+      "children": [
+        {
+          "id": "outer.api",
+          "type": "service",
+          "label": "API",
+          "parent": "outer"
+        }
+      ]
+    }
+  ],
+  "edges": [],
+  "metadata": {
+    "notation": "architecture"
+  }
+}

@@ -1,0 +1,2035 @@
+[
+  {
+    "type": "alt_fragment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_message_line",
+          "named": true
+        },
+        {
+          "type": "sequence_note_line",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "anchor_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "side_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "arrangement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_parameters",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "rectangle_member",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "attribute_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "attribute",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "bare_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "body_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "arrangement",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "compartment",
+          "named": true
+        },
+        {
+          "type": "edge",
+          "named": true
+        },
+        {
+          "type": "node",
+          "named": true
+        },
+        {
+          "type": "port",
+          "named": true
+        },
+        {
+          "type": "spatial_constraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "compartment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "attribute_line",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "operation_line",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "constraint_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "constraint_parameters",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "diagram_attribute",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "diagram_attributes",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "diagram_attribute",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "diagram_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "diagram_attributes",
+          "named": true
+        },
+        {
+          "type": "diagram_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "directive_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "edge",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "connector",
+          "named": true
+        },
+        {
+          "type": "edge_fields",
+          "named": true
+        },
+        {
+          "type": "edge_label_placement",
+          "named": true
+        },
+        {
+          "type": "endpoint",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "label",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "edge_fields",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "bare_type",
+          "named": true
+        },
+        {
+          "type": "keyed_edge_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "edge_label_placement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "placement_side",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "end_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "endpoint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "node_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "guarded_fragment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_message_line",
+          "named": true
+        },
+        {
+          "type": "sequence_note_line",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "identifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "keyed_edge_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "end_name",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "style_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "label",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "layout",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "layout_parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "layout_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "label",
+          "named": true
+        },
+        {
+          "type": "node_body",
+          "named": true
+        },
+        {
+          "type": "node_fields",
+          "named": true
+        },
+        {
+          "type": "node_kind",
+          "named": true
+        },
+        {
+          "type": "node_label_placement",
+          "named": true
+        },
+        {
+          "type": "node_position",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_body",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "body_line",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "route_block",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_fields",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "node_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_kind",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_label_placement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "placement_side",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_position",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "node_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "operation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "operation_signature",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "operation_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "operation",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "operation_parameter",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "operation_signature",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "operation_parameter",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "par_fragment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_message_line",
+          "named": true
+        },
+        {
+          "type": "sequence_note_line",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "placement_side",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "port",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "port_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "port_field",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "positive_integer",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "port_reference",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "node_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "prelude_trivia",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "rectangle_member",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "node_reference",
+          "named": true
+        },
+        {
+          "type": "typed_rectangle",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "route_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "node_reference",
+          "named": true
+        },
+        {
+          "type": "route_waypoint_line",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "route_waypoint_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "node_reference",
+          "named": true
+        },
+        {
+          "type": "port_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_activation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_message_line",
+          "named": true
+        },
+        {
+          "type": "sequence_note_line",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_fragment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "alt_fragment",
+          "named": true
+        },
+        {
+          "type": "guarded_fragment",
+          "named": true
+        },
+        {
+          "type": "par_fragment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_message_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "edge",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_note",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_note_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "sequence_note",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sequence_region",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_message_line",
+          "named": true
+        },
+        {
+          "type": "sequence_note_line",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "side_name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "arrangement",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "diagram_line",
+          "named": true
+        },
+        {
+          "type": "directive_line",
+          "named": true
+        },
+        {
+          "type": "edge",
+          "named": true
+        },
+        {
+          "type": "layout",
+          "named": true
+        },
+        {
+          "type": "node",
+          "named": true
+        },
+        {
+          "type": "prelude_trivia",
+          "named": true
+        },
+        {
+          "type": "route_block",
+          "named": true
+        },
+        {
+          "type": "sequence_activation",
+          "named": true
+        },
+        {
+          "type": "sequence_fragment",
+          "named": true
+        },
+        {
+          "type": "sequence_group",
+          "named": true
+        },
+        {
+          "type": "sequence_note",
+          "named": true
+        },
+        {
+          "type": "sequence_region",
+          "named": true
+        },
+        {
+          "type": "spatial_constraint",
+          "named": true
+        },
+        {
+          "type": "statement_line",
+          "named": true
+        },
+        {
+          "type": "symbol_definition",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "spatial_constraint",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "constraint_parameters",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "node_reference",
+          "named": true
+        },
+        {
+          "type": "typed_rectangle",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "statement_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "arrangement",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "edge",
+          "named": true
+        },
+        {
+          "type": "layout",
+          "named": true
+        },
+        {
+          "type": "node",
+          "named": true
+        },
+        {
+          "type": "sequence_note",
+          "named": true
+        },
+        {
+          "type": "spatial_constraint",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "style_value",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "double_quoted",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "rgb_hex",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "symbol_anchor",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "anchor_field",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "symbol_artwork",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "raw_block",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "symbol_definition",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "symbol_artwork",
+          "named": true
+        },
+        {
+          "type": "symbol_line",
+          "named": true
+        },
+        {
+          "type": "trivia_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "symbol_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "placement_side",
+          "named": true
+        },
+        {
+          "type": "port",
+          "named": true
+        },
+        {
+          "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "symbol_anchor",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "trivia_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "typed_rectangle",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "node_reference",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "+",
+    "named": false
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": ".",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": "=",
+    "named": false
+  },
+  {
+    "type": "@",
+    "named": false
+  },
+  {
+    "type": "DOWN",
+    "named": false
+  },
+  {
+    "type": "E",
+    "named": false
+  },
+  {
+    "type": "LEFT",
+    "named": false
+  },
+  {
+    "type": "N",
+    "named": false
+  },
+  {
+    "type": "ORTHOGONAL",
+    "named": false
+  },
+  {
+    "type": "POLYLINE",
+    "named": false
+  },
+  {
+    "type": "RIGHT",
+    "named": false
+  },
+  {
+    "type": "S",
+    "named": false
+  },
+  {
+    "type": "SPLINES",
+    "named": false
+  },
+  {
+    "type": "UP",
+    "named": false
+  },
+  {
+    "type": "W",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "above",
+    "named": false
+  },
+  {
+    "type": "algorithm",
+    "named": false
+  },
+  {
+    "type": "alignment",
+    "named": false
+  },
+  {
+    "type": "anchor",
+    "named": false
+  },
+  {
+    "type": "arrange",
+    "named": false
+  },
+  {
+    "type": "arrow",
+    "named": false
+  },
+  {
+    "type": "artwork",
+    "named": false
+  },
+  {
+    "type": "at",
+    "named": false
+  },
+  {
+    "type": "attribute",
+    "named": false
+  },
+  {
+    "type": "attributes",
+    "named": false
+  },
+  {
+    "type": "bar",
+    "named": false
+  },
+  {
+    "type": "below",
+    "named": false
+  },
+  {
+    "type": "bottom",
+    "named": false
+  },
+  {
+    "type": "box",
+    "named": false
+  },
+  {
+    "type": "center",
+    "named": false
+  },
+  {
+    "type": "circle",
+    "named": false
+  },
+  {
+    "type": "column",
+    "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "conformanceException",
+    "named": false
+  },
+  {
+    "type": "connector",
+    "named": true
+  },
+  {
+    "type": "constraint",
+    "named": false
+  },
+  {
+    "type": "coordinate",
+    "named": true
+  },
+  {
+    "type": "crowFoot",
+    "named": false
+  },
+  {
+    "type": "description",
+    "named": false
+  },
+  {
+    "type": "diagram",
+    "named": false
+  },
+  {
+    "type": "diagram_type",
+    "named": true
+  },
+  {
+    "type": "diamond",
+    "named": false
+  },
+  {
+    "type": "direction",
+    "named": false
+  },
+  {
+    "type": "double_quoted",
+    "named": true
+  },
+  {
+    "type": "edge",
+    "named": false
+  },
+  {
+    "type": "edgeEdge",
+    "named": false
+  },
+  {
+    "type": "edgeRouting",
+    "named": false
+  },
+  {
+    "type": "ellipse",
+    "named": false
+  },
+  {
+    "type": "end",
+    "named": false
+  },
+  {
+    "type": "exit",
+    "named": false
+  },
+  {
+    "type": "filledArrow",
+    "named": false
+  },
+  {
+    "type": "filledCircle",
+    "named": false
+  },
+  {
+    "type": "filledDiamond",
+    "named": false
+  },
+  {
+    "type": "filledTriangle",
+    "named": false
+  },
+  {
+    "type": "first",
+    "named": false
+  },
+  {
+    "type": "firstEnd",
+    "named": false
+  },
+  {
+    "type": "firstPort",
+    "named": false
+  },
+  {
+    "type": "fixed",
+    "named": false
+  },
+  {
+    "type": "force",
+    "named": false
+  },
+  {
+    "type": "forward",
+    "named": false
+  },
+  {
+    "type": "gap",
+    "named": false
+  },
+  {
+    "type": "group",
+    "named": false
+  },
+  {
+    "type": "in",
+    "named": false
+  },
+  {
+    "type": "inout",
+    "named": false
+  },
+  {
+    "type": "inset",
+    "named": false
+  },
+  {
+    "type": "label",
+    "named": false
+  },
+  {
+    "type": "layerSpacing",
+    "named": false
+  },
+  {
+    "type": "layered",
+    "named": false
+  },
+  {
+    "type": "layout",
+    "named": false
+  },
+  {
+    "type": "left",
+    "named": false
+  },
+  {
+    "type": "license",
+    "named": false
+  },
+  {
+    "type": "maxConnections",
+    "named": false
+  },
+  {
+    "type": "mrtree",
+    "named": false
+  },
+  {
+    "type": "name",
+    "named": false
+  },
+  {
+    "type": "node",
+    "named": false
+  },
+  {
+    "type": "nodeEdge",
+    "named": false
+  },
+  {
+    "type": "nodeNode",
+    "named": false
+  },
+  {
+    "type": "none",
+    "named": false
+  },
+  {
+    "type": "note",
+    "named": false
+  },
+  {
+    "type": "of",
+    "named": false
+  },
+  {
+    "type": "offset",
+    "named": false
+  },
+  {
+    "type": "on",
+    "named": false
+  },
+  {
+    "type": "one",
+    "named": false
+  },
+  {
+    "type": "oneOrMany",
+    "named": false
+  },
+  {
+    "type": "operation",
+    "named": false
+  },
+  {
+    "type": "operations",
+    "named": false
+  },
+  {
+    "type": "out",
+    "named": false
+  },
+  {
+    "type": "outline",
+    "named": false
+  },
+  {
+    "type": "package",
+    "named": false
+  },
+  {
+    "type": "pinned",
+    "named": false
+  },
+  {
+    "type": "port",
+    "named": false
+  },
+  {
+    "type": "positive_integer",
+    "named": true
+  },
+  {
+    "type": "preferred",
+    "named": false
+  },
+  {
+    "type": "private",
+    "named": false
+  },
+  {
+    "type": "protected",
+    "named": false
+  },
+  {
+    "type": "public",
+    "named": false
+  },
+  {
+    "type": "quoted",
+    "named": true
+  },
+  {
+    "type": "radial",
+    "named": false
+  },
+  {
+    "type": "raw_block",
+    "named": true
+  },
+  {
+    "type": "rectangle",
+    "named": false
+  },
+  {
+    "type": "relative",
+    "named": false
+  },
+  {
+    "type": "required",
+    "named": false
+  },
+  {
+    "type": "reverse",
+    "named": false
+  },
+  {
+    "type": "rgb_hex",
+    "named": true
+  },
+  {
+    "type": "right",
+    "named": false
+  },
+  {
+    "type": "rounded",
+    "named": false
+  },
+  {
+    "type": "row",
+    "named": false
+  },
+  {
+    "type": "second",
+    "named": false
+  },
+  {
+    "type": "secondEnd",
+    "named": false
+  },
+  {
+    "type": "secondPort",
+    "named": false
+  },
+  {
+    "type": "side",
+    "named": false
+  },
+  {
+    "type": "size",
+    "named": false
+  },
+  {
+    "type": "source",
+    "named": false
+  },
+  {
+    "type": "start",
+    "named": false
+  },
+  {
+    "type": "stress",
+    "named": false
+  },
+  {
+    "type": "strict",
+    "named": false
+  },
+  {
+    "type": "stroke",
+    "named": false
+  },
+  {
+    "type": "style",
+    "named": false
+  },
+  {
+    "type": "svg",
+    "named": false
+  },
+  {
+    "type": "symbol",
+    "named": false
+  },
+  {
+    "type": "tags",
+    "named": false
+  },
+  {
+    "type": "the",
+    "named": false
+  },
+  {
+    "type": "tint",
+    "named": false
+  },
+  {
+    "type": "to",
+    "named": false
+  },
+  {
+    "type": "top",
+    "named": false
+  },
+  {
+    "type": "triangle",
+    "named": false
+  },
+  {
+    "type": "type",
+    "named": false
+  },
+  {
+    "type": "typical",
+    "named": false
+  },
+  {
+    "type": "variant",
+    "named": false
+  },
+  {
+    "type": "waypoint",
+    "named": false
+  },
+  {
+    "type": "x",
+    "named": false
+  },
+  {
+    "type": "y",
+    "named": false
+  },
+  {
+    "type": "zeroOrMany",
+    "named": false
+  },
+  {
+    "type": "zeroOrOne",
+    "named": false
+  },
+  {
+    "type": "zeroToMany",
+    "named": false
+  },
+  {
+    "type": "{",
+    "named": false
+  },
+  {
+    "type": "}",
+    "named": false
+  }
+]

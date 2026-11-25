@@ -1,0 +1,13 @@
+@diagram block
+hub block {
+  left port [direction: out, anchor: E]
+  right port [direction: out, anchor: E]
+}
+leftUnit block {
+  receive port [direction: in, anchor: W]
+}
+rightUnit block {
+  receive port [direction: in, anchor: W]
+}
+hub:left -> leftUnit:receive as "Left data"
+hub:right -> rightUnit:receive as "Right data"

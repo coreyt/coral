@@ -1,0 +1,11 @@
+sequenceDiagram
+    actor Client
+    participant Server
+    participant Logger
+
+    Client->>Server: ping
+    Server-->>Client: pong
+    Server->>Logger: record ping-pong latency
+    Client->>Server: ping
+    Server-->>Client: pong
+    Server->>Logger: record ping-pong latency

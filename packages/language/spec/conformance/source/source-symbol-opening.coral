@@ -1,0 +1,9 @@
+@diagram architecture
+@coralVersion "0.2.9"
+@symbol 9x {
+  name "Bad"
+}
+@symbol
+@symbol open {
+  name "Open"
+gate service

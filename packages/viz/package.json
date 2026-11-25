@@ -1,0 +1,93 @@
+{
+  "name": "@coral-viz/viz",
+  "version": "0.2.12",
+  "description": "Coral visual diagram editor using React Flow",
+  "homepage": "https://coreyt.github.io/coral/",
+  "bugs": {
+    "url": "https://github.com/coreyt/coral/issues"
+  },
+  "keywords": [
+    "coral",
+    "diagram",
+    "diagram-editor",
+    "diagrams-as-code",
+    "react",
+    "react-flow",
+    "flowchart",
+    "sequence-diagram",
+    "svg"
+  ],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreyt/coral.git",
+    "directory": "packages/viz"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./editor": {
+      "types": "./dist/editor/index.d.ts",
+      "import": "./dist/editor/index.js"
+    },
+    "./layout": {
+      "types": "./dist/layout/index.d.ts",
+      "import": "./dist/layout/index.js"
+    },
+    "./text-editor": {
+      "types": "./dist/text-editor/index.d.ts",
+      "import": "./dist/text-editor/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node ../../scripts/clean.mjs dist && tsc",
+    "prepack": "npm run build",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p type-tests/tsconfig.json"
+  },
+  "dependencies": {
+    "@coral-viz/language": "0.2.12",
+    "@coral-viz/render": "0.2.12",
+    "@graph-ir/core": "0.2.4",
+    "@xyflow/system": "0.0.82",
+    "elkjs": "0.12.0",
+    "libavoided-js": "0.1.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.3",
+    "@types/node": "24.13.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitest/coverage-v8": "5.0.5",
+    "@xyflow/react": "12.11.6",
+    "jsdom": "30.1.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  },
+  "peerDependencies": {
+    "@xyflow/react": "^12.0.0",
+    "react": "^18.3.0 || ^19.0.0",
+    "react-dom": "^18.3.0 || ^19.0.0"
+  },
+  "engines": {
+    "node": ">=24.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,660 @@
+name: Coral CI
+# Titles read only trusted contexts: the full ref, or a pull request's number.
+run-name: ${{ inputs.final_candidate == true && 'Coral 0.2.12 — Release validation' || github.event_name == 'pull_request' && format('Coral CI — pull request {0}', github.event.pull_request.number) || format('Coral CI — {0}', github.ref) }}
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      final_candidate:
+        description: Require the full exact-SHA release matrix
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+# Superseded pull request runs are cancelled. Every other run has its own
+# group, so a push or final-candidate run is never cancelled or replaced.
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      full-matrix: ${{ steps.tier.outputs.full-matrix }}
+      tier: ${{ steps.tier.outputs.tier }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Classify changed paths conservatively
+        id: tier
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+          FINAL_CANDIDATE: ${{ inputs.final_candidate || false }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          args=()
+          if [[ "$FINAL_CANDIDATE" == "true" ]]; then args+=(--final-candidate); fi
+          # A manual run, new branch or base outside this history cannot be classified; run everything.
+          if [[ "$EVENT_NAME" == "workflow_dispatch" || -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]] || ! git cat-file -e "${BASE_SHA}^{commit}"; then
+            node scripts/ci-path-tier.mjs --unknown-base "${args[@]}" >> "$GITHUB_OUTPUT"
+          else
+            git diff --name-only "$BASE_SHA" "$HEAD_SHA" | node scripts/ci-path-tier.mjs --stdin "${args[@]}" >> "$GITHUB_OUTPUT"
+          fi
+
+  source-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - name: Install pinned gitleaks
+        env:
+          GOBIN: ${{ runner.temp }}/gitleaks
+        run: go install github.com/zricethezav/gitleaks/v8@v8.30.1
+      - name: Test secret detection
+        env:
+          GITLEAKS_BIN: ${{ runner.temp }}/gitleaks/gitleaks
+        run: npm run test:gitleaks
+      - name: Scan tracked source for secrets
+        env:
+          GITLEAKS_BIN: ${{ runner.temp }}/gitleaks/gitleaks
+        run: '"$GITLEAKS_BIN" detect --no-git --redact --config .gitleaks.toml --source .'
+      - run: npm run ci:source
+
+  candidate-packages:
+    needs: classify
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      artifact-digest: ${{ steps.upload.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - name: Build and freeze the six candidate packages
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: npm run ci:packages
+      - id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts/
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: true
+
+  candidate-site:
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      version-sha256: ${{ steps.site.outputs.version-sha256 }}
+      integrity-sha256: ${{ steps.site.outputs.integrity-sha256 }}
+      payload-sha256: ${{ steps.site.outputs.payload-sha256 }}
+      site-artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      site-artifact-digest: ${{ steps.upload.outputs.artifact-digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Build and freeze the production site from the prepared declarations
+        id: site
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run ci:site
+      - id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: candidate-site
+          path: candidate-site/
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: true
+
+  windows-risk:
+    needs: classify
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: 3.12.10
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - run: npm run ci:windows-risk
+
+  contracts:
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Typecheck and run script contracts against the frozen declarations
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run ci:contracts
+
+  consumers:
+    name: consumers (${{ matrix.node }})
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - node: 26.8.2
+            cases: language,render,library-docs-render,viz,mcp-server,tree-sitter-coral,browser,installed-renderer
+          - node: 24.19.0
+            cases: language,render,library-docs-render,viz,viz-graphir-migration,mcp-server,tree-sitter-coral,browser
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - if: matrix.node == '26.8.2'
+        run: npm run check:toolchain
+      - if: matrix.node == '24.19.0'
+        run: npm run check:minimum-runtime
+      - run: npm ci
+      # The installed-renderer case drives the installed browser package in Chromium.
+      - if: matrix.node == '26.8.2'
+        run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Install and exercise the frozen packages
+        env:
+          CORAL_CONSUMER_CASES: ${{ matrix.cases }}
+          CORAL_EXPECT_NODE: ${{ matrix.node }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run smoke:consumer
+
+  baseline-consumer:
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.19.0
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:minimum-runtime
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Exercise the published 0.2.8 baseline compatibility consumers
+        env:
+          CORAL_EXPECT_NODE: 24.19.0
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run smoke:api-compat-consumers
+
+  react-consumers:
+    name: react-consumers (${{ matrix.react }})
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        react: [18, 19]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24.19.0
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:minimum-runtime
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Install the frozen viz package under React
+        env:
+          CORAL_CONSUMER_CASES: viz-react-${{ matrix.react }}
+          CORAL_EXPECT_NODE: 24.19.0
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run smoke:consumer
+
+  native-smoke:
+    name: native-smoke (${{ matrix.os }})
+    needs: [classify, candidate-packages]
+    if: needs.classify.outputs.full-matrix == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux-x64
+          - os: macos-15
+            platform: darwin-arm64
+          - os: windows-latest
+            platform: win32-x64
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        if: runner.os == 'Windows'
+        with:
+          python-version: 3.12.10
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      # Windows also installs the frozen JavaScript packages, including the MCP
+      # server binary, so path and subprocess failures surface early.
+      - name: Install and exercise the frozen JavaScript packages on Windows
+        if: runner.os == 'Windows'
+        env:
+          CORAL_CONSUMER_CASES: language,render,library-docs-render,viz,viz-graphir-migration,mcp-server,browser
+          CORAL_EXPECT_NODE: 26.8.2
+          CORAL_EXPECT_PLATFORM: win32-x64
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run smoke:consumer
+      - name: Compile the native grammar, check corpus parity and the rich frozen consumer
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run ci:native
+      - name: Install and load the frozen native package
+        env:
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+          CORAL_EXPECT_PLATFORM: ${{ matrix.platform }}
+        run: npm run smoke:native
+
+  browser-smoke:
+    needs: [classify, candidate-packages, candidate-site]
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: [self-hosted, coral-e2e]
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          # This persistent runner reuses its local npm cache; never upload it.
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - run: npm run check:browser-canary
+      - run: npx playwright install chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: candidate-site
+          path: candidate-site
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Restore the frozen packages and production site
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+          EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.payload-sha256 }}
+        run: npm run ci:browser-prepare
+      - name: Production browser smoke
+        env:
+          CORAL_E2E_PHASE: smoke
+        run: npm run test:e2e
+
+  unit:
+    needs:
+      - classify
+      - source-checks
+      - candidate-packages
+      - candidate-site
+      - windows-risk
+      - contracts
+      - consumers
+      - baseline-consumer
+      - react-consumers
+      - native-smoke
+      - browser-smoke
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Product unit suites with coverage floors
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run ci:unit
+
+  windows-product:
+    needs:
+      - classify
+      - source-checks
+      - candidate-packages
+      - candidate-site
+      - windows-risk
+      - contracts
+      - consumers
+      - baseline-consumer
+      - react-consumers
+      - native-smoke
+      - browser-smoke
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: windows-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: 3.12.10
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Product unit suites on Windows
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+        run: npm run ci:windows-unit
+
+  e2e:
+    needs:
+      - classify
+      - source-checks
+      - candidate-packages
+      - candidate-site
+      - windows-risk
+      - contracts
+      - consumers
+      - baseline-consumer
+      - react-consumers
+      - native-smoke
+      - browser-smoke
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: [self-hosted, coral-e2e]
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          # This persistent runner reuses its local npm cache; never upload it.
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - run: npx playwright install chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: candidate-site
+          path: candidate-site
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Restore the frozen packages and production site
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+          EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.payload-sha256 }}
+        run: npm run ci:browser-prepare
+      - name: Complete browser correctness
+        env:
+          CORAL_E2E_PHASE: full
+        run: npm run test:e2e
+
+  online-delivery:
+    needs:
+      - classify
+      - source-checks
+      - candidate-packages
+      - candidate-site
+      - windows-risk
+      - contracts
+      - consumers
+      - baseline-consumer
+      - react-consumers
+      - native-smoke
+      - browser-smoke
+    if: needs.classify.outputs.full-matrix == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - run: npm install --global npm@12.0.2
+      - run: npm run check:toolchain
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: candidate-site
+          path: candidate-site
+      - name: Verify the frozen candidate manifest and tarball digests
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: node scripts/candidate-artifacts.mjs verify candidate-artifacts
+      - name: Delivery behavior and one independent reproducibility build
+        env:
+          RELEASE_VERSION: 0.2.12
+          RELEASE_COMMIT: ${{ github.sha }}
+          CORAL_ARTIFACT_DIR: candidate-artifacts
+          EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.payload-sha256 }}
+        run: npm run ci:delivery
+
+  final-candidate:
+    if: ${{ always() }}
+    needs:
+      - classify
+      - source-checks
+      - candidate-packages
+      - candidate-site
+      - windows-risk
+      - contracts
+      - consumers
+      - baseline-consumer
+      - react-consumers
+      - native-smoke
+      - browser-smoke
+      - unit
+      - windows-product
+      - e2e
+      - online-delivery
+    # Reads back the latest attempt of every required cell in this run and SHA
+    # to bind the proof to them.
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 26.8.2
+          package-manager-cache: false
+      - if: ${{ inputs.final_candidate == true }}
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: node-26-candidate-packages
+          path: candidate-artifacts
+      - name: Evaluate the closed required-job set
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: 0.2.12
+          NEEDS_JSON: ${{ toJSON(needs) }}
+          FULL_MATRIX: ${{ needs.classify.outputs.full-matrix }}
+          MATRIX_TIER: ${{ needs.classify.outputs.tier }}
+          FINAL_CANDIDATE: ${{ inputs.final_candidate || false }}
+          CANDIDATE_MANIFEST: candidate-artifacts/candidate-manifest.json
+          CANDIDATE_ARTIFACT_ID: ${{ needs.candidate-packages.outputs.artifact-id }}
+          CANDIDATE_ARTIFACT_DIGEST: ${{ needs.candidate-packages.outputs.artifact-digest }}
+          CANDIDATE_SITE_ARTIFACT_ID: ${{ needs.candidate-site.outputs.site-artifact-id }}
+          CANDIDATE_SITE_ARTIFACT_DIGEST: ${{ needs.candidate-site.outputs.site-artifact-digest }}
+          EXPECTED_VERSION_SHA256: ${{ needs.candidate-site.outputs.version-sha256 }}
+          EXPECTED_INTEGRITY_SHA256: ${{ needs.candidate-site.outputs.integrity-sha256 }}
+          EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.payload-sha256 }}
+          FINAL_CANDIDATE_PROOF: final-candidate-proof.json
+        run: node scripts/ci-final-candidate.mjs
+      - if: ${{ inputs.final_candidate == true }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: final-candidate-proof
+          path: final-candidate-proof.json
+          if-no-files-found: error
+          retention-days: 90
+          overwrite: true

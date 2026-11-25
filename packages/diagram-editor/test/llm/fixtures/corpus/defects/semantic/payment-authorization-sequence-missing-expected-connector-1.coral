@@ -1,0 +1,17 @@
+@diagram uml-sequence
+Customer actor as "Customer"
+Checkout participant as "Checkout Service"
+Gateway participant as "Payment Gateway"
+Fraud participant as "Fraud Service"
+Network participant as "Card Network"
+Bank participant as "Bank"
+
+msg_1 = Customer -#> Checkout as "submit payment details"
+msg_2 = Checkout -#> Gateway as "authorize(amount, card token)"
+msg_3 = Gateway -#> Fraud as "check transaction risk"
+msg_4 = Fraud -.-> Gateway as "risk score: low"
+msg_5 = Gateway -#> Network as "request authorization"
+msg_6 = Network -#> Bank as "verify funds"
+msg_8 = Network -.-> Gateway as "authorization code"
+msg_9 = Gateway -.-> Checkout as "payment authorized"
+msg_10 = Checkout -.-> Customer as "order confirmed"

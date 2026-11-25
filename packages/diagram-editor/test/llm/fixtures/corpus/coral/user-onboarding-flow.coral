@@ -1,0 +1,23 @@
+@diagram architecture
+layout [direction: DOWN]
+User service as "New User"
+SignupForm service as "Signup Form"
+AuthService service as "Auth Service"
+UserDB database as "User Database"
+EmailService service as "Email Verification Service"
+ProfileWizard service as "Profile Setup Wizard"
+WelcomeService service as "Welcome Email Service"
+Dashboard service as "User Dashboard"
+AnalyticsService service as "Analytics Service"
+
+edge_1 = User -> SignupForm as "submits signup form"
+edge_2 = SignupForm -> AuthService as "create account"
+edge_3 = AuthService -> UserDB as "store credentials"
+edge_4 = AuthService -> EmailService as "send verification email"
+edge_5 = EmailService -> User as "deliver verification link"
+edge_6 = User -> AuthService as "clicks verification link"
+edge_7 = AuthService -> ProfileWizard as "redirect to"
+edge_8 = ProfileWizard -> UserDB as "save profile data"
+edge_9 = ProfileWizard -> WelcomeService as "trigger"
+edge_10 = WelcomeService -> Dashboard as "redirect to"
+edge_11 = Dashboard -> AnalyticsService as "log activity"
