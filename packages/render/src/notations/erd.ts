@@ -23,6 +23,10 @@ export const erdNotation: NotationDefinition = {
     'erd-isa',
     'erd-note',
   ],
+  symbols0214: [
+    'erd-weak-entity',
+    'erd-view',
+  ],
 
   edgeStyles: {
     relationship: {

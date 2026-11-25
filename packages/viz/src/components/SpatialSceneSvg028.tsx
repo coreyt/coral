@@ -1,7 +1,7 @@
 /** React projection of the renderer's already-resolved spatial scene.
  * This component must not choose a stencil, measure text, or route an edge. */
 import React, { useId, useMemo } from 'react';
-import { embeddedFontCssFor, markerId, markerPrimitives, sceneArtworkDefinitions029,
+import { embeddedFontCssFor, markerId, markerPrimitives, markerSize028, sceneArtworkDefinitions029,
   type PreparedSpatialScene028, type ScenePartRecord028 } from '@coral-viz/render';
 
 export interface SpatialSceneSvg028Props {
@@ -27,7 +27,7 @@ export function SpatialSceneMarkerDefs028({ scene, namespace }: {
   }
   return <defs>{[...markers].map(([id, { marker, stroke }]) =>
     <marker key={id} id={`${namespace}-${id}`} viewBox="0 0 16 16"
-      refX="14" refY="8" markerWidth="10" markerHeight="10"
+      refX="14" refY="8" markerWidth={markerSize028(marker)} markerHeight={markerSize028(marker)}
       orient="auto-start-reverse" markerUnits="strokeWidth">
       {markerPrimitives(marker).map((primitive, index) =>
         <path key={index} d={primitive.d}

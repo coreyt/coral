@@ -71,6 +71,8 @@ test('keyboard edge authoring refuses a duplicate ID, then creates and deletes a
   const edited = source + 'bc = B -> C\n';
   await startCleanEditor(page);
   await openBuffer(page, { name: 'keyboard-edge.coral', buffer: Buffer.from(source) });
+  // Initialize the original handles before replacing same-sized scene nodes.
+  await expect(page.locator('.react-flow__edge[data-id="ab"]')).toHaveCount(1);
   const editor = page.getByLabel('DSL editor', { exact: true });
 
   await page.locator('.react-flow__node[data-id="A"]').focus();

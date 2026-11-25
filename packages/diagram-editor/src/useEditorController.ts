@@ -151,7 +151,11 @@ import {
   type NodeInterpretation028,
   type SuccessorSourceGraph028,
   type SvgOptions,
+  baseRenderStyle028,
+  normalizeRenderStyle0214,
+  type RenderStyle0214,
   type RenderStyle028,
+  type RenderStyleInput0214,
   type PreparedSpatialScene028,
   visualStyle028,
   resolveDiagramFont,
@@ -452,7 +456,7 @@ const TEXT_TO_DIAGRAM_DEBOUNCE_MS = 300;
 const TEXT_ORIGIN_SETTLE_MS = 100;
 const INTERNAL_TEXT_GUARD_MS = 1000;
 const DOCUMENT_LOAD_GUARD_MS = 400;
-const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.12';
+const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.14';
 
 // layoutNodes, convertEdges, LayoutResult imported from './hooks/diagramUtils'
 const layoutNodes = layoutNodesUtil;
@@ -2212,13 +2216,24 @@ export function useEditorController() {
   });
   const documentSettingsRef = useRef(documentSettings);
   documentSettingsRef.current = documentSettings;
-  const renderStyle028 = documentSettings.renderStyle028 ?? 'lowfi';
+  const renderStyle0214: RenderStyle0214 = normalizeRenderStyle0214(
+    documentSettings.renderStyle0214 ?? documentSettings.renderStyle028 ?? 'lowfi',
+  );
+  const renderStyle028: RenderStyle028 = baseRenderStyle028(renderStyle0214);
   const renderInputRevisionRef028 = useRef(0);
   const typedRenderInputsRef028 = useRef<string | null>(null);
   const renewTypedRenderInputsRef028 = useRef(() => {});
-  const setRenderStyle028 = useCallback((style: RenderStyle028) => {
-    if ((documentSettingsRef.current.renderStyle028 ?? 'lowfi') === style) return;
-    const next = { ...documentSettingsRef.current, renderStyle028: style };
+  const setRenderStyle028 = useCallback((style: RenderStyleInput0214) => {
+    const canonical = normalizeRenderStyle0214(style);
+    const current = normalizeRenderStyle0214(
+      documentSettingsRef.current.renderStyle0214 ?? documentSettingsRef.current.renderStyle028 ?? 'lowfi',
+    );
+    if (current === canonical) return;
+    const next = {
+      ...documentSettingsRef.current,
+      renderStyle028: baseRenderStyle028(canonical),
+      renderStyle0214: canonical === 'anemone' ? ('anemone' as const) : undefined,
+    };
     documentSettingsRef.current = next;
     // A pending layout measured for the previous visual font is stale even
     // when the authored source revision has not changed.
@@ -6336,6 +6351,7 @@ export function useEditorController() {
     return {
       theme: theme === lightTheme ? 'light' : 'dark',
       style: renderStyle028,
+      renderStyle: renderStyle0214,
       title: documentName,
       fontSettings: editorVisualFonts028(documentSettingsRef.current.font, renderStyle028),
       edgeRoutes,
@@ -6345,7 +6361,7 @@ export function useEditorController() {
       revision: JSON.stringify({
         source: revisions.publicationEnvelope().sourceRevision,
         display: revisions.publicationEnvelope().displayRevision,
-        style: renderStyle028,
+        style: renderStyle0214,
         theme: theme === lightTheme ? 'light' : 'dark',
         font: editorVisualFonts028(documentSettingsRef.current.font, renderStyle028),
         layout: documentSettingsRef.current.layout,
@@ -6355,7 +6371,7 @@ export function useEditorController() {
       ...(sourceGraphRef.current.nodes.length > 0
         ? { semanticGraph: sourceGraphRef.current } : {}),
     };
-  }, [documentName, notation, theme, waypointManager, renderStyle028, revisions]);
+  }, [documentName, notation, theme, waypointManager, renderStyle028, renderStyle0214, revisions]);
 
   const requireCurrentSourcePortRoutes = useCallback((options: SvgOptions) => {
     if (dslTypeRef.current !== 'coral' || !isAuthored028Source(dslRef.current)) return;
@@ -7084,7 +7100,7 @@ export function useEditorController() {
     key?: string }>({});
   const canvasTransient028 = nodes.some((node) => node.dragging === true);
   const canvasSceneKey028 = JSON.stringify({ graph: sourceGraphRef.current.id,
-    source: dsl, style: renderStyle028, theme: theme === lightTheme ? 'light' : 'dark',
+    source: dsl, style: renderStyle0214, theme: theme === lightTheme ? 'light' : 'dark',
     font: documentSettings.font, layout: documentSettings.layout,
     fontRevision: renderInputRevisionRef028.current });
   const canvasScene028 = useMemo<{ scene?: PreparedSpatialScene028; error?: string }>(() => {
@@ -7360,7 +7376,7 @@ export function useEditorController() {
       scene028: canvasScene028.scene,
       sceneError028: canvasScene028.error,
       sceneTransient028: canvasTransient028,
-      renderStyle028,
+      renderStyle028: renderStyle0214,
       onRenderStyle028Change: setRenderStyle028,
       nodes: styledNodes,
       edges: styledEdges,
@@ -7478,7 +7494,7 @@ export function useEditorController() {
       theme: viewTheme,
     },
     sequence: isSequenceGraph(sourceGraphRef.current) ? {
-      renderStyle028,
+      renderStyle028: renderStyle0214,
       onRenderStyle028Change: setRenderStyle028,
       graph: (() => {
         const accepted = lastParsedRef.current;

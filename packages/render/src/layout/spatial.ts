@@ -4899,6 +4899,58 @@ async function resolveSpatialLayoutOnce029(request: SpatialLayoutRequest,
   }
   const horizontalBpmnAligned = (direction === 'RIGHT' || direction === 'LEFT') && bpmnSpine.length > 1
     && alignHorizontalBpmnSpine028(bpmnSpine, rects, records, request.graph.edges);
+  // 0.2.14 Slice 20: Align off-spine / cyclic / grouped horizontal BPMN pairs
+  // (event or gateway adjacent to a task) by their visual glyph center so
+  // single horizontal edges attach dead-center instead of 16px off-center.
+  if ((direction === 'RIGHT' || direction === 'LEFT') && notationId === 'bpmn'
+    && !typed?.length && !constraints.length && !request.candidateLayout
+    && [...records.values()].every(({ node }) => !node.position && !node.pinned && !node.labelPlacement)) {
+    const spineSet = horizontalBpmnAligned ? new Set(bpmnSpine) : new Set<string>();
+    const isCaptionedBpmn = (id: string): boolean => {
+      const rec = records.get(id);
+      if (!rec) return false;
+      const sym = renderSymbolId(rec.node, rec.notationId, rec.catalog);
+      return isBpmnEventSymbol028(sym) || isBpmnGatewaySymbol028(sym);
+    };
+    const allRects = [...rects.values()];
+    const overlapsOther = (moved: MutableRect): boolean => {
+      for (const other of allRects) {
+        if (other.id === moved.id) continue;
+        if (records.get(other.id)?.node.children?.length || isContainerNode028(records.get(other.id)!.node)) continue;
+        if (Math.min(moved.absolutePosition.x + moved.width, other.absolutePosition.x + other.width) -
+            Math.max(moved.absolutePosition.x, other.absolutePosition.x) > TOLERANCE &&
+          Math.min(moved.absolutePosition.y + moved.height, other.absolutePosition.y + other.height) -
+            Math.max(moved.absolutePosition.y, other.absolutePosition.y) > TOLERANCE) {
+          return true;
+        }
+      }
+      return false;
+    };
+    for (const edge of request.graph.edges) {
+      const src = rects.get(edge.source);
+      const tgt = rects.get(edge.target);
+      if (!src || !tgt || src.parentId || tgt.parentId) continue;
+      if (records.get(src.id)?.node.children?.length || records.get(tgt.id)?.node.children?.length) continue;
+      const horizSep = direction === 'RIGHT'
+        ? tgt.absolutePosition.x - (src.absolutePosition.x + src.width)
+        : src.absolutePosition.x - (tgt.absolutePosition.x + tgt.width);
+      if (horizSep < 10) continue;
+      const srcCap = isCaptionedBpmn(src.id);
+      const tgtCap = isCaptionedBpmn(tgt.id);
+      if (srcCap === tgtCap) continue;
+      const mover = srcCap && !spineSet.has(src.id) ? src : tgtCap && !spineSet.has(tgt.id) ? tgt : undefined;
+      if (!mover) continue;
+      const anchor = mover === src ? tgt : src;
+      const deltaY = flowObjectCenter028(anchor, records).y - flowObjectCenter028(mover, records).y;
+      if (Math.abs(deltaY) < 2 || Math.abs(deltaY) > 24) continue;
+      const savedY = mover.absolutePosition.y;
+      moveAbsolute(mover, 'y', savedY + deltaY, rects, records);
+      const parentOk = !mover.parentId || containmentSatisfied(rects, records);
+      if (!parentOk || overlapsOther(mover)) {
+        moveAbsolute(mover, 'y', savedY, rects, records);
+      }
+    }
+  }
   const visualMetrics0210 = (rect: AlignableRect): VisualNodeMetrics0210 => {
     const r = rect as MutableRect, rec = records.get(r.id);
     const isCaptionedIcon = isCaptionedIcon029(r.id, records);
@@ -5162,10 +5214,16 @@ async function resolveSpatialLayoutOnce029(request: SpatialLayoutRequest,
       throw error;
     }
   }
+  const is0214Graph = typeof request.graph.metadata?.custom?.coralEdition === 'string' &&
+    /^0\.2\.(?:1[4-9]|[2-9]\d)|^[1-9]|^0\.[3-9]/.test(request.graph.metadata.custom.coralEdition);
+  const authoredRouting0214 = request.graph.layoutOptions?.edgeRouting
+    ?? (request.graph as { layoutOptions028?: { edgeRouting?: string } }).layoutOptions028?.edgeRouting;
   const resolvedRoutingStyle0211: 'orthogonal' | 'polyline' | 'splines' =
-    effectiveOptions['elk.edgeRouting'] === 'POLYLINE' || notationId === 'block' ? 'polyline'
-    : effectiveOptions['elk.edgeRouting'] === 'SPLINES' || notationId === 'sketch' ? 'splines'
-    : 'orthogonal';
+    (is0214Graph && !authoredRouting0214 && (notationId === 'block' || notationId === 'architecture' || notationId === 'erd'))
+      ? 'orthogonal'
+      : effectiveOptions['elk.edgeRouting'] === 'POLYLINE' || notationId === 'block' ? 'polyline'
+      : effectiveOptions['elk.edgeRouting'] === 'SPLINES' || notationId === 'sketch' ? 'splines'
+      : 'orthogonal';
   const hasReservedUserLabel = [...records.values()].some((r) => Boolean(r.reservedLabel029));
   if (!typed?.length && !request.candidateLayout && !request.execution?.engine
     && !hasReservedUserLabel

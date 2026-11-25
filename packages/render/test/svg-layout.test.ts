@@ -624,12 +624,13 @@ describe('layoutGraphForSvg', () => {
       // The grown group itself may move; its automatic child keeps its place in it.
       expect(inGroup(mixed, 'inner')).toEqual(inGroup(automatic, 'inner'));
       expect(at(mixed, 'side')).toEqual({ x: at(mixed, 'group').x + 300, y: at(mixed, 'group').y + 200 });
-      expect(digest(mixed)).toBe('1561672cc1c6b6919bbd3815beea5e48ea4bdbf36ccec13c5f119e0a5db4f0db');
+      // Deterministic 0.2.14 Slice 20 Phase E3/E4 baseline.
+      expect(digest(mixed)).toBe('2e9fd0cefb74f5c5521ac14bf67ef899e38f6da62312d14abb968f7feba0012c');
     });
 
     it('lays out a group whose children are all positioned exactly as before D6', async () => {
-      // Deterministic 0.2.11 BRANDES_KOEPF baseline.
-      expect(digest(await layoutGraphForSvg(allPositioned))).toBe('52ce6596facda448c01c2f1f11c3c08501b9675cc34f2550b383f791e842ec07');
+      // Deterministic 0.2.14 Slice 20 Phase E3/E4 baseline.
+      expect(digest(await layoutGraphForSvg(allPositioned))).toBe('de96a96ae93e6b5cb882131bb9486a93f949a171a6cf08d8d41e3132d5bdc395');
     });
   });
 

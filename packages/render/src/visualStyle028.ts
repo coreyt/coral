@@ -8,6 +8,26 @@ import type { ShapeDefinition } from './types.js';
 
 export type RenderStyle028 = 'lowfi' | 'hifi';
 
+/** 0.2.14 canonical render styles: monochrome `lowfi`/`hifi` plus peer `anemone`. */
+export type RenderStyle0214 = RenderStyle028 | 'anemone';
+
+/** Accepted style inputs, including the `'ane'` shorthand for `'anemone'`. */
+export type RenderStyleInput0214 = RenderStyle0214 | 'ane';
+
+export function normalizeRenderStyle0214(style: unknown): RenderStyle0214 {
+  if (style === 'lowfi' || style === 'hifi') return style;
+  if (style === 'anemone' || style === 'ane') return 'anemone';
+  throw new Error(`render.capability.style: ${String(style)} is unavailable; thx is reserved`);
+}
+
+export function baseRenderStyle028(style: unknown): RenderStyle028 {
+  return normalizeRenderStyle0214(style ?? 'lowfi') === 'lowfi' ? 'lowfi' : 'hifi';
+}
+
+export function isAnemoneStyle0214(style: unknown): boolean {
+  return style === 'anemone' || style === 'ane';
+}
+
 export interface VisualStyle028 {
   readonly ink: string;
   readonly softInk: string;

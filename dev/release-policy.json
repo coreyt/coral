@@ -76,7 +76,7 @@
   },
   "ci": {
     "aggregateContext": "final-candidate",
-    "candidateRef": "refs/heads/release/0.2.12",
+    "candidateRef": "refs/heads/release/0.2.14",
     "pathTiers": {
       "docsAndReleaseRecords": {
         "paths": ["dev/releases/**/*.md", "dev/archive/releases/**/*.md", "*.md"],

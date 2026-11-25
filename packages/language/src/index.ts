@@ -8,11 +8,11 @@ export { labelToId } from './parser/index.js';
 export { CORAL_LANGUAGE_VERSION } from './spellings.js';
 export { parseDocument028 as parse, parseDocument028, formatDocument028 } from './parser/document028.js';
 export { setCandidateLabel } from './parser/candidate028.js';
-export { isDashedOpenArrow028 } from './parser/connector028.js';
-export type { CandidateEdgeSyntax, CandidateFragmentSyntax, CandidateNodeSyntax,
+export { isDashedOpenArrow028, parseCrowsFootConnector0214 } from './parser/connector028.js';
+export type { CandidateEdgeSyntax, CandidateErdColumnSyntax, CandidateFragmentSyntax, CandidateNodeSyntax,
   CandidateParticipantGroupSyntax,
-  CandidatePortSyntax, CandidateSequenceItemSyntax } from './parser/candidate028.js';
-export { editionAdmitsUserSymbols029, parseHeader028, pinHeaderEdition029,
+  CandidatePortSyntax, CandidateSequenceItemSyntax, NodeStyleIntent0214 } from './parser/candidate028.js';
+export { editionAdmits0214, editionAdmitsUserSymbols029, parseHeader028, pinHeaderEdition029,
   prepareHeaderForSave028 } from './parser/header028.js';
 export { parseSymbolDefinitions029 } from './parser/symbolDefinitions029.js';
 export type {

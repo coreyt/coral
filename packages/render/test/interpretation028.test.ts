@@ -276,7 +276,7 @@ describe('0.2.8 unified node interpretation seam', () => {
   });
 
   it('keeps explicit symbol interpretation aligned across all installed profiles', () => {
-    expect(notationRegistry.getAll()).toHaveLength(12);
+    expect(notationRegistry.getAll()).toHaveLength(13);
     for (const notation of notationRegistry.getAll()) {
       if (notation.id === 'uml-state') {
         expect(notation.symbols).toEqual([]);

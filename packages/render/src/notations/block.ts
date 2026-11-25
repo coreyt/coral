@@ -12,6 +12,10 @@ export const blockNotation: NotationDefinition = {
     elkOptions: { 'elk.layered.considerModelOrder.strategy': 'NODES_AND_EDGES' },
   },
   symbols: ['block-unit'],
+  symbols0214: [
+    'block-rounded', 'block-circle', 'block-oval', 'block-triangle',
+    'block-diamond', 'block-cylinder', 'block-pill', 'block-note', 'block-group',
+  ],
   edgeStyles: {
     flow: { name: 'Directed connection', targetArrow: 'arrow',
       lineStyle: 'solid', stroke: '#425466', strokeWidth: 1.5 },

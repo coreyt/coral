@@ -4,7 +4,9 @@ import { validateIR } from '@graph-ir/core/validation';
 import { detectFormat, editionAdmitsUserSymbols029, isSequenceGraph, validateSequenceInteraction } from '@coral-viz/language';
 import { assessGraphPortReferences028, assessSuccessorSourcePortReferences028,
   assessInstalledSuccessorSourceIntegrity028,
+  baseRenderStyle028,
   installedPortReferenceRanges028, installedWrittenPortReferenceRanges028,
+  normalizeRenderStyle0214,
   parseInstalledDocument028, projectInstalledSourceToSuccessor028,
   renderSvg, sourceSpatialFailureDiagnostics028, sourceLayoutCapabilityNotices028, sourceSemanticCapabilityNotices028, successorSourceDisplay028,
   successorDisplayFailureDiagnostic028, successorSourceDisplayWithSemanticPorts028, sourcePortDeclarationDiagnostics028,
@@ -19,12 +21,13 @@ import { CoralRenderError, type CoralDiagnostic } from './errors.js';
 
 export type CoralTheme = 'light' | 'dark';
 export type CoralDirection = 'RIGHT' | 'DOWN' | 'LEFT' | 'UP';
+export type CoralStyle = 'lowfi' | 'hifi' | 'anemone' | 'ane';
 
 export interface CoralRenderOptions {
   /** Default `light`. */
   theme?: CoralTheme;
-  /** Approved 0.2.8 visual style; `thx` is reserved. */
-  style?: 'lowfi' | 'hifi';
+  /** Visual style: monochrome `lowfi` or `hifi`, or peer `anemone` (shorthand `ane`). `thx` is reserved. */
+  style?: CoralStyle;
   /** Default `RIGHT`, the MCP `coral_render` default. */
   direction?: CoralDirection;
   /** Emitted as the SVG `<title>` only when set. */
@@ -106,7 +109,7 @@ export function assertAvailableFaces(svg: string): void {
 }
 
 function checkOptions(options: unknown): Required<Pick<CoralRenderOptions, 'theme' | 'direction'>> &
-  Pick<CoralRenderOptions, 'title' | 'style'> {
+  Pick<CoralRenderOptions, 'title'> & { style?: 'lowfi' | 'hifi' | 'anemone' } {
   const invalid = (message: string): CoralRenderError => new CoralRenderError('coral.browser.option.invalid', message);
   if (options === undefined) return { theme: 'light', direction: 'RIGHT' };
   if (options === null || typeof options !== 'object' || Array.isArray(options)
@@ -118,8 +121,12 @@ function checkOptions(options: unknown): Required<Pick<CoralRenderOptions, 'them
     if (!OPTION_KEYS.has(key) && record[key] !== undefined) throw invalid(`Unknown render option "${key}".`);
   }
   if (record.theme !== undefined && !THEMES.has(record.theme)) throw invalid('Option "theme" must be "light" or "dark".');
-  if (record.style !== undefined && record.style !== 'lowfi' && record.style !== 'hifi') {
-    throw invalid('Option "style" must be "lowfi" or "hifi"; "thx" is reserved.');
+  let normalizedStyle: 'lowfi' | 'hifi' | 'anemone' = 'lowfi';
+  if (record.style !== undefined) {
+    if (record.style !== 'lowfi' && record.style !== 'hifi' && record.style !== 'anemone' && record.style !== 'ane') {
+      throw invalid('Option "style" must be "lowfi", "hifi", or "anemone" ("ane"); "thx" is reserved.');
+    }
+    normalizedStyle = normalizeRenderStyle0214(record.style);
   }
   if (record.direction !== undefined && !DIRECTIONS.has(record.direction)) {
     throw invalid('Option "direction" must be "RIGHT", "DOWN", "LEFT", or "UP".');
@@ -130,7 +137,7 @@ function checkOptions(options: unknown): Required<Pick<CoralRenderOptions, 'them
   }
   return {
     theme: (record.theme as CoralTheme | undefined) ?? 'light',
-    style: (record.style as 'lowfi' | 'hifi' | undefined) ?? 'lowfi',
+    style: normalizedStyle,
     direction: (record.direction as CoralDirection | undefined) ?? 'RIGHT',
     ...(record.title !== undefined ? { title: record.title as string } : {}),
   };
@@ -328,13 +335,15 @@ export async function render(source: string, options?: CoralRenderOptions): Prom
   }
 
   let svg: string;
+  const baseStyle = baseRenderStyle028(style ?? 'lowfi');
   try {
     const laidOut = await layoutGraphForSvg(graph, { direction, nodeSpacing: 50,
-      svgOptions: { style, theme },
+      svgOptions: { style: baseStyle, ...(style ? { renderStyle: style } : {}), theme },
       ...(semanticInterpretations ? { semanticInterpretations } : {}) });
     if (laidOut.layoutDiagnostics028?.length) diagnostics.push(...sourceSpatialFailureDiagnostics028(
       { diagnostics: laidOut.layoutDiagnostics028 }, installed).map(toCoralDiagnostic));
-    svg = renderSvg(laidOut, { theme, style, ...(title !== undefined ? { title } : {}),
+    svg = renderSvg(laidOut, { theme, style: baseStyle, ...(style ? { renderStyle: style } : {}),
+      ...(title !== undefined ? { title } : {}),
       domIdNamespace: `browser-${++browserSvgInstanceSerial028}`,
       edgeRoutes: laidOut.edgeRoutes, layoutDirection: direction, semanticGraph: graph,
       ...(sourceProjection?.graph ? { successorSource: sourceProjection.graph } : {}) });

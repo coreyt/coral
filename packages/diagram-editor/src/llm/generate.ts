@@ -34,7 +34,10 @@ import {
 } from './spatial';
 
 const headerRuntime028 = { manifest: HEADER_MANIFEST_028, currentVersion: '0.2.8',
-  trustedDigests: Object.fromEntries(Object.values(HEADER_MANIFEST_028['0.2.8']!).flatMap(
+  trustedDigests: Object.fromEntries([
+    ...Object.values(HEADER_MANIFEST_028['0.2.8']!),
+    ...Object.values(HEADER_MANIFEST_028['0.2.14']!),
+  ].flatMap(
     (edition) => edition.catalogs.map((catalog) => [`${catalog.id}@${catalog.version}`, catalog.digest]))) };
 
 /**

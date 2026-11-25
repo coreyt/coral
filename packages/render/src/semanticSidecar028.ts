@@ -1,7 +1,8 @@
 import type { GraphIR, GraphNode } from '@graph-ir/core';
+import { editionAdmits0214 } from '@coral-viz/language';
 import type { NodeInterpretation028 } from './interpretation028.js';
 import { catalogForInterpretations029 } from './documentCatalog029.js';
-import { notationCatalogIdentity028, resolveNotationNode028 } from './notations/index.js';
+import { notationCatalogIdentity028, notationCatalogIdentity0214, resolveNotationNode028 } from './notations/index.js';
 
 export class SemanticSidecarMismatch028 extends Error {
   readonly code = 'render.capability.semantic-port-sidecar';
@@ -22,10 +23,12 @@ export function assertSemanticSidecar028(
     throw new SemanticSidecarMismatch028(nodeId, reason);
   };
   if (!notation) return mismatch(graph.id, 'requires an installed notation');
-  const catalog = notationCatalogIdentity028(notation);
+  const edition = typeof graph.metadata?.custom?.coralEdition === 'string' ? graph.metadata.custom.coralEdition : undefined;
+  const is0214 = edition !== undefined && editionAdmits0214(edition);
+  const catalog = is0214 ? notationCatalogIdentity0214(notation) : notationCatalogIdentity028(notation);
   if (!catalog) return mismatch(graph.id, `has no installed catalog for ${notation}`);
   // User symbols resolve through the document catalog the interpretations carry.
-  const documentCatalog = catalogForInterpretations029(notation, interpretations);
+  const documentCatalog = catalogForInterpretations029(notation, interpretations, edition);
   const visited = new Set<string>();
   const visit = (nodes: GraphNode[]): void => {
     for (const node of nodes) {

@@ -66,8 +66,8 @@ export const renderTool = {
             default: 'light',
           },
           style: {
-            type: 'string', enum: ['lowfi', 'hifi'],
-            description: '0.2.8 visual style; thx is reserved', default: 'lowfi',
+            type: 'string', enum: ['lowfi', 'hifi', 'anemone', 'ane'],
+            description: 'Visual style: monochrome lowfi or hifi, or peer anemone (shorthand ane); thx is reserved', default: 'lowfi',
           },
           nodeSpacing: { type: 'number', description: 'Spacing between nodes', default: 50 },
           fontSettings: {
@@ -132,7 +132,7 @@ const RenderOptionsSchema = z.object({
   format: z.enum(['svg', 'html']).default('svg'),
   direction: z.enum(['RIGHT', 'DOWN', 'LEFT', 'UP']).default('RIGHT'),
   theme: z.enum(['light', 'dark']).default('light'),
-  style: z.enum(['lowfi', 'hifi']).default('lowfi'),
+  style: z.enum(['lowfi', 'hifi', 'anemone', 'ane']).default('lowfi'),
   nodeSpacing: z.number().positive().default(50),
   fontSettings: DiagramFontSettingsSchema.optional(),
   fontFamily: z.string().trim().min(1).optional(),
@@ -334,9 +334,11 @@ export async function handleRender(args: unknown) {
     || options.fontSize !== undefined
     || options.fontWeight !== undefined
     || options.lineHeight !== undefined;
+  const normalizedStyle = options.style === 'ane' ? 'anemone' : options.style;
   const svgOptions: SvgOptions = {
     theme: options.theme,
-    style: options.style,
+    style: normalizedStyle === 'lowfi' ? 'lowfi' : 'hifi',
+    renderStyle: normalizedStyle,
     layoutDirection: options.direction,
     ...(options.fontSettings !== undefined || scalarFontOption
       ? { fontSettings: (options.fontSettings ?? {}) as DiagramRenderFontSettings }

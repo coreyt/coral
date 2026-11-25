@@ -1,8 +1,8 @@
 # Embed Coral
 
 Choose among six public packages, install only what your application needs
-and compose Coral's public APIs. Use verified 0.2.12 archives together.
-Package version 0.2.12,
+and compose Coral's public APIs. Use verified 0.2.14 archives together.
+Package version 0.2.14,
 Language Specification 1.3.0, and saved source/header editions 0.2.8 and 0.2.9
 are distinct.
 
@@ -34,7 +34,7 @@ acceptance.
 ## Shared requirements
 
 - Node.js 24.19.0 or newer is the consumer runtime for the five JavaScript
-  packages. Coral 0.2.12 is built with Node 26.8.2 and npm 12.0.2.
+  packages. Coral 0.2.14 is built with Node 26.8.2 and npm 12.0.2.
 - `@coral-viz/viz` has peers on React and React DOM 18.3 or 19 and
   `@xyflow/react` 12. Import the React Flow stylesheet once.
 - `tree-sitter-coral` compiles a native addon from source. Python is required
@@ -57,22 +57,22 @@ resolve to the same version. The published Core dependency is pinned to
 For the canonical rendering chain:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.12.tgz \
-  ./coral-viz-render-0.2.12.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.14.tgz \
+  ./coral-viz-render-0.2.14.tgz
 ```
 
 For the React editor:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.12.tgz \
-  ./coral-viz-render-0.2.12.tgz ./coral-viz-viz-0.2.12.tgz \
+npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.14.tgz \
+  ./coral-viz-render-0.2.14.tgz ./coral-viz-viz-0.2.14.tgz \
   @xyflow/react@^12 react@^19 react-dom@^19
 ```
 
 For browser rendering without React:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.12.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.14.tgz
 ```
 
 The browser archive bundles its Coral language and rendering implementation.

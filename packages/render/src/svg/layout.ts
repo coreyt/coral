@@ -6,6 +6,7 @@ import type { SpatialSidecar028 } from '../layout/typedSpatial028.js';
  * Callers validate first; this module does not.
  */
 import type { GraphIR } from '@graph-ir/core';
+import { editionAdmits0214 } from '@coral-viz/language';
 import type { GraphEdge, GraphNode } from '../types.js';
 import type { LayoutDirection, ResolvedLayoutDiagnostic } from '../layout/types.js';
 import { resolveSpatialLayout } from '../layout/spatial.js';
@@ -18,7 +19,7 @@ import { semanticLayoutPorts028 } from '../semanticLayoutPorts028.js';
 import { isSequenceRenderGraph, type SequenceDisplayTree028 } from '../sequence.js';
 import type { SuccessorSourceInteraction028 } from '../successorSourceProjection028.js';
 import { catalogSymbol029 } from '../catalogLookup029.js';
-import { catalogForInterpretations029, type DocumentCatalog029 } from '../documentCatalog029.js';
+import { catalogForInterpretations029, documentCatalog029, type DocumentCatalog029 } from '../documentCatalog029.js';
 import { containerAutomaticPadding028, containerLayoutOptions028, measureSvgNode, usesPortableSvgFonts, type SvgOptions } from './serialize.js';
 
 export interface SvgLayoutOptions {
@@ -53,7 +54,8 @@ export interface SvgLayoutGraph {
 
 /** Layout-only GraphIR 3 projection; semantic ports do not become authored geometric ports. */
 function projectCatalogPortsForSvg(graph: GraphIR, direction: LayoutDirection, notation?: string,
-  interpretations?: ReadonlyMap<string, NodeInterpretation028>, catalog?: DocumentCatalog029): GraphIR {
+  interpretations?: ReadonlyMap<string, NodeInterpretation028>, catalog?: DocumentCatalog029,
+  preserveOmittedPorts = false): GraphIR {
   if (interpretations) assertSemanticSidecar028(graph, notation, interpretations);
   if (!notation) return graph;
   assertRenderableInterpretation028(graph.nodes, notation, graph.profile, catalog);
@@ -78,7 +80,7 @@ function projectCatalogPortsForSvg(graph: GraphIR, direction: LayoutDirection, n
   // The successor sidecar is source-owned: an omitted semantic-port reference
   // must remain omitted even in the temporary layout graph. ELK may choose a
   // node-boundary attachment; it must not turn the first named port into intent.
-  const edges = interpretations ? graph.edges : graph.edges.map((edge) => ({ ...edge,
+  const edges = (interpretations || preserveOmittedPorts) ? graph.edges : graph.edges.map((edge) => ({ ...edge,
     sourcePort: edge.sourcePort ?? defaults.get(edge.source)?.source,
     targetPort: edge.targetPort ?? defaults.get(edge.target)?.target,
   }));
@@ -153,9 +155,15 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
   const nodeSpacing = options.nodeSpacing ?? (hifiDefaults ? 36 : 50);
   const layerSpacing = options.layerSpacing ?? (hifiDefaults ? 54 : nodeSpacing + 30);
   // A user symbol's frame is exactly its definition size; labels never resize it.
-  const documentCatalog = options.semanticInterpretations && svgOptions.notation
-    ? catalogForInterpretations029(svgOptions.notation, options.semanticInterpretations) : undefined;
-  const catalog = documentCatalog?.userSymbols.size ? documentCatalog : undefined;
+  const graphEdition = typeof graph.metadata?.custom?.coralEdition === 'string'
+    ? graph.metadata.custom.coralEdition : undefined;
+  const is0214 = graphEdition !== undefined && editionAdmits0214(graphEdition);
+  const documentCatalog = svgOptions.notation
+    ? options.semanticInterpretations
+      ? catalogForInterpretations029(svgOptions.notation, options.semanticInterpretations, graphEdition)
+      : is0214 ? documentCatalog029(svgOptions.notation, [], graphEdition) : undefined
+    : undefined;
+  const catalog = documentCatalog && (documentCatalog.userSymbols.size > 0 || is0214) ? documentCatalog : undefined;
   const frameOf = (node: GraphNode) => options.semanticInterpretations?.get(node.id)?.userSymbol029?.outline;
   const automaticPadding028 = new Map<string, NonNullable<NonNullable<GraphNode['layoutOptions']>['padding']>>();
   const addMissingDimensions = (nodes: GraphNode[]): GraphNode[] => nodes.map((node) => {
@@ -165,7 +173,7 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
     ...node,
     layoutOptions: containerLayoutOptions028(node, svgOptions),
     ...(!node.dimensions && !node.children?.length && usesPortableSvgFonts(svgOptions)
-      ? { dimensions: measureSvgNode(node, svgOptions) } : {}),
+      ? { dimensions: measureSvgNode(node, catalog ? { ...svgOptions, documentCatalog029: catalog } : svgOptions) } : {}),
     ...(frameOf(node) ? { dimensions: { width: frameOf(node)!.width, height: frameOf(node)!.height } } : {}),
     ...(node.children ? { children: addMissingDimensions(node.children) } : {}),
   };
@@ -173,13 +181,13 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
   const sizedGraph = { ...graph, nodes: addMissingDimensions(graph.nodes) };
 
   const layoutGraph = projectCatalogPortsForSvg(
-    sizedGraph, options.direction ?? 'RIGHT', svgOptions.notation, options.semanticInterpretations, catalog,
+    sizedGraph, options.direction ?? 'RIGHT', svgOptions.notation, options.semanticInterpretations, catalog, is0214,
   );
   const result = await resolveSpatialLayout({
     revision: `svg:${graph.id}`,
     graph: layoutGraph,
     operation: 'load',
-    proximitySceneOptions: svgOptions,
+    proximitySceneOptions: catalog ? { ...svgOptions, documentCatalog029: catalog } : svgOptions,
     ...(automaticPadding028.size ? { automaticPadding028 } : {}),
     ...(catalog ? { documentCatalog029: catalog } : {}),
     defaults: {

@@ -3,7 +3,7 @@ import { createHash } from 'node:crypto';
 import { sha256Hex028 } from '../src/catalogDigest028.js';
 import { glyphRegistry } from '../src/glyphs/index.js';
 import { HEADER_MANIFEST_028 } from '../../language/src/parser/header-manifest028.js';
-import { getNotation, notationCatalogIdentity028, notationRegistry } from '../src/notations/index.js';
+import { getNotation, notationCatalogIdentity028, notationCatalogIdentity0214, notationRegistry } from '../src/notations/index.js';
 import { getAllShapes } from '../src/shapes/index.js';
 import { getAllSymbols } from '../src/symbols/index.js';
 import { symbolRegistry } from '../src/symbols/index.js';
@@ -11,10 +11,15 @@ import { symbolRegistry } from '../src/symbols/index.js';
 describe('installed 0.2.8 catalog identity', () => {
   it('matches every source-header catalog pin to the exact installed snapshot', () => {
     expect(Object.keys(HEADER_MANIFEST_028['0.2.8']!).sort()).toEqual(
-      notationRegistry.getAll().map((notation) => notation.id).sort());
+      notationRegistry.getAll().filter((notation) => notation.id !== 'infrastructure').map((notation) => notation.id).sort());
     for (const [diagramType, edition] of Object.entries(HEADER_MANIFEST_028['0.2.8']!)) {
       const identity = notationCatalogIdentity028(diagramType);
       expect(identity, diagramType).toBeDefined();
+      expect(identity).toEqual(edition.catalogs.find((item) => item.version === edition.defaults[1]));
+    }
+    for (const [diagramType, edition] of Object.entries(HEADER_MANIFEST_028['0.2.14']!)) {
+      const identity = notationCatalogIdentity0214(diagramType);
+      expect(identity, `0.2.14:${diagramType}`).toBeDefined();
       expect(identity).toEqual(edition.catalogs.find((item) => item.version === edition.defaults[1]));
     }
     expect(Object.isFrozen(HEADER_MANIFEST_028)).toBe(true);
@@ -33,9 +38,9 @@ describe('installed 0.2.8 catalog identity', () => {
 
   it('binds the identity to the shapes and glyphs used by the installed stencil catalog', () => {
     const notation = getNotation('sketch')!;
-    const symbols = [...getAllSymbols()].sort((a, b) => a.id.localeCompare(b.id));
-    const shapes = [...getAllShapes()].sort((a, b) => a.id.localeCompare(b.id));
-    const glyphs = glyphRegistry.getAll().sort((a, b) => a.id.localeCompare(b.id));
+    const symbols = [...getAllSymbols()].filter((s) => !s.addedInEdition).sort((a, b) => a.id.localeCompare(b.id));
+    const shapes = [...getAllShapes()].filter((s) => !s.addedInEdition).sort((a, b) => a.id.localeCompare(b.id));
+    const glyphs = glyphRegistry.getAll().filter((g) => !g.addedInEdition).sort((a, b) => a.id.localeCompare(b.id));
     const typeSymbols = notation.symbols.map((id) => [id, id]).sort(([a], [b]) => a.localeCompare(b));
     const expected = `sha256-${createHash('sha256').update(JSON.stringify({ notation, symbols,
       shapes, glyphs, typeSymbols })).digest('hex')}`;

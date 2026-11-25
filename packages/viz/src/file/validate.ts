@@ -102,6 +102,11 @@ export function validateDocument(doc: unknown): ValidationResult {
         settings.renderStyle028 !== 'hifi') {
       errors.push('settings.renderStyle028 must be lowfi or hifi');
     }
+    if (settings.renderStyle0214 !== undefined && settings.renderStyle0214 !== 'lowfi' &&
+        settings.renderStyle0214 !== 'hifi' && settings.renderStyle0214 !== 'anemone' &&
+        settings.renderStyle0214 !== 'ane') {
+      errors.push('settings.renderStyle0214 must be lowfi, hifi, anemone, or ane');
+    }
 
     if (!settings.layout || typeof settings.layout !== 'object') {
       errors.push('Missing or invalid settings.layout');

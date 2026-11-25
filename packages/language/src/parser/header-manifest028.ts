@@ -88,6 +88,40 @@ const manifest: HeaderManifest028 = {
  * the 0.2.8 profiles, catalogs and digests. */
 manifest['0.2.9'] = JSON.parse(JSON.stringify(manifest['0.2.8'])) as HeaderManifest028[string];
 
+/** Edition 0.2.14 extends Coral with node style/technology/description/provider,
+ * edge technology/description/endpoint labels, N1 approvedTypeWords, Crow's Foot
+ * ERD (enabling erd and retiring Chen), expanded block/architecture catalogs,
+ * cloud infrastructure, camelCase relation mappings, and symmetric UML attribute
+ * visibility. */
+const edition0214 = JSON.parse(JSON.stringify(manifest['0.2.8'])) as HeaderManifest028[string];
+const digests0214: Record<string, string> = {
+  block: 'sha256-dd0923b6f4058dc0bd67e54c33abb087a224fd2ad9b79cd8ccaaf4dc743efe7e',
+  erd: 'sha256-3cdd1e70ab93292dd38aba713c026661283e66df04fb6d3f1dfb29af24e0aafb',
+  code: 'sha256-053fdf6270114df0fb356c36b14c3c9282067b9c18dda3be98bf9bf5b3128da2',
+  architecture: 'sha256-53e81d82aad7b30c36e9cde1ea06becab645e8b9bdcea1ef86fc53dc1ae8f47c',
+  aiml: 'sha256-aba23bd2ba00c9e4b92a1238e66b1b5a423d8b4a36820c89efbd520407bd5760',
+  'data-engineering': 'sha256-b4f4a43d180626a01d0b1c2d646175ac03b192c06b8f33790d5675cae4ed423c',
+  sketch: 'sha256-e0b6ceb7c382f81e3f3841ef03946df2d3b9581cacd3d636c571a45234edd85b',
+};
+for (const [id, digest] of Object.entries(digests0214)) {
+  const entry = edition0214[id]!;
+  delete entry.enabled;
+  entry.catalogs = [{ id, version: '1.1.0', digest }];
+  entry.compatible = [['1.0.0', '1.1.0']];
+  entry.defaults = ['1.0.0', '1.1.0'];
+}
+edition0214.infrastructure = {
+  profiles: [{ id: 'infrastructure', version: '1.0.0' }],
+  catalogs: [{
+    id: 'infrastructure',
+    version: '1.0.0',
+    digest: 'sha256-83f62279be1b07a20393fd001351159db8f7023b7ff2eecf2539c5cbd0812143',
+  }],
+  compatible: [['1.0.0', '1.0.0']],
+  defaults: ['1.0.0', '1.0.0'],
+};
+manifest['0.2.14'] = edition0214;
+
 function freezeDeep(value: unknown): void {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return;
   for (const child of Object.values(value)) freezeDeep(child);

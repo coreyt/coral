@@ -123,6 +123,8 @@ export interface ShapeDefinition {
   strokeOnly?: boolean;
   /** Sizing metadata for adaptive node sizing (CORAL-REQ-011) */
   sizing?: ShapeSizing;
+  /** Present only on shapes introduced after the frozen 0.2.8 catalog. */
+  addedInEdition?: string;
 }
 
 /**
@@ -172,6 +174,8 @@ export interface SymbolDefinition {
   namedAnchors?: NamedSymbolAnchor[];
   marker?: string;
   isContainer?: boolean;
+  /** Present only on symbols introduced after the frozen 0.2.8 catalog. */
+  addedInEdition?: string;
 }
 
 /**
@@ -288,6 +292,8 @@ export interface NotationDefinition {
   version: string;
   layoutProfile?: NotationLayoutProfile;
   symbols: string[]; // references to symbol ids
+  /** Additive symbols introduced in edition 0.2.14 (keeps 0.2.8 digests immutable). */
+  symbols0214?: string[];
   edgeStyles?: Record<string, NotationEdgeStyle>;
   defaultEdgeStyle: string | NotationEdgeStyle;
   connectionRules: ConnectionRule[];

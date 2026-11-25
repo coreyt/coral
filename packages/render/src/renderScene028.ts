@@ -3,7 +3,7 @@ import { stencilCaptionHeight028, stencilLabelSizing028 } from './stencilLabelGe
 /** Typed, JSON-safe scene evidence for the 0.2.8 renderer. Authoring meaning
  * is copied from the input graph; layout supplies coordinates only. */
 import type { EdgeLabelPlacement, EndpointMarker, GraphEdge, GraphIR, GraphNode, Position } from '@graph-ir/core';
-import { markerId, RenderCapabilityError, symbolMarkerName, symbolMarkerPrimitives, type RenderScene,
+import { markerId, markerSize028, RenderCapabilityError, symbolMarkerName, symbolMarkerPrimitives, type RenderScene,
   type RenderCapabilityDiagnostic } from './scene.js';
 import type { NodeLabelLayout } from './text/sizing.js';
 import type { ResolvedFont } from './text/fonts.js';
@@ -129,14 +129,21 @@ function edgeLabelPosition028(edgeId: string, classifierLabel: boolean, points: 
     box(x - width / 2, y - height, width, height);
   const search = (bounds: SceneBounds028): SceneBounds028 =>
     box(bounds.x - 4, bounds.y - 4, bounds.width + 8, bounds.height + 8);
-  const collisions = (bounds: SceneBounds028): number => {
+  const collisionCounts = (bounds: SceneBounds028) => {
     const bodyCollisions = nodes.query(search(bounds)).filter((node) => overlapsBounds028(bounds, node, 3)).length;
-    // Class labels must clear painted bodies. A shorter but occluded slot
-    // cannot outrank a readable one merely because both cross one obstacle.
+    const labelCollisions = labels.query(search(bounds)).filter((label) => overlapsBounds028(bounds, label, 3)).length;
+    const segmentCollisions = segments.query(search(bounds)).filter(([start, end]) => routeHitsBounds028(start, end, bounds, 4)).length;
+    return { bodyCollisions, labelCollisions, segmentCollisions };
+  };
+  const collisionPenalty = (bounds: SceneBounds028): number => {
+    const { bodyCollisions, labelCollisions, segmentCollisions } = collisionCounts(bounds);
     if (classifierLabel && bodyCollisions > 0) return Number.POSITIVE_INFINITY;
-    return bodyCollisions +
-      labels.query(search(bounds)).filter((label) => overlapsBounds028(bounds, label, 3)).length +
-      segments.query(search(bounds)).filter(([start, end]) => routeHitsBounds028(start, end, bounds, 4)).length;
+    return bodyCollisions * 100_000 + labelCollisions * 50_000 + segmentCollisions * 10_000;
+  };
+  const collisions = (bounds: SceneBounds028): number => {
+    const { bodyCollisions, labelCollisions, segmentCollisions } = collisionCounts(bounds);
+    if (classifierLabel && bodyCollisions > 0) return Number.POSITIVE_INFINITY;
+    return bodyCollisions + labelCollisions + segmentCollisions;
   };
   // In horizontal class layouts, use the space reserved between columns
   // before considering a long vertical fan-out trunk or the arc midpoint.
@@ -169,7 +176,27 @@ function edgeLabelPosition028(edgeId: string, classifierLabel: boolean, points: 
     bounds: boundsAt(midpoint.x, midpoint.y - 4) };
   if (collisions(baseline.bounds) === 0 && gapPenalty(baseline.bounds) === 0) return baseline;
   let best = baseline;
-  let bestScore = collisions(baseline.bounds) * 10_000 + gapPenalty(baseline.bounds);
+  let bestScore = collisionPenalty(baseline.bounds) + gapPenalty(baseline.bounds);
+  const pointToRouteDist = (px: number, py: number): number => {
+    let bestD = Infinity;
+    for (let i = 1; i < points.length; i += 1) {
+      const a = points[i - 1]!; const b = points[i]!;
+      const dx = b.x - a.x; const dy = b.y - a.y;
+      const lenSq = dx * dx + dy * dy;
+      const t = lenSq > 1e-9 ? Math.max(0, Math.min(1, ((px - a.x) * dx + (py - a.y) * dy) / lenSq)) : 0;
+      const d = Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy));
+      if (d < bestD) bestD = d;
+    }
+    return bestD;
+  };
+  const tryCandidate = (cx: number, cy: number, tieBias: number): void => {
+    const y = cy + height / 2;
+    const bounds = boundsAt(cx, y);
+    const edgeDist = classifierLabel ? 0 : pointToRouteDist(cx, cy);
+    const score = collisionPenalty(bounds) + gapPenalty(bounds) +
+      Math.hypot(cx - midpoint.x, cy - midpoint.y) * 0.1 + edgeDist * 1.5 + tieBias;
+    if (score < bestScore - 1e-6) { best = { x: cx, y, bounds }; bestScore = score; }
+  };
   for (let index = 1; index < points.length; index += 1) {
     const start = points[index - 1]!; const end = points[index]!;
     const dx = end.x - start.x; const dy = end.y - start.y;
@@ -186,35 +213,49 @@ function edgeLabelPosition028(edgeId: string, classifierLabel: boolean, points: 
         [node.x, node.y], [node.x + node.width, node.y],
         [node.x, node.y + node.height], [node.x + node.width, node.y + node.height],
       ].map(([x, y]) => ((x! - centerX) * nx + (y! - originY) * ny) * side)) + 8);
-      // Short diagonals between tall classifiers can have clear slots
-      // directly above/below the shaft that normal-only offsets miss.
       if (classifierLabel && side === -1) for (const gap of [8, 16, 24, 32, 48, 64]) {
         for (const [ox, oy] of [[0, -height / 2 - gap], [0, height / 2 + gap],
           [-width / 2 - gap, 0], [width / 2 + gap, 0]]) {
           const x = centerX + ox!; const centerY = originY + oy!;
           const initial = boundsAt(x, centerY + height / 2);
-          // Exact body margins expose narrow readable corridors that fixed
-          // offset steps can skip, especially with taller handwritten text.
-          const candidates = [[x, centerY], ...nodes.query(search(initial)).flatMap(node => [
+          const candidates: [number, number][] = [[x, centerY], ...nodes.query(search(initial)).flatMap((node): [number, number][] => [
             [x, node.y - 4 - height / 2], [x, node.y + node.height + 4 + height / 2],
             [node.x - 4 - width / 2, centerY], [node.x + node.width + 4 + width / 2, centerY],
           ])];
-          for (const [cx, cy] of candidates) {
-            const y = cy! + height / 2; const bounds = boundsAt(cx!, y);
-            const score = collisions(bounds) * 10_000 + gapPenalty(bounds) +
-              Math.hypot(cx! - midpoint.x, cy! - midpoint.y) * 0.1 + gap * 0.01;
-            if (score < bestScore) { best = { x: cx!, y, bounds }; bestScore = score; }
-          }
+          for (const [cx, cy] of candidates) tryCandidate(cx, cy, gap * 0.01);
         }
       }
       for (const gap of new Set([8, 20, 32, 40, 48, 64, ...expanded.filter((gap) => gap > 64)])) {
         const x = centerX + nx * side * (extent + gap);
         const centerY = originY + ny * side * (extent + gap);
-        const y = centerY + height / 2;
-        const bounds = boundsAt(x, y);
-        const score = collisions(bounds) * 10_000 + gapPenalty(bounds) +
-          Math.hypot(x - midpoint.x, centerY - midpoint.y) * 0.1 + gap * 0.01;
-        if (score < bestScore) { best = { x, y, bounds }; bestScore = score; }
+        tryCandidate(x, centerY, gap * 0.01);
+      }
+    }
+  }
+  // Fallback clearance-snapped search (0.2.14 Slice 20): runs ONLY when the
+  // fast normal-offset search still leaves a body/label/wire collision, keeping
+  // 2000-node renders fast while guaranteeing DRQ-22 collision freedom on dense
+  // C4/architecture/grouped layouts.
+  if (!classifierLabel && bestScore >= 10_000) {
+    for (let index = 1; index < points.length; index += 1) {
+      const start = points[index - 1]!; const end = points[index]!;
+      const dx = end.x - start.x; const dy = end.y - start.y;
+      const length = Math.hypot(dx, dy);
+      if (length < 1e-6) continue;
+      for (const fraction of [0.5, 0.25, 0.75]) {
+        const centerX = start.x + dx * fraction; const originY = start.y + dy * fraction;
+        for (const gap of [8, 20, 36]) {
+          for (const [ox, oy] of [[0, -height / 2 - gap], [0, height / 2 + gap],
+            [-width / 2 - gap, 0], [width / 2 + gap, 0]]) {
+            const x = centerX + ox!; const centerY = originY + oy!;
+            const initial = boundsAt(x, centerY + height / 2);
+            const candidates: [number, number][] = [[x, centerY], ...nodes.query(search(initial)).flatMap((node): [number, number][] => [
+              [x, node.y - 5 - height / 2], [x, node.y + node.height + 5 + height / 2],
+              [node.x - 5 - width / 2, centerY], [node.x + node.width + 5 + width / 2, centerY],
+            ])];
+            for (const [cx, cy] of candidates) tryCandidate(cx, cy, gap * 0.01);
+          }
+        }
       }
     }
   }
@@ -538,13 +579,13 @@ export function spatialPartManifest028(
         ([[edge.source, edge.points[0], edge.points[1]], [edge.target, edge.points.at(-1), edge.points.at(-2)]] as const)
           .some(([end, point, next]) => {
             if (!point || !end.marker || end.marker.kind === 'none') return false;
-            // A marker is drawn in a 10 x stroke square with refX 14, refY 8 of
+            // A marker is drawn in its viewport x stroke square with refX 14, refY 8 of
             // 16, so on an axis-aligned final segment it reaches 5 x stroke
             // across the segment; other segments keep the rotation-safe square.
-            const along = visual.strokeWidth * 10 + 2;
+            const along = visual.strokeWidth * markerSize028(end.marker) + 2;
             const vertical = next !== undefined && Math.abs(next.x - point.x) < 1e-6 && Math.abs(next.y - point.y) >= 1e-6;
             const horizontal = next !== undefined && Math.abs(next.y - point.y) < 1e-6 && Math.abs(next.x - point.x) >= 1e-6;
-            const across = vertical || horizontal ? visual.strokeWidth * 5 + 2 : along;
+            const across = vertical || horizontal ? visual.strokeWidth * markerSize028(end.marker) / 2 + 2 : along;
             const [halfWidth, halfHeight] = horizontal ? [along, across] : [across, along];
             return overlapsBounds028(bounds, box(point.x + options.shiftX - halfWidth, point.y + options.shiftY - halfHeight,
               halfWidth * 2, halfHeight * 2));
@@ -614,7 +655,7 @@ export function spatialPartManifest028(
       [edge.source, edge.points[0]], [edge.target, edge.points.at(-1)],
     ] as const) {
       if (!point || !endpoint.marker || endpoint.marker.kind === 'none') continue;
-      const radius = visual.strokeWidth * 10 + 2;
+      const radius = visual.strokeWidth * markerSize028(endpoint.marker) + 2;
       const bounds = box(point.x + options.shiftX - radius, point.y + options.shiftY - radius, radius * 2, radius * 2);
       labelIndex.insert(bounds, bounds);
     }
@@ -677,9 +718,9 @@ export function spatialPartManifest028(
       const marker = edge[endpoint].marker;
       if (!marker || marker.kind === 'none') continue;
       const contact = endpoint === 'source' ? points[0]! : points.at(-1)!;
-      // SVG markerUnits="strokeWidth" scales the 10x10 marker viewport by
+      // SVG markerUnits="strokeWidth" scales the marker viewport by
       // the visible stroke. Rotation can place any corner around the contact.
-      const markerRadius = visual.strokeWidth * 10 + 2;
+      const markerRadius = visual.strokeWidth * markerSize028(marker) + 2;
       add({ id: `${edge.id}:${endpoint}-marker`, owner: { kind: 'edge', id: edge.id },
         role: endpoint === 'source' ? 'source-marker' : 'target-marker',
         bounds: box(contact.x - markerRadius, contact.y - markerRadius,
@@ -730,7 +771,8 @@ export function spatialPartManifest028(
       { kind: 'node', id: node.id });
     const x = layout.x + options.shiftX; const y = layout.y + options.shiftY;
     const installedShape = sceneNodeShape029(node);
-    const shape = installedShape && containerStencilShape028(installedShape, layout.width, layout.height, node.container);
+    const elasticFrame = Boolean(node.container) || Boolean(node.classifier && !layout.node.classifier && node.shapeId === 'rectangle');
+    const shape = installedShape && containerStencilShape028(installedShape, layout.width, layout.height, elasticFrame);
     if (!shape) failure('render.capability.stencil', `${node.shapeId} is not installed`,
       { kind: 'node', id: node.id });
     const eventFrame = isBpmnEventSymbol028(node.symbolId)
@@ -753,16 +795,30 @@ export function spatialPartManifest028(
           frame: artworkFrame,
           ...(node.artwork029.tint === 'stroke' ? { tint: visual.ink } : {}) } });
     }
+    const authoredNodeStyle = (layout.node.properties as { coralStyle0214?: {
+      lineStyle?: 'solid' | 'dashed' | 'dotted'; strokeColor?: string;
+      fillColor?: string; accentColor?: string; strokeWeight?: 'regular' | 'thick';
+    } } | undefined)?.coralStyle0214;
+    const nodeStrokeDash = authoredNodeStyle?.lineStyle === 'dashed' ? '6 4'
+      : authoredNodeStyle?.lineStyle === 'dotted' ? '2 3'
+      : authoredNodeStyle?.lineStyle === 'solid' ? undefined
+      : node.style.strokeDasharray;
+    const nodeStrokeWidth = authoredNodeStyle?.strokeWeight === 'thick'
+      ? visual.strokeWidth * 1.65 : visual.strokeWidth;
+    const nodeFill = authoredNodeStyle?.fillColor
+      ?? ((Boolean(layout.node.children?.length) || Boolean(node.container) || layout.node.type === 'group') && !layout.node.classifier
+        ? 'none' : visual.paper);
+    const nodeStroke = authoredNodeStyle?.strokeColor ?? visual.ink;
     const stencil = node.artwork029 ? [] : eventFrame
       ? bpmnEventPathPrimitives028(node.id, node.symbolId!, options.style,
         visual.paper, visual.ink)
       : stencilPathPrimitives028({ ownerId: node.id, style: options.style,
         shapeId: node.shapeId, parameters: node.shapeParameters,
-        fill: (Boolean(layout.node.children?.length) || layout.node.type === 'group') && !layout.node.classifier ? 'none' : visual.paper,
-        stroke: visual.ink, strokeWidth: visual.strokeWidth,
-        strokeDasharray: node.style.strokeDasharray,
+        fill: nodeFill,
+        stroke: nodeStroke, strokeWidth: nodeStrokeWidth,
+        strokeDasharray: nodeStrokeDash,
         doubleOutline: node.style.doubleOutline, scale: fit!.scale,
-        ...(node.container && node.shapeId === 'rectangle' ? { containerFrame: { width: layout.width, height: layout.height } } : {}) });
+        ...(elasticFrame && node.shapeId === 'rectangle' ? { containerFrame: { width: layout.width, height: layout.height } } : {}) });
     for (const primitive of stencil) {
       const partX = x + (eventFrame?.x ?? frame.x);
       const partY = y + (eventFrame?.y ?? frame.y);
@@ -843,6 +899,7 @@ export function spatialPartManifest028(
         bounds: box(x + run.inkBounds.x, y + run.inkBounds.y,
           run.inkBounds.width, run.inkBounds.height),
         geometry: { ...run, kind: 'text', x: x + run.x, y: y + run.y,
+          ...(!layout.node.classifier && run.role === 'classifier-name' ? { fontWeight: Math.max(run.fontWeight, 600) } : {}),
           ...(node.text.fontStyle ? { fontStyle: node.text.fontStyle } : {}),
           ...(node.text.textDecoration ? { textDecoration: node.text.textDecoration } : {}) },
         presentationOnly: false });
@@ -857,11 +914,23 @@ export function spatialPartManifest028(
           layout.labelLayout.textHeight > layout.labelLayout.textBox.height + 1e-6))
         failure('render.capability.hard-size-text-conflict',
           `Node ${node.id} label cannot fit its painted ${node.shapeId} text region (${layout.labelLayout.textWidth}×${layout.labelLayout.textHeight} in ${layout.labelLayout.textBox.width}×${layout.labelLayout.textBox.height})`, { kind: 'node', id: node.id });
-      const runs = nodeLabelPrimitives028(node.id, layout.labelLayout, font, visual.ink).map(run => {
-        if (!node.container) return run;
-        const ink = textInkVertical028(run.text, font);
-        return { ...run, inkBounds: { ...run.inkBounds,
-          y: run.y - ink.ascent * font.size, height: (ink.ascent + ink.descent) * font.size } };
+      const hasCardMeta = !node.container && (
+        (typeof layout.node.properties?.technology === 'string' && layout.node.properties.technology.length > 0) ||
+        (typeof layout.node.description === 'string' && layout.node.description.length > 0)
+      );
+      const softInk = options.theme === 'dark' ? '#a9bfdc' : '#525b66';
+      const runs = nodeLabelPrimitives028(node.id, layout.labelLayout, font, visual.ink).map((run, idx) => {
+        if (node.container) {
+          const ink = textInkVertical028(run.text, font);
+          return { ...run, inkBounds: { ...run.inkBounds,
+            y: run.y - ink.ascent * font.size, height: (ink.ascent + ink.descent) * font.size } };
+        }
+        if (hasCardMeta) {
+          if (idx === 0) return { ...run, fontWeight: Math.max(run.fontWeight, 600) };
+          return { ...run, fontSize: Math.max(9.5, Math.round(run.fontSize * 0.86 * 10) / 10),
+            fontWeight: 400, fill: softInk };
+        }
+        return run;
       });
       const labelOffsetX = gatewayFrame
         ? bpmnGatewayCaptionOffsetX028(layout.labelLayout,

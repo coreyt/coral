@@ -16,6 +16,9 @@ const dashed = ['-.-', '-.--', '-.---', '-.----'].flatMap((shaft) =>
   ['', ...secondEnds].map((end) => shaft + end));
 const reverse = ['-', '--', '---', '----', '-----', '------'].flatMap((shaft) =>
   [`<${shaft}`, `<${shaft}>`]);
+const crowsFoot = ['||', '|o', 'o|', '}|', '}o'].flatMap((left) =>
+  ['--', '..', '-.-'].flatMap((shaft) =>
+    ['||', 'o|', '|o', '|{', 'o{'].map((right) => left + shaft + right)));
 const ends = ['none', 'arrow', 'filledArrow', 'triangle', 'filledTriangle',
   'diamond', 'filledDiamond', 'circle', 'filledCircle', 'bar', 'crowFoot',
   'zeroOrOne', 'one', 'zeroOrMany', 'oneOrMany', 'zeroToMany'];
@@ -95,8 +98,11 @@ module.exports = grammar({
     coordinate: () => token(/-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?/),
     node_fields: $ => seq('[', $.node_field,
       repeat(seq(',', $.node_field)), ']'),
-    node_field: $ => seq(choice('symbol', 'variant', 'conformanceException'),
-      ':', $.quoted),
+    node_field: $ => choice(
+      seq(choice('symbol', 'variant', 'technology', 'description', 'provider', 'conformanceException'),
+        ':', $.quoted),
+      seq('style', ':', $.style_value),
+    ),
     label: $ => seq(token(/as[ \t]+/), $.quoted),
     placement_side: () => choice('above', 'below', 'left', 'right', 'center'),
     node_label_placement: $ => seq('label', $.placement_side,
@@ -137,7 +143,7 @@ module.exports = grammar({
       optional(seq(':', $.identifier))),
     port_reference: $ => seq($.node_reference, ':', $.identifier),
     node_reference: $ => seq($.identifier, repeat(seq('.', $.identifier))),
-    connector: () => token(seq(/[ \t]+/, choice(...dashed, ...solid, ...reverse), /[ \t]+/)),
+    connector: () => token(seq(/[ \t]+/, choice(...dashed, ...solid, ...reverse, ...crowsFoot), /[ \t]+/)),
     edge_fields: $ => seq('[',
       choice(seq($.bare_type, optional(seq(',', $.keyed_edge_field,
         repeat(seq(',', $.keyed_edge_field))))),
@@ -147,7 +153,7 @@ module.exports = grammar({
     bare_type: $ => $.identifier,
     keyed_edge_field: $ => choice(
       seq('type', ':', $.identifier),
-      seq('label', ':', $.quoted),
+      seq(choice('label', 'technology', 'description', 'firstLabel', 'secondLabel'), ':', $.quoted),
       seq(choice('firstPort', 'secondPort'), ':', $.identifier),
       seq(choice('firstEnd', 'secondEnd'), ':', $.end_name),
       seq('style', ':', $.style_value),
@@ -184,11 +190,21 @@ module.exports = grammar({
         seq('{', optional($.comment), $._newline,
           repeat(choice($.trivia_line, $.operation_line)), '}'),
       )),
+      seq(optional(seq($.identifier, '=')), 'columns', choice(
+        seq('{', '}'),
+        seq('{', optional($.comment), $._newline,
+          repeat(choice($.trivia_line, $.erd_column_line)), '}'),
+      )),
     ),
+    erd_column_line: $ => seq($.erd_column, optional($.comment), $._newline),
+    erd_column: $ => seq($.identifier, $.erd_column_type, optional($.erd_column_flags)),
+    erd_column_type: $ => seq($.identifier, optional(seq('(', $.coordinate, repeat(seq(',', $.coordinate)), ')'))),
+    erd_column_flags: $ => seq('[', $.erd_column_flag, repeat(seq(',', $.erd_column_flag)), ']'),
+    erd_column_flag: () => choice('pk', 'fk', 'uk', 'null', seq('not', 'null')),
     attribute_line: $ => seq($.attribute,
       optional($.comment), $._newline),
     attribute: $ => choice(
-      seq('+', $.identifier, ':', $.identifier),
+      seq(token(/[+\-#~][ \t]+/), $.identifier, ':', $.identifier),
       seq($.identifier, '=', choice('public', 'private', 'protected', 'package'),
         'attribute', $.identifier, ':', $.identifier),
     ),

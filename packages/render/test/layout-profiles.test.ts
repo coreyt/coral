@@ -5,7 +5,7 @@ describe('notation layout profiles', () => {
   it('registers one conservative closed profile for every installed notation', () => {
     const notations = notationRegistry.getAll();
     expect(notations.map((notation) => notation.id)).toEqual([
-      'block', 'flowchart', 'bpmn', 'erd', 'code', 'architecture', 'aiml', 'data-engineering', 'sketch', 'uml-class', 'uml-sequence', 'uml-state',
+      'block', 'flowchart', 'bpmn', 'erd', 'code', 'architecture', 'infrastructure', 'aiml', 'data-engineering', 'sketch', 'uml-class', 'uml-sequence', 'uml-state',
     ]);
     // R-039 leaves sequence layout to R-060's specialized layout: no ELK profile.
     expect(notationRegistry.get('uml-sequence')?.layoutProfile).toBeUndefined();

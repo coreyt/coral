@@ -16,7 +16,21 @@ import type { LayoutSection } from '../layout/types.js';
 import type { LayoutDirection } from '../layout/types.js';
 import type { SourceEdgeDirection028 } from '../sourceDirection028.js';
 import type { SuccessorSourceGraph028 } from '../successorSourceProjection028.js';
-import { visualContour028, visualStyle028, type RenderStyle028 } from '../visualStyle028.js';
+import {
+  baseRenderStyle028,
+  normalizeRenderStyle0214,
+  visualContour028,
+  visualStyle028,
+  type RenderStyle0214,
+  type RenderStyle028,
+  type RenderStyleInput0214,
+} from '../visualStyle028.js';
+import {
+  ANEMONE_DARK_PALETTE_0214,
+  ANEMONE_LIGHT_PALETTE_0214,
+  applyParrotfishToScene0214,
+  type ParrotfishModelInput,
+} from '../parrotfishCore.js';
 import { bpmnEventFrame028, bpmnEventLabelLayout028, bpmnEventMinimumSize028,
   isBpmnEventSymbol028 } from '../bpmnEventVisual028.js';
 import { bpmnGatewayFrame028, bpmnGatewayLabelLayout028,
@@ -58,11 +72,15 @@ import {
 import {
   markerId,
   markerPrimitives,
+  markerSize028,
   RenderCapabilityError,
   classifierMinimumSize,
+  classifierPresentationMinimumSize0214,
+  effectiveClassifierPresentation0214,
   fitClassifierFrame028,
   fitPlainRectangleInk028,
   assertRenderableInterpretation028,
+  nodeDisplayText0214,
   renderSymbolId,
   resolveRenderScene,
   stableSvgId,
@@ -81,17 +99,28 @@ import {
   type SequenceTheme,
 } from '../sequence.js';
 
+function resolveRequestedStyle0214(options: SvgOptions): {
+  canonical: RenderStyle0214;
+  base: RenderStyle028;
+  explicit: boolean;
+} {
+  const raw = options.renderStyle ?? (options as { style?: unknown }).style;
+  const canonical = normalizeRenderStyle0214(raw ?? 'lowfi');
+  return { canonical, base: baseRenderStyle028(canonical), explicit: raw !== undefined };
+}
+
 /** The one mapping from SVG options to the sequence scene, shared by drawing and face preloading. */
 function sequenceLayoutOptions(options: SvgOptions): SequenceLayoutOptions {
-  const visual = visualStyle028(options.style ?? 'lowfi', options.theme === 'dark' ? 'dark' : 'light');
+  const { base } = resolveRequestedStyle0214(options);
+  const visual = visualStyle028(base, options.theme === 'dark' ? 'dark' : 'light');
   return {
     padding: options.padding,
     fontSize: options.fontSize ?? (options.fontSettings ? undefined : visual.labelSize),
     fontFamily: options.fontFamily ?? (options.fontSettings ? undefined : visual.fontFamily),
     fontSettings: options.fontSettings,
-    fontWeight: options.fontWeight ?? (options.fontSettings ? undefined : options.style === 'hifi' ? 600 : 500),
+    fontWeight: options.fontWeight ?? (options.fontSettings ? undefined : base === 'hifi' ? 600 : 500),
     messageFontWeight: !options.fontSettings && !options.fontWeight &&
-      (options.style ?? 'lowfi') === 'lowfi' ? 550 : undefined,
+      base === 'lowfi' ? 550 : undefined,
     lineHeight: options.lineHeight ?? (options.fontSettings ? undefined : 1.4),
     ...(options.sequenceGroupStyle ? { groupStyle: options.sequenceGroupStyle } : {}),
   };
@@ -102,6 +131,8 @@ export interface PreparedSequenceScene028 {
   readonly id: string;
   readonly revision: string;
   readonly style: RenderStyle028;
+  readonly renderStyle0214?: RenderStyle0214;
+  readonly background0214?: string;
   readonly viewport: Readonly<{ width: number; height: number }>;
   readonly bounds: Readonly<{ x: number; y: number; width: number; height: number }>;
   readonly fontFaces: readonly FontFaceRequest[];
@@ -118,14 +149,27 @@ export interface PreparedSequenceScene028 {
  * stable owner-derived part ID; element syntax remains projector-specific. */
 export function prepareSequenceScene028(graph: SequenceGraph, options: SvgOptions = {},
   themeOverride?: SequenceTheme): PreparedSequenceScene028 {
+  const { canonical, base } = resolveRequestedStyle0214(options);
   const theme = resolveTheme(options.theme);
-  const visual = visualStyle028(options.style ?? 'lowfi', options.theme === 'dark' ? 'dark' : 'light');
+  const dark = options.theme === 'dark';
+  const visual = visualStyle028(base, dark ? 'dark' : 'light');
+  const anemone = canonical === 'anemone';
+  const anemonePalette = dark ? ANEMONE_DARK_PALETTE_0214 : ANEMONE_LIGHT_PALETTE_0214;
   const scene = layoutSequence(graph, sequenceLayoutOptions(options));
-  const primitives = sequencePrimitives(scene, themeOverride ?? {
-    background: theme.background, fill: visual.paper, stroke: visual.ink,
-    text: visual.ink, edge: visual.ink,
-    noteFill: theme === DARK_THEME ? '#3f3a24' : '#fef9c3',
-  }, options.style ?? 'lowfi');
+  const primitives = sequencePrimitives(scene, themeOverride ?? (anemone
+    ? {
+      background: anemonePalette.background,
+      fill: dark ? '#102a2e' : '#f0fdfa',
+      stroke: dark ? '#2dd4bf' : '#0f766e',
+      text: anemonePalette.ink,
+      edge: anemonePalette.edge,
+      noteFill: dark ? '#2c2010' : '#fffbeb',
+    }
+    : {
+      background: theme.background, fill: visual.paper, stroke: visual.ink,
+      text: visual.ink, edge: visual.ink,
+      noteFill: theme === DARK_THEME ? '#3f3a24' : '#fef9c3',
+    }), base);
   const partIndex: Record<string, number> = {};
   const ownerPartIds: Record<string, string[]> = Object.create(null);
   let paintIndex = 0;
@@ -190,10 +234,13 @@ export function prepareSequenceScene028(graph: SequenceGraph, options: SvgOption
   }
   const semantic = semanticManifest028(graph, options.semanticGraph, options.successorSource);
   const revision = options.revision === undefined
-    ? sceneFingerprint028({ semantic, scene, parts, style: options.style ?? 'lowfi' })
+    ? sceneFingerprint028({ semantic, scene, parts, style: canonical })
     : String(options.revision);
   return { kind: 'sequence', id: graph.id ?? '', revision,
-    style: options.style ?? 'lowfi', viewport: { width: scene.width, height: scene.height },
+    style: base,
+    ...(canonical !== base ? { renderStyle0214: canonical } : {}),
+    ...(anemone ? { background0214: anemonePalette.background } : {}),
+    viewport: { width: scene.width, height: scene.height },
     bounds: { x: 0, y: 0, width: scene.width, height: scene.height },
     fontFaces: scene.faces, semantic, scene, parts, partIndex,
     ownerLookup: { partIds: ownerPartIds, hitBounds },
@@ -247,6 +294,10 @@ export interface SvgOptions {
   labelBounds028?: SpatialSidecar028['labelBounds028'];
   /** 0.2.8 visual family. `thx` is reserved. */
   style?: RenderStyle028;
+  /** 0.2.14 visual style, including peer `'anemone'` (shorthand `'ane'`). */
+  renderStyle?: RenderStyleInput0214;
+  /** Optional Parrotfish modeled presentation applied without altering layout or routing. */
+  parrotfish?: ParrotfishModelInput;
   theme?: 'light' | 'dark' | SvgTheme;
   /** Padding around the content, in pixels. */
   padding?: number;
@@ -310,6 +361,9 @@ export interface PreparedSpatialScene028 {
   readonly id: string;
   readonly revision: string;
   readonly style: RenderStyle028;
+  readonly renderStyle0214?: RenderStyle0214;
+  readonly background0214?: string;
+  readonly parrotfishModel0214?: string;
   readonly notationId?: string;
   readonly nodes: readonly PlacedNode[];
   readonly resolved: ReturnType<typeof resolveRenderScene>;
@@ -375,29 +429,31 @@ export function resolveSvgNodeFont(
   options: SvgOptions,
 ): ResolvedFont | undefined {
   if (!usesPortableSvgFonts(options)) return undefined;
-  const visual = visualStyle028(options.style ?? 'lowfi');
-  const base = options.fontSettings
+  const { base } = resolveRequestedStyle0214(options);
+  const visual = visualStyle028(base);
+  const baseFont = options.fontSettings
     ? resolveDiagramFont(options.fontSettings,
       node ? renderSymbolId(node, options.notation, options.documentCatalog029) : undefined, node?.type)
     : resolveFont({ family: visual.fontFamily, size: visual.labelSize,
-      weight: options.style === 'hifi' ? 600 : 500, lineHeight: 1.4 });
+      weight: base === 'hifi' ? 600 : 500, lineHeight: 1.4 });
   return resolveFont({
     family: typeof options.fontFamily === 'string' && options.fontFamily.trim()
       ? options.fontFamily
-      : base.requestedFamily,
-    size: validPositive(options.fontSize) ? options.fontSize : base.size,
-    weight: validWeight(options.fontWeight) ? options.fontWeight : base.weight,
-    lineHeight: validPositive(options.lineHeight) ? options.lineHeight : base.lineHeight,
+      : baseFont.requestedFamily,
+    size: validPositive(options.fontSize) ? options.fontSize : baseFont.size,
+    weight: validWeight(options.fontWeight) ? options.fontWeight : baseFont.weight,
+    lineHeight: validPositive(options.lineHeight) ? options.lineHeight : baseFont.lineHeight,
   });
 }
 
 function alternateVisualFont028(node: GraphNode, options: SvgOptions): ResolvedFont | undefined {
   if (options.fontFamily || options.fontSize || options.fontWeight || options.lineHeight) return undefined;
-  // When a caller explicitly selects a visual style (e.g. `hifi` or `lowfi`),
-  // size nodes to that style's own font instead of inflating compact `hifi`
+  // When a caller explicitly selects a visual style (e.g. `hifi`, `lowfi`, or
+  // `anemone`), size nodes to that style's own font instead of inflating compact
   // layouts to fit `lowfi`'s 26 px handwritten Caveat face. Style-agnostic
-  // layouts (`options.style === undefined`) keep sizing for the larger of both.
-  if (options.style) return undefined;
+  // layouts (`options.style === undefined && options.renderStyle === undefined`)
+  // keep sizing for the larger of both.
+  if (options.style || options.renderStyle) return undefined;
   const selected = visualStyle028('lowfi');
   const settings = options.fontSettings;
   if (settings) {
@@ -416,10 +472,11 @@ function alternateVisualFont028(node: GraphNode, options: SvgOptions): ResolvedF
 
 /** Measure a node with the same font and symbol rules used by the serializer. */
 export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: number; height: number } {
+  const displayText = nodeDisplayText0214(node);
   const font = resolveSvgNodeFont(node, options);
   if (!font) {
     const measured = measureText({
-      text: node.label ?? node.id,
+      text: displayText,
       fontSize: options.fontSize ?? DEFAULT_RENDER_FONT_SETTINGS.size,
     });
     return {
@@ -433,24 +490,24 @@ export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: n
   if (user) return { width: user.outline.width, height: user.outline.height };
   const shapeId = catalogSymbol029(symbolId ?? '', options.documentCatalog029)?.shape ?? 'rectangle';
   if (isBpmnEventSymbol028(renderSymbolId(node, options.notation, options.documentCatalog029))) {
-    const selected = bpmnEventMinimumSize028(node.label ?? node.id, font, options.layoutDirection ?? 'RIGHT');
+    const selected = bpmnEventMinimumSize028(displayText, font, options.layoutDirection ?? 'RIGHT');
     const alternate = alternateVisualFont028(node, options);
     if (!alternate) return selected;
-    const other = bpmnEventMinimumSize028(node.label ?? node.id, alternate, options.layoutDirection ?? 'RIGHT');
+    const other = bpmnEventMinimumSize028(displayText, alternate, options.layoutDirection ?? 'RIGHT');
     return { width: Math.max(selected.width, other.width),
       height: Math.max(selected.height, other.height) };
   }
   if (isBpmnGatewaySymbol028(renderSymbolId(node, options.notation, options.documentCatalog029))) {
     const direction = options.layoutDirection ?? 'RIGHT';
-    const selected = bpmnGatewayMinimumSize028(node.label ?? node.id, font, direction);
+    const selected = bpmnGatewayMinimumSize028(displayText, font, direction);
     const alternate = alternateVisualFont028(node, options);
     if (!alternate) return selected;
-    const other = bpmnGatewayMinimumSize028(node.label ?? node.id, alternate, direction);
+    const other = bpmnGatewayMinimumSize028(displayText, alternate, direction);
     return { width: Math.max(selected.width, other.width),
       height: Math.max(selected.height, other.height) };
   }
   const measure = (face: ResolvedFont) => computeNodeSize({
-    text: node.label ?? node.id,
+    text: displayText,
     shapeId,
     sizingMode: 'adaptive',
     fontFamily: face.cssFamily,
@@ -462,10 +519,16 @@ export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: n
     layoutDirection: options.layoutDirection,
   });
   const selectedBase = measure(font);
-  const selectedClassifier = classifierMinimumSize(node.classifier, {
-    fontSize: font.size, fontFamily: font.cssFamily,
-    fontWeight: font.weight, lineHeight: font.lineHeight,
-  });
+  const erdPres = !node.classifier ? effectiveClassifierPresentation0214(node) : undefined;
+  const selectedClassifier = node.classifier
+    ? classifierMinimumSize(node.classifier, {
+      fontSize: font.size, fontFamily: font.cssFamily,
+      fontWeight: font.weight, lineHeight: font.lineHeight,
+    })
+    : classifierPresentationMinimumSize0214(erdPres, {
+      fontSize: font.size, fontFamily: font.cssFamily,
+      fontWeight: font.weight, lineHeight: font.lineHeight,
+    });
   const selected = { width: Math.max(selectedBase.width, selectedClassifier?.width ?? 0),
     height: Math.max(selectedBase.height, selectedClassifier?.height ?? 0) };
   const fitDiamond = (size: { width: number; height: number }) =>
@@ -477,10 +540,15 @@ export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: n
   const otherFont = alternateVisualFont028(node, options);
   if (!otherFont) return fitRectangleInk(fitDiamond(fitClassifierFrame028(node.classifier, shapeId, selected)));
   const otherBase = measure(otherFont);
-  const otherClassifier = classifierMinimumSize(node.classifier, {
-    fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
-    fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
-  });
+  const otherClassifier = node.classifier
+    ? classifierMinimumSize(node.classifier, {
+      fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
+      fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
+    })
+    : classifierPresentationMinimumSize0214(erdPres, {
+      fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
+      fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
+    });
   const other = { width: Math.max(otherBase.width, otherClassifier?.width ?? 0),
     height: Math.max(otherBase.height, otherClassifier?.height ?? 0) };
   return fitRectangleInk(fitDiamond(fitClassifierFrame028(node.classifier, shapeId,
@@ -491,7 +559,7 @@ export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: n
 /** Elastic frames use their own full-width title region, independent of the
  * nominal process glyph's inset. Bounds describe actual glyph ink. */
 function containerTitleLayout028(node: GraphNode, width: number, font: ResolvedFont): NodeLabelLayout {
-  const measured = measureText({ text: node.label ?? node.id, fontFamily: font.cssFamily,
+  const measured = measureText({ text: nodeDisplayText0214(node), fontFamily: font.cssFamily,
     fontSize: font.size, fontWeight: font.weight, lineHeight: font.lineHeight,
     maxWidth: Math.max(1, width - 16) });
   const metrics = textInkVertical028(measured.lines.join(''), font);
@@ -605,7 +673,7 @@ function place(nodes: GraphNode[], options: SvgOptions, portable: boolean, conta
 
   const walk = (list: GraphNode[], offsetX = 0, offsetY = 0) => {
     for (const node of list) {
-      const label = node.label ?? node.id;
+      const label = nodeDisplayText0214(node);
       const symbolId = renderSymbolId(node, options.notation, options.documentCatalog029);
       const shapeId = symbolId
         ? catalogSymbol029(symbolId, options.documentCatalog029)?.shape ?? 'rectangle'
@@ -614,17 +682,32 @@ function place(nodes: GraphNode[], options: SvgOptions, portable: boolean, conta
       const measured = portable
         ? measureSvgNode(node, options)
         : measureText({ text: label, fontSize: legacySize });
-      const classifierSize = classifierMinimumSize(node.classifier, {
-        fontSize: portable ? font!.size : legacySize,
-        fontFamily: portable ? font!.cssFamily : options.fontFamily ?? INTER_FONT_FAMILY,
-        fontWeight: portable ? font!.weight : 'normal',
-        lineHeight: portable ? font!.lineHeight : 1.4,
-      });
+      const erdPres = !node.classifier ? effectiveClassifierPresentation0214(node) : undefined;
+      const classifierSize = node.classifier
+        ? classifierMinimumSize(node.classifier, {
+          fontSize: portable ? font!.size : legacySize,
+          fontFamily: portable ? font!.cssFamily : options.fontFamily ?? INTER_FONT_FAMILY,
+          fontWeight: portable ? font!.weight : 'normal',
+          lineHeight: portable ? font!.lineHeight : 1.4,
+        })
+        : classifierPresentationMinimumSize0214(erdPres, {
+          fontSize: portable ? font!.size : legacySize,
+          fontFamily: portable ? font!.cssFamily : options.fontFamily ?? INTER_FONT_FAMILY,
+          fontWeight: portable ? font!.weight : 'normal',
+          lineHeight: portable ? font!.lineHeight : 1.4,
+        });
       const otherFont = portable ? alternateVisualFont028(node, options) : undefined;
-      const otherClassifierSize = otherFont ? classifierMinimumSize(node.classifier, {
-        fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
-        fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
-      }) : undefined;
+      const otherClassifierSize = otherFont
+        ? (node.classifier
+          ? classifierMinimumSize(node.classifier, {
+            fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
+            fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
+          })
+          : classifierPresentationMinimumSize0214(erdPres, {
+            fontSize: otherFont.size, fontFamily: otherFont.cssFamily,
+            fontWeight: otherFont.weight, lineHeight: otherFont.lineHeight,
+          }))
+        : undefined;
       let width = node.dimensions?.width ?? (portable
         ? Math.max(measured.width, classifierSize?.width ?? 0, otherClassifierSize?.width ?? 0)
         : Math.max(DEFAULT_WIDTH, measured.width + 32, classifierSize?.width ?? 0));
@@ -863,7 +946,9 @@ export function prepareSpatialScene028(
   const authoredDirection = (options.semanticGraph as SpatialSidecar028 | undefined)?.layoutOptions028?.direction ??
     (graph as SpatialSidecar028).layoutOptions028?.direction;
   if (authoredDirection) options = { ...options, layoutDirection: authoredDirection };
-  const visualStyle = visualStyle028(options.style ?? 'lowfi', options.theme === 'dark' ? 'dark' : 'light');
+  const { canonical: requestedStyle, base: baseStyle } = resolveRequestedStyle0214(options);
+  const themeMode: 'light' | 'dark' = options.theme === 'dark' ? 'dark' : 'light';
+  const visualStyle = visualStyle028(baseStyle, themeMode);
   const notationId = options.notation ?? effectiveGraphNotationId028(graph);
   // User symbols resolve only through the document catalog: supplied, carried
   // by the SVG layout graph, or built from the source-owned successor.
@@ -914,7 +999,7 @@ export function prepareSpatialScene028(
     sourceDirections, containerNodeIds: containerIds,
     nodeParentIds: containerParentIds028(options.semanticGraph?.nodes ?? graph.nodes),
     visibleContour: (shapeId, parameters, containerFrame) => visualContour028(shapeId,
-      options.style ?? 'lowfi', parameters, containerFrame),
+      baseStyle, parameters, containerFrame),
     nodeGeometry: new Map(placed.map((node) => [node.node.id, node])),
     layoutDirection: options.layoutDirection ?? 'RIGHT',
     ...(catalog ? { documentCatalog029: catalog } : {}),
@@ -922,9 +1007,9 @@ export function prepareSpatialScene028(
   });
   const semantic = semanticManifest028(graph, options.semanticGraph, options.successorSource);
   const partFont = defaultFont ?? resolveFont({ family: visualStyle.fontFamily,
-    size: visualStyle.labelSize, weight: options.style === 'hifi' ? 600 : 500 });
-  const partOptions = { style: (options.style ?? 'lowfi') as RenderStyle028,
-    theme: (options.theme === 'dark' ? 'dark' : 'light') as 'dark' | 'light',
+    size: visualStyle.labelSize, weight: baseStyle === 'hifi' ? 600 : 500 });
+  const partOptions = { style: baseStyle,
+    theme: themeMode,
     defaultFont: partFont, layoutDirection: options.layoutDirection ?? 'RIGHT',
     labelBounds028: options.labelBounds028 ?? (graph as SpatialSidecar028).labelBounds028 };
   // Include routes, labels, marker ink and node decorations in the viewport.
@@ -962,7 +1047,12 @@ export function prepareSpatialScene028(
   const height = Math.ceil(maxY - minY + padding * 2);
   const shiftX = padding - minX;
   const shiftY = padding - minY;
-  const parts = shiftSpatialParts028(unshifted, shiftX, shiftY, partOptions.style);
+  const parts = [...shiftSpatialParts028(unshifted, shiftX, shiftY, partOptions.style)];
+  // Filled containers form the back layer on every shared-scene surface.
+  const containerPart = (part: ScenePartRecord028) =>
+    part.owner.kind === 'node' && containerIds.has(part.owner.id);
+  parts.sort((a, b) => Number(containerPart(b)) - Number(containerPart(a)));
+
 
   const partIndex = Object.fromEntries(parts.map((part, index) => [part.id, index]));
   const ownerLookup = spatialOwnerLookup028(parts);
@@ -1017,29 +1107,28 @@ export function prepareSpatialScene028(
     a.localId < b.localId ? -1 : a.localId > b.localId ? 1 : 0)) : undefined;
   const revision = options.revision === undefined
     ? sceneFingerprint028({ semantic, placed, parts, portContacts,
-      style: options.style ?? 'lowfi', layoutDirection: options.layoutDirection ?? 'RIGHT',
+      style: requestedStyle, layoutDirection: options.layoutDirection ?? 'RIGHT',
       ...(artwork029 ? { artwork029: artwork029.map((entry) => [entry.localId, entry.artwork.canonicalText, entry.tint]) } : {}) })
     : String(options.revision);
-  return { kind: 'spatial', id: graph.id ?? '', revision, style: options.style ?? 'lowfi',
+  const prepared: PreparedSpatialScene028 = { kind: 'spatial', id: graph.id ?? '', revision, style: baseStyle,
+    ...(requestedStyle !== baseStyle ? { renderStyle0214: requestedStyle } : {}),
     ...(artwork029 ? { artwork029 } : {}),
     ...(notationId ? { notationId } : {}), nodes: placed, resolved: scene,
     viewport: { width, height, shiftX, shiftY }, fontFamily,
     bounds: { x: 0, y: 0, width, height }, partIndex, ownerLookup, portContacts,
     fontFaces: svgFontFaceRequests(graph, effectiveOptions), semantic, parts,
     status: 'complete', diagnostics: [] };
+  if (options.parrotfish !== undefined || requestedStyle === 'anemone') {
+    return applyParrotfishToScene0214(prepared, options.parrotfish ?? 'anemone', themeMode);
+  }
+  return prepared;
 }
 
-/**
- * Render a graph to a standalone SVG document.
- * Positions come from `node.position`; source consumers lay out first.
- */
-export function renderSvg(
-  graph: { nodes: GraphNode[]; edges: GraphEdge[]; metadata?: { notation?: string };
-    profile?: NotationProfile } & Omit<SequenceGraph, 'nodes' | 'edges' | 'metadata'>,
-  options: SvgOptions = {}
+/** Serialize an already-prepared spatial scene to a standalone SVG string. */
+export function serializePreparedSpatialScene028(
+  prepared: PreparedSpatialScene028,
+  options: SvgOptions = {},
 ): string {
-  if (isSequenceRenderGraph(graph)) return renderSequenceSvg(graph, options);
-  const prepared = prepareSpatialScene028(graph, options);
   const theme = resolveTheme(options.theme);
   const portable = usesPortableSvgFonts(options);
   const { width, height } = prepared.viewport;
@@ -1067,11 +1156,11 @@ export function renderSvg(
   const markerSvg = [...markerDefinitions.entries()].map(([id, definition]) => {
     const paths = markerPrimitives(definition.marker).map((primitive) =>
       `<path d="${primitive.d}" fill="${primitive.filled ? definition.stroke : 'none'}" stroke="${definition.stroke}" stroke-width="1.5"/>`).join('');
-    return `<marker id="${domNamespace}-${id}" viewBox="0 0 16 16" refX="14" refY="8" markerWidth="10" markerHeight="10" orient="auto-start-reverse" markerUnits="strokeWidth">${paths}</marker>`;
+    return `<marker id="${domNamespace}-${id}" viewBox="0 0 16 16" refX="14" refY="8" markerWidth="${markerSize028(definition.marker)}" markerHeight="${markerSize028(definition.marker)}" orient="auto-start-reverse" markerUnits="strokeWidth">${paths}</marker>`;
   }).join('');
   const artworkSvg = prepared.artwork029 ? sceneArtworkDefinitions029(prepared.artwork029, domNamespace) : '';
   parts.push(`<defs><style>${fontCss}</style>${markerSvg}${artworkSvg}</defs>`);
-  parts.push(`<rect width="${width}" height="${height}" fill="${theme.background}"/>`);
+  parts.push(`<rect width="${width}" height="${height}" fill="${prepared.background0214 ?? theme.background}"/>`);
 
   // The prepared scene owns the drawing order and geometry. The projector
   // only translates typed records into SVG elements and accessibility groups.
@@ -1081,6 +1170,11 @@ export function renderSvg(
     const owned = byOwner.get(key) ?? [];
     owned.push(part);
     byOwner.set(key, owned);
+  }
+  for (const node of scene.nodes) if (node.container) {
+    parts.push(`<g data-coral-node="${escapeXml(node.id)}">`);
+    for (const part of byOwner.get(`node:${node.id}`) ?? []) parts.push(serializeScenePart028(part, domNamespace));
+    parts.push('</g>');
   }
   for (const edge of scene.edges) {
     parts.push(`<g data-coral-edge="${escapeXml(edge.id)}">`);
@@ -1095,15 +1189,17 @@ export function renderSvg(
     parts.push('</g>');
   }
   for (const node of scene.nodes) {
+    if (node.container) continue;
     parts.push(`<g data-coral-node="${escapeXml(node.id)}">`);
     let glyphOpen = false;
     for (const part of byOwner.get(`node:${node.id}`) ?? []) {
-      if (part.role === 'glyph' && !glyphOpen) {
+      const semanticGlyph = part.role === 'glyph' && !part.presentationOnly;
+      if (semanticGlyph && !glyphOpen) {
         const name = part.geometry.kind === 'decoration-path' ? part.geometry.name : 'Symbol';
         const titleId = stableSvgId('coral-glyph-title', `${domNamespace}:${node.id}`);
         parts.push(`<g role="img" aria-labelledby="${titleId}"><title id="${titleId}">${escapeXml(name)}</title>`);
         glyphOpen = true;
-      } else if (part.role !== 'glyph' && glyphOpen) {
+      } else if (!semanticGlyph && glyphOpen) {
         parts.push('</g>');
         glyphOpen = false;
       }
@@ -1116,4 +1212,18 @@ export function renderSvg(
 
   parts.push('</svg>');
   return parts.join('\n');
+}
+
+/**
+ * Render a graph to a standalone SVG document.
+ * Positions come from `node.position`; source consumers lay out first.
+ */
+export function renderSvg(
+  graph: { nodes: GraphNode[]; edges: GraphEdge[]; metadata?: { notation?: string };
+    profile?: NotationProfile } & Omit<SequenceGraph, 'nodes' | 'edges' | 'metadata'>,
+  options: SvgOptions = {}
+): string {
+  if (isSequenceRenderGraph(graph)) return renderSequenceSvg(graph, options);
+  const prepared = prepareSpatialScene028(graph, options);
+  return serializePreparedSpatialScene028(prepared, options);
 }

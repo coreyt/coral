@@ -10,6 +10,8 @@ export interface GlyphDefinition {
   name: string;
   viewBox: string;
   paths: GlyphPath[];
+  /** Present only on glyphs introduced after the frozen 0.2.8 catalog. */
+  addedInEdition?: string;
 }
 
 const glyphs: GlyphDefinition[] = [

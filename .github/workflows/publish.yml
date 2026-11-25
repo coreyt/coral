@@ -142,22 +142,22 @@ jobs:
         run: node scripts/release-registry.mjs preflight
       - name: Publish @coral-viz/language
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 0 }}
-        run: npm publish ./candidate-artifacts/coral-viz-language-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/coral-viz-language-0.2.14.tgz --access public
       - name: Publish @coral-viz/render
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 1 }}
-        run: npm publish ./candidate-artifacts/coral-viz-render-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/coral-viz-render-0.2.14.tgz --access public
       - name: Publish @coral-viz/browser
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 2 }}
-        run: npm publish ./candidate-artifacts/coral-viz-browser-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/coral-viz-browser-0.2.14.tgz --access public
       - name: Publish @coral-viz/viz
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 3 }}
-        run: npm publish ./candidate-artifacts/coral-viz-viz-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/coral-viz-viz-0.2.14.tgz --access public
       - name: Publish @coral-viz/mcp-server
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 4 }}
-        run: npm publish ./candidate-artifacts/coral-viz-mcp-server-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/coral-viz-mcp-server-0.2.14.tgz --access public
       - name: Publish tree-sitter-coral
         if: ${{ fromJSON(steps.registry.outputs.start-index) <= 5 }}
-        run: npm publish ./candidate-artifacts/tree-sitter-coral-0.2.12.tgz --access public
+        run: npm publish ./candidate-artifacts/tree-sitter-coral-0.2.14.tgz --access public
 
   registry:
     if: ${{ needs.publish.result == 'success' }}

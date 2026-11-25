@@ -28,7 +28,7 @@ export function createSuccessorBrowserBinding028(directory,
   const compiler = new Ajv2020({ allErrors: true, strict: false, strictNumbers: true,
     // Unrolling permits removal of raw schema objects. Referenced definitions
     // still share compiled functions; the schema itself is compiled unchanged.
-    validateFormats: false, inlineRefs: false, code: { source: true, optimize: 2 } });
+    validateFormats: false, messages: true, inlineRefs: false, code: { source: true, optimize: 2 } });
   const standalone = foldStandaloneSchema028(standaloneCode(compiler, compiler.compile(JSON.parse(bytes))));
   const validatorModule = resolve(directory, 'successor-schema-validator.cjs');
   writeFileSync(validatorModule, standalone.code);

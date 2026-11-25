@@ -242,9 +242,9 @@ describe('Symbol Registry', () => {
   });
 
   describe('getAllLibraries', () => {
-    it('returns 11 symbol libraries', () => {
+    it('returns 12 symbol libraries', () => {
       const libraries = getAllLibraries();
-      expect(libraries.length).toBe(11);
+      expect(libraries.length).toBe(12);
       expect(libraries.map((l) => l.id)).toContain('block');
       expect(libraries.map((l) => l.id)).toContain('flowchart');
       expect(libraries.map((l) => l.id)).toContain('bpmn');
@@ -363,9 +363,9 @@ describe('Notation Registry', () => {
   });
 
   describe('getAllNotations', () => {
-    it('returns 12 notations', () => {
+    it('returns 13 notations', () => {
       const notations = getAllNotations();
-      expect(notations.length).toBe(12);
+      expect(notations.length).toBe(13);
     });
   });
 
@@ -743,9 +743,9 @@ describe('Sketch Shapes', () => {
 });
 
 describe('Sketch Symbol Library', () => {
-  it('11 symbol libraries registered', () => {
+  it('12 symbol libraries registered', () => {
     const libraries = getAllLibraries();
-    expect(libraries.length).toBe(11);
+    expect(libraries.length).toBe(12);
     expect(libraries.map(l => l.id)).toContain('sketch');
   });
 
@@ -772,9 +772,9 @@ describe('Sketch Symbol Library', () => {
 });
 
 describe('Sketch Notation', () => {
-  it('12 notations registered', () => {
+  it('13 notations registered', () => {
     const notations = getAllNotations();
-    expect(notations.length).toBe(12);
+    expect(notations.length).toBe(13);
   });
 
   it('sketch notation exists with correct id', () => {

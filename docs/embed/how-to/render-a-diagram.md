@@ -5,11 +5,11 @@ production source reader, checks, layout, and renderer.
 
 ## Before you begin
 
-Use Node.js 24.19.0 or later. Install the verified Coral 0.2.12 browser archive
+Use Node.js 24.19.0 or later. Install the verified Coral 0.2.14 browser archive
 with its exact published GraphIR Core pin:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.12.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.14.tgz
 ```
 
 Use the archive names delivered with your verified packages. The browser

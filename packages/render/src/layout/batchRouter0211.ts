@@ -1307,7 +1307,9 @@ export function coordinateBatchRoutes0211(ctx: BatchRouterContext0211): void {
     const badCaptionSouth = freeTarget && ((tgtInfo.hasBottomCaption && check.side === 'SOUTH'
       && (ctx.direction === 'RIGHT' || ctx.direction === 'LEFT'))
       || (tgtInfo.hasRightCaption && check.side === 'EAST' && captionRightOfTgt));
-    const hitsCaption = containerCaptionBoxes.length > 0 && pathHitsObstacles(pts, containerCaptionBoxes, 1.0);
+    // Repair collisions with every body and caption before final validation
+    // can replace the route without the batch port/corridor safeguards.
+    const hitsObstacle = pathHitsObstacles(pts, collectObstaclesFor(edge, ctx.rects, ctx.nodeInfo).boxes, 1.0);
     const reentersOwn = pathReentersEndNodes(pts, srcInfo.frame, tgtInfo.frame);
     const fS = srcInfo.frame;
     const horizFlow = ctx.direction === 'RIGHT' || ctx.direction === 'LEFT';
@@ -1374,7 +1376,7 @@ export function coordinateBatchRoutes0211(ctx: BatchRouterContext0211): void {
       if (oe.source === edge.target && Math.hypot(opts[0]!.x - end.x, opts[0]!.y - end.y) < 10) return true;
       return false;
     });
-    if (check.ok && !tooShort && !badCaptionSouth && !badSrcCaptionSouth && !hitsCaption && !reentersOwn && !offDiamondVertex && !offDiamondSource && !collidingDiamondTarget) continue;
+    if (check.ok && !tooShort && !badCaptionSouth && !badSrcCaptionSouth && !hitsObstacle && !reentersOwn && !offDiamondVertex && !offDiamondSource && !collidingDiamondTarget) continue;
 
     const srcCx = srcInfo.frame.x + srcInfo.frame.width / 2;
     const srcCy = srcInfo.frame.y + srcInfo.frame.height / 2;
@@ -1559,7 +1561,7 @@ export function coordinateBatchRoutes0211(ctx: BatchRouterContext0211): void {
     if (fixed) {
       setRoutePoints(route, fixed);
       anyB2Changed = true;
-    } else if (hitsCaption) {
+    } else if (hitsObstacle) {
       // Fallback: shift any interior segment crossing a container caption cleanly outside the caption box.
       const shifted = pts.map((p) => ({ ...p }));
       let okShift = false;
@@ -2913,6 +2915,643 @@ export function coordinateBatchRoutes0211(ctx: BatchRouterContext0211): void {
           finalPts[i] = comp;
           break;
         }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Phase E3 (0.2.14 Slice 20): Universal single-edge free-port re-centering
+  // After all slot spills and corridor refinements, any non-container node side
+  // carrying a single free-port edge should anchor cleanly at its visual glyph
+  // midpoint when doing so is strictly collision-free and non-regressive.
+  // Bounded to graphs <= 120 routes to preserve R-026 large-graph budgets.
+  // ---------------------------------------------------------------------------
+  if (ctx.routes.length <= 120) {
+    const finalPts = ctx.routes.map((r) => sectionPoints(r.sections));
+    const sideGroups = new Map<string, { routeIdx: number; end: 'source' | 'target'; nodeId: string; side: PortSide; pt: Point }[]>();
+    for (let i = 0; i < ctx.routes.length; i++) {
+      const edge = edgeById.get(ctx.routes[i]!.id);
+      if (!edge) continue;
+      const pts = finalPts[i]!;
+      if (pts.length < 2) continue;
+      for (const end of ['source', 'target'] as const) {
+        const nodeId = end === 'source' ? edge.source : edge.target;
+        const info = ctx.nodeInfo(nodeId);
+        if (!info || info.isContainer) continue;
+        const pt = end === 'source' ? pts[0]! : pts[pts.length - 1]!;
+        const side = inferContactSide(pt, info.frame);
+        const key = `${nodeId}:${side}`;
+        const list = sideGroups.get(key) ?? [];
+        list.push({ routeIdx: i, end, nodeId, side, pt });
+        sideGroups.set(key, list);
+      }
+    }
+    for (const list of sideGroups.values()) {
+      if (list.length !== 1) continue;
+      const item = list[0]!;
+      const edge = edgeById.get(ctx.routes[item.routeIdx]!.id);
+      if (!editable(edge)) continue;
+      if (item.end === 'source' && edge.sourcePort) continue;
+      if (item.end === 'target' && edge.targetPort) continue;
+      const info = ctx.nodeInfo(item.nodeId);
+      if (!info || info.isContainer) continue;
+      const horizSide = item.side === 'NORTH' || item.side === 'SOUTH';
+      const midCoord = horizSide
+        ? info.frame.x + info.frame.width / 2
+        : info.frame.y + info.frame.height / 2;
+      const curCoord = horizSide ? item.pt.x : item.pt.y;
+      if (Math.abs(curCoord - midCoord) <= 4) continue;
+
+      const targetPt = ctx.contourContact?.(item.nodeId, item.side, midCoord)
+        ?? (horizSide
+          ? { x: midCoord, y: item.side === 'NORTH' ? info.frame.y : info.frame.y + info.frame.height }
+          : { x: item.side === 'WEST' ? info.frame.x : info.frame.x + info.frame.width, y: midCoord });
+      const pts = finalPts[item.routeIdx]!;
+      const { boxes, srcFrame, tgtFrame } = collectObstaclesFor(edge, ctx.rects, ctx.nodeInfo);
+      const candidates: Point[][] = [];
+      const directReanchor = reanchorEndpointOrthogonal(pts, item.end, targetPt, item.side, boxes);
+      if (directReanchor && directReanchor.length <= pts.length) candidates.push(directReanchor);
+      // If a free single port is severely off-center (>= 22 px, so re-centering
+      // via a clean Z-route will NOT create a <22px avoidable jog) and direct
+      // reanchoring failed or grew bends, try a clean centered Z-route.
+      if (Math.abs(curCoord - midCoord) >= 22 && candidates.length === 0) {
+        const otherEnd = item.end === 'source' ? pts[pts.length - 1]! : pts[0]!;
+        const otherInfo = ctx.nodeInfo(item.end === 'source' ? edge.target : edge.source);
+        if (otherInfo && !otherInfo.isContainer) {
+          const otherSide = inferContactSide(otherEnd, otherInfo.frame);
+          const sPt = item.end === 'source' ? targetPt : otherEnd;
+          const sSide = item.end === 'source' ? item.side : otherSide;
+          const tPt = item.end === 'source' ? otherEnd : targetPt;
+          const tSide = item.end === 'source' ? otherSide : item.side;
+          const sH = sSide === 'EAST' || sSide === 'WEST';
+          const tH = tSide === 'EAST' || tSide === 'WEST';
+          const sD = sSide === 'EAST' || sSide === 'SOUTH' ? 1 : -1;
+          const tD = tSide === 'EAST' || tSide === 'SOUTH' ? 1 : -1;
+          if (sH && tH) {
+            for (const f of [0.5, 0.35, 0.65]) {
+              const mx = sPt.x + (tPt.x - sPt.x) * f;
+              if ((mx - sPt.x) * sD >= 14 && (mx - tPt.x) * tD >= 14) {
+                candidates.push(compactOrthogonal([sPt, { x: mx, y: sPt.y }, { x: mx, y: tPt.y }, tPt]));
+              }
+            }
+          } else if (!sH && !tH) {
+            for (const f of [0.5, 0.35, 0.65]) {
+              const my = sPt.y + (tPt.y - sPt.y) * f;
+              if ((my - sPt.y) * sD >= 14 && (my - tPt.y) * tD >= 14) {
+                candidates.push(compactOrthogonal([sPt, { x: sPt.x, y: my }, { x: tPt.x, y: my }, tPt]));
+              }
+            }
+          }
+        }
+      }
+      for (const updated of candidates) {
+        if (!isPathOrthogonal(updated)) continue;
+        if (pathReentersEndNodes(updated, srcFrame, tgtFrame)) continue;
+        if (pathHitsObstacles(updated, boxes, 1.5)) continue;
+        if (containerCaptionBoxes.length > 0 && pathHitsObstacles(updated, containerCaptionBoxes, 2)) continue;
+        if (pathBorderHugCount(updated, containers, 11.5) > pathBorderHugCount(pts, containers, 11.5)) continue;
+        // Reject if any interior segment becomes a micro-jog (< 12 px).
+        let createsMicroJog = false;
+        for (let si = 1; si < updated.length - 2; si++) {
+          if (Math.hypot(updated[si + 1]!.x - updated[si]!.x, updated[si + 1]!.y - updated[si]!.y) < 12) {
+            createsMicroJog = true;
+            break;
+          }
+        }
+        if (createsMicroJog) continue;
+        // Verify inward approach on target and live >= 11 px port clearance on
+        // BOTH ends against all other routes (DRQ-17).
+        if (tgtFrame && !isInwardApproach(updated[updated.length - 2]!, updated[updated.length - 1]!, tgtFrame).ok) continue;
+        let bad = false;
+        let oldCross = 0;
+        let newCross = 0;
+        const newSrcPt = updated[0]!;
+        const newTgtPt = updated[updated.length - 1]!;
+        for (let k = 0; k < finalPts.length; k++) {
+          if (k === item.routeIdx) continue;
+          const pk = finalPts[k]!;
+          const ek = edgeById.get(ctx.routes[k]!.id);
+          if (ek) {
+            if (ek.source === edge.source && Math.hypot(newSrcPt.x - pk[0]!.x, newSrcPt.y - pk[0]!.y) < 11) { bad = true; break; }
+            if (ek.target === edge.source && Math.hypot(newSrcPt.x - pk[pk.length - 1]!.x, newSrcPt.y - pk[pk.length - 1]!.y) < 11) { bad = true; break; }
+            if (ek.source === edge.target && Math.hypot(newTgtPt.x - pk[0]!.x, newTgtPt.y - pk[0]!.y) < 11) { bad = true; break; }
+            if (ek.target === edge.target && Math.hypot(newTgtPt.x - pk[pk.length - 1]!.x, newTgtPt.y - pk[pk.length - 1]!.y) < 11) { bad = true; break; }
+          }
+          oldCross += countOrthogonalCrossings(pts, pk);
+          newCross += countOrthogonalCrossings(updated, pk);
+          if (hasCollinearOverlap(updated, pk, 3)) { bad = true; break; }
+        }
+        if (!bad && newCross <= oldCross) {
+          setRoutePoints(ctx.routes[item.routeIdx]!, updated);
+          finalPts[item.routeIdx] = updated;
+          break;
+        }
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Phase E4 (0.2.14 Slice 20): Shared-endpoint crossing elimination &
+  // alternate-face escape (DRQ-14, DRQ-17, DRQ-19).
+  // Bounded to graphs <= 120 routes to preserve R-026 large-graph budgets.
+  // ---------------------------------------------------------------------------
+  if (ctx.routes.length <= 120) {
+    const finalPts = ctx.routes.map((r) => sectionPoints(r.sections));
+    const hasMicroJog = (pts: readonly Point[]): boolean => {
+      for (let si = 1; si < pts.length - 2; si++) {
+        if (Math.hypot(pts[si + 1]!.x - pts[si]!.x, pts[si + 1]!.y - pts[si]!.y) < 12) return true;
+      }
+      return false;
+    };
+    const allBounds = [...ctx.rects.values()];
+    const globalMinX = allBounds.length ? Math.min(...allBounds.map((r) => r.absolutePosition.x)) : 0;
+    const globalMaxX = allBounds.length ? Math.max(...allBounds.map((r) => r.absolutePosition.x + r.width)) : 0;
+    const globalMinY = allBounds.length ? Math.min(...allBounds.map((r) => r.absolutePosition.y)) : 0;
+    const globalMaxY = allBounds.length ? Math.max(...allBounds.map((r) => r.absolutePosition.y + r.height)) : 0;
+
+    const buildOrthogonalCandidates = (
+      start: Point,
+      sSide: PortSide,
+      end: Point,
+      tSide: PortSide,
+      includeOuterBypass = false,
+    ): Point[][] => {
+      const cands: Point[][] = [];
+      const sHoriz = sSide === 'EAST' || sSide === 'WEST';
+      const tHoriz = tSide === 'EAST' || tSide === 'WEST';
+      const sDir = sSide === 'EAST' || sSide === 'SOUTH' ? 1 : -1;
+      const tDir = tSide === 'EAST' || tSide === 'SOUTH' ? 1 : -1;
+      // 1. Direct straight line
+      if ((sHoriz && tHoriz && Math.abs(start.y - end.y) <= EPS)
+        || (!sHoriz && !tHoriz && Math.abs(start.x - end.x) <= EPS)) {
+        cands.push(compactOrthogonal([start, end]));
+      }
+      // 2. Single-bend L-routes
+      if (sHoriz && !tHoriz) {
+        const corner = { x: end.x, y: start.y };
+        if ((corner.x - start.x) * sDir >= 12 && (corner.y - end.y) * tDir >= 12) {
+          cands.push(compactOrthogonal([start, corner, end]));
+        }
+      } else if (!sHoriz && tHoriz) {
+        const corner = { x: start.x, y: end.y };
+        if ((corner.y - start.y) * sDir >= 12 && (corner.x - end.x) * tDir >= 12) {
+          cands.push(compactOrthogonal([start, corner, end]));
+        }
+      }
+      // 3. 2-bend Z-routes at multiple corridor splits
+      if (sHoriz && tHoriz) {
+        for (const frac of [0.5, 0.3, 0.7, 0.2, 0.8]) {
+          const midX = start.x + (end.x - start.x) * frac;
+          if ((midX - start.x) * sDir >= 14 && (midX - end.x) * tDir >= 14) {
+            cands.push(compactOrthogonal([start, { x: midX, y: start.y }, { x: midX, y: end.y }, end]));
+          }
+        }
+        // Offset stubs near source/target
+        for (const stub of [18, 28, 42]) {
+          const mx1 = start.x + sDir * stub;
+          if ((mx1 - end.x) * tDir >= 14) {
+            cands.push(compactOrthogonal([start, { x: mx1, y: start.y }, { x: mx1, y: end.y }, end]));
+          }
+          const mx2 = end.x + tDir * stub;
+          if ((mx2 - start.x) * sDir >= 14) {
+            cands.push(compactOrthogonal([start, { x: mx2, y: start.y }, { x: mx2, y: end.y }, end]));
+          }
+        }
+      } else if (!sHoriz && !tHoriz) {
+        for (const frac of [0.5, 0.3, 0.7, 0.2, 0.8]) {
+          const midY = start.y + (end.y - start.y) * frac;
+          if ((midY - start.y) * sDir >= 14 && (midY - end.y) * tDir >= 14) {
+            cands.push(compactOrthogonal([start, { x: start.x, y: midY }, { x: end.x, y: midY }, end]));
+          }
+        }
+        if (includeOuterBypass) {
+          // DRQ-19 outer return/bypass channels above/below the diagram envelope
+          for (const pad of [22, 36, 52]) {
+            if (sSide === 'NORTH' && tSide === 'NORTH') {
+              const y = Math.min(start.y, end.y, globalMinY) - pad;
+              cands.push(compactOrthogonal([start, { x: start.x, y }, { x: end.x, y }, end]));
+            }
+            if (sSide === 'SOUTH' && tSide === 'SOUTH') {
+              const y = Math.max(start.y, end.y, globalMaxY) + pad;
+              cands.push(compactOrthogonal([start, { x: start.x, y }, { x: end.x, y }, end]));
+            }
+          }
+        }
+      } else if (sHoriz && !tHoriz) {
+        for (const stub of [20, 34, 50]) {
+          const sx = start.x + sDir * stub;
+          const ty = end.y + tDir * stub;
+          cands.push(compactOrthogonal([start, { x: sx, y: start.y }, { x: sx, y: ty }, { x: end.x, y: ty }, end]));
+        }
+        // Step across in an intermediate horizontal corridor before approaching target
+        for (const stub of [14, 24]) {
+          const sx = start.x + sDir * stub;
+          for (const frac of [0.25, 0.45, 0.65]) {
+            const my = start.y + (end.y - start.y) * frac;
+            if ((my - end.y) * tDir >= 14) {
+              cands.push(compactOrthogonal([start, { x: sx, y: start.y }, { x: sx, y: my }, { x: end.x, y: my }, end]));
+            }
+          }
+        }
+        if (includeOuterBypass) {
+          for (const xOut of [globalMinX - 22, globalMaxX + 22]) {
+            const ty = end.y + tDir * 22;
+            cands.push(compactOrthogonal([start, { x: xOut, y: start.y }, { x: xOut, y: ty }, { x: end.x, y: ty }, end]));
+          }
+        }
+      } else if (!sHoriz && tHoriz) {
+        for (const stub of [20, 34, 50]) {
+          const sy = start.y + sDir * stub;
+          const tx = end.x + tDir * stub;
+          cands.push(compactOrthogonal([start, { x: start.x, y: sy }, { x: tx, y: sy }, { x: tx, y: end.y }, end]));
+        }
+        // Step vertically in an intermediate corridor before approaching target horizontally
+        for (const stub of [14, 24]) {
+          const sy = start.y + sDir * stub;
+          for (const frac of [0.25, 0.45, 0.65]) {
+            const mx = start.x + (end.x - start.x) * frac;
+            if ((mx - end.x) * tDir >= 14) {
+              cands.push(compactOrthogonal([start, { x: start.x, y: sy }, { x: mx, y: sy }, { x: mx, y: end.y }, end]));
+            }
+          }
+        }
+        if (includeOuterBypass) {
+          for (const yOut of [globalMinY - 22, globalMaxY + 22]) {
+            for (const xOut of [globalMinX - 22, globalMaxX + 22]) {
+              cands.push(compactOrthogonal([start, { x: start.x, y: yOut }, { x: xOut, y: yOut }, { x: xOut, y: end.y }, end]));
+            }
+            const tx = end.x + tDir * 22;
+            cands.push(compactOrthogonal([start, { x: start.x, y: yOut }, { x: tx, y: yOut }, { x: tx, y: end.y }, end]));
+          }
+        }
+      }
+      if (includeOuterBypass && sHoriz && tHoriz) {
+        // Outer bypass above/below for horizontal-face edges (e.g. skip edges & back-edges)
+        for (const y of [globalMinY - 22, globalMinY - 38, globalMaxY + 22, globalMaxY + 38]) {
+          const sx = start.x + sDir * 20;
+          const tx = end.x + tDir * 20;
+          cands.push(compactOrthogonal([start, { x: sx, y: start.y }, { x: sx, y }, { x: tx, y }, { x: tx, y: end.y }, end]));
+        }
+      }
+      if (includeOuterBypass && !sHoriz && !tHoriz) {
+        for (const x of [globalMinX - 22, globalMinX - 38, globalMaxX + 22, globalMaxX + 38]) {
+          const sy = start.y + sDir * 20;
+          const ty = end.y + tDir * 20;
+          cands.push(compactOrthogonal([start, { x: start.x, y: sy }, { x, y: sy }, { x, y: ty }, { x: end.x, y: ty }, end]));
+        }
+      }
+      return cands;
+    };
+    const isRouteClean = (
+      routeIdx: number,
+      edge: GraphEdge,
+      cand: readonly Point[],
+      overrideMap?: ReadonlyMap<number, readonly Point[]>,
+    ): boolean => {
+      if (cand.length < 2 || !isPathOrthogonal(cand) || hasMicroJog(cand)) return false;
+      const { boxes, srcFrame, tgtFrame } = collectObstaclesFor(edge, ctx.rects, ctx.nodeInfo);
+      if (pathReentersEndNodes(cand, srcFrame, tgtFrame)) return false;
+      if (pathHitsObstacles(cand, boxes, 1.5)) return false;
+      if (containerCaptionBoxes.length > 0 && pathHitsObstacles(cand, containerCaptionBoxes, 2)) return false;
+      if (tgtFrame && !isInwardApproach(cand[cand.length - 2]!, cand[cand.length - 1]!, tgtFrame).ok) return false;
+      const orig = finalPts[routeIdx]!;
+      if (pathBorderHugCount(cand, containers, 11.5) > pathBorderHugCount(orig, containers, 11.5)) return false;
+      const sPt = cand[0]!;
+      const tPt = cand[cand.length - 1]!;
+      for (let k = 0; k < finalPts.length; k++) {
+        if (k === routeIdx) continue;
+        const pk = overrideMap?.get(k) ?? finalPts[k]!;
+        if (hasCollinearOverlap(cand, pk, 3)) return false;
+        const ek = edgeById.get(ctx.routes[k]!.id);
+        if (ek) {
+          if (ek.source === edge.source && Math.hypot(sPt.x - pk[0]!.x, sPt.y - pk[0]!.y) < 11) return false;
+          if (ek.target === edge.source && Math.hypot(sPt.x - pk[pk.length - 1]!.x, sPt.y - pk[pk.length - 1]!.y) < 11) return false;
+          if (ek.source === edge.target && Math.hypot(tPt.x - pk[0]!.x, tPt.y - pk[0]!.y) < 11) return false;
+          if (ek.target === edge.target && Math.hypot(tPt.x - pk[pk.length - 1]!.x, tPt.y - pk[pk.length - 1]!.y) < 11) return false;
+        }
+      }
+      return true;
+    };
+    const countCrossingsAgainstAll = (
+      idx: number,
+      cand: readonly Point[],
+      overrideMap?: ReadonlyMap<number, readonly Point[]>,
+    ): number => {
+      let c = 0;
+      for (let k = 0; k < finalPts.length; k++) {
+        if (k === idx) continue;
+        const pk = overrideMap?.get(k) ?? finalPts[k]!;
+        c += countOrthogonalCrossings(cand, pk);
+      }
+      return c;
+    };
+
+    for (let pass = 0; pass < 3; pass++) {
+      let improved = false;
+
+      // Move 1 & 2: Pairwise shared-node port & rail swap (including diamonds & different faces).
+      for (let i = 0; i < ctx.routes.length; i++) {
+        const eA = edgeById.get(ctx.routes[i]!.id);
+        if (!editable(eA)) continue;
+        for (let j = i + 1; j < ctx.routes.length; j++) {
+          const eB = edgeById.get(ctx.routes[j]!.id);
+          if (!editable(eB)) continue;
+          const pA = finalPts[i]!;
+          const pB = finalPts[j]!;
+          if (countOrthogonalCrossings(pA, pB) === 0) continue;
+
+          const sharedEnds: Array<{ end: 'source' | 'target'; nodeId: string }> = [];
+          if (eA.target === eB.target && !eA.targetPort && !eB.targetPort
+            && !ctx.isFixedPort(eA.target, eA.targetPort) && !ctx.isFixedPort(eB.target, eB.targetPort)) {
+            sharedEnds.push({ end: 'target', nodeId: eA.target });
+          }
+          if (eA.source === eB.source && !eA.sourcePort && !eB.sourcePort
+            && !ctx.isFixedPort(eA.source, eA.sourcePort) && !ctx.isFixedPort(eB.source, eB.sourcePort)) {
+            sharedEnds.push({ end: 'source', nodeId: eA.source });
+          }
+
+          let fixedPair = false;
+          for (const { end, nodeId } of sharedEnds) {
+            const info = ctx.nodeInfo(nodeId);
+            if (!info || info.isContainer) continue;
+            const ptA = end === 'source' ? pA[0]! : pA[pA.length - 1]!;
+            const ptB = end === 'source' ? pB[0]! : pB[pB.length - 1]!;
+            const sideA = inferContactSide(ptA, info.frame);
+            const sideB = inferContactSide(ptB, info.frame);
+            const otherNodeA = ctx.nodeInfo(end === 'source' ? eA.target : eA.source);
+            const otherNodeB = ctx.nodeInfo(end === 'source' ? eB.target : eB.source);
+            if (!otherNodeA || !otherNodeB) continue;
+            const otherPtA = end === 'source' ? pA[pA.length - 1]! : pA[0]!;
+            const otherPtB = end === 'source' ? pB[pB.length - 1]! : pB[0]!;
+            const otherSideA = inferContactSide(otherPtA, otherNodeA.frame);
+            const otherSideB = inferContactSide(otherPtB, otherNodeB.frame);
+
+            const { boxes: boxesA } = collectObstaclesFor(eA, ctx.rects, ctx.nodeInfo);
+            const { boxes: boxesB } = collectObstaclesFor(eB, ctx.rects, ctx.nodeInfo);
+
+            const candsA: Point[][] = [];
+            const candsB: Point[][] = [];
+            // Direct reanchor onto swapped slot
+            const rA = reanchorEndpointOrthogonal(pA, end, ptB, sideB, boxesA);
+            const rB = reanchorEndpointOrthogonal(pB, end, ptA, sideA, boxesB);
+            if (rA) candsA.push(rA);
+            if (rB) candsB.push(rB);
+            // Also try swapping penultimate rail X/Y when both routes have >= 4 points on same face
+            if (sideA === sideB && end === 'target' && pA.length >= 4 && pB.length >= 4) {
+              const horiz = sideA === 'WEST' || sideA === 'EAST';
+              const railA = horiz ? pA[pA.length - 2]!.x : pA[pA.length - 2]!.y;
+              const railB = horiz ? pB[pB.length - 2]!.x : pB[pB.length - 2]!.y;
+              if (Math.abs(railA - railB) > 2) {
+                const shiftRail = (orig: readonly Point[], newEnd: Point, newRail: number): Point[] => {
+                  const copy = orig.map((p) => ({ ...p }));
+                  const n = copy.length;
+                  if (horiz) {
+                    copy[n - 1] = { ...newEnd };
+                    copy[n - 2] = { x: newRail, y: newEnd.y };
+                    copy[n - 3] = { x: newRail, y: copy[n - 3]!.y };
+                  } else {
+                    copy[n - 1] = { ...newEnd };
+                    copy[n - 2] = { x: newEnd.x, y: newRail };
+                    copy[n - 3] = { x: copy[n - 3]!.x, y: newRail };
+                  }
+                  return compactOrthogonal(copy);
+                };
+                candsA.push(shiftRail(pA, ptB, railB));
+                candsB.push(shiftRail(pB, ptA, railA));
+              }
+            }
+            // Fresh clean L/Z candidates between swapped endpoints
+            if (end === 'source') {
+              candsA.push(...buildOrthogonalCandidates(ptB, sideB, otherPtA, otherSideA));
+              candsB.push(...buildOrthogonalCandidates(ptA, sideA, otherPtB, otherSideB));
+            } else {
+              candsA.push(...buildOrthogonalCandidates(otherPtA, otherSideA, ptB, sideB));
+              candsB.push(...buildOrthogonalCandidates(otherPtB, otherSideB, ptA, sideA));
+            }
+
+            const oldCross = countCrossingsAgainstAll(i, pA) + countCrossingsAgainstAll(j, pB) - countOrthogonalCrossings(pA, pB);
+            let bestPair: { a: Point[]; b: Point[]; cross: number; bends: number } | undefined;
+            for (const cA of candsA) {
+              for (const cB of candsB) {
+                const ov = new Map<number, readonly Point[]>([[i, cA], [j, cB]]);
+                if (!isRouteClean(i, eA, cA, ov) || !isRouteClean(j, eB, cB, ov)) continue;
+                const newCross = countCrossingsAgainstAll(i, cA, ov) + countCrossingsAgainstAll(j, cB, ov) - countOrthogonalCrossings(cA, cB);
+                const newBends = (cA.length - 2) + (cB.length - 2);
+                if (newCross < oldCross && (!bestPair || newCross < bestPair.cross || (newCross === bestPair.cross && newBends < bestPair.bends))) {
+                  bestPair = { a: cA, b: cB, cross: newCross, bends: newBends };
+                }
+              }
+            }
+            if (bestPair) {
+              setRoutePoints(ctx.routes[i]!, bestPair.a);
+              setRoutePoints(ctx.routes[j]!, bestPair.b);
+              finalPts[i] = bestPair.a;
+              finalPts[j] = bestPair.b;
+              improved = true;
+              fixedPair = true;
+              break;
+            }
+          }
+          if (fixedPair) break;
+        }
+      }
+
+      // Move 3: Single-edge crossing-free reroute & alternate-face escape.
+      // Same-endpoint rerouting is safe even on fixed-port diamonds (e.g. c04, c06);
+      // alternate-face moves remain gated per-end on !isFixedPort and no authored port.
+      for (let i = 0; i < ctx.routes.length; i++) {
+        const edge = edgeById.get(ctx.routes[i]!.id);
+        if (!editable(edge)) continue;
+        const orig = finalPts[i]!;
+        const oldCross = countCrossingsAgainstAll(i, orig);
+        if (oldCross === 0) continue;
+        const srcInfo = ctx.nodeInfo(edge.source);
+        const tgtInfo = ctx.nodeInfo(edge.target);
+        if (!srcInfo || !tgtInfo || srcInfo.isContainer || tgtInfo.isContainer) continue;
+        const curTgtPt = orig[orig.length - 1]!;
+        const curTgtSide = inferContactSide(curTgtPt, tgtInfo.frame);
+        const curSrcPt = orig[0]!;
+        const curSrcSide = inferContactSide(curSrcPt, srcInfo.frame);
+        const srcFree = !edge.sourcePort && !ctx.isFixedPort(edge.source, edge.sourcePort);
+        const tgtFree = !edge.targetPort && !ctx.isFixedPort(edge.target, edge.targetPort);
+
+        let best: { pts: Point[]; cross: number; bends: number } | undefined;
+        // 3a. Same exact endpoints, cleaner intermediate corridor or outer bypass
+        for (const cand of buildOrthogonalCandidates(curSrcPt, curSrcSide, curTgtPt, curTgtSide, true)) {
+          if (!isRouteClean(i, edge, cand)) continue;
+          const newCross = countCrossingsAgainstAll(i, cand);
+          const newBends = cand.length - 2;
+          if (newCross < oldCross && (!best || newCross < best.cross || (newCross === best.cross && newBends < best.bends))) {
+            best = { pts: cand, cross: newCross, bends: newBends };
+          }
+        }
+        const tryAltStart = (side: PortSide) => {
+          if (!srcFree) return;
+          if (side === 'SOUTH' && srcInfo.hasBottomCaption) return;
+          if (side === 'EAST' && srcInfo.hasRightCaption) return;
+          const horizSide = side === 'NORTH' || side === 'SOUTH';
+          const spanStart = horizSide ? srcInfo.frame.x + srcInfo.frame.width * 0.2 : srcInfo.frame.y + srcInfo.frame.height * 0.2;
+          const spanEnd = horizSide ? srcInfo.frame.x + srcInfo.frame.width * 0.8 : srcInfo.frame.y + srcInfo.frame.height * 0.8;
+          for (const f of [0.5, 0.25, 0.75, 0.1, 0.9]) {
+            const coord = spanStart + (spanEnd - spanStart) * f;
+            const sPt = ctx.contourContact?.(edge.source, side, coord)
+              ?? (horizSide
+                ? { x: coord, y: side === 'NORTH' ? srcInfo.frame.y : srcInfo.frame.y + srcInfo.frame.height }
+                : { x: side === 'WEST' ? srcInfo.frame.x : srcInfo.frame.x + srcInfo.frame.width, y: coord });
+            for (const cand of buildOrthogonalCandidates(sPt, side, curTgtPt, curTgtSide, true)) {
+              if (!isRouteClean(i, edge, cand)) continue;
+              const newCross = countCrossingsAgainstAll(i, cand);
+              const newBends = cand.length - 2;
+              if (newCross < oldCross && (!best || newCross < best.cross || (newCross === best.cross && newBends < best.bends))) {
+                best = { pts: cand, cross: newCross, bends: newBends };
+              }
+            }
+          }
+        };
+        const tryAltEnd = (side: PortSide) => {
+          if (!tgtFree) return;
+          if (side === 'SOUTH' && tgtInfo.hasBottomCaption) return;
+          if (side === 'EAST' && tgtInfo.hasRightCaption) return;
+          const horizSide = side === 'NORTH' || side === 'SOUTH';
+          const spanStart = horizSide ? tgtInfo.frame.x + tgtInfo.frame.width * 0.2 : tgtInfo.frame.y + tgtInfo.frame.height * 0.2;
+          const spanEnd = horizSide ? tgtInfo.frame.x + tgtInfo.frame.width * 0.8 : tgtInfo.frame.y + tgtInfo.frame.height * 0.8;
+          for (const f of [0.5, 0.25, 0.75, 0.1, 0.9]) {
+            const coord = spanStart + (spanEnd - spanStart) * f;
+            const tPt = ctx.contourContact?.(edge.target, side, coord)
+              ?? (horizSide
+                ? { x: coord, y: side === 'NORTH' ? tgtInfo.frame.y : tgtInfo.frame.y + tgtInfo.frame.height }
+                : { x: side === 'WEST' ? tgtInfo.frame.x : tgtInfo.frame.x + tgtInfo.frame.width, y: coord });
+            for (const cand of buildOrthogonalCandidates(curSrcPt, curSrcSide, tPt, side, true)) {
+              if (!isRouteClean(i, edge, cand)) continue;
+              const newCross = countCrossingsAgainstAll(i, cand);
+              const newBends = cand.length - 2;
+              if (newCross < oldCross && (!best || newCross < best.cross || (newCross === best.cross && newBends < best.bends))) {
+                best = { pts: cand, cross: newCross, bends: newBends };
+              }
+            }
+          }
+        };
+        for (const side of ['EAST', 'WEST', 'NORTH', 'SOUTH'] as const) {
+          tryAltStart(side);
+          tryAltEnd(side);
+        }
+        // Also try paired NORTH->NORTH / SOUTH->SOUTH outer return channels (DRQ-19)
+        // when changing both ends simultaneously eliminates a back-edge crossing.
+        if (srcFree && tgtFree && (!best || best.cross > 0)) {
+          for (const pairSide of ['NORTH', 'SOUTH'] as const) {
+            if (pairSide === 'SOUTH' && (srcInfo.hasBottomCaption || tgtInfo.hasBottomCaption)) continue;
+            const sx = srcInfo.frame.x + srcInfo.frame.width / 2;
+            const tx = tgtInfo.frame.x + tgtInfo.frame.width / 2;
+            const sPt = ctx.contourContact?.(edge.source, pairSide, sx)
+              ?? { x: sx, y: pairSide === 'NORTH' ? srcInfo.frame.y : srcInfo.frame.y + srcInfo.frame.height };
+            const tPt = ctx.contourContact?.(edge.target, pairSide, tx)
+              ?? { x: tx, y: pairSide === 'NORTH' ? tgtInfo.frame.y : tgtInfo.frame.y + tgtInfo.frame.height };
+            for (const cand of buildOrthogonalCandidates(sPt, pairSide, tPt, pairSide, true)) {
+              if (!isRouteClean(i, edge, cand)) continue;
+              const newCross = countCrossingsAgainstAll(i, cand);
+              const newBends = cand.length - 2;
+              if (newCross < oldCross && (!best || newCross < best.cross || (newCross === best.cross && newBends < best.bends))) {
+                best = { pts: cand, cross: newCross, bends: newBends };
+              }
+            }
+          }
+        }
+        if (best) {
+          setRoutePoints(ctx.routes[i]!, best.pts);
+          finalPts[i] = best.pts;
+          improved = true;
+        }
+      }
+
+      if (!improved) break;
+    }
+
+    // Move 4 (DRQ-19): Bend-parsimony simplification for high-bend routes (>= 3 bends)
+    // without introducing any crossing or Tier-1 defect.
+    for (let i = 0; i < ctx.routes.length; i++) {
+      const edge = edgeById.get(ctx.routes[i]!.id);
+      if (!editable(edge)) continue;
+      const orig = finalPts[i]!;
+      if (orig.length < 5) continue;
+      const srcInfo = ctx.nodeInfo(edge.source);
+      const tgtInfo = ctx.nodeInfo(edge.target);
+      if (!srcInfo || !tgtInfo || srcInfo.isContainer || tgtInfo.isContainer) continue;
+      const sPt = orig[0]!;
+      const tPt = orig[orig.length - 1]!;
+      const sSide = inferContactSide(sPt, srcInfo.frame);
+      const tSide = inferContactSide(tPt, tgtInfo.frame);
+      const oldCross = countCrossingsAgainstAll(i, orig);
+      let best: { pts: Point[]; bends: number } | undefined;
+      for (const cand of buildOrthogonalCandidates(sPt, sSide, tPt, tSide, false)) {
+        const bends = cand.length - 2;
+        if (bends >= orig.length - 2) continue;
+        if (!isRouteClean(i, edge, cand)) continue;
+        if (countCrossingsAgainstAll(i, cand) > oldCross) continue;
+        if (!best || bends < best.bends) best = { pts: cand, bends };
+      }
+      if (best) {
+        setRoutePoints(ctx.routes[i]!, best.pts);
+        finalPts[i] = best.pts;
+      }
+    }
+
+    // Move 5: Normal-exit stub guard for routes leaving a diamond vertex tangentially
+    // (e.g. horizontal exit from a diamond's NORTH/SOUTH vertex). Fixing this
+    // here prevents validateFinalRoutes028 from invoking fallback libavoid repair
+    // that can re-introduce avoidable crossings (c04 e7, c06 e2).
+    for (let i = 0; i < ctx.routes.length; i++) {
+      const edge = edgeById.get(ctx.routes[i]!.id);
+      if (!editable(edge)) continue;
+      const orig = finalPts[i]!;
+      if (orig.length < 2) continue;
+      const srcInfo = ctx.nodeInfo(edge.source);
+      const tgtInfo = ctx.nodeInfo(edge.target);
+      if (!srcInfo || !tgtInfo || srcInfo.isContainer || tgtInfo.isContainer) continue;
+      if (srcInfo.shapeId !== 'diamond') continue;
+      const sPt = orig[0]!;
+      const sNext = orig[1]!;
+      const tPt = orig[orig.length - 1]!;
+      const sSide = inferContactSide(sPt, srcInfo.frame);
+      const tSide = inferContactSide(tPt, tgtInfo.frame);
+      const tangentVerticalSide = (sSide === 'NORTH' || sSide === 'SOUTH') && Math.abs(sNext.y - sPt.y) <= EPS && Math.abs(sNext.x - sPt.x) > EPS;
+      const tangentHorizSide = (sSide === 'WEST' || sSide === 'EAST') && Math.abs(sNext.x - sPt.x) <= EPS && Math.abs(sNext.y - sPt.y) > EPS;
+      if (!tangentVerticalSide && !tangentHorizSide) continue;
+      const cands: Point[][] = [];
+      // 1. Keep existing route geometry by simply inserting a clean normal stub before orig[1]
+      if (tangentVerticalSide && orig.length >= 3) {
+        const dir = sSide === 'NORTH' ? -1 : 1;
+        for (const stub of [14, 22]) {
+          const sy = sPt.y + dir * stub;
+          cands.push(compactOrthogonal([sPt, { x: sPt.x, y: sy }, { x: sNext.x, y: sy }, ...orig.slice(2)]));
+        }
+      } else if (tangentHorizSide && orig.length >= 3) {
+        const dir = sSide === 'WEST' ? -1 : 1;
+        for (const stub of [14, 22]) {
+          const sx = sPt.x + dir * stub;
+          cands.push(compactOrthogonal([sPt, { x: sx, y: sPt.y }, { x: sx, y: sNext.y }, ...orig.slice(2)]));
+        }
+      }
+      // 2. Also include clean orthogonal & outer-bypass candidates exiting normally
+      cands.push(...buildOrthogonalCandidates(sPt, sSide, tPt, tSide, true));
+      let best: { pts: Point[]; hugs: number; cross: number; bends: number } | undefined;
+      for (const cand of cands) {
+        if (!isRouteClean(i, edge, cand)) continue;
+        // Require the candidate to actually exit normally from sSide
+        const cNext = cand[1]!;
+        if (sSide === 'NORTH' && !(cNext.y < sPt.y - 4 && Math.abs(cNext.x - sPt.x) <= EPS)) continue;
+        if (sSide === 'SOUTH' && !(cNext.y > sPt.y + 4 && Math.abs(cNext.x - sPt.x) <= EPS)) continue;
+        if (sSide === 'WEST' && !(cNext.x < sPt.x - 4 && Math.abs(cNext.y - sPt.y) <= EPS)) continue;
+        if (sSide === 'EAST' && !(cNext.x > sPt.x + 4 && Math.abs(cNext.y - sPt.y) <= EPS)) continue;
+        const hugs = pathBorderHugCount(cand, containers, 11.5);
+        const cross = countCrossingsAgainstAll(i, cand);
+        const bends = cand.length - 2;
+        if (!best || hugs < best.hugs || (hugs === best.hugs && (cross < best.cross || (cross === best.cross && bends < best.bends)))) {
+          best = { pts: cand, hugs, cross, bends };
+        }
+      }
+      if (best) {
+        setRoutePoints(ctx.routes[i]!, best.pts);
+        finalPts[i] = best.pts;
       }
     }
   }

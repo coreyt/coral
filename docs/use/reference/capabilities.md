@@ -1,6 +1,6 @@
 # Capability matrix
 
-Supported subsets in the Coral 0.2.12 implementation. The language contract is
+Supported subsets in the Coral 0.2.14 implementation. The language contract is
 [Specification 1.3.0](../../embed/reference/language-specification-1.3.0.md);
 saved source defaults to edition 0.2.8, with explicitly pinned edition 0.2.9
 for document-local symbols. Parsing, source validation, notation checks

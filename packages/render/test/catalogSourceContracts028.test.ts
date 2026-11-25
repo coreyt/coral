@@ -23,7 +23,7 @@ const fixture = JSON.parse(readFileSync(new URL(
 
 describe('installed catalog source and scene contracts', () => {
   it('covers every installed base and variant without inventing author type words', () => {
-    const installed = symbolRegistry.getAll().flatMap((symbol) => [symbol.id,
+    const installed = symbolRegistry.getAll().filter((symbol) => !symbol.addedInEdition).flatMap((symbol) => [symbol.id,
       ...Object.keys(symbol.variants ?? {}).map((variant) => `${symbol.id}/${variant}`)]).sort();
     expect(fixture.cases.map(({ id }) => id).sort()).toEqual(installed);
     expect(new Set(fixture.cases.map(({ id }) => id)).size).toBe(installed.length);

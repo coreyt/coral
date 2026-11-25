@@ -15,6 +15,7 @@ import { bpmnSymbols } from './bpmn.js';
 import { erdSymbols } from './erd.js';
 import { codeSymbols } from './code.js';
 import { architectureSymbols } from './architecture.js';
+import { infrastructureSymbols } from './infrastructure.js';
 import { aimlSymbols } from './aiml.js';
 import { dataEngineeringSymbols } from './data-engineering.js';
 import { sketchSymbols } from './sketch.js';
@@ -28,6 +29,7 @@ const allLibraries: SymbolLibrary[] = [
   erdSymbols,
   codeSymbols,
   architectureSymbols,
+  infrastructureSymbols,
   aimlSymbols,
   dataEngineeringSymbols,
   sketchSymbols,
@@ -175,6 +177,7 @@ export { bpmnSymbols } from './bpmn.js';
 export { erdSymbols } from './erd.js';
 export { codeSymbols } from './code.js';
 export { architectureSymbols } from './architecture.js';
+export { infrastructureSymbols } from './infrastructure.js';
 export { aimlSymbols } from './aiml.js';
 export { dataEngineeringSymbols } from './data-engineering.js';
 export { sketchSymbols } from './sketch.js';

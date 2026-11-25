@@ -13,10 +13,10 @@ governed by [Language Specification 1.3.0](language-specification-1.3.0.md).
 
 ## Install the package
 
-Install the verified 0.2.12 archive with its exact published GraphIR Core pin:
+Install the verified 0.2.14 archive with its exact published GraphIR Core pin:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.12.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.14.tgz
 ```
 
 ## Read saved source

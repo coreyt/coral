@@ -10,7 +10,7 @@ import { layoutTool, handleLayout } from './tools/layout.js';
 import { renderTool, handleRender } from './tools/render.js';
 
 export function createCoralMcpServer(): Server {
-  const server = new Server({ name: 'coral-mcp-server', version: '0.2.12' },
+  const server = new Server({ name: 'coral-mcp-server', version: '0.2.14' },
     { capabilities: { tools: {} } });
 
   server.setRequestHandler(ListToolsRequestSchema, async () => ({

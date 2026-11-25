@@ -259,7 +259,10 @@ export const SymbolNode = memo(function SymbolNode({ id, data, selected }: Symbo
 
   useEffect(() => {
     if (hasResolvedFont) return queueNodeInternals(flowStore.getState, id, updateNodeInternals);
-  }, [flowStore.getState, hasResolvedFont, height, id, updateNodeInternals, width]);
+  // Replacing a same-sized scene clears XYFlow's cached handle bounds too.
+  // Refresh after its new geometry/contacts commit, even without a resize.
+  }, [data.sceneParts028, data.scenePortContacts028,
+    flowStore.getState, hasResolvedFont, height, id, updateNodeInternals, width]);
 
   // Get ports
   const authoredPorts = (data.canonical as { ports?: AuthoredPort[] } | undefined)?.ports;

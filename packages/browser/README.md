@@ -1,8 +1,8 @@
 # @coral-viz/browser
 
-## Coral 0.2.12
+## Coral 0.2.14
 
-Install verified 0.2.12 archives together with the matching published GraphIR
+Install verified 0.2.14 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
@@ -25,7 +25,7 @@ Install the browser package with its Core type dependency. Language/render
 are bundled into the browser artifacts:
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-browser-0.2.12.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-browser-0.2.14.tgz
 ```
 
 ## Render from an ES module
@@ -51,8 +51,8 @@ Without `source`, it reads the element's text the first time and reuses that
 text afterwards. The target may belong to another window, such as a
 same-origin iframe.
 
-The options include `style` (`lowfi` or `hifi`), `theme` (`light` or `dark`),
-`direction` (`RIGHT`, `DOWN`,
+The options include `style` (`lowfi` or `hifi`), `theme`
+(`light` or `dark`), `direction` (`RIGHT`, `DOWN`,
 `LEFT`, or `UP`), and `title`. Reserved or unsupported options are refused.
 
 ## Render from a script tag

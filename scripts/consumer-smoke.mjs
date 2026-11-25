@@ -160,7 +160,7 @@ const reactDocSource = await readFile(
 );
 const expectedGraphVersion = artifactGeneration.schema;
 const savedSource028 = '@diagram architecture\nconsumer service as "Consumer"\norders database as "Orders"\nconsumer -> orders\n';
-const source028 = ['0.2.8', '0.2.9', '0.2.11', '0.2.12'].includes(expectedArtifactVersion);
+const source028 = ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'].includes(expectedArtifactVersion);
 const languageRuntime = source028
   ? `import { HEADER_MANIFEST_028, parse } from '@coral-viz/language';
 const source = ${JSON.stringify(savedSource028)};
@@ -224,7 +224,7 @@ void [HEADER_MANIFEST_028, parse];`
     name: 'render',
     install: ['@coral-viz/render', '@coral-viz/language'],
     runtime: `import { renderHtml } from '@coral-viz/render';
-if (!renderHtml({nodes:[{id:'a',type:'service',label:'Consumer',position:{x:0,y:0}}],edges:[]}).includes('Consumer')) throw new Error('render failed');` + (['0.2.9', '0.2.11', '0.2.12'].includes(expectedArtifactVersion) ? userSymbolRuntime029 : ''),
+if (!renderHtml({nodes:[{id:'a',type:'service',label:'Consumer',position:{x:0,y:0}}],edges:[]}).includes('Consumer')) throw new Error('render failed');` + (['0.2.9', '0.2.11', '0.2.12', '0.2.14'].includes(expectedArtifactVersion) ? userSymbolRuntime029 : ''),
     types: `import type { SvgOptions, HtmlOptions } from '@coral-viz/render';
 // @ts-expect-error C10 cache controls must not enter the packed root declarations.
 import { resetFontResolutionCacheForTests, fontResolutionCacheSnapshotForTests } from '@coral-viz/render';
@@ -232,7 +232,7 @@ declare const values: [SvgOptions, HtmlOptions]; void values;`,
   },
   {
     name: 'library-docs-render',
-    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     requiresBrowser: true,
     install: ['@coral-viz/browser'],
     runtimeSourcePath: 'docs/embed/examples/render-diagram.mjs',
@@ -244,7 +244,7 @@ void result.then(({ svg, sourceGraph, diagnostics }) => [svg, sourceGraph, diagn
   },
   {
     name: 'library-docs-source-reader',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     install: ['@coral-viz/language'],
     runtimeSourcePath: 'docs/embed/examples/read-coral-source.mjs',
     types: `import { HEADER_MANIFEST_028, parse } from '@coral-viz/language';
@@ -252,7 +252,7 @@ void [HEADER_MANIFEST_028, parse];`,
   },
   {
     name: 'library-docs-interchange',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     install: ['@coral-viz/language'],
     runtimeSourcePath: 'docs/embed/examples/read-graph-interchange.mjs',
     types: `import { parse } from '@coral-viz/language/parser';
@@ -260,7 +260,7 @@ void parse('service "API"');`,
   },
   {
     name: 'library-docs-browser-esm',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     requiresBrowser: true,
     install: ['@coral-viz/browser'],
     runtimeSourcePath: 'docs/embed/examples/browser-esm.mjs',
@@ -270,7 +270,7 @@ void [render, renderTo, options];`,
   },
   {
     name: 'viz',
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     runtime: `import { CORAL_EDGE_VIEW_METADATA, CORAL_NODE_VIEW_METADATA, DEFAULT_DIAGRAM_FONT_SETTINGS, DEFAULT_FONT_SETTINGS, DiagramFontFaces, FONT_FAMILY_PRESETS, FONT_SIZE_PRESETS, FontSettingsForm, convertGraphToFlow, getFontFamilyPreset, getFontSizePreset, normalizeDiagramFontSettings } from '@coral-viz/viz';
 if (convertGraphToFlow({version:'${expectedGraphVersion}',id:'g',nodes:[{id:'a',type:'service'}],edges:[]}).nodes.length !== 1) throw new Error('viz failed');
@@ -283,7 +283,7 @@ declare const values: [CoralEdgeViewMetadata, CoralEditorProps, CoralNodeViewMet
   },
   {
     name: 'viz-graphir-migration',
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     coreVersions: ['0.2.2', '0.2.3', '0.2.4'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     typescriptSourcePath: 'docs/embed/examples/graphir-migration.ts',
@@ -301,9 +301,9 @@ function legacyDiagnostic(code: LayoutDiagnosticCode): string {
 }
 function spatialDiagnostic(code: SpatialLayoutDiagnosticCode): string {
   switch (code) {
-    ${['0.2.9', '0.2.11', '0.2.12'].includes(expectedArtifactVersion) ? `case 'layout.geometry.invalid': return code;
+    ${['0.2.9', '0.2.11', '0.2.12', '0.2.14'].includes(expectedArtifactVersion) ? `case 'layout.geometry.invalid': return code;
     case 'layout.route.invalid': return code;` : ''}
-    ${['0.2.11', '0.2.12'].includes(expectedArtifactVersion) ? `case 'layout.route.degraded': return code;
+    ${['0.2.11', '0.2.12', '0.2.14'].includes(expectedArtifactVersion) ? `case 'layout.route.degraded': return code;
     case 'layout.route.retried': return code;` : ''}
     case 'layout.capability.unsupported': return code;
     case 'layout.constraint.required-unsatisfied': return code;
@@ -333,7 +333,7 @@ void [resolved, legacyDiagnostic, spatialDiagnostic];`,
     },
   ].map(({ line, react, reactTypes, reactDomTypes }) => ({
     name: `viz-react-${line}`,
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     coreVersions: ['0.2.2', '0.2.3', '0.2.4'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     extra: [
@@ -513,7 +513,7 @@ void [values, graph, renderTo, scan, defineCustomElement];`,
     // the MCP Mermaid chain, the source x style x theme matrix across browser,
     // MCP and public editor, then Chromium ESM/IIFE and the strict-CSP comparator.
     name: 'installed-renderer',
-    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12'],
+    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'],
     requiresBrowser: true,
     install: ['@coral-viz/language', '@coral-viz/render', '@coral-viz/browser', '@coral-viz/viz', '@coral-viz/mcp-server'],
     extra: ['react@19.3.0', 'react-dom@19.3.0', '@xyflow/react@12.11.6'],

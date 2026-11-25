@@ -1,6 +1,6 @@
 {
   "name": "@coral-viz/mcp-server",
-  "version": "0.2.12",
+  "version": "0.2.14",
   "description": "MCP server for Coral diagram parsing, conversion, and layout",
   "homepage": "https://coreyt.github.io/coral/",
   "bugs": {
@@ -45,8 +45,8 @@
     "LICENSE"
   ],
   "dependencies": {
-    "@coral-viz/language": "0.2.12",
-    "@coral-viz/render": "0.2.12",
+    "@coral-viz/language": "0.2.14",
+    "@coral-viz/render": "0.2.14",
     "@graph-ir/core": "0.2.4",
     "@modelcontextprotocol/sdk": "1.32.2",
     "elkjs": "0.12.0",

@@ -5,6 +5,62 @@ Notable changes to Coral are recorded here. The format follows
 Unreleased are planned for the named release and are updated when the owning
 slice closes.
 
+## 0.2.14
+
+Release `0.2.14` intentionally skips `0.2.13`.
+
+### Added
+
+- Modeled presentation renderer **`parrotfish`** in `@coral-viz/render` to
+  apply modeled visual treatments (style, colors, accents, decorative elements)
+  strictly without modifying layout, flow, or edge routing.
+- Saved-source edition **`0.2.14`** (`@coralVersion "0.2.14"`, leaving `0.2.8`
+  and `0.2.9` catalogs immutable) with full `tree-sitter-coral` grammar parity:
+  - Expanded freeform `@diagram block` (`box`, `rounded`, `circle`, `oval`,
+    `triangle`, `diamond`, `cylinder`, `pill`, `note`, `group`) and inline node
+    `[style: ...]`.
+  - Overhauled `@diagram architecture` for C4-grade system design (`person`,
+    `system`, `externalSystem`, `container`, `component`, `database`, `queue`,
+    `storage`, `cdn`, `function`, `loadBalancer`, `gateway`, `boundary`,
+    `systemBoundary`, `containerBoundary`) plus structured `technology:` and
+    `description:` metadata on nodes and edges.
+  - Dedicated cloud `@diagram infrastructure` (`users`, `cdn`, `dns`, `waf`,
+    `gateway`, `loadBalancer`, `compute`, `container`, `kubernetes`, `function`,
+    `database`, `cache`, `storage`, `queue`, `iam`, `monitoring`, `ml`,
+    `boundary`, `vpc`, `subnet`, `region`, `account`, `zone`, `cluster`, `note`)
+    with `[provider: "aws" | "azure" | "gcp" | "generic"]`, Apache-2.0 built-in
+    geometric glyphs, and `scripts/convert-cloud-icons.mjs` for converting
+    official vendor SVGs into Coral `@symbol` definitions.
+  - Revived Crow's Foot `@diagram erd` (`entity`, `weakEntity`, `table`, `view`,
+    `note`, tabular `columns { ... }` with `pk`/`fk`/`uk`/`null` flags, Crow's
+    Foot operators `||--o{`, `||-.-|{`, `||..o{`, and `[firstLabel: ...,
+    secondLabel: ...]`), explicitly retiring legacy Chen notation with
+    `coral.erd.chen.retired`.
+  - Completed `approvedTypeWords` across `aiml`, `data-engineering`, `code`,
+    and `sketch`; camelCase catalog relation terms with hyphen diagnostics
+    (`coral.syntax.bracket.relation-hyphen`); and `-`, `#`, `~` unnamed UML
+    class attributes.
+
+### Changed
+
+- Improved core multi-stage layout and alignment quality to `95.06 / 100`
+  composite mean across all 40 `LAYOUT_CORPUS_0211` diagrams (`40/40` Tier-1
+  pass, `0` hard defects). The 12-case competitor benchmark now averages
+  `96.91 / 100`, with all 12 Coral cases passing without hard defects.
+- Enabled orthogonal batch routing by default for edition `0.2.14` `block`,
+  `architecture`, `infrastructure`, and `erd` diagrams when no explicit
+  `edgeRouting` option is set.
+
+### Fixed
+
+- Refreshed React Flow handle measurements when a same-sized prepared scene
+  changes, keeping keyboard-created connections visible and focusable.
+- Fixed Crow's Foot SVG endpoint markers (`crow-foot`, `zero-or-one`,
+  `zero-or-many`, `one-or-many`) so zero circles center on `y = 8` and toes
+  flare outward into entity borders.
+- Prevented omitted edge port stamping on edition `0.2.14` fan-out nodes so
+  multi-slot orthogonal routing distributes connections cleanly.
+
 ## 0.2.12
 
 ### Added

@@ -6,7 +6,7 @@
  */
 
 import type { GraphIR, SizingMode } from '../types.js';
-import type { NotificationLevel, RenderStyle028 } from '@coral-viz/render';
+import type { NotificationLevel, RenderStyle028, RenderStyleInput0214 } from '@coral-viz/render';
 
 /**
  * Current schema version. Increment when making breaking changes.
@@ -89,6 +89,8 @@ export interface DocumentSettings {
   notation: string;
   /** Production renderer style; absent documents open in lowfi. */
   renderStyle028?: RenderStyle028;
+  /** 0.2.14 peer renderer style (`lowfi`, `hifi`, `anemone`, or shorthand `ane`). */
+  renderStyle0214?: RenderStyleInput0214;
   /** Layout configuration */
   layout: LayoutSettings;
   /** Font settings (CORAL-REQ-012) */

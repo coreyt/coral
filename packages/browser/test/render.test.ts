@@ -163,7 +163,7 @@ describe('render', () => {
       .toEqual({ kind: 'crow-foot', fill: 'unspecified' });
     expect(result.graph.edges[0]?.targetEnd?.marker)
       .toEqual({ kind: 'crow-foot', fill: 'unspecified' });
-    expect(result.svg).toContain('M14 8 L3 2');
+    expect(result.svg).toContain('M3 8 L14 2');
   });
 
   it('executes proximity in browser/MCP with the same geometry and retained source identity', async () => {

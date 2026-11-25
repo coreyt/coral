@@ -193,6 +193,10 @@
           "named": true
         },
         {
+          "type": "erd_column_line",
+          "named": true
+        },
+        {
           "type": "identifier",
           "named": true
         },
@@ -403,6 +407,87 @@
     }
   },
   {
+    "type": "erd_column",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "erd_column_flags",
+          "named": true
+        },
+        {
+          "type": "erd_column_type",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "erd_column_flag",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "erd_column_flags",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "erd_column_flag",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "erd_column_line",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "erd_column",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "erd_column_type",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "coordinate",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "guarded_fragment",
     "named": true,
     "fields": {},
@@ -602,6 +687,10 @@
       "types": [
         {
           "type": "quoted",
+          "named": true
+        },
+        {
+          "type": "style_value",
           "named": true
         }
       ]
@@ -1469,10 +1558,6 @@
     "named": false
   },
   {
-    "type": "+",
-    "named": false
-  },
-  {
     "type": ",",
     "named": false
   },
@@ -1613,6 +1698,10 @@
     "named": false
   },
   {
+    "type": "columns",
+    "named": false
+  },
+  {
     "type": "comment",
     "named": true
   },
@@ -1709,11 +1798,19 @@
     "named": false
   },
   {
+    "type": "firstLabel",
+    "named": false
+  },
+  {
     "type": "firstPort",
     "named": false
   },
   {
     "type": "fixed",
+    "named": false
+  },
+  {
+    "type": "fk",
     "named": false
   },
   {
@@ -1797,7 +1894,15 @@
     "named": false
   },
   {
+    "type": "not",
+    "named": false
+  },
+  {
     "type": "note",
+    "named": false
+  },
+  {
+    "type": "null",
     "named": false
   },
   {
@@ -1845,6 +1950,10 @@
     "named": false
   },
   {
+    "type": "pk",
+    "named": false
+  },
+  {
     "type": "port",
     "named": false
   },
@@ -1862,6 +1971,10 @@
   },
   {
     "type": "protected",
+    "named": false
+  },
+  {
+    "type": "provider",
     "named": false
   },
   {
@@ -1921,6 +2034,10 @@
     "named": false
   },
   {
+    "type": "secondLabel",
+    "named": false
+  },
+  {
     "type": "secondPort",
     "named": false
   },
@@ -1969,6 +2086,10 @@
     "named": false
   },
   {
+    "type": "technology",
+    "named": false
+  },
+  {
     "type": "the",
     "named": false
   },
@@ -1994,6 +2115,10 @@
   },
   {
     "type": "typical",
+    "named": false
+  },
+  {
+    "type": "uk",
     "named": false
   },
   {

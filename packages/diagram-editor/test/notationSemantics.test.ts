@@ -96,6 +96,7 @@ describe('notation semantic and symbol mapping', () => {
     const expected: Record<string, readonly (string | undefined)[]> = {
       block: [undefined, undefined, undefined, undefined, undefined, undefined],
       architecture: ['arch-service', 'arch-database', undefined, undefined, 'arch-actor', undefined],
+      infrastructure: [undefined, 'infra-database', undefined, undefined, undefined, undefined],
       flowchart: [undefined, undefined, undefined, undefined, undefined, undefined],
       bpmn: [undefined, undefined, undefined, undefined, undefined, undefined],
       erd: [undefined, undefined, undefined, undefined, undefined, undefined],

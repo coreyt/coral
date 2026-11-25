@@ -4,7 +4,7 @@ import { ReactFlowProvider } from '@xyflow/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { resolveFont } from '@coral-viz/render';
 import { EditProvider } from '../src/components/EditContext';
-import { SymbolNode } from '../src/components/SymbolNode';
+import { SymbolNode, type SymbolNodeData } from '../src/components/SymbolNode';
 import { CORAL_NODE_VIEW_METADATA } from '../src/types';
 
 const updateNodeInternals = vi.hoisted(() => vi.fn());
@@ -23,9 +23,11 @@ function data(width: number) {
   };
 }
 const flush = () => act(async () => { await Promise.resolve(); });
-function Editor({ ids = ['n1'], width = 120 }: { ids?: string[]; width?: number }) {
+function Editor({ ids = ['n1'], width = 120, sceneParts }: {
+  ids?: string[]; width?: number; sceneParts?: SymbolNodeData['sceneParts028'];
+}) {
   return <ReactFlowProvider><EditProvider>
-    {ids.map(id => <SymbolNode key={id} id={id} data={data(width)} />)}
+    {ids.map(id => <SymbolNode key={id} id={id} data={{ ...data(width), sceneParts028: sceneParts }} />)}
   </EditProvider></ReactFlowProvider>;
 }
 describe('SymbolNode font-aware React Flow measurement', () => {
@@ -41,6 +43,18 @@ describe('SymbolNode font-aware React Flow measurement', () => {
     view.rerender(<Editor ids={ids} width={180} />);
     await flush();
     expect(updateNodeInternals.mock.calls).toEqual([[ids], [ids]]);
+  });
+  it('refreshes handles when a same-sized prepared scene is replaced', async () => {
+    const first: NonNullable<SymbolNodeData['sceneParts028']> = [];
+    const next: NonNullable<SymbolNodeData['sceneParts028']> = [];
+    const view = render(<Editor sceneParts={first} />);
+    await flush();
+    view.rerender(<Editor sceneParts={first} />);
+    await flush();
+    expect(updateNodeInternals).toHaveBeenCalledTimes(1);
+    view.rerender(<Editor sceneParts={next} />);
+    await flush();
+    expect(updateNodeInternals.mock.calls).toEqual([[['n1']], [['n1']]]);
   });
   it('isolates editors with the same node IDs', async () => {
     render(<><Editor /><Editor /></>);

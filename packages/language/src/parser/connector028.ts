@@ -98,3 +98,37 @@ export function isDashedOpenArrow028(connector: ConnectorSyntax028 | undefined):
   return connector?.stroke === 'dashed' && connector.firstEnd.kind === 'none' &&
     connector.secondEnd.kind === 'arrow' && connector.secondEnd.fill === 'open';
 }
+
+const crowsFootLeft0214: Readonly<Record<string, EndpointMarker>> = {
+  '||': { kind: 'one', fill: 'unspecified' },
+  '|o': { kind: 'zero-or-one', fill: 'unspecified' },
+  'o|': { kind: 'zero-or-one', fill: 'unspecified' },
+  '}|': { kind: 'one-or-many', fill: 'unspecified' },
+  '}o': { kind: 'zero-or-many', fill: 'unspecified' },
+};
+const crowsFootRight0214: Readonly<Record<string, EndpointMarker>> = {
+  '||': { kind: 'one', fill: 'unspecified' },
+  'o|': { kind: 'zero-or-one', fill: 'unspecified' },
+  '|o': { kind: 'zero-or-one', fill: 'unspecified' },
+  '|{': { kind: 'one-or-many', fill: 'unspecified' },
+  'o{': { kind: 'zero-or-many', fill: 'unspecified' },
+};
+export const CROWS_FOOT_OPERATOR_PATTERN_0214 =
+  /^(?:\|\||\|o|o\||\}\||\}o)(?:--|\.\.|-\.-)(?:\|\||o\||\|o|\|\{|o\{)/;
+
+/** Edition 0.2.14 Crow's Foot ERD connector parser (`||--o{`, `||-.-|{`, `||..o{`, etc.). */
+export function parseCrowsFootConnector0214(raw: string): ConnectorSyntax028 | undefined {
+  const match = /^(\|\||\|o|o\||\}\||\}o)(--|\.\.|-\.-)(\|\||o\||\|o|\|\{|o\{)$/.exec(raw);
+  if (!match) return undefined;
+  const firstEnd = crowsFootLeft0214[match[1]!];
+  const secondEnd = crowsFootRight0214[match[3]!];
+  if (!firstEnd || !secondEnd) return undefined;
+  return {
+    dashCount: 2,
+    stroke: match[2] === '--' ? 'solid' : 'dashed',
+    firstEndAuthored: true,
+    secondEndAuthored: true,
+    firstEnd: { ...firstEnd },
+    secondEnd: { ...secondEnd },
+  };
+}

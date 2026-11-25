@@ -11,7 +11,7 @@ import type { PortReferenceRanges028 } from './graphPortReferences028.js';
 import type { SourceRange028 } from './portReferences028.js';
 import type { SuccessorWrittenPortRanges028 } from './successorSourcePortReferences028.js';
 import type { ConformanceReport, ConformanceRequest, RuleFinding } from './conformance028.js';
-import { notationCatalogIdentity028, notationRegistry } from './notations/index.js';
+import { notationCatalogIdentity028, notationCatalogIdentity0214, notationRegistry } from './notations/index.js';
 import type { NodeInterpretation028 } from './interpretation028.js';
 import { sourceEdgeDirection028 } from './sourceDirection028.js';
 
@@ -22,6 +22,8 @@ function installedHeaderRuntime028(): HeaderRuntime028 {
     const identity = notationCatalogIdentity028(notation.id);
     if (!identity) throw new Error(`Installed notation ${notation.id} has no catalog identity`);
     trustedDigests[`${identity.id}@${identity.version}`] = identity.digest;
+    const identity0214 = notationCatalogIdentity0214(notation.id);
+    if (identity0214) trustedDigests[`${identity0214.id}@${identity0214.version}`] = identity0214.digest;
   }
   return { manifest: HEADER_MANIFEST_028, currentVersion: '0.2.8', trustedDigests };
 }

@@ -28,6 +28,14 @@ export const architectureNotation: NotationDefinition = {
     'arch-function',
     'arch-annotation',
   ],
+  symbols0214: [
+    'arch-system',
+    'arch-external-system',
+    'arch-deployable',
+    'arch-component',
+    'arch-system-boundary',
+    'arch-container-boundary',
+  ],
 
   edgeStyles: {
     sync: {

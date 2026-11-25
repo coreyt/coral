@@ -1,15 +1,17 @@
 # Active Plan
 
-The active release is **Coral 0.2.12** — the inaugural public open-source
-repository launch on `coreyt/coral`. The
-[0.2.12 launch plan](dev/releases/0.2.12/plan.md) records the repository
-cleanup, script and config normalization, community health files, package
-metadata, and release verification scope.
+The active release is **Coral 0.2.14** (intentionally skipping `0.2.13`) —
+advancing rendering quality (`>= 95 / 100` empirical bar), expressive
+presentation (`anemone`/`ane` and `parrotfish` alongside basic monochrome
+`lowfi`/`hifi`), and intuitive edition `0.2.14` diagram notations. The
+[0.2.14 release plan](dev/releases/0.2.14/plan.md) records the locked owner
+decisions, HITL notation approvals, slice breakdown, and verification gates.
 
-Coral 0.2.12 builds directly on the verified 0.2.11 layout, routing, and
-visual-fidelity baseline (including upstream `libavoided-js@0.1.3`), shipping
-all six public npm packages, the online diagram editor, and the documentation
-site from a clean public repository.
+Coral 0.2.14 expands `@diagram block` into freeform boxes-and-arrows, overhauls
+`@diagram architecture` for C4-grade system design, introduces dedicated cloud
+`@diagram infrastructure`, and revives `@diagram erd` with Crow's Foot notation
+while retiring Chen. It ships all six public npm packages, the online diagram
+editor, and the documentation site from `coreyt/coral`.
 
 Current [requirements](dev/requirements.md),
 [architecture](dev/ARCHITECTURE.md), [roadmap](dev/ROADMAP.md), and

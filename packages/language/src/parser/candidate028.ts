@@ -2,11 +2,12 @@ import type {SpatialConstraintSuccessor,LayoutOptionsSuccessor,RouteIntentSucces
 import {parseConstraint028, parseLayout028, rectangleToken028, spatialParameters028, resolveSpatial028, spatialIssue028, type CandidateConstraintSyntax028, type CandidateLayoutSyntax028, type SpatialParameters028} from './spatialSource028.js';
 import type { ClassifierAttribute, ClassifierCompartment, ClassifierOperation, GraphEdge, GraphIR, GraphNode, InteractionMessage } from '../types.js';
 import { parseDiagnostic, type DiagnosticRange, type ParseDiagnostic } from '../diagnostics.js';
-import { editionAdmitsUserSymbols029 } from './header028.js';
+import { editionAdmits0214, editionAdmitsUserSymbols029 } from './header028.js';
 import { classifierFor } from '../uml.js';
 import { SEQUENCE_PARTICIPANT_TYPES, sequenceMessageToken } from '../sequence.js';
-import { CONNECTOR_END_SPELLINGS_028, connectorEndHasShorthand028, isDashedOpenArrow028, keyedConnectorEnd028,
-  parseConnector028, type ConnectorSyntax028 } from './connector028.js';
+import { CONNECTOR_END_SPELLINGS_028, CROWS_FOOT_OPERATOR_PATTERN_0214,
+  connectorEndHasShorthand028, isDashedOpenArrow028, keyedConnectorEnd028,
+  parseConnector028, parseCrowsFootConnector0214, type ConnectorSyntax028 } from './connector028.js';
 
 /** Staged approved-core parser; not a second shipped Coral reader. */
 export interface CandidateOptions {
@@ -24,12 +25,22 @@ export interface CandidateToken {
   value: string;
   range: DiagnosticRange;
 }
+export interface NodeStyleIntent0214 {
+  lineStyle?: 'solid' | 'dashed' | 'dotted';
+  strokeColor?: string;
+  fillColor?: string;
+  accentColor?: string;
+  strokeWeight?: 'regular' | 'thick';
+}
 export interface CandidateNodeSyntax {
   kind: 'node'; id: CandidateToken; nodeKind: CandidateToken;
   /** Resolved identity; id retains the exact local source spelling. */
   qualifiedId?: string;
   assignment?: CandidateToken; label?: CandidateToken;
   symbol?: CandidateToken; variant?: CandidateToken;
+  technology?: CandidateToken; description?: CandidateToken;
+  provider?: CandidateToken; style?: CandidateToken;
+  nodeStyleIntent?: NodeStyleIntent0214;
   bracketClose?: CandidateToken;
   /** Exact symbol choice to which a local conformance exception is bound. */
   conformanceException?: CandidateToken;
@@ -62,6 +73,8 @@ export interface CandidateEdgeSyntax {
   connector?: CandidateConnectorSyntax;
   bracketClose?: CandidateToken;
   firstEnd?: CandidateToken; secondEnd?: CandidateToken;
+  firstLabel?: CandidateToken; secondLabel?: CandidateToken;
+  technology?: CandidateToken; description?: CandidateToken;
   style?: CandidateToken;
   styleIntent?: EdgeStyleIntent028;
   edgeType?: CandidateToken; typeOrigin?: 'bare' | 'keyed';
@@ -96,6 +109,11 @@ export interface CandidateOperationSyntax {
   name: CandidateToken;
   parameters: { name: CandidateToken; type?: CandidateToken }[];
   returnType?: CandidateToken;
+}
+export interface CandidateErdColumnSyntax {
+  kind: 'erd-column'; owner: CandidateCompartmentSyntax;
+  name: CandidateToken; columnType: CandidateToken;
+  flags: CandidateToken[];
 }
 export interface CandidateArrangementSyntax {
   kind: 'arrangement'; id?: CandidateToken; assignment?: CandidateToken;
@@ -158,7 +176,7 @@ const SINGLE_OPERAND_FRAGMENTS_028 = new Set(['loop', 'opt', 'critical', 'break'
 const MULTI_OPERAND_FRAGMENTS_028 = new Set(['alt', 'par']);
 export type CandidateConnectorSyntax = ConnectorSyntax028;
 export type CandidateStatement = CandidateConstraintSyntax028 | CandidateLayoutSyntax028 | CandidateNodeSyntax | CandidatePortSyntax | CandidateEdgeSyntax |
-  CandidateCompartmentSyntax | CandidateAttributeSyntax | CandidateOperationSyntax | CandidateArrangementSyntax |
+  CandidateCompartmentSyntax | CandidateAttributeSyntax | CandidateOperationSyntax | CandidateErdColumnSyntax | CandidateArrangementSyntax |
   CandidateRouteSyntax |
   CandidateFragmentSyntax | CandidateNoteSyntax | CandidateActivationSyntax | CandidateRegionSyntax |
   CandidateParticipantGroupSyntax;
@@ -251,7 +269,7 @@ function scanConnector(line: Line, start: number, errors: ParseDiagnostic[]): Ca
   }
   return makeToken(line, 'operator', start, end);
 }
-function scan(line: Line, errors: ParseDiagnostic[]): { tokens: CandidateToken[]; invalidSpacing: boolean } {
+function scan(line: Line, errors: ParseDiagnostic[], admits0214 = false): { tokens: CandidateToken[]; invalidSpacing: boolean } {
   const tokens: CandidateToken[] = [];
   const s = line.text;
   let i = 0;
@@ -262,6 +280,17 @@ function scan(line: Line, errors: ParseDiagnostic[]): { tokens: CandidateToken[]
     const start = i;
     const ch = s[i]!;
     const codePoint = String.fromCodePoint(s.codePointAt(i)!);
+    if (admits0214 && (ch === '|' || ch === 'o' || ch === '}')) {
+      const cf = CROWS_FOOT_OPERATOR_PATTERN_0214.exec(s.slice(i));
+      if (cf) {
+        const after = s[i + cf[0].length];
+        if (after === undefined || after === ' ' || after === '\t') {
+          i += cf[0].length;
+          tokens.push(makeToken(line, 'operator', start, i));
+          continue;
+        }
+      }
+    }
     if (/[A-Za-z_]/.test(ch)) {
       while (i < s.length && /[A-Za-z0-9_]/.test(s[i]!)) i++;
       // A dotted path is one reference token. Its segments still obey the
@@ -424,12 +453,17 @@ function placementClause(tokens: CandidateToken[], at: number, previous: Candida
     ...(atValue?.kind === 'number' ? { at: atValue } : {}),
     ...(offsetValue?.kind === 'number' ? { offset: offsetValue } : {}) } };
 }
-function nodeBracket(tokens: CandidateToken[], at: number, line: Line, errors: ParseDiagnostic[]) {
+const VALID_PROVIDERS_0214 = new Set(['aws', 'azure', 'gcp', 'generic']);
+function nodeBracket(tokens: CandidateToken[], at: number, line: Line, errors: ParseDiagnostic[], admits0214 = false) {
   let symbol: CandidateToken | undefined;
   let variant: CandidateToken | undefined;
+  let technology: CandidateToken | undefined;
+  let description: CandidateToken | undefined;
+  let provider: CandidateToken | undefined;
+  let style: CandidateToken | undefined;
   let conformanceException: CandidateToken | undefined;
   let bracketClose: CandidateToken | undefined;
-  if (!raw(tokens[at], '[')) return { next: at, symbol, variant, conformanceException, bracketClose };
+  if (!raw(tokens[at], '[')) return { next: at, symbol, variant, technology, description, provider, style, conformanceException, bracketClose };
   const open = tokens[at]!;
   at++;
   if (raw(tokens[at], ']')) issue(errors, line, ...offsets(open),
@@ -441,16 +475,29 @@ function nodeBracket(tokens: CandidateToken[], at: number, line: Line, errors: P
     if (!isId(key) || !raw(colon, ':') || !value) {
       issue(errors, line, ...offsets(key), 'coral.syntax.node.field.invalid',
         'A node bracket field must be a keyed value');
-      return { next: tokens.length, symbol, variant, conformanceException, bracketClose };
+      return { next: tokens.length, symbol, variant, technology, description, provider, style, conformanceException, bracketClose };
     }
-    if (key.value !== 'symbol' && key.value !== 'variant' && key.value !== 'conformanceException') {
+    const is028Key = key.value === 'symbol' || key.value === 'variant' || key.value === 'conformanceException';
+    const is0214Key = admits0214 && (key.value === 'technology' || key.value === 'description' ||
+      key.value === 'provider' || key.value === 'style');
+    if (!is028Key && !is0214Key) {
       issue(errors, line, ...offsets(key), 'coral.syntax.node.field.unknown',
         `Unknown node field: ${key.value}`);
+    } else if (key.value === 'style') {
+      const validStyleVal = isBareId(value) || value.raw.startsWith('#') ||
+        (value.kind === 'string' && value.raw.startsWith('"'));
+      if (!validStyleVal) {
+        issue(errors, line, ...offsets(value), 'coral.syntax.bracket.value-invalid',
+          'style requires one bare term or a double-quoted recipe');
+      } else if (style) {
+        issue(errors, line, key.range.start.column, value.range.end.column,
+          'coral.syntax.node.style.duplicate', 'Duplicate node style', style);
+      } else style = value;
     } else if (value.kind !== 'string') {
       issue(errors, line, ...offsets(value), 'coral.syntax.node.field.quoted-required',
         key.value === 'conformanceException'
           ? 'conformanceException requires a quoted, exact symbol ID'
-          : `${key.value} requires a quoted catalog ID`);
+          : is0214Key ? `${key.value} requires quoted text` : `${key.value} requires a quoted catalog ID`);
     } else if (key.value === 'symbol') {
       if (symbol) issue(errors, line, key.range.start.column, value.range.end.column,
         'coral.syntax.node.symbol.duplicate', 'Duplicate explicit symbol', symbol);
@@ -459,6 +506,21 @@ function nodeBracket(tokens: CandidateToken[], at: number, line: Line, errors: P
       if (variant) issue(errors, line, key.range.start.column, value.range.end.column,
         'coral.syntax.node.variant.duplicate', 'Duplicate explicit variant', variant);
       else variant = value;
+    } else if (key.value === 'technology') {
+      if (technology) issue(errors, line, key.range.start.column, value.range.end.column,
+        'coral.syntax.node.technology.duplicate', 'Duplicate node technology', technology);
+      else technology = value;
+    } else if (key.value === 'description') {
+      if (description) issue(errors, line, key.range.start.column, value.range.end.column,
+        'coral.syntax.node.description.duplicate', 'Duplicate node description', description);
+      else description = value;
+    } else if (key.value === 'provider') {
+      if (provider) issue(errors, line, key.range.start.column, value.range.end.column,
+        'coral.syntax.node.provider.duplicate', 'Duplicate node provider', provider);
+      else if (!VALID_PROVIDERS_0214.has(value.value)) issue(errors, line, ...offsets(value),
+        'coral.infrastructure.provider.unknown',
+        `Unknown cloud provider: ${value.value} (expected aws, azure, gcp, or generic)`);
+      else provider = value;
     } else if (conformanceException) issue(errors, line, key.range.start.column, value.range.end.column,
       'coral.syntax.node.conformance-exception.duplicate', 'Duplicate conformance exception', conformanceException);
     else conformanceException = value;
@@ -471,15 +533,15 @@ function nodeBracket(tokens: CandidateToken[], at: number, line: Line, errors: P
     } else if (!raw(tokens[at], ']')) {
       issue(errors, line, ...offsets(tokens[at] ?? value),
         'coral.syntax.node.bracket.comma-required', 'Expected comma or closing bracket');
-      return { next: tokens.length, symbol, variant, conformanceException, bracketClose };
+      return { next: tokens.length, symbol, variant, technology, description, provider, style, conformanceException, bracketClose };
     }
   }
   if (!raw(tokens[at], ']')) issue(errors, line, ...offsets(open),
     'coral.syntax.node.bracket.unclosed', 'Node bracket is not closed');
   else { bracketClose = tokens[at]; at++; }
-  return { next: at, symbol, variant, conformanceException, bracketClose };
+  return { next: at, symbol, variant, technology, description, provider, style, conformanceException, bracketClose };
 }
-function bracket(tokens: CandidateToken[], at: number, line: Line, errors: ParseDiagnostic[]) {
+function bracket(tokens: CandidateToken[], at: number, line: Line, errors: ParseDiagnostic[], admits0214 = false) {
   const duplicateFields: Readonly<Record<string, { code: string; message: string }>> = {
     type: { code: 'coral.syntax.type.duplicate', message: 'Duplicate edge type' },
     label: { code: 'coral.syntax.label.duplicate', message: 'Duplicate edge label' },
@@ -488,6 +550,12 @@ function bracket(tokens: CandidateToken[], at: number, line: Line, errors: Parse
     firstEnd: { code: 'coral.syntax.connector.end-duplicate', message: 'Duplicate firstEnd assignment' },
     secondEnd: { code: 'coral.syntax.connector.end-duplicate', message: 'Duplicate secondEnd assignment' },
     style: { code: 'coral.syntax.style.duplicate', message: 'Duplicate edge style' },
+    ...(admits0214 ? {
+      technology: { code: 'coral.syntax.edge.technology.duplicate', message: 'Duplicate edge technology' },
+      description: { code: 'coral.syntax.edge.description.duplicate', message: 'Duplicate edge description' },
+      firstLabel: { code: 'coral.syntax.edge.first-label.duplicate', message: 'Duplicate edge firstLabel' },
+      secondLabel: { code: 'coral.syntax.edge.second-label.duplicate', message: 'Duplicate edge secondLabel' },
+    } : {}),
   };
   const assignments = new Map<string, CandidateToken>();
   let edgeType: CandidateToken | undefined;
@@ -499,11 +567,16 @@ function bracket(tokens: CandidateToken[], at: number, line: Line, errors: Parse
   let targetPortAssignment: CandidateToken | undefined;
   let firstEnd: CandidateToken | undefined;
   let secondEnd: CandidateToken | undefined;
+  let firstLabel: CandidateToken | undefined;
+  let secondLabel: CandidateToken | undefined;
+  let technology: CandidateToken | undefined;
+  let description: CandidateToken | undefined;
   let style: CandidateToken | undefined;
   let typeOrigin: 'bare' | 'keyed' | undefined;
   let bracketClose: CandidateToken | undefined;
   if (!raw(tokens[at], '[')) return { next: at, edgeType, label, labelAssignment,
-    sourcePort, targetPort, sourcePortAssignment, targetPortAssignment, firstEnd, secondEnd, style,
+    sourcePort, targetPort, sourcePortAssignment, targetPortAssignment, firstEnd, secondEnd,
+    firstLabel, secondLabel, technology, description, style,
     typeOrigin, bracketClose };
   const open = tokens[at]!;
   at++;
@@ -546,10 +619,28 @@ function bracket(tokens: CandidateToken[], at: number, line: Line, errors: Parse
         'coral.syntax.bracket.value-required', `${key.raw} requires a value`);
       at += 2;
     } else if (isKeyed && raw(key, 'type') && isBareId(value)) {
-      if (!firstAssignment) { edgeType = value; typeOrigin = 'keyed'; }
-      at += 3;
+      if (admits0214 && raw(tokens[at + 3], '-') && isBareId(tokens[at + 4])) {
+        const right = tokens[at + 4]!;
+        const camel = value.value + right.value[0]!.toUpperCase() + right.value.slice(1);
+        issue(errors, line, value.range.start.column, right.range.end.column,
+          'coral.syntax.bracket.relation-hyphen',
+          `Use camelCase "${camel}" instead of hyphenated "${value.value}-${right.value}" for relation words`);
+        at += 5;
+      } else {
+        if (!firstAssignment) { edgeType = value; typeOrigin = 'keyed'; }
+        at += 3;
+      }
     } else if (isKeyed && raw(key, 'label') && value?.kind === 'string') {
       if (!firstAssignment) label = value;
+      at += 3;
+    } else if (isKeyed && admits0214 && (raw(key, 'technology') || raw(key, 'description') ||
+      raw(key, 'firstLabel') || raw(key, 'secondLabel')) && value?.kind === 'string') {
+      if (!firstAssignment) {
+        if (raw(key, 'technology')) technology = value;
+        else if (raw(key, 'description')) description = value;
+        else if (raw(key, 'firstLabel')) firstLabel = value;
+        else secondLabel = value;
+      }
       at += 3;
     } else if (isKeyed && (raw(key, 'firstPort') || raw(key, 'secondPort')) && isBareId(value)) {
       const first = raw(key, 'firstPort');
@@ -567,13 +658,23 @@ function bracket(tokens: CandidateToken[], at: number, line: Line, errors: Parse
       if (!firstAssignment) style = value;
       at += 3;
     } else if (!isKeyed && index === 0 && isBareId(key)) {
-      edgeType = key;
-      typeOrigin = 'bare';
-      assignments.set('type', key);
-      at++;
+      if (admits0214 && raw(tokens[at + 1], '-') && isBareId(tokens[at + 2])) {
+        const right = tokens[at + 2]!;
+        const camel = key.value + right.value[0]!.toUpperCase() + right.value.slice(1);
+        issue(errors, line, key.range.start.column, right.range.end.column,
+          'coral.syntax.bracket.relation-hyphen',
+          `Use camelCase "${camel}" instead of hyphenated "${key.value}-${right.value}" for relation words`);
+        at += 3;
+      } else {
+        edgeType = key;
+        typeOrigin = 'bare';
+        assignments.set('type', key);
+        at++;
+      }
     } else if (isKeyed && field && value) {
       const message = field === 'type' ? 'type requires a bare relation word'
-        : field === 'label' ? 'label requires quoted text'
+        : field === 'label' || field === 'technology' || field === 'description' ||
+          field === 'firstLabel' || field === 'secondLabel' ? `${field} requires quoted text`
           : field === 'style' ? 'style requires one bare term or a double-quoted recipe'
             : field === 'firstPort' || field === 'secondPort' ? `${field} requires a port ID`
               : `${field} requires an end name`;
@@ -602,7 +703,8 @@ function bracket(tokens: CandidateToken[], at: number, line: Line, errors: Parse
     'coral.syntax.bracket.unclosed', 'Bracket is not closed');
   else { bracketClose = tokens[at]; at++; }
   return { next: at, edgeType, label, labelAssignment, sourcePort, targetPort,
-    sourcePortAssignment, targetPortAssignment, firstEnd, secondEnd, style, typeOrigin, bracketClose };
+    sourcePortAssignment, targetPortAssignment, firstEnd, secondEnd,
+    firstLabel, secondLabel, technology, description, style, typeOrigin, bracketClose };
 }
 const NAMED_STROKE_COLORS_028: ReadonlyMap<string, string> = new Map([
   ['black', '#000000'], ['gray', '#808080'], ['red', '#FF0000'],
@@ -673,7 +775,79 @@ function checkEdgeStyle028(style: CandidateToken, line: Line, errors: ParseDiagn
       'Unknown style cannot be projected without silently dropping authored intent');
   return intent;
 }
-function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic[]): CandidateStatement | undefined {
+
+const NAMED_NODE_COLORS_0214: ReadonlyMap<string, string> = new Map([
+  ...NAMED_STROKE_COLORS_028,
+  ['teal', '#0F766E'], ['coral', '#E11D48'], ['indigo', '#4338CA'],
+  ['amber', '#B45309'], ['rose', '#BE123C'], ['slate', '#475569'],
+]);
+function checkNodeStyle0214(style: CandidateToken, line: Line, errors: ParseDiagnostic[]): NodeStyleIntent0214 {
+  const intent: NodeStyleIntent0214 = {};
+  const seen = new Map<string, { token: CandidateToken; canonical: string }>();
+  const inner = style.kind === 'string' ? style.raw.slice(1, -1) : style.raw;
+  const base = style.range.start.column + (style.kind === 'string' ? 1 : 0);
+  let cursor = 0;
+  for (const rawTerm of inner.split(/[,;]/)) {
+    const trimmed = rawTerm.trim();
+    const start = base + cursor + rawTerm.indexOf(trimmed);
+    const end = start + trimmed.length;
+    cursor += rawTerm.length + 1;
+    if (!trimmed) {
+      issue(errors, line, start, Math.max(end, start + 1),
+        'coral.syntax.style.empty-term', 'A style recipe cannot contain an empty term');
+      continue;
+    }
+    const token = makeToken(line, 'id', start, end);
+    const keyed = /^(fill|stroke|accent)[ \t]*:[ \t]*([^\s]+)$/.exec(trimmed);
+    let dimension: 'pattern' | 'color' | 'fill' | 'accent' | 'weight' | undefined;
+    let colorVal: string | undefined;
+    if (keyed) {
+      const k = keyed[1] as 'fill' | 'stroke' | 'accent';
+      const v = keyed[2]!;
+      const named = NAMED_NODE_COLORS_0214.get(v);
+      if (v.startsWith('#') || named) {
+        dimension = k === 'stroke' ? 'color' : k;
+        colorVal = named ?? v;
+      } else warning(errors, token, 'coral.style.term.unknown', `Unknown node style: ${trimmed}`);
+    } else if (['solid', 'dashed', 'dotted'].includes(trimmed)) dimension = 'pattern';
+    else if (trimmed.startsWith('#') || NAMED_NODE_COLORS_0214.has(trimmed)) {
+      dimension = 'color';
+      colorVal = NAMED_NODE_COLORS_0214.get(trimmed) ?? trimmed;
+    } else if (trimmed === 'regular' || trimmed === 'thick') dimension = 'weight';
+    else warning(errors, token, 'coral.style.term.unknown', `Unknown node style: ${trimmed}`);
+    if (dimension) {
+      const canonical = colorVal ? colorVal.toUpperCase() : trimmed;
+      const first = seen.get(dimension);
+      if (first) issue(errors, line, start, end,
+        first.canonical === canonical ? 'coral.syntax.style.dimension-duplicate'
+          : 'coral.syntax.style.dimension-conflict',
+        first.canonical === canonical
+          ? `Style ${dimension} repeats ${first.token.value}`
+          : `Style ${dimension} conflicts with ${first.token.value}`, first.token);
+      else seen.set(dimension, { token, canonical });
+      if (dimension === 'pattern' && !first) intent.lineStyle = trimmed as NodeStyleIntent0214['lineStyle'];
+      if (dimension === 'weight' && !first) intent.strokeWeight = trimmed as NodeStyleIntent0214['strokeWeight'];
+      if (colorVal) {
+        if (colorVal.startsWith('#') && !/^#[0-9A-Fa-f]{6}$/.test(colorVal))
+          issue(errors, line, start, end, 'coral.syntax.style.hex-invalid',
+            'RGB colors use exactly six hexadecimal digits');
+        else if (!first) {
+          if (dimension === 'fill') intent.fillColor = colorVal;
+          else if (dimension === 'accent') intent.accentColor = colorVal;
+          else intent.strokeColor = colorVal;
+        }
+      }
+    }
+  }
+  if (errors.some((item) => item.code === 'coral.style.term.unknown' &&
+    item.range?.start.line === line.number && item.range.start.column >= style.range.start.column &&
+    item.range.start.column < style.range.end.column))
+    issue(errors, line, ...offsets(style), 'coral.style.capability.unavailable',
+      'Unknown style cannot be projected without silently dropping authored intent');
+  return intent;
+}
+function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic[],
+  admits0214 = false, profile?: string): CandidateStatement | undefined {
   if (!tokens.length) return undefined;
   const first = tokens[0]!;
   if (!isId(first)) {
@@ -764,7 +938,8 @@ function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic
       return undefined;
     }
     if (!assignment) requireGap(first, nodeKind, line, errors);
-    const fields = nodeBracket(tokens, assignment ? 3 : 2, line, errors);
+    const fields = nodeBracket(tokens, assignment ? 3 : 2, line, errors, admits0214);
+    const nodeStyleIntent = fields.style ? checkNodeStyle0214(fields.style, line, errors) : undefined;
     const tail = labelClause(tokens, fields.next, line, errors);
     const placed = placementClause(tokens, tail.next,
       tail.label ?? fields.bracketClose ?? nodeKind, line, errors, 'node');
@@ -807,6 +982,11 @@ function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic
     return { kind: 'node', id: first, nodeKind, ...(assignment ? { assignment } : {}),
       ...(fields.symbol ? { symbol: fields.symbol } : {}),
       ...(fields.variant ? { variant: fields.variant } : {}),
+      ...(fields.technology ? { technology: fields.technology } : {}),
+      ...(fields.description ? { description: fields.description } : {}),
+      ...(fields.provider ? { provider: fields.provider } : {}),
+      ...(fields.style ? { style: fields.style } : {}),
+      ...(nodeStyleIntent ? { nodeStyleIntent } : {}),
       ...(fields.conformanceException ? { conformanceException: fields.conformanceException } : {}),
       ...(fields.bracketClose ? { bracketClose: fields.bracketClose } : {}),
       ...(tail.label ? { label: tail.label } : {}),
@@ -832,10 +1012,15 @@ function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic
   }
   requireGap(sourcePort ?? source, operator, line, errors);
   requireGap(operator, target, line, errors);
-  const operatorConnector = parseConnector028(operator.raw);
-  if (!operatorConnector) issue(errors, line, ...offsets(operator),
+  const crowsFootConnector = admits0214 ? parseCrowsFootConnector0214(operator.raw) : undefined;
+  if (crowsFootConnector && profile !== 'erd') {
+    issue(errors, line, ...offsets(operator), 'coral.erd.crows-foot.profile-required',
+      "Crow's Foot cardinality connectors require @diagram erd");
+  }
+  const operatorConnector = parseConnector028(operator.raw) ?? (profile === 'erd' ? crowsFootConnector : undefined);
+  if (!operatorConnector && !crowsFootConnector) issue(errors, line, ...offsets(operator),
     'coral.syntax.connector.invalid', 'Invalid connector operator');
-  const fields = bracket(tokens, operatorAt + (targetPortColon ? 4 : 2), line, errors);
+  const fields = bracket(tokens, operatorAt + (targetPortColon ? 4 : 2), line, errors, admits0214);
   const styleIntent = fields.style ? checkEdgeStyle028(fields.style, line, errors) : undefined;
   if (styleIntent?.lineStyle && operatorConnector?.stroke === 'dashed') issue(errors, line,
     ...offsets(fields.style!), 'coral.syntax.style.operator-conflict',
@@ -852,8 +1037,9 @@ function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic
     const prior = side === 'first' ? operatorConnector.firstEnd : operatorConnector.secondEnd;
     const authored = side === 'first'
       ? operatorConnector.firstEndAuthored : operatorConnector.secondEndAuthored;
-    if (authored && connectorEndHasShorthand028(marker, side) &&
-      (marker.kind !== prior.kind || marker.fill !== prior.fill)) {
+    const conflict = authored && (crowsFootConnector || connectorEndHasShorthand028(marker, side)) &&
+      (marker.kind !== prior.kind || marker.fill !== prior.fill);
+    if (conflict) {
       issue(errors, line, ...offsets(token), 'coral.syntax.connector.end-conflict',
         `${side}End conflicts with the connector operator; use its matching shorthand`, operator);
       continue;
@@ -887,6 +1073,10 @@ function statement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic
     ...(fields.bracketClose ? { bracketClose: fields.bracketClose } : {}),
     ...(fields.firstEnd ? { firstEnd: fields.firstEnd } : {}),
     ...(fields.secondEnd ? { secondEnd: fields.secondEnd } : {}),
+    ...(fields.firstLabel ? { firstLabel: fields.firstLabel } : {}),
+    ...(fields.secondLabel ? { secondLabel: fields.secondLabel } : {}),
+    ...(fields.technology ? { technology: fields.technology } : {}),
+    ...(fields.description ? { description: fields.description } : {}),
     ...(fields.style ? { style: fields.style } : {}),
     ...(styleIntent ? { styleIntent } : {}),
     ...(fields.edgeType ? { edgeType: fields.edgeType, typeOrigin: fields.typeOrigin } : {}),
@@ -1015,16 +1205,18 @@ function referenceError(out: ParseDiagnostic[], token: CandidateToken, role: 'so
     position: token.range.start, range: token.range }));
 }
 function compartmentStatement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic[],
-  owner: CandidateToken): CandidateCompartmentSyntax | undefined {
+  owner: CandidateToken, erdColumns = false): CandidateCompartmentSyntax | undefined {
   if (!tokens.length) return undefined;
   const assignment = raw(tokens[1], '=') ? tokens[1] : undefined;
   const id = assignment ? tokens[0] : undefined;
   const compartmentKind = tokens[assignment ? 2 : 0];
   const blockOpen = tokens[assignment ? 3 : 1];
+  const allowed = erdColumns ? ['columns'] : ['attributes', 'operations'];
   if (id && !isBareId(id) || !isBareId(compartmentKind) ||
-      !['attributes', 'operations'].includes(compartmentKind.value) || !raw(blockOpen, '{')) {
-    issue(errors, line, ...offsets(tokens[0]!), 'coral.uml.compartment.invalid',
-      'Expected attributes {, operations {, or a named compartment');
+      !allowed.includes(compartmentKind.value) || !raw(blockOpen, '{')) {
+    issue(errors, line, ...offsets(tokens[0]!),
+      erdColumns ? 'coral.erd.compartment.invalid' : 'coral.uml.compartment.invalid',
+      erdColumns ? 'Expected columns {' : 'Expected attributes {, operations {, or a named compartment');
     return undefined;
   }
   const blockClose = raw(tokens[assignment ? 4 : 2], '}') ? tokens[assignment ? 4 : 2] : undefined;
@@ -1034,8 +1226,85 @@ function compartmentStatement(tokens: CandidateToken[], line: Line, errors: Pars
   return { kind: 'compartment', owner, ...(id ? { id, assignment } : {}),
     compartmentKind, blockOpen: blockOpen!, ...(blockClose ? { blockClose } : {}) };
 }
+function erdColumnStatement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic[],
+  owner: CandidateCompartmentSyntax): CandidateErdColumnSyntax | undefined {
+  if (!tokens.length) return undefined;
+  const name = tokens[0];
+  const baseType = tokens[1];
+  if (!isBareId(name) || !isBareId(baseType)) {
+    issue(errors, line, ...offsets(tokens[0]!), 'coral.erd.column.invalid',
+      'Expected column_name type [pk, fk, uk, null, not null]');
+    return undefined;
+  }
+  requireGap(name, baseType, line, errors);
+  let at = 2;
+  let columnType: CandidateToken = baseType;
+  if (raw(tokens[at], '(')) {
+    let close = at + 1;
+    while (close < tokens.length && !raw(tokens[close], ')')) close++;
+    if (!raw(tokens[close], ')')) {
+      issue(errors, line, ...offsets(tokens[at]!), 'coral.erd.column.type-unclosed',
+        'Column type parameter list is not closed');
+      return undefined;
+    }
+    columnType = makeToken(line, 'id', baseType.range.start.column, tokens[close]!.range.end.column);
+    at = close + 1;
+  }
+  const flags: CandidateToken[] = [];
+  if (raw(tokens[at], '[')) {
+    const open = tokens[at]!;
+    at++;
+    if (raw(tokens[at], ']')) issue(errors, line, ...offsets(open),
+      'coral.erd.column.bracket-empty', 'Column flag bracket cannot be empty');
+    const seen = new Set<string>();
+    while (at < tokens.length && !raw(tokens[at], ']')) {
+      const tok = tokens[at]!;
+      let flag: CandidateToken | undefined;
+      if (raw(tok, 'not') && raw(tokens[at + 1], 'null')) {
+        flag = makeToken(line, 'id', tok.range.start.column, tokens[at + 1]!.range.end.column, 'not null');
+        at += 2;
+      } else if (isBareId(tok) && ['pk', 'fk', 'uk', 'null'].includes(tok.value)) {
+        flag = tok;
+        at++;
+      } else {
+        issue(errors, line, ...offsets(tok), 'coral.erd.column.flag-unknown',
+          `Unknown column flag: ${tok.raw} (expected pk, fk, uk, null, or not null)`);
+        at++;
+      }
+      if (flag) {
+        if (seen.has(flag.value) || (flag.value === 'null' && seen.has('not null')) ||
+          (flag.value === 'not null' && seen.has('null'))) {
+          issue(errors, line, ...offsets(flag), 'coral.erd.column.flag-conflict',
+            `Duplicate or conflicting column flag: ${flag.value}`);
+        } else {
+          seen.add(flag.value);
+          flags.push(flag);
+        }
+      }
+      if (raw(tokens[at], ',')) {
+        const comma = tokens[at]!;
+        at++;
+        if (raw(tokens[at], ']')) issue(errors, line, ...offsets(comma),
+          'coral.erd.column.trailing-comma', 'A column flag must follow the final comma');
+      } else if (at < tokens.length && !raw(tokens[at], ']')) {
+        issue(errors, line, ...offsets(tokens[at]!), 'coral.erd.column.comma-required',
+          'Expected comma or closing bracket in column flags');
+        return undefined;
+      }
+    }
+    if (!raw(tokens[at], ']')) {
+      issue(errors, line, ...offsets(open), 'coral.erd.column.bracket-unclosed',
+        'Column flag bracket is not closed');
+      return undefined;
+    }
+    at++;
+  }
+  if (at < tokens.length) issue(errors, line, ...offsets(tokens[at]!),
+    'coral.syntax.statement.trailing', 'Unexpected text after ERD column');
+  return { kind: 'erd-column', owner, name, columnType, flags };
+}
 function attributeStatement(tokens: CandidateToken[], line: Line, errors: ParseDiagnostic[],
-  owner: CandidateCompartmentSyntax): CandidateAttributeSyntax | undefined {
+  owner: CandidateCompartmentSyntax, admits0214 = false): CandidateAttributeSyntax | undefined {
   if (!tokens.length) return undefined;
   const assignment = raw(tokens[1], '=') ? tokens[1] : undefined;
   const id = assignment ? tokens[0] : undefined;
@@ -1048,7 +1317,9 @@ function attributeStatement(tokens: CandidateToken[], line: Line, errors: ParseD
   const named = !!assignment && isBareId(id) && !!tokens[start]
     && ['public', 'private', 'protected', 'package'].includes(tokens[start]!.raw)
     && raw(tokens[start + 1], 'attribute');
-  const compact = !assignment && raw(tokens[0], '+');
+  const compact = !assignment && (admits0214
+    ? !!tokens[0] && ['+', '-', '#', '~'].includes(tokens[0]!.raw)
+    : raw(tokens[0], '+'));
   const visibility = tokens[start];
   const memberKind = named ? tokens[start + 1] : undefined;
   const name = tokens[start + (named ? 2 : 1)];
@@ -1056,7 +1327,9 @@ function attributeStatement(tokens: CandidateToken[], line: Line, errors: ParseD
   const valueType = tokens[start + (named ? 4 : 3)];
   if ((!named && !compact) || !isBareId(name) || !raw(colon, ':') || !isBareId(valueType)) {
     issue(errors, line, ...offsets(tokens[0]!), 'coral.uml.member.invalid',
-      'Expected + name: Type or id = visibility attribute name: Type');
+      admits0214
+        ? 'Expected +|-|#|~ name: Type or id = visibility attribute name: Type'
+        : 'Expected + name: Type or id = visibility attribute name: Type');
     return undefined;
   }
   requireGap(visibility, memberKind ?? name, line, errors);
@@ -1252,7 +1525,43 @@ function routeWaypoint(tokens: CandidateToken[], line: Line, errors: ParseDiagno
   return { id: id!, x: x!, y: y!, ...(anchor ? { anchor } : {}),
     ...(anchorNode ? { anchorNode } : {}), ...(anchorPort ? { anchorPort } : {}), ...(anchorWaypoint ? {anchorWaypoint} : {}) };
 }
+const ARCH_CONTAINER_KINDS_0214 = new Set(['boundary', 'systemBoundary', 'containerBoundary']);
+const INFRA_CONTAINER_KINDS_0214 = new Set([
+  'cloud', 'account', 'subscription', 'project', 'region', 'az', 'availabilityZone',
+  'vpc', 'vnet', 'subnet', 'cluster', 'securityGroup', 'boundary', 'namespace', 'resourceGroup',
+]);
+const ERD_ENTITY_KINDS_0214 = new Set(['entity', 'weakEntity', 'table', 'view']);
+const CHEN_RETIRED_KINDS_0214 = new Set(['attribute', 'relationship', 'isa']);
+const CHEN_RETIRED_SYMBOLS_0214 = new Set(['erd-attribute', 'erd-relationship', 'erd-isa']);
+function isContainerKind(profile: string | undefined, nodeKind: string, admits0214: boolean): boolean {
+  if (nodeKind === 'group') return true;
+  if (!admits0214) return false;
+  if (profile === 'architecture') return ARCH_CONTAINER_KINDS_0214.has(nodeKind);
+  if (profile === 'infrastructure') return INFRA_CONTAINER_KINDS_0214.has(nodeKind);
+  return false;
+}
+const CAMEL_RELATION_MAP_0214: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  aiml: { dataFlow: 'data-flow', toolUse: 'tool-use' },
+  'data-engineering': { batchFlow: 'batch-flow', streamFlow: 'stream-flow' },
+};
+const KNOWN_RELATIONS_0214: Readonly<Record<string, ReadonlySet<string>>> = {
+  block: new Set(['flow', 'annotation']),
+  flowchart: new Set(['flow', 'annotation']),
+  architecture: new Set(['sync', 'async', 'data', 'bidirectional', 'annotation', 'uses', 'calls', 'reads', 'writes']),
+  infrastructure: new Set(['network', 'sync', 'async', 'data', 'dns', 'replication', 'monitoring', 'annotation']),
+  bpmn: new Set(['sequence', 'message', 'association', 'annotation']),
+  erd: new Set(['relationship', 'identifying', 'nonIdentifying', 'annotation']),
+  code: new Set(['calls', 'imports', 'extends', 'implements', 'uses', 'contains', 'annotation']),
+  aiml: new Set(['data-flow', 'dataFlow', 'training', 'inference', 'embedding', 'tool-use', 'toolUse', 'annotation']),
+  'data-engineering': new Set(['batch-flow', 'batchFlow', 'stream-flow', 'streamFlow', 'lineage', 'quality', 'annotation']),
+  sketch: new Set(['flow', 'annotation']),
+  'uml-class': new Set(['association', 'aggregation', 'composition', 'generalization', 'realization', 'dependency', 'annotation']),
+  'uml-sequence': new Set(['sync', 'async', 'return', 'create', 'destroy', 'lost', 'found']),
+  'uml-state': new Set(['transition', 'annotation']),
+};
+
 export function parseCandidate028(source: string, options: CandidateOptions = {}): CandidateResult {
+  const admits0214 = options.edition !== undefined && editionAdmits0214(options.edition);
   const diagnostics: ParseDiagnostic[] = [];
   const statements: CandidateStatement[] = [];
   const sequenceItems: CandidateSequenceItemSyntax[] = [];
@@ -1273,7 +1582,7 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
   let invalidBlockDepth = 0;
   for (const line of sourceLines(source)) {
     const diagnosticsBeforeLine = diagnostics.length;
-    const { tokens, invalidSpacing } = scan(line, diagnostics);
+    const { tokens, invalidSpacing } = scan(line, diagnostics, admits0214);
     const blockDelta = tokens.reduce((depth, token) => depth + (raw(token, '{') ? 1 : raw(token, '}') ? -1 : 0), 0);
     if (invalidBlockDepth > 0) {
       invalidBlockDepth = Math.max(0, invalidBlockDepth + blockDelta);
@@ -1557,22 +1866,25 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
       continue;
     }
     if (compartmentScope) {
-      const member = compartmentScope.syntax.compartmentKind.value === 'operations'
-        ? operationStatement(tokens, line, diagnostics, compartmentScope.syntax)
-        : attributeStatement(tokens, line, diagnostics, compartmentScope.syntax);
+      const member = compartmentScope.syntax.compartmentKind.value === 'columns'
+        ? erdColumnStatement(tokens, line, diagnostics, compartmentScope.syntax)
+        : compartmentScope.syntax.compartmentKind.value === 'operations'
+          ? operationStatement(tokens, line, diagnostics, compartmentScope.syntax)
+          : attributeStatement(tokens, line, diagnostics, compartmentScope.syntax, admits0214);
       if (member && diagnostics.length === diagnosticsBeforeLine) statements.push(member);
       else if (diagnostics.length > diagnosticsBeforeLine) invalidBlockDepth = Math.max(0, blockDelta);
       continue;
     }
     if (classifierScope) {
-      const compartment = compartmentStatement(tokens, line, diagnostics, classifierScope.node.id);
+      const compartment = compartmentStatement(tokens, line, diagnostics, classifierScope.node.id,
+        admits0214 && options.profile === 'erd');
       if (compartment && diagnostics.length === diagnosticsBeforeLine) {
         statements.push(compartment);
         if (!compartment.blockClose) compartmentScope = { syntax: compartment, open: compartment.blockOpen, line };
       } else if (diagnostics.length > diagnosticsBeforeLine) invalidBlockDepth = Math.max(0, blockDelta);
       continue;
     }
-    const parsed = statement(tokens, line, diagnostics);
+    const parsed = statement(tokens, line, diagnostics, admits0214, options.profile);
     if (parsed && diagnostics.length === diagnosticsBeforeLine) {
       if (sequenceScopes.length && parsed.kind !== 'edge') {
         issue(diagnostics, line, ...offsets(tokens[0]!), 'coral.sequence.fragment.item',
@@ -1598,9 +1910,11 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
             if (options.profile === 'uml-class') classifierScope = { node: parsed, open: parsed.blockOpen, line };
             else issue(diagnostics, line, ...offsets(parsed.blockOpen), 'coral.uml.class.profile-required',
               'A classifier body requires the UML class profile');
-          } else if (parsed.nodeKind.value === 'group') groups.push({ id: parsed.id, open: parsed.blockOpen, line,
-            syntax: parsed });
-          else portOnlyScope = { node: parsed, open: parsed.blockOpen, line };
+          } else if (admits0214 && options.profile === 'erd' && ERD_ENTITY_KINDS_0214.has(parsed.nodeKind.value)) {
+            classifierScope = { node: parsed, open: parsed.blockOpen, line };
+          } else if (isContainerKind(options.profile, parsed.nodeKind.value, admits0214)) {
+            groups.push({ id: parsed.id, open: parsed.blockOpen, line, syntax: parsed });
+          } else portOnlyScope = { node: parsed, open: parsed.blockOpen, line };
         }
       }
       if (parsed.kind === 'edge' || parsed.kind === 'arrangement' || parsed.kind === 'constraint') {
@@ -1616,11 +1930,15 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
     } else if (diagnostics.length > diagnosticsBeforeLine) invalidBlockDepth = Math.max(0, blockDelta);
   }
   if (compartmentScope) issue(diagnostics, compartmentScope.line, ...offsets(compartmentScope.open),
-    'coral.uml.compartment.unclosed', 'UML compartment is not closed');
+    compartmentScope.syntax.compartmentKind.value === 'columns' ? 'coral.erd.compartment.unclosed' : 'coral.uml.compartment.unclosed',
+    compartmentScope.syntax.compartmentKind.value === 'columns' ? 'ERD columns block is not closed' : 'UML compartment is not closed');
   if (routeScope) issue(diagnostics, routeScope.line, ...offsets(routeScope.syntax.blockOpen),
     'coral.route.unclosed', 'Route block is not closed');
   if (classifierScope) issue(diagnostics, classifierScope.line, ...offsets(classifierScope.open),
-    'coral.uml.class.unclosed', `Class ${classifierScope.node.id.value} is not closed`);
+    options.profile === 'erd' ? 'coral.erd.entity.unclosed' : 'coral.uml.class.unclosed',
+    options.profile === 'erd'
+      ? `Entity ${classifierScope.node.id.value} is not closed`
+      : `Class ${classifierScope.node.id.value} is not closed`);
   if (portOnlyScope) issue(diagnostics, portOnlyScope.line, ...offsets(portOnlyScope.open),
     'coral.syntax.node.unclosed', `Node ${portOnlyScope.node.id.value} is not closed`);
   for (const group of groups) issue(diagnostics, group.line, ...offsets(group.open),
@@ -1632,7 +1950,10 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
       : scope.syntax.kind === 'region' ? 'Region is not closed'
       : `${scope.syntax.fragmentKind.value} fragment is not closed`);
   const graph: GraphIR = { version: '3.0.0', id: options.graphId ?? 'coral-graph', nodes: [], edges: [],
-    ...(options.profile ? { metadata: { notation: options.profile } } : {}) };
+    ...(options.profile || admits0214 ? { metadata: {
+      ...(options.profile ? { notation: options.profile } : {}),
+      ...(admits0214 ? { custom: { coralEdition: options.edition } } : {}),
+    } } : {}) };
   const nodes = new Map<string, GraphNode>();
   const nodeByDeclaration = new Map<CandidateToken, GraphNode>();
   const declared = new Map<string, CandidateToken>();
@@ -1674,10 +1995,25 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
         position: item.nodeKind.range.start, range: item.nodeKind.range }));
       continue;
     }
+    if (admits0214 && options.profile === 'erd' &&
+      (CHEN_RETIRED_KINDS_0214.has(item.nodeKind.value) ||
+        (item.symbol && CHEN_RETIRED_SYMBOLS_0214.has(item.symbol.value)))) {
+      const target = CHEN_RETIRED_KINDS_0214.has(item.nodeKind.value) ? item.nodeKind : item.symbol!;
+      diagnostics.push(parseDiagnostic({ severity: 'error', code: 'coral.erd.chen.retired',
+        message: `Chen ERD "${target.value}" is retired in Coral 0.2.14; use Crow's Foot entities with columns { ... } and cardinality connectors (e.g. ||--o{).`,
+        position: target.range.start, range: target.range }));
+      continue;
+    }
+    const nodeProps: Record<string, unknown> = {};
+    if (item.technology) nodeProps.technology = item.technology.value;
+    if (item.provider) nodeProps.provider = item.provider.value;
+    if (item.nodeStyleIntent && Object.keys(item.nodeStyleIntent).length) nodeProps.coralStyle0214 = item.nodeStyleIntent;
     const node: GraphNode = { id, type: item.nodeKind.value,
       label: item.label?.value ?? id,
+      ...(item.description ? { description: item.description.value } : {}),
       ...(item.symbol ? { symbol: item.symbol.value } : {}),
       ...(item.variant ? { variant: item.variant.value } : {}),
+      ...(Object.keys(nodeProps).length ? { properties: nodeProps } : {}),
       ...(item.position ? { position: { x: Number(item.position.x.value),
         y: Number(item.position.y.value) } } : {}),
       ...(item.pinned && item.position ? { pinned: true } : {}),
@@ -1692,7 +2028,7 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
     if (item.parentGroup) {
       const parentId = node.parent!;
       const parent = nodes.get(parentId);
-      if (parent?.type !== 'group' || declared.get(parentId) !== item.parentGroup) {
+      if (!parent || !isContainerKind(options.profile, parent.type, admits0214) || declared.get(parentId) !== item.parentGroup) {
         diagnostics.push(parseDiagnostic({ severity: 'error', code: 'coral.syntax.group.parent-invalid',
           message: `Group ${item.parentGroup.value} is not a valid parent`,
           position: item.parentGroup.range.start, range: item.parentGroup.range }));
@@ -1770,9 +2106,9 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
     }
     memberIds.set(key, item.id ?? item.name);
     if (item.kind === 'attribute' && compartment.kind === 'attributes') {
-      const visibility = ({ '+': 'public', public: 'public', private: 'private',
-        protected: 'protected', package: 'package',
-      } as const)[item.visibility.value as '+' | 'public' | 'private' | 'protected' | 'package'];
+      const visibility = ({ '+': 'public', '-': 'private', '#': 'protected', '~': 'package',
+        public: 'public', private: 'private', protected: 'protected', package: 'package',
+      } as const)[item.visibility.value as '+' | '-' | '#' | '~' | 'public' | 'private' | 'protected' | 'package'];
       const attribute: ClassifierAttribute = { id, kind: 'attribute', visibility,
         name: item.name.value, type: item.valueType.value };
       compartment.items.push(attribute);
@@ -1786,6 +2122,32 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
         })), ...(item.returnType ? { returnType: item.returnType.value } : {}) };
       compartment.items.push(operation);
     }
+  }
+  const erdColumnNames = new Map<string, CandidateToken>();
+  for (const item of statements) {
+    if (item.kind !== 'erd-column') continue;
+    const node = nodeByDeclaration.get(item.owner.owner);
+    if (!node) continue;
+    const key = `${node.id}\0${item.name.value}`;
+    const first = erdColumnNames.get(key);
+    if (first) {
+      diagnostics.push(parseDiagnostic({ severity: 'error', code: 'coral.erd.column.duplicate',
+        message: `Duplicate column "${item.name.value}" on entity ${node.id}`,
+        position: item.name.range.start, range: item.name.range,
+        related: [{ message: 'First column declaration', position: first.range.start, range: first.range }] }));
+      continue;
+    }
+    erdColumnNames.set(key, item.name);
+    node.properties ??= {};
+    const cols = (node.properties.erdColumns0214 as Array<{
+      name: string; type: string; flags: string[];
+    }> | undefined) ?? [];
+    cols.push({
+      name: item.name.value,
+      type: item.columnType.value,
+      flags: item.flags.map((f) => f.value),
+    });
+    node.properties.erdColumns0214 = cols;
   }
   const arrangementIds = new Map<string, CandidateToken>();
   const explicitArrangementIds = new Set(statements.flatMap((item) =>
@@ -1888,6 +2250,22 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
     // GraphIR 3 requires sequence display edges to run sender-to-receiver.
     // Reverse source endpoint order remains authoritative in the syntax tree
     // and in the direct successor projection, not in this display graph.
+    const mappedEdgeType = item.edgeType
+      ? (admits0214 && options.profile ? CAMEL_RELATION_MAP_0214[options.profile]?.[item.edgeType.value] : undefined) ??
+        (options.profile === 'data-engineering' && item.edgeType.value === 'batchFlow'
+          ? 'batch-flow' : item.edgeType.value)
+      : undefined;
+    if (admits0214 && item.edgeType && options.profile) {
+      const known = KNOWN_RELATIONS_0214[options.profile];
+      if (known && !known.has(item.edgeType.value) && !(mappedEdgeType && known.has(mappedEdgeType))) {
+        warning(diagnostics, item.edgeType, 'coral.relation.unknown',
+          `Unknown ${options.profile} relation "${item.edgeType.value}"`);
+      }
+    }
+    const edgeProps: Record<string, unknown> = {};
+    if (item.technology) edgeProps.technology = item.technology.value;
+    if (item.firstLabel) edgeProps.firstLabel = item.firstLabel.value;
+    if (item.secondLabel) edgeProps.secondLabel = item.secondLabel.value;
     const edge: GraphEdge = { id,
       source: reverseSequence ? item.resolvedTarget : item.resolvedSource!,
       target: reverseSequence ? item.resolvedSource! : item.resolvedTarget,
@@ -1897,24 +2275,30 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
         ? { targetPort: (reverseSequence ? item.sourcePort : item.targetPort)!.value } : {}),
       // The approved source word names the existing portable profile relation.
       // Keep the authored token intact for exact saves and bounded edits.
-      ...(item.edgeType ? { type: options.profile === 'data-engineering' &&
-        item.edgeType.value === 'batchFlow' ? 'batch-flow' : item.edgeType.value }
+      ...(mappedEdgeType ? { type: mappedEdgeType }
         : sequence ? { type: sequenceMessageToken(messageKind) }
           : options.profile === 'uml-state' ? { type: 'transition' } : {}),
       ...(item.label ? { label: item.label.value } : {}),
+      ...(item.description ? { description: item.description.value } : {}),
+      ...(Object.keys(edgeProps).length ? { properties: edgeProps } : {}),
       ...(item.labelPlacement ? { labelPlacement: {
         side: item.labelPlacement.side.value as 'above' | 'below' | 'left' | 'right' | 'center',
         ...(item.labelPlacement.at ? { at: Number(item.labelPlacement.at.value) } : {}),
         ...(item.labelPlacement.offset ? { offset: Number(item.labelPlacement.offset.value) } : {}),
       } } : {}) };
     if (item.connector) {
-      edge.sourceEnd = { marker: reverseSequence
-        ? { kind: 'none', fill: 'unspecified' } : item.connector.firstEnd };
+      edge.sourceEnd = {
+        marker: reverseSequence ? { kind: 'none', fill: 'unspecified' } : item.connector.firstEnd,
+        ...(item.firstLabel ? { role: item.firstLabel.value } : {}),
+      };
       const marker = sequence && arrowEnd?.kind === 'arrow' &&
         arrowEnd.fill === 'filled'
         ? { kind: 'triangle' as const, fill: 'filled' as const }
         : reverseSequence ? item.connector.firstEnd : item.connector.secondEnd;
-      edge.targetEnd = { marker };
+      edge.targetEnd = {
+        marker,
+        ...(item.secondLabel ? { role: item.secondLabel.value } : {}),
+      };
       if (item.style && ['solid', 'dashed', 'dotted'].includes(item.style.value))
         edge.style = { lineStyle: item.style.value as 'solid' | 'dashed' | 'dotted' };
       else if (item.connector.stroke === 'dashed') edge.style = { lineStyle: 'dashed' };

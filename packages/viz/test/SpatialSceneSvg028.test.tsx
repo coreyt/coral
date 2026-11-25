@@ -39,6 +39,23 @@ describe('React spatial scene projection', () => {
     }
   });
 
+  it.each(['hifi', 'anemone'] as const)('keeps grouped connectors above container backgrounds in %s', (renderStyle) => {
+    const grouped = { ...drawing, edges: drawing.edges.map((edge) => ({ ...edge,
+      targetEnd: { marker: { kind: 'zero-or-many' as const, fill: 'open' as const } } })),
+      nodes: [{ id: 'frame', label: 'Approval',
+      position: { x: 0, y: 0 }, dimensions: { width: 450, height: 220 }, children: drawing.nodes.map((node) => ({ ...node, position: { ...node.position, y: 80 } })) }] };
+    const scene = prepareSpatialScene028(grouped, { renderStyle });
+    const react = renderToStaticMarkup(<SpatialSceneSvg028 scene={scene} namespace="grouped" />);
+    const exported = renderSvg(grouped, { renderStyle });
+    const ids = (markup: string) => [...markup.matchAll(/data-coral-part-id="([^"]+)"/g)].map((match) => match[1]);
+    expect(ids(react)).toEqual(ids(exported));
+    for (const markup of [react, exported]) expect(markup).toContain('markerWidth="14"');
+    const firstEdge = scene.parts.findIndex((part) => part.owner.kind === 'edge');
+    const lastContainer = scene.parts.findLastIndex((part) => part.owner.kind === 'node' && part.owner.id === 'frame');
+    expect(lastContainer).toBeGreaterThanOrEqual(0);
+    expect(firstEdge).toBeGreaterThan(lastContainer);
+  });
+
   it.each(['lowfi', 'hifi'] as const)('projects exact centered multiline labels with a shared background in %s', (style) => {
     const graph = { ...drawing, nodes: drawing.nodes.map((node, index) => ({ ...node,
       position: { x: index * 700, y: 100 } })), edges: [{ ...drawing.edges[0],

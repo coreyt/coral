@@ -8,7 +8,7 @@ const pagesWorkflow = '.github/workflows/pages.yml';
 const restoreWorkflowRef =
   'coreyt/coral/.github/workflows/pages-restore.yml@refs/heads/main';
 const requiredJobs = ['build', 'registry', 'deploy'];
-const supportedRestoreVersions = new Set(['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12']);
+const supportedRestoreVersions = new Set(['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14']);
 
 export function validateRestoreContext(environment) {
   const expected = {

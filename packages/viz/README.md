@@ -1,8 +1,8 @@
 # @coral-viz/viz
 
-## Coral 0.2.12
+## Coral 0.2.14
 
-Install verified 0.2.12 archives together with the matching published GraphIR
+Install verified 0.2.14 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
@@ -10,8 +10,8 @@ React Flow editor components, GraphIR projection, file/settings helpers, text
 synchronization, layout, connections, waypoints, and properties APIs.
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.12.tgz \
-  ./coral-viz-render-0.2.12.tgz ./coral-viz-viz-0.2.12.tgz \
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.14.tgz \
+  ./coral-viz-render-0.2.14.tgz ./coral-viz-viz-0.2.14.tgz \
   @xyflow/react@^12 react@^19 react-dom@^19
 ```
 

@@ -187,12 +187,38 @@ export function classifierPresentation(classifier: Classifier | undefined): Clas
   };
 }
 
-/** Deterministic minimum bounds for every visible classifier row and separator. */
-export function classifierMinimumSize(
-  classifier: Classifier | undefined,
+/** Edition 0.2.14 Crow's Foot ERD tabular entity presentation from `node.properties.erdColumns0214`. */
+export function erdEntityPresentation0214(node: GraphNode): ClassifierPresentation | undefined {
+  const cols = node.properties?.erdColumns0214 as Array<{ name: string; type: string; flags: string[] }> | undefined;
+  if (!Array.isArray(cols) || !cols.length) return undefined;
+  const stereotype = node.type === 'weakEntity' ? '«weak»' : node.type === 'view' ? '«view»' : undefined;
+  const name = node.label ?? node.id;
+  const rows = cols.map((col) => {
+    const keys = col.flags.filter((f) => f === 'pk' || f === 'fk' || f === 'uk').map((f) => f.toUpperCase());
+    const nullable = col.flags.includes('null');
+    const badge = keys.length ? `${keys.join(',')} ` : '';
+    return `${badge}${col.name}: ${col.type}${nullable ? '?' : ''}`;
+  });
+  return {
+    ...(stereotype ? { stereotype } : {}),
+    name,
+    abstract: false,
+    static: false,
+    compartments: [{ id: 'columns', kind: 'attributes', rows }],
+    accessibleName: [stereotype, name, ...rows].filter(Boolean).join(', '),
+  };
+}
+
+/** Unified tabular presentation for UML classifiers and Crow's Foot ERD entities. */
+export function effectiveClassifierPresentation0214(node: GraphNode): ClassifierPresentation | undefined {
+  return classifierPresentation(node.classifier) ?? erdEntityPresentation0214(node);
+}
+
+/** Deterministic minimum bounds for a precomputed ClassifierPresentation (UML or ERD). */
+export function classifierPresentationMinimumSize0214(
+  presentation: ClassifierPresentation | undefined,
   options: { fontSize?: number; fontFamily?: string; fontWeight?: string | number; lineHeight?: number } = {},
 ): { width: number; height: number } | undefined {
-  const presentation = classifierPresentation(classifier);
   if (!presentation) return undefined;
   const fontSize = options.fontSize ?? 12;
   const lineHeight = options.lineHeight ?? 1.4;
@@ -212,12 +238,20 @@ export function classifierMinimumSize(
   const emptyCompartments = presentation.compartments.filter((part) => part.rows.length === 0).length;
   return {
     width: Math.max(180, Math.ceil(contentWidth + 32)),
-    // The drawing compositor adds five pixels after each divider and reserves
-    // one blank row for an empty compartment. Keep layout's minimum at least
-    // as large as those exact painted rows.
-    height: Math.max(120, (lines.length + emptyCompartments) * lineHeightPixels +
-      presentation.compartments.length * 5 + 16),
+    height: Math.max(96, (lines.length + emptyCompartments) * lineHeightPixels +
+      presentation.compartments.length * 5 + 18),
   };
+}
+
+/** Deterministic minimum bounds for every visible classifier row and separator. */
+export function classifierMinimumSize(
+  classifier: Classifier | undefined,
+  options: { fontSize?: number; fontFamily?: string; fontWeight?: string | number; lineHeight?: number } = {},
+): { width: number; height: number } | undefined {
+  const presentation = classifierPresentation(classifier);
+  if (!presentation) return undefined;
+  const base = classifierPresentationMinimumSize0214(presentation, options)!;
+  return { width: base.width, height: Math.max(120, base.height - 2) };
 }
 
 /** Match the painted rectangle's aspect-preserving fit before layout and routing. */
@@ -245,6 +279,27 @@ export function fitPlainRectangleInk028(
     .trim().split(/[\s,]+/).map(Number);
   const width = Math.ceil(Math.max(size.width, size.height * shapeWidth! / shapeHeight!));
   return { width, height: Math.ceil(width * shapeHeight! / shapeWidth!) };
+}
+
+/** Edition 0.2.14 display label combining title with optional technology and description. */
+export function nodeDisplayText0214(node: GraphNode): string {
+  const base = node.label ?? node.id;
+  if (node.classifier) return base;
+  const tech = typeof node.properties?.technology === 'string' && node.properties.technology.length
+    ? node.properties.technology : undefined;
+  const desc = typeof node.description === 'string' && node.description.length
+    ? node.description : undefined;
+  if (!tech && !desc) return base;
+  if (node.children?.length || isContainerNode028(node)) return tech ? `${base} [${tech}]` : base;
+  return [base, ...(tech ? [`[${tech}]`] : []), ...(desc ? [desc] : [])].join('\n');
+}
+
+/** Edition 0.2.14 edge display label combining label with optional [technology]. */
+export function edgeDisplayText0214(edge: GraphEdge): string | undefined {
+  const tech = typeof edge.properties?.technology === 'string' && edge.properties.technology.length
+    ? edge.properties.technology : undefined;
+  if (!tech) return edge.label;
+  return edge.label ? `${edge.label} [${tech}]` : `[${tech}]`;
 }
 
 export function renderSymbolId(node: GraphNode, notationId?: string, catalog?: CatalogSnapshot028): string | undefined {
@@ -396,6 +451,11 @@ export function resolveEdgeAppearance(
   };
 }
 
+/** Crow's Foot variants use 1.4x the standard endpoint viewport. */
+export function markerSize028(marker: EndpointMarker): number {
+  return marker.kind === 'crow-foot' || marker.kind.endsWith('many') ? 14 : 10;
+}
+
 export function markerPrimitives(marker: EndpointMarker): MarkerPrimitive[] {
   const filled = marker.fill === 'filled';
   switch (marker.kind) {
@@ -405,11 +465,11 @@ export function markerPrimitives(marker: EndpointMarker): MarkerPrimitive[] {
     case 'diamond': return [{ d: 'M1 8 L8 2 L15 8 L8 14 Z', filled }];
     case 'circle': return [{ d: 'M8 2 A6 6 0 1 1 8 14 A6 6 0 1 1 8 2', filled }];
     case 'bar': return [{ d: 'M10 2 L10 14', filled: false }];
-    case 'crow-foot': return [{ d: 'M14 8 L3 2 M14 8 L3 8 M14 8 L3 14', filled: false }];
-    case 'zero-or-one': return [{ d: 'M5 2 A3 3 0 1 1 5 8 A3 3 0 1 1 5 2 M11 2 L11 14', filled: false }];
+    case 'crow-foot': return [{ d: 'M3 8 L14 2 M3 8 L14 8 M3 8 L14 14', filled: false }];
+    case 'zero-or-one': return [{ d: 'M5 5 A3 3 0 1 1 5 11 A3 3 0 1 1 5 5 M11 2 L11 14', filled: false }];
     case 'one': return [{ d: 'M7 2 L7 14 M12 2 L12 14', filled: false }];
-    case 'zero-or-many': return [{ d: 'M4 2 A3 3 0 1 1 4 8 A3 3 0 1 1 4 2 M14 8 L8 2 M14 8 L8 8 M14 8 L8 14', filled: false }];
-    case 'one-or-many': return [{ d: 'M5 2 L5 14 M14 8 L8 2 M14 8 L8 8 M14 8 L8 14', filled: false }];
+    case 'zero-or-many': return [{ d: 'M4 5 A3 3 0 1 1 4 11 A3 3 0 1 1 4 5 M8 8 L14 2 M8 8 L14 8 M8 8 L14 14', filled: false }];
+    case 'one-or-many': return [{ d: 'M5 2 L5 14 M8 8 L14 2 M8 8 L14 8 M8 8 L14 14', filled: false }];
   }
 }
 
@@ -700,8 +760,10 @@ export function resolveRenderScene(
     const defaults = resolveSymbolDefaults(symbol, node.variant);
     const geometry = options.nodeGeometry?.get(node.id);
     const x = geometry?.x ?? ox + (node.position?.x ?? 0); const y = geometry?.y ?? oy + (node.position?.y ?? 0);
-    const classifier = classifierPresentation(node.classifier);
-    const classifierSize = classifierMinimumSize(node.classifier);
+    const classifier = effectiveClassifierPresentation0214(node);
+    const classifierSize = node.classifier
+      ? classifierMinimumSize(node.classifier)
+      : classifierPresentationMinimumSize0214(classifier);
     const defaultWidth = numberValue(defaults.width) ?? shape?.defaultSize.width ?? 120;
     const defaultHeight = numberValue(defaults.height) ?? shape?.defaultSize.height ?? 60;
     const width = geometry?.width ?? node.dimensions?.width ?? Math.max(defaultWidth, classifierSize?.width ?? 0);
@@ -815,10 +877,11 @@ export function resolveRenderScene(
       options.sourceDirections?.get(edge.id));
     const sourceCentre = { x: from.x + from.width / 2, y: from.y + from.height / 2 };
     const targetCentre = { x: to.x + to.width / 2, y: to.y + to.height / 2 };
+    const edgeLabel = edgeDisplayText0214(edge);
     return [{ id: edge.id, sourceId: edge.source, targetId: edge.target, points,
       generatedRoute: edge.routeIntent === undefined,
       ...(escape.source || escape.target ? { escape029: escape } : {}),
-      ...(edge.label ? { label: edge.label } : {}),
+      ...(edgeLabel ? { label: edgeLabel } : {}),
       ...(edge.labelPlacement ? { labelPlacement: structuredClone(edge.labelPlacement) } : {}), ...appearance,
       endpointLabels: placeEndpointLabels(points, appearance.source, appearance.target, sourceCentre, targetCentre) }];
   });

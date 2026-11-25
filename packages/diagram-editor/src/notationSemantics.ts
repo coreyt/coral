@@ -4,6 +4,7 @@ import { approvedNotationTypeWords028, notationRegistry, resolveNotationNode028,
 export type NotationType =
   | 'block'
   | 'architecture'
+  | 'infrastructure'
   | 'flowchart'
   | 'bpmn'
   | 'erd'
@@ -46,6 +47,26 @@ const NOTATION_SEMANTICS: Readonly<Record<NotationType, NotationSemanticMapping>
       ...baseAliases('arch-service', 'arch-database', 'arch-service', 'arch-external-api', 'arch-actor', 'arch-container'),
       queue: 'arch-queue', load_balancer: 'arch-load-balancer', cdn: 'arch-cdn', storage: 'arch-storage',
       function: 'arch-function', label: 'arch-annotation',
+    },
+  },
+  infrastructure: {
+    symbolTypes: {
+      'infra-users': 'users', 'infra-dns': 'dns', 'infra-cdn': 'cdn', 'infra-waf': 'waf',
+      'infra-gateway': 'gateway', 'infra-load-balancer': 'loadBalancer', 'infra-compute': 'compute',
+      'infra-container': 'container', 'infra-kubernetes': 'kubernetes', 'infra-function': 'function',
+      'infra-database': 'database', 'infra-cache': 'cache', 'infra-storage': 'storage',
+      'infra-queue': 'queue', 'infra-iam': 'iam', 'infra-monitoring': 'monitoring',
+      'infra-ml': 'ml', 'infra-boundary': 'boundary', 'infra-note': 'note',
+    },
+    typeSymbols: {
+      users: 'infra-users', dns: 'infra-dns', cdn: 'infra-cdn', waf: 'infra-waf',
+      gateway: 'infra-gateway', loadBalancer: 'infra-load-balancer', compute: 'infra-compute',
+      container: 'infra-container', kubernetes: 'infra-kubernetes', function: 'infra-function',
+      database: 'infra-database', cache: 'infra-cache', storage: 'infra-storage',
+      queue: 'infra-queue', iam: 'infra-iam', monitoring: 'infra-monitoring',
+      ml: 'infra-ml', boundary: 'infra-boundary', vpc: 'infra-boundary',
+      subnet: 'infra-boundary', region: 'infra-boundary', account: 'infra-boundary',
+      zone: 'infra-boundary', cluster: 'infra-boundary', note: 'infra-note',
     },
   },
   flowchart: {

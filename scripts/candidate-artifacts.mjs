@@ -90,7 +90,7 @@ export async function createCandidateManifest(directory, {
     });
   }
   if (files.length !== packages.length) throw new Error('Unexpected candidate archives');
-  if (['0.2.8', '0.2.9', '0.2.11', '0.2.12'].includes(version)) {
+  if (['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'].includes(version)) {
     for (const pkg of packages) {
       const packed = JSON.parse(tarOutput(['-xOf', join(directory, pkg.filename), 'package/package.json']));
       const errors = validatePackedPackage028(packed, pkg.files, pkg);
@@ -120,7 +120,7 @@ export async function verifyCandidateFiles(directory, manifest, expected) {
   for (const pkg of manifest.packages ?? []) {
     try {
       const bytes = await readFile(join(directory, pkg.filename));
-      if (['0.2.8', '0.2.9', '0.2.11', '0.2.12'].includes(manifest.version)) {
+      if (['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14'].includes(manifest.version)) {
         const inventory = tarOutput(['-tf', join(directory, pkg.filename)]).split(/\r?\n/).filter(Boolean).sort();
         const packed = JSON.parse(tarOutput(['-xOf', join(directory, pkg.filename), 'package/package.json']));
         errors.push(...validatePackedPackage028(packed, inventory, pkg));

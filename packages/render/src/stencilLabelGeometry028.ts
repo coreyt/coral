@@ -26,12 +26,12 @@ const ALWAYS_CAPTIONED_SHAPES_0210 = new Set(
   'actor brain funnel neural-net cube chip chat-bubble shield gear warehouse lake pipe wave dashboard'.split(' '),
 );
 const DOMAIN_CAPTIONED_SHAPES_0210 = new Set('cylinder diamond hexagon cloud parallelogram'.split(' '));
-const DOMAIN_NOTATIONS_0210 = new Set(['aiml', 'architecture', 'data-engineering']);
+const DOMAIN_NOTATIONS_0210 = new Set(['aiml', 'architecture', 'infrastructure', 'data-engineering']);
 
 function isDomainCaptionContext0210(context?: StencilCaptionContext0210): boolean {
   return Boolean(context && (
     (context.notationId && DOMAIN_NOTATIONS_0210.has(context.notationId))
-    || (context.symbolId && /^(?:aiml|arch|data)-/.test(context.symbolId))
+    || (context.symbolId && /^(?:aiml|arch|infra|data)-/.test(context.symbolId))
   ));
 }
 

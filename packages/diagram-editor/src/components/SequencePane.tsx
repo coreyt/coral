@@ -5,13 +5,13 @@
  */
 
 import { SequenceDiagram, type DiagramFontSettings, type SequenceSelection } from '@coral-viz/viz';
-import { caveatFontCss028, type RenderStyle028 } from '@coral-viz/render';
+import { baseRenderStyle028, caveatFontCss028, type RenderStyle0214, type RenderStyleInput0214 } from '@coral-viz/render';
 import type { GraphIR } from '../printer';
 import type { CanvasUpdateStatus } from './CanvasPane';
 
 export interface SequencePaneProps {
-  renderStyle028: RenderStyle028;
-  onRenderStyle028Change: (style: RenderStyle028) => void;
+  renderStyle028: RenderStyle0214;
+  onRenderStyle028Change: (style: RenderStyleInput0214) => void;
   graph: GraphIR;
   selected: SequenceSelection | null;
   error: string | null;
@@ -38,8 +38,8 @@ export function SequencePane({ graph, selected, error, onSelect, theme, themeMod
         display: 'inline-block', padding: '4px 6px', background: theme?.controlBg ?? '#fff' }}>
         Style{' '}
         <select aria-label="Diagram style" value={renderStyle028}
-          onChange={(event) => onRenderStyle028Change(event.target.value as RenderStyle028)}>
-          <option value="lowfi">Lowfi</option><option value="hifi">Hifi</option>
+          onChange={(event) => onRenderStyle028Change(event.target.value as RenderStyleInput0214)}>
+          <option value="lowfi">Lowfi</option><option value="hifi">Hifi</option><option value="anemone">Anemone</option>
         </select>
       </label>
       {updateStatus && (
@@ -56,7 +56,8 @@ export function SequencePane({ graph, selected, error, onSelect, theme, themeMod
       )}
       {error && <div role="status" className="coral-sequence-pane__status" style={{ padding: 8, fontSize: 12 }}>{error}</div>}
       <SequenceDiagram graph={graph} selected={selected} onSelect={onSelect}
-        themeMode={themeMode} fontSettings={fontSettings} renderStyle028={renderStyle028} />
+        themeMode={themeMode} fontSettings={fontSettings}
+        renderStyle028={baseRenderStyle028(renderStyle028)} renderStyle0214={renderStyle028} />
     </section>
   );
 }

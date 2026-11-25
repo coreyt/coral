@@ -163,7 +163,7 @@ test('frozen packages and site flow from their producers by identity', () => {
   rejects(inJob('browser-smoke',
     'EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.payload-sha256 }}', 'EXPECTED_SITE_SHA256: ${{ needs.candidate-site.outputs.version-sha256 }}'),
   /browser smoke must restore the frozen site/);
-  assert.match(validateCandidateArtifactConsumers(ci.replaceAll('RELEASE_VERSION: 0.2.12', 'RELEASE_VERSION: 0.2.6')).join('\n'),
+  assert.match(validateCandidateArtifactConsumers(ci.replaceAll('RELEASE_VERSION: 0.2.14', 'RELEASE_VERSION: 0.2.6')).join('\n'),
     /active candidate version/);
 });
 
@@ -185,9 +185,9 @@ test('the aggregate always runs, needs everything and binds producer identities'
 test('only passive release records and root prose are reduced; docs and authorities run everything', async () => {
   const { classifyChangedPaths } = await import('./ci-path-tier.mjs');
   for (const path of ['docs/use/index.md', 'docs/embed/examples/render-diagram.mjs', 'docs/embed/examples/graphir-migration.ts',
-    'PLAN.md', 'CLAUDE.md', 'dev/releases/0.2.12/plan.md', 'dev/releases/0.2.12/0.2.12-plan.md',
-    'dev/releases/0.2.12/slice-100/plan.md', 'dev/releases/0.2.12/slice-100/ci-plan.md',
-    'dev/releases/0.2.12/slice-100/ci-design.md', 'dev/release-policy.json', '.github/workflows/ci.yml']) {
+    'PLAN.md', 'CLAUDE.md', 'dev/releases/0.2.14/plan.md', 'dev/releases/0.2.14/0.2.14-plan.md',
+    'dev/releases/0.2.14/slice-100/plan.md', 'dev/releases/0.2.14/slice-100/ci-plan.md',
+    'dev/releases/0.2.14/slice-100/ci-design.md', 'dev/release-policy.json', '.github/workflows/ci.yml']) {
     assert.equal(classifyChangedPaths([path]).fullMatrix, true, path);
   }
   for (const path of ['README.md', 'dev/releases/0.2.9/status/slice-100.md', 'dev/releases/0.2.9/slice-100/reviews.md',

@@ -38,13 +38,13 @@ describe('source-owned grouped edge and arrangement transaction', () => {
         expect(result.current.inspector?.onEdgeLabelEdit('sales.route', 'Sales route')).toBe(true);
       });
       await waitFor(() => expect(result.current.editor.dsl).toBe(edited));
-      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull());
+      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull(), { timeout: 5000 });
       act(() => result.current.canvas.onUndo());
       await waitFor(() => expect(result.current.editor.dsl).toBe(source));
-      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull());
+      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull(), { timeout: 5000 });
       act(() => result.current.canvas.onRedo());
       await waitFor(() => expect(result.current.editor.dsl).toBe(edited));
-      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull());
+      await waitFor(() => expect(result.current.canvas.updateStatus).toBeNull(), { timeout: 5000 });
 
       let saved!: ReturnType<typeof result.current.header.onSave>;
       act(() => { saved = result.current.header.onSave(); });

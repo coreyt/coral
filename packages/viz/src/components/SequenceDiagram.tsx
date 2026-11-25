@@ -8,12 +8,14 @@
 
 import { createElement, useMemo, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react';
 import {
+  baseRenderStyle028,
   prepareSequenceScene028,
   type SequenceGraph,
   type SequencePrimitive,
   type SequenceTheme,
   visualStyle028,
   type RenderStyle028,
+  type RenderStyleInput0214,
 } from '@coral-viz/render';
 import { normalizeDiagramFontSettings, type DiagramFontSettings } from '../file/schema.js';
 
@@ -22,6 +24,7 @@ export interface SequenceSelection { kind: SequenceSelectionKind; id: string; }
 
 export interface SequenceDiagramProps {
   renderStyle028?: RenderStyle028;
+  renderStyle0214?: RenderStyleInput0214;
   graph: SequenceGraph;
   theme?: SequenceTheme;
   themeMode?: 'light' | 'dark';
@@ -41,12 +44,15 @@ function reactName(name: string): string {
 }
 
 export function SequenceDiagram({ graph, theme, themeMode = 'light', fontSettings, fontSize, fontFamily,
-  renderStyle028 = 'lowfi', selected, onSelect }: SequenceDiagramProps) {
-  const visual = visualStyle028(renderStyle028, themeMode);
+  renderStyle028 = 'lowfi', renderStyle0214, selected, onSelect }: SequenceDiagramProps) {
+  const baseStyle = baseRenderStyle028(renderStyle0214 ?? renderStyle028);
+  const visual = visualStyle028(baseStyle, themeMode);
   const layout = useMemo(() => {
     try {
       return { prepared: prepareSequenceScene028(graph, {
-        style: renderStyle028, theme: themeMode,
+        style: baseStyle,
+        ...(renderStyle0214 ? { renderStyle: renderStyle0214 } : {}),
+        theme: themeMode,
         fontSize: fontSize ?? (fontSettings ? undefined : visual.labelSize),
         fontFamily: fontFamily ?? (fontSettings ? undefined : visual.fontFamily),
         lineHeight: fontSettings ? undefined : 1.4,
@@ -56,7 +62,7 @@ export function SequenceDiagram({ graph, theme, themeMode = 'light', fontSetting
     } catch (error) {
       return { error: error instanceof Error ? error.message : String(error) };
     }
-  }, [graph, fontSettings, fontSize, fontFamily, renderStyle028, themeMode, theme, visual]);
+  }, [graph, fontSettings, fontSize, fontFamily, baseStyle, renderStyle0214, themeMode, theme, visual]);
 
   if (!layout.prepared) {
     return <div role="alert" className="coral-sequence-error">{layout.error}</div>;

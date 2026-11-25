@@ -30,7 +30,7 @@ import {
 } from '@xyflow/react';
 import { SymbolNode, EditProvider, CompatibilityEdge, useAxisConstrain,
   SpatialSceneArtworkDefs029, SpatialSceneMarkerDefs028 } from '@coral-viz/viz';
-import { caveatFontCss028, embeddedFontCssFor, stableSvgId, type RenderStyle028,
+import { caveatFontCss028, embeddedFontCssFor, stableSvgId, type RenderStyle0214, type RenderStyleInput0214,
   type PreparedSpatialScene028, type ScenePartRecord028 } from '@coral-viz/render';
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { isNativeEditingTarget } from '../authoringShortcuts';
@@ -122,8 +122,8 @@ export interface CanvasPaneProps {
   sceneError028?: string;
   /** A node is being dragged; connectors follow live handles until commit. */
   sceneTransient028?: boolean;
-  renderStyle028: RenderStyle028;
-  onRenderStyle028Change: (style: RenderStyle028) => void;
+  renderStyle028: RenderStyle0214;
+  onRenderStyle028Change: (style: RenderStyleInput0214) => void;
   // Deliberately loose in the node's data type: the composition root owns the
   // node shape, and the pane only renders and forwards.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -799,9 +799,10 @@ export function CanvasPane({
         padding: '4px 6px', borderRadius: 4, fontSize: 12 }}>
         Style{' '}
         <select aria-label="Diagram style" value={renderStyle028}
-          onChange={(event) => onRenderStyle028Change(event.target.value as RenderStyle028)}>
+          onChange={(event) => onRenderStyle028Change(event.target.value as RenderStyleInput0214)}>
           <option value="lowfi">Lowfi</option>
           <option value="hifi">Hifi</option>
+          <option value="anemone">Anemone</option>
         </select>
       </label>
       {/* Keep ReactFlow mounted regardless of optional visual-control preferences. */}

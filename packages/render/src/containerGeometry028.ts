@@ -2,8 +2,18 @@
 import type { GraphNode } from '@graph-ir/core';
 import type { ShapeDefinition } from './types.js';
 
-export function isContainerNode028(node: Pick<GraphNode, 'type' | 'children' | 'classifier'>): boolean {
-  return !node.classifier && (node.type === 'group' || Boolean(node.children?.length));
+const CONTAINER_TYPES_0214 = new Set([
+  'group', 'boundary', 'systemBoundary', 'containerBoundary',
+  'account', 'subscription', 'project', 'region', 'az', 'availabilityZone',
+  'vpc', 'vnet', 'subnet', 'cluster', 'securityGroup',
+]);
+
+export function isContainerNode028(node: Pick<GraphNode, 'type' | 'children' | 'classifier' | 'symbol'>): boolean {
+  return !node.classifier && (
+    CONTAINER_TYPES_0214.has(node.type)
+    || node.symbol === 'infra-boundary'
+    || Boolean(node.children?.length)
+  );
 }
 
 /** Containers are elastic frames; ordinary symbols retain their native aspect ratio. */

@@ -41,7 +41,6 @@ export function alignGroupColumns0211(
   paddingOf?: (id: string) => Padding | undefined,
 ): boolean {
   const containers = collectContainersBottomUp(graph.nodes);
-  if (!containers.length) return false;
   const horiz = direction === 'RIGHT' || direction === 'LEFT';
   let movedAny = false;
 
@@ -196,11 +195,25 @@ export function alignGroupColumns0211(
       if (hasSameRank) continue;
       const centers = cluster.map(secondaryCenter);
       if (Math.max(...centers) - Math.min(...centers) <= 0.25) continue;
-      // Prefer captioned-icon glyph centers in a mixed cluster so plain rects shift
-      // inside the existing container without pushing right/bottom captions outward.
+      // Prefer captioned-icon glyph centers in a mixed cluster; if shifting plain
+      // nodes toward captioned icons would push a child above container padding,
+      // fall back to the non-captioned center so alignment stays strictly inside.
       const captioned = cluster.filter(isAsymmetricCaptioned);
-      const anchorCenters = captioned.length ? captioned.map(secondaryCenter) : centers;
-      const target = (Math.min(...anchorCenters) + Math.max(...anchorCenters)) / 2;
+      const plain = cluster.filter((r) => !isAsymmetricCaptioned(r));
+      const pad = paddingOf?.(container.id);
+      const padMin = horiz ? Math.max(16, pad?.top ?? 16) : Math.max(16, pad?.left ?? 16);
+      const containerStart = horiz ? cRect.absolutePosition.y : cRect.absolutePosition.x;
+      const tryTarget = (target: number): boolean => cluster.every((r) => {
+        const m = metrics.get(r.id)!;
+        const nextSec = target - (horiz ? m.centerOffsetY : m.centerOffsetX);
+        return nextSec >= containerStart + padMin - 0.5;
+      });
+      const primaryCenters = captioned.length ? captioned.map(secondaryCenter) : centers;
+      let target = (Math.min(...primaryCenters) + Math.max(...primaryCenters)) / 2;
+      if (!tryTarget(target) && plain.length) {
+        const plainCenters = plain.map(secondaryCenter);
+        target = (Math.min(...plainCenters) + Math.max(...plainCenters)) / 2;
+      }
       for (const r of cluster) {
         const m = metrics.get(r.id)!;
         const nextSec = target - (horiz ? m.centerOffsetY : m.centerOffsetX);
@@ -295,7 +308,8 @@ export function alignGroupColumns0211(
   // Second pass: snap standalone top-level leaf nodes (e.g. transit gateways,
   // external SaaS, edge entry icons) onto their directly connected upstream or
   // downstream peer's visual glyph centerline when close and collision-free.
-  const topLevelLeaves = graph.nodes
+  // Skip sketch (spline feedback loops require preserved vertical separation).
+  const topLevelLeaves = graph.metadata?.notation === 'sketch' ? [] : graph.nodes
     .filter((n) => !n.children?.length && !n.pinned && !n.position)
     .map((n) => rects.get(n.id))
     .filter((r): r is AlignableRect => Boolean(r && !r.fixed));
@@ -343,8 +357,11 @@ export function alignGroupColumns0211(
           allPeers.sort((a, b) => Math.abs(primCenterOf(a) - primCenterOf(r)) - Math.abs(primCenterOf(b) - primCenterOf(r)));
           if (allPeers[0]) candidates.push(allPeers[0]);
         }
-        // Only snap when caption asymmetry on either node caused glyph-center drift.
-        const asymCandidates = candidates.filter((p) => isAsymTop(r) || isAsymTop(p));
+        // Only snap when caption asymmetry on either node caused glyph-center drift,
+        // and never collapse a direct 2-cycle pair whose return loop needs clearance.
+        const isMutual = (p: AlignableRect) =>
+          (incoming.get(r.id)?.includes(p.id) ?? false) && (outgoing.get(r.id)?.includes(p.id) ?? false);
+        const asymCandidates = candidates.filter((p) => !isMutual(p) && (isAsymTop(r) || isAsymTop(p)));
         // Prefer a peer inside a container (already anchored) over a floating peer.
         asymCandidates.sort((a, b) => (parentById.has(b.id) ? 1 : 0) - (parentById.has(a.id) ? 1 : 0)
           || Math.abs(secCenterOf(a) - secCenterOf(r)) - Math.abs(secCenterOf(b) - secCenterOf(r)));

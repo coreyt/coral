@@ -5,7 +5,7 @@ import type { UserSymbolDefinition } from '@coral-viz/language';
 import { admitSvgArtwork029 } from './artwork/svgArtworkAdmission029.js';
 import type { AdmittedSvgArtwork029 } from './artwork/svgArtworkModel029.js';
 import type { CatalogSnapshot028 } from './interpretation028.js';
-import { installedCatalogSnapshot028 } from './notations/index.js';
+import { installedCatalogSnapshot028, installedCatalogSnapshotForEdition } from './notations/index.js';
 import { projectPortAnchor028 } from './portAnchorProjection028.js';
 import type { ShapeDefinition, SymbolDefinition, SymbolPort } from './types.js';
 import { resolveUserAnchor029, userOutlineShape029, type ResolvedUserAnchor029,
@@ -72,18 +72,20 @@ const documentCatalogs = new WeakMap<readonly UserSymbolDefinitionView029[], Map
 /** One catalog per parse: memoized on the definitions array, so every consumer of one parse shares it. */
 export function documentCatalog029(
   notationId: string, definitions: readonly UserSymbolDefinitionView029[],
+  edition?: string,
 ): DocumentCatalog029 {
-  const base = installedCatalogSnapshot028(notationId);
+  const base = edition ? installedCatalogSnapshotForEdition(notationId, edition) : installedCatalogSnapshot028(notationId);
+  const cacheKey = edition ? `${notationId}@${base.identity.version}` : notationId;
   if (!definitions.length) {
-    let empty = emptyCatalogs.get(notationId);
+    let empty = emptyCatalogs.get(cacheKey);
     if (!empty) {
       empty = Object.freeze({ ...base, userSymbols: new Map(), shapes: new Map() });
-      emptyCatalogs.set(notationId, empty);
+      emptyCatalogs.set(cacheKey, empty);
     }
     return empty;
   }
   let byNotation = documentCatalogs.get(definitions);
-  const cached = byNotation?.get(notationId);
+  const cached = byNotation?.get(cacheKey);
   if (cached) return cached;
   const userSymbols = new Map(definitions.map((definition) =>
     [definition.symbolId, resolveUserSymbol029(definition)] as const));
@@ -95,7 +97,7 @@ export function documentCatalog029(
     shapes: new Map([...userSymbols].map(([id, user]) => [id, user.shape] as const)),
   });
   if (!byNotation) documentCatalogs.set(definitions, byNotation = new Map());
-  byNotation.set(notationId, catalog);
+  byNotation.set(cacheKey, catalog);
   return catalog;
 }
 
@@ -106,17 +108,19 @@ const interpretationCatalogs = new WeakMap<object, Map<string, DocumentCatalog02
  * consistently without a separate catalog parameter. */
 export function catalogForInterpretations029(
   notationId: string, interpretations: ReadonlyMap<string, { userSymbol029?: ResolvedUserSymbol029 }>,
+  edition?: string,
 ): DocumentCatalog029 {
+  const cacheKey = edition ? `${notationId}@${edition}` : notationId;
   let byNotation = interpretationCatalogs.get(interpretations);
-  const cached = byNotation?.get(notationId);
+  const cached = byNotation?.get(cacheKey);
   if (cached) return cached;
   const users = new Map<string, UserSymbolDefinitionView029>();
   for (const interpretation of interpretations.values()) {
     const user = interpretation.userSymbol029;
     if (user) users.set(user.definition.symbolId, user.definition);
   }
-  const catalog = documentCatalog029(notationId, [...users.values()]);
+  const catalog = documentCatalog029(notationId, [...users.values()], edition);
   if (!byNotation) interpretationCatalogs.set(interpretations, byNotation = new Map());
-  byNotation.set(notationId, catalog);
+  byNotation.set(cacheKey, catalog);
   return catalog;
 }

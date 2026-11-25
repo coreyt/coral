@@ -42,6 +42,7 @@ const cards: Readonly<Record<string, RulesetDefinition<GraphIR>>> = Object.freez
   erd: freezeCard(partialCard('erd')),
   code: freezeCard(sharedCard('code')),
   architecture: freezeCard(sharedCard('architecture')),
+  infrastructure: freezeCard(sharedCard('infrastructure')),
   aiml: freezeCard(sharedCard('aiml')),
   'data-engineering': freezeCard(sharedCard('data-engineering')),
   sketch: freezeCard(sharedCard('sketch')),

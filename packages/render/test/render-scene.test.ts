@@ -313,11 +313,11 @@ describe('Slice 40 notation render scene', () => {
       diamond: 'M1 8 L8 2 L15 8 L8 14 Z',
       circle: 'M8 2 A6 6 0 1 1 8 14 A6 6 0 1 1 8 2',
       bar: 'M10 2 L10 14',
-      'crow-foot': 'M14 8 L3 2 M14 8 L3 8 M14 8 L3 14',
-      'zero-or-one': 'M5 2 A3 3 0 1 1 5 8 A3 3 0 1 1 5 2 M11 2 L11 14',
+      'crow-foot': 'M3 8 L14 2 M3 8 L14 8 M3 8 L14 14',
+      'zero-or-one': 'M5 5 A3 3 0 1 1 5 11 A3 3 0 1 1 5 5 M11 2 L11 14',
       one: 'M7 2 L7 14 M12 2 L12 14',
-      'zero-or-many': 'M4 2 A3 3 0 1 1 4 8 A3 3 0 1 1 4 2 M14 8 L8 2 M14 8 L8 8 M14 8 L8 14',
-      'one-or-many': 'M5 2 L5 14 M14 8 L8 2 M14 8 L8 8 M14 8 L8 14',
+      'zero-or-many': 'M4 5 A3 3 0 1 1 4 11 A3 3 0 1 1 4 5 M8 8 L14 2 M8 8 L14 8 M8 8 L14 14',
+      'one-or-many': 'M5 2 L5 14 M8 8 L14 2 M8 8 L14 8 M8 8 L14 14',
     } as const;
     const fillable = new Set(['arrow', 'triangle', 'diamond', 'circle']);
     expect(new Set(Object.values(geometry)).size).toBe(Object.keys(geometry).length);

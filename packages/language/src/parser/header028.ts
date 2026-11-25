@@ -139,6 +139,16 @@ export function editionAdmitsUserSymbols029(version: string): boolean {
   return major > 0 || minor > 2 || minor === 2 && patch >= 9;
 }
 
+/** Editions that admit Coral 0.2.14 syntax (node style/technology/description/provider,
+ * edge technology/description/endpoint labels, Crow's Foot ERD, cloud infrastructure,
+ * camelCase relation mappings, and symmetric unnamed UML attribute visibility). */
+export function editionAdmits0214(version: string): boolean {
+  const parts = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)?.slice(1).map(Number);
+  if (!parts) return false;
+  const [major, minor, patch] = parts as [number, number, number];
+  return major > 0 || minor > 2 || minor === 2 && patch >= 14;
+}
+
 interface RegionScan {
   region?: SymbolDefinitionRegion029; lines: Line[];
   /** The opening line, from `@symbol` to its last non-space character. */

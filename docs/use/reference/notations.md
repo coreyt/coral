@@ -1,6 +1,6 @@
 # Notation libraries
 
-Enabled visual vocabularies for Coral 0.2.12, using saved-source edition 0.2.8.
+Enabled visual vocabularies for Coral 0.2.14, using saved-source edition 0.2.8.
 
 | Notation library | Use it for |
 | --- | --- |

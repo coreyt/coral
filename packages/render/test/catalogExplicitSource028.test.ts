@@ -34,7 +34,7 @@ describe('pinned explicit-symbol source smoke inventory', () => {
   });
 
   it('names every installed base and variant exactly once', () => {
-    const expected = symbolRegistry.getAll().flatMap((symbol) => [
+    const expected = symbolRegistry.getAll().filter((symbol) => !symbol.addedInEdition).flatMap((symbol) => [
       symbol.id, ...Object.keys(symbol.variants ?? {}).map((variant) => `${symbol.id}/${variant}`),
     ]).sort();
     expect(fixture.schemaVersion).toBe(1);

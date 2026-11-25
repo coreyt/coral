@@ -22,6 +22,8 @@ describe('Slice 20: Canonical 40-diagram Coral layout verification corpus', () =
     expect(grouped.length).toBeGreaterThanOrEqual(8);
   });
 
+  const scores: number[] = [];
+
   it.each(LAYOUT_CORPUS_0211)(
     'renders and scores deterministically: $id ($notation, $direction, $scale)',
     async (entry) => {
@@ -37,9 +39,16 @@ describe('Slice 20: Canonical 40-diagram Coral layout verification corpus', () =
       expect(report.tier2.intraGroupAlignmentMaxPx).toBeLessThanOrEqual(1);
       expect(report.nodeCount).toBeGreaterThanOrEqual(5);
       expect(report.edgeCount).toBeGreaterThanOrEqual(5);
-      expect(report.tier2.compositeScore).toBeGreaterThanOrEqual(0);
+      expect(report.tier2.compositeScore).toBeGreaterThanOrEqual(65);
       expect(report.tier2.compositeScore).toBeLessThanOrEqual(100);
+      scores.push(report.tier2.compositeScore);
     },
     15000,
   );
+
+  it('meets the 0.2.14 >= 95.0 composite quality bar across the full 40-diagram corpus', () => {
+    expect(scores.length).toBe(LAYOUT_CORPUS_0211.length);
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    expect(mean).toBeGreaterThanOrEqual(95.0);
+  });
 });

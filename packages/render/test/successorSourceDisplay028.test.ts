@@ -10,8 +10,10 @@ import { stencilFitPoint028 } from '../src/stencilAnchorGeometry028.js';
 describe('read-only display of installed successor source meaning', () => {
   it.each(notationRegistry.getAll().map((notation) => notation.id).filter((id) => id !== 'erd'))(
     'displays a saved %s document without changing its installed profile meaning', (diagramType) => {
-      const body = diagramType === 'uml-sequence' ? 'example participant' : 'example group';
-      const source = `@diagram ${diagramType}\n${body}\n`;
+      const body = diagramType === 'uml-sequence' ? 'example participant'
+        : diagramType === 'infrastructure' ? 'example compute' : 'example group';
+      const versionHeader = diagramType === 'infrastructure' ? '@coralVersion "0.2.14"\n' : '';
+      const source = `@diagram ${diagramType}\n${versionHeader}${body}\n`;
       const projected = projectInstalledSourceToSuccessor028(source);
       expect(projected.diagnostics).toEqual([]);
       const display = successorSourceDisplay028(projected.graph!);
