@@ -456,7 +456,7 @@ const TEXT_TO_DIAGRAM_DEBOUNCE_MS = 300;
 const TEXT_ORIGIN_SETTLE_MS = 100;
 const INTERNAL_TEXT_GUARD_MS = 1000;
 const DOCUMENT_LOAD_GUARD_MS = 400;
-const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.14';
+const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.15';
 
 // layoutNodes, convertEdges, LayoutResult imported from './hooks/diagramUtils'
 const layoutNodes = layoutNodesUtil;
@@ -2945,7 +2945,6 @@ export function useEditorController() {
     setDebugInfo(options.announcement);
     if (options.focus) {
       setSelectedNodeId(options.focus.kind === 'node' ? options.focus.id : null);
-      if (options.focus.kind === 'node') setInspectorCollapsed(false);
       setCanvasFocusRequest({ ...options.focus, token: ++canvasFocusTokenRef.current });
     }
     if (options.closeAuthoring) setAuthoringSession(null);
@@ -3064,7 +3063,8 @@ export function useEditorController() {
     const delta = { x: key === 'ArrowRight' ? step : key === 'ArrowLeft' ? -step : 0,
       y: key === 'ArrowDown' ? step : key === 'ArrowUp' ? -step : 0 };
     try {
-      const edited = editSourceOwnedNodePositions028(dslRef.current, nodeIds, delta);
+      const edited = editSourceOwnedNodePositions028(dslRef.current, nodeIds, delta,
+        new Map(nodesRef.current.map((node) => [node.id, node.position])));
       if (edited !== dslRef.current) {
         replacementNeedsConfirmationRef.current = true;
         sourceTextEditRef.current(edited);
@@ -3086,7 +3086,8 @@ export function useEditorController() {
       return;
     }
     try {
-      const edited = editSourceOwnedNodePositions028(dslRef.current, nodeIds, delta);
+      const edited = editSourceOwnedNodePositions028(dslRef.current, nodeIds, delta,
+        new Map(nodesRef.current.map((node) => [node.id, node.position])));
       if (edited !== dslRef.current) {
         replacementNeedsConfirmationRef.current = true;
         sourceTextEditRef.current(edited);
@@ -4232,24 +4233,21 @@ export function useEditorController() {
     if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
   }, []);
 
-  // Handle node selection - switch to Selection tab in Inspector
+  // Selection updates Properties content without opening the panel.
   const handleSelectionChange = useCallback(({ nodes: selectedNodes, edges: selectedEdges = [] }: { nodes: Node[]; edges?: Edge[] }) => {
     propertiesInvokerRef.current = null;
     if (selectedNodes.length === 1 && selectedEdges.length === 0) {
       setSelectedNodeId(selectedNodes[0].id);
       setSelectedEdgeId(null);
       setSelectionSummary({ kind: 'node', count: 1, label: String(selectedNodes[0].data?.label ?? selectedNodes[0].id) });
-      setInspectorCollapsed(false); // Ensure inspector is visible
     } else if (selectedNodes.length === 0 && selectedEdges.length === 1) {
       setSelectedNodeId(null);
       setSelectedEdgeId(selectedEdges[0].id);
       setSelectionSummary({ kind: 'edge', count: 1, label: String(selectedEdges[0].label ?? selectedEdges[0].id) });
-      setInspectorCollapsed(false);
     } else if (selectedNodes.length + selectedEdges.length > 1) {
       setSelectedNodeId(null);
       setSelectedEdgeId(null);
       setSelectionSummary({ kind: 'mixed', count: selectedNodes.length + selectedEdges.length });
-      setInspectorCollapsed(false);
     } else {
       setSelectedNodeId(null);
       setSelectedEdgeId(null);
@@ -7523,7 +7521,6 @@ export function useEditorController() {
       onSourceParticipantDelete: commitSourceParticipantDelete,
       onSelect: (selection: SequenceSelection | null) => {
         setSequenceSelection(selection);
-        if (selection) setInspectorCollapsed(false);
       },
       onOperation: (operation: SequenceOperation) => commitSequenceOperation(operation),
       onDismissError: () => setSequenceError(null),

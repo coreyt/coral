@@ -3,11 +3,11 @@ import { readFileSync } from 'node:fs';
 import { CANDIDATE_PACKAGES } from './candidate-artifacts.mjs';
 
 export const RENDERER_CANDIDATE = Object.freeze(JSON.parse(readFileSync(new URL(
-  '../dev/releases/0.2.14/renderer-candidate.json', import.meta.url), 'utf8')));
+  '../dev/releases/0.2.15/renderer-candidate.json', import.meta.url), 'utf8')));
 
 export function validateRendererCandidate(config) {
   assert.equal(config.schemaVersion, 1);
-  assert.equal(config.version, '0.2.14');
+  assert.equal(config.version, '0.2.15');
   assert.equal(config.candidateRef, `refs/heads/release/${config.version}`);
   assert.equal(config.integrationRef, `refs/heads/release/${config.version}`);
   assert.equal(config.mergeTarget, `refs/heads/release/${config.version}`);

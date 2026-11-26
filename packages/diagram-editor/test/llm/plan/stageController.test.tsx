@@ -3,7 +3,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { validatePlanResponse, type PlanResponse } from '../../../src/llm/plan/decode';
 import type { PlanCapture } from '../../../src/llm/plan/snapshot';
 import { planStageIsOpen, type PlanStage, type PlanStageResult } from '../../../src/llm/plan/stage';
-import { useEditorController, type PlanApplyResult } from '../../../src/useEditorController';
+import { type PlanApplyResult } from '../../../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from '../../fixtures/useEditorControllerWithProperties';
 
 const faults = vi.hoisted(() => ({ canvasLayout: false, previewLayout: false, abortAfterPreview: null as AbortController | null }));
 // The canvas places nodes through the editor's incremental layout; the preview draws through the shared SVG layout.

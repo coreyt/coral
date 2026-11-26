@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { startCleanEditor, openBuffer, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, startCleanEditor, openBuffer, waitForEditorSettled } from './support/user-journey.js';
 
 const SOURCE = ['@diagram architecture', '@coralVersion "0.2.9"', '@symbol gate {', '  name "Gate"',
   '  size 48 x 48', '  artwork svg """',
@@ -8,6 +8,7 @@ const SOURCE = ['@diagram architecture', '@coralVersion "0.2.9"', '@symbol gate 
 
 test('rapid inspector fields retain both source edits and separate Undo entries', async ({ page }) => {
   await startCleanEditor(page);
+  await showProperties(page);
   await openBuffer(page, { name: 'pending.coral', buffer: Buffer.from(SOURCE) });
   await page.locator('.react-flow__node[data-id="g"]').click();
   await page.getByRole('button', { name: 'Edit symbol', exact: true }).click();
@@ -29,6 +30,7 @@ test('rapid inspector fields retain both source edits and separate Undo entries'
 
 test('inspector connector label retains keyboard focus after its commit', async ({ page }) => {
   await startCleanEditor(page);
+  await showProperties(page);
   await openBuffer(page, { name: 'pending.coral', buffer: Buffer.from(SOURCE) });
   await page.getByRole('button', { name: 'Fit diagram to view' }).click();
   const point = await page.locator('.react-flow__edge[data-id="read"] path').first().evaluate(element => {

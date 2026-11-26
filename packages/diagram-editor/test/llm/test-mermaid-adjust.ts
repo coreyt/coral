@@ -34,7 +34,7 @@ console.log(`Nodes: ${parsed.nodes.map(n => n.id + '="' + n.label + '"').join(',
 console.log(`Edges: ${parsed.edges.length}`);
 
 // Step 2: Convert to Coral DSL using shared utility
-const coralDsl = printCoralDSL({ version: '1.0.0', id: 'current', nodes: parsed.nodes, edges: parsed.edges });
+const coralDsl = printCoralDSL({ version: '3.0.0', id: 'current', nodes: parsed.nodes, edges: parsed.edges });
 console.log('\n-- Step 2: Converted to Coral DSL --');
 console.log(coralDsl);
 

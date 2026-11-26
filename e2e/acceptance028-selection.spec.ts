@@ -17,48 +17,53 @@ test('Escape clears source-owned node selection without changing Coral text', as
   await expect(editor).toHaveValue(source);
 });
 
-test('Shift drag and Escape keep source ownership through save and reopen', async ({ page }) => {
+test('Shift drag saves constrained coordinates and Escape only clears selection', async ({ page }) => {
   const source = '@diagram architecture\nalpha service\nbeta database\nalpha -> beta [writes]';
   await startCleanEditor(page);
   await openBuffer(page, { name: 'selection.coral', buffer: Buffer.from(source) });
   await waitForEditorSettled(page);
   const editor = page.getByLabel('DSL editor', { exact: true });
   const node = page.locator('.react-flow__node[data-id="alpha"]');
-  await expect(node).toBeVisible();
   const position = () => node.evaluate((element: HTMLElement) => {
     const matrix = new DOMMatrixReadOnly(element.style.transform);
     return { x: matrix.m41, y: matrix.m42 };
   });
   const before = await position();
-  const undoBefore = await page.getByRole('button', { name: /^Undo \(/ }).getAttribute('aria-label');
-  const exportCandidate = async () => JSON.parse((await downloadFromPalette(
-    page, 'Export GraphIR 4 candidate')).bytes.toString('utf8'));
-  const meaningBefore = await exportCandidate();
-  const box = await node.boundingBox();
-  expect(box).not.toBeNull();
-  const x = box!.x + box!.width / 2;
-  const y = box!.y + box!.height / 2;
+  const box = (await node.boundingBox())!;
+  const x = box.x + box.width / 2, y = box.y + box.height / 2;
   await page.keyboard.down('Shift');
   await page.mouse.move(x, y);
   await page.mouse.down();
   await page.mouse.move(x + 40, y + 15, { steps: 4 });
+  const target = await position();
+  expect(target.x).not.toBe(before.x);
+  expect(target.y).toBe(before.y);
   await page.mouse.up();
   await page.keyboard.up('Shift');
+  await expect(editor).toHaveValue(/alpha service @ \(/);
+  const moved = await editor.inputValue();
+  expect(moved.replace(/alpha service @ \([^)]+\)/, 'alpha service')).toBe(source);
+  await waitForEditorSettled(page);
+  const distanceFromTarget = async () => {
+    const current = await position();
+    return Math.hypot(current.x - target.x, current.y - target.y);
+  };
+  // CSS transforms round displayed coordinates; source keeps the full drag precision.
+  await expect.poll(distanceFromTarget).toBeLessThan(0.001);
   await expect(node).toHaveClass(/selected/);
-  await expect.poll(position).toEqual(before);
-  await expect(page.getByRole('button', { name: /^Undo \(/ })).toHaveAttribute('aria-label', undoBefore!);
-  await expect(editor).toHaveValue(source);
-  expect(await exportCandidate()).toEqual(meaningBefore);
+  await expect(page.getByLabel('Properties panel', { exact: true })).toHaveCount(0);
+  const undoBeforeEscape = await page.getByRole('button', { name: /^Undo \(/ }).getAttribute('aria-label');
   await node.press('Escape');
   await expect(node).not.toHaveClass(/selected/);
+  await expect(editor).toHaveValue(moved);
+  await expect(page.getByRole('button', { name: /^Undo \(/ })).toHaveAttribute('aria-label', undoBeforeEscape!);
   const saved = await saveDocument(page);
-  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: source });
+  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: moved });
   await editor.fill('@diagram architecture\nother service');
   await waitForEditorSettled(page);
   await openSavedDocument(page, saved.path);
-  await expect(editor).toHaveValue(source);
-  await expect(node).toBeVisible();
-  expect(await exportCandidate()).toEqual(meaningBefore);
+  await expect(editor).toHaveValue(moved);
+  await expect.poll(distanceFromTarget).toBeLessThan(0.001);
 });
 
 test('canceled source-owned pointer drag rejects its late release without changing source or meaning', async ({ page }) => {

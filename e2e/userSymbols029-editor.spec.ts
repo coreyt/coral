@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openBuffer, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, openBuffer, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
 
 // Slice 60 C5, R-065 AC-2 and AC-5: a keyboard-only journey through the
 // Symbol list, the inspector Symbol summary, the symbol editor and a port
@@ -54,6 +54,7 @@ test('a user symbol is placed, inspected and edited from the keyboard with Undo'
   // Inspect the symbol and rename it in the symbol editor.
   await page.locator('.react-flow__node[data-id="g"]').focus();
   await page.keyboard.press('Enter');
+  await showProperties(page);
   const inspector = page.getByLabel('Properties panel');
   const summary = inspector.getByRole('group', { name: 'Symbol' });
   await expect(summary.getByText(/^sha256:[0-9a-f]{64}$/)).toBeVisible();

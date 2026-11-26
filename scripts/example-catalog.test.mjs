@@ -50,7 +50,7 @@ test('website admission refuses missing files, mismatched notation and invalid s
   t.after(() => rm(root, { recursive: true, force: true }));
   const sources = join(root, 'packages/diagram-editor/src/example-sources');
   await cp(new URL('../packages/diagram-editor/src/example-sources/', import.meta.url), sources, { recursive: true });
-  await writeFile(join(root, 'package.json'), JSON.stringify({ version: '0.2.14', type: 'module' }));
+  await writeFile(join(root, 'package.json'), JSON.stringify({ version: '0.2.15', type: 'module' }));
   const file = join(sources, 'block.coral');
   const original = await readFile(file, 'utf8');
   await rm(file);

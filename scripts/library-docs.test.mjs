@@ -104,7 +104,7 @@ test('the chooser matches public package entries, requirements, and GraphIR 3', 
     assert.ok(source.includes('@graph-ir/core@0.2.4'), `${page} lacks exact Core pin`);
   }
   assert.ok((await read('docs/embed/reference/tree-sitter.md')).includes(`./tree-sitter-coral-${version}.tgz`));
-  assert.match(index, /verified 0\.2\.14 archives/);
+  assert.match(index, /verified 0\.2\.15 archives/);
   assert.doesNotMatch(index, /until Coral 0\.2\.8 is published|published 0\.2\.6 identities/);
 
   for (const page of [
@@ -127,7 +127,7 @@ test('Current READMEs provide complete executable installs and durable Embed lin
     ...packages, ['packages/browser', '@coral-viz/browser', 'how-to/render-in-a-browser', []],
   ]) {
     const source = await read(`${directory}/README.md`);
-    assert.match(source, /## Coral 0\.2\.14/);
+    assert.match(source, /## Coral 0\.2\.15/);
     assert.doesNotMatch(source, /private candidate|not tagged or\s+published/);
     const block = source.match(/```sh\n(npm install [\s\S]*?)\n```/)?.[1];
     assert.ok(block, `${name}: install command missing`);
@@ -220,9 +220,9 @@ test('the MCP reference describes all seven current bounded contracts', async ()
 
 test('current archive install guidance stays explicit', async () => {
   const guide = await read('docs/embed/how-to/render-a-diagram.md');
-  assert.match(guide, /verified Coral 0\.2\.14 browser archive/);
-  assert.ok(guide.includes(`npm install @graph-ir/core@${(await readRegistryCoreIdentity()).version} ./coral-viz-browser-0.2.14.tgz`));
-  assert.match(guide, /coral-viz-browser-0\.2\.14\.tgz/);
+  assert.match(guide, /verified Coral 0\.2\.15 browser archive/);
+  assert.ok(guide.includes(`npm install @graph-ir/core@${(await readRegistryCoreIdentity()).version} ./coral-viz-browser-0.2.15.tgz`));
+  assert.match(guide, /coral-viz-browser-0\.2\.15\.tgz/);
   assert.match(guide, /Verify archive checksums before\s+installation/);
   assert.doesNotMatch(guide, /npm install @coral-viz\/language@0\.2\.6/);
 });

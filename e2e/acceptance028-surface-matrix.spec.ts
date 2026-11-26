@@ -3,8 +3,13 @@ import { resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 import { ACTIVE_RENDERER_SOURCE_CASES_028, DISABLED_RENDERER_SOURCE_CASES_028 }
   from '../scripts/renderer-source-cases.mjs';
-import { downloadFromPalette, openBuffer, openSavedDocument, saveDocument,
-  startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, downloadFromPalette, openBuffer, openSavedDocument, saveDocument,
+  startCleanEditor as startCleanEditorBase, waitForEditorSettled } from './support/user-journey.js';
+
+async function startCleanEditor(page: Parameters<typeof startCleanEditorBase>[0]) {
+  await startCleanEditorBase(page);
+  await showProperties(page);
+}
 
 const fixtures = ACTIVE_RENDERER_SOURCE_CASES_028;
 

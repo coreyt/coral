@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import { expect, test } from '@playwright/test';
-import { openBuffer, openSavedDocument, saveDocument, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, openBuffer, openSavedDocument, saveDocument, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
 
 const SOURCE = ['@diagram architecture', '@coralVersion "0.2.9"', '@symbol gate {', '  name "Gate"',
   '  size 40 x 40', '  artwork svg """',
@@ -18,6 +18,7 @@ test('user-symbol edits save and reopen locally before frozen export and raw can
     return route.continue();
   });
   await startCleanEditor(page);
+  await showProperties(page);
   await openBuffer(page, { name: 'symbols.coral', buffer: Buffer.from(SOURCE) });
   await expect(page.locator('[data-coral-artwork="local.gate"] use')).toHaveCount(1);
   await page.locator('.react-flow__node[data-id="g"]').click();

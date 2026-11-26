@@ -22,6 +22,34 @@ describe('CommandPalette focus handoff', () => {
     expect(document.activeElement).toBe(input);
   });
 
+  it('restores the current invoker after reopening from a different control', async () => {
+    function Harness() {
+      const [open, setOpen] = useState(false);
+      return <>
+        <button onClick={() => setOpen(true)}>First control</button>
+        <button onClick={() => setOpen(true)}>Second control</button>
+        <CommandPalette isOpen={open} onClose={() => setOpen(false)}
+          commands={[{ id: 'properties', label: 'Show Inspector', category: 'View', action: () => {} }]}
+          theme={theme} />
+      </>;
+    }
+    render(<Harness />);
+    const first = screen.getByRole('button', { name: 'First control' });
+    first.focus();
+    fireEvent.click(first);
+    const input = await screen.findByLabelText('Search commands');
+    await waitFor(() => expect(document.activeElement).toBe(input));
+    fireEvent.change(input, { target: { value: 'Show Inspector' } });
+    fireEvent.click(screen.getByRole('option', { name: 'Show Inspector' }));
+    await waitFor(() => expect(document.activeElement).toBe(first));
+    const second = screen.getByRole('button', { name: 'Second control' });
+    second.focus();
+    fireEvent.click(second);
+    await waitFor(() => expect(document.activeElement).toBe(screen.getByLabelText('Search commands')));
+    fireEvent.click(screen.getByRole('button', { name: 'Close command palette' }));
+    await waitFor(() => expect(document.activeElement).toBe(second));
+  });
+
   it('does not restore its invoker when a command transfers focus', async () => {
     function Harness() {
       const [open, setOpen] = useState(false);

@@ -107,7 +107,7 @@ test('keyboard moves authored positions in one source transaction with history a
   expect(await exportCandidate()).toEqual(graph);
 });
 
-test('keyboard move without authored position leaves source and history quiet', async ({ page }) => {
+test('keyboard movement saves a first authored position and supports undo', async ({ page }) => {
   const source = '@diagram architecture\napi service\nstore database @ (300, 80) pinned\n' +
     'request = api -> store\n';
   await startCleanEditor(page);
@@ -115,14 +115,20 @@ test('keyboard move without authored position leaves source and history quiet', 
   await waitForEditorSettled(page);
   const editor = page.getByLabel('DSL editor', { exact: true });
   const node = page.locator('.react-flow__node[data-id="api"]');
-  const undoBefore = await page.getByRole('button', { name: /^Undo \(/ }).getAttribute('aria-label');
+  const before = await node.evaluate((element: HTMLElement) => {
+    const matrix = new DOMMatrixReadOnly(element.style.transform);
+    return { x: matrix.m41, y: matrix.m42 };
+  });
   await node.focus();
   await node.press('Enter');
   await node.press('ArrowRight');
-  await expect(editor).toHaveValue(source);
-  await expect(page.getByRole('button', { name: /^Undo \(/ })).toHaveAttribute('aria-label', undoBefore!);
+  const moved = source.replace('api service', `api service @ (${before.x + 5}, ${before.y})`);
+  await expect(editor).toHaveValue(moved);
+  await expect(page.getByLabel('Properties panel', { exact: true })).toHaveCount(0);
   const saved = await saveDocument(page);
-  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: source });
+  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: moved });
+  await page.keyboard.press('Control+z');
+  await expect(editor).toHaveValue(source);
 });
 
 test('pointer drag moves an authored node through source history and reopen', async ({ page }) => {
@@ -161,33 +167,50 @@ test('pointer drag moves an authored node through source history and reopen', as
   await expect(editor).toHaveValue(moved);
 });
 
-test('pointer drag without authored coordinates leaves source and history quiet', async ({ page }) => {
-  const source = '@diagram architecture\napi service\nstore database @ (300, 80) pinned\n' +
-    'request = api -> store\n';
+test('pointer drag saves a first authored position through history and reopen', async ({ page }) => {
+  test.setTimeout(90_000);
+  const source = '// Keep this comment and connection.\n@diagram architecture\napi service\n' +
+    'store database @ (300, 80) pinned\nrequest = api -> store\n';
   await startCleanEditor(page);
   await openBuffer(page, { name: 'unpositioned-pointer.coral', buffer: Buffer.from(source) });
   await waitForEditorSettled(page);
   const editor = page.getByLabel('DSL editor', { exact: true });
-  const undoBefore = await page.getByRole('button', { name: /^Undo \(/ }).getAttribute('aria-label');
   const api = page.locator('.react-flow__node[data-id="api"]');
   const position = () => api.evaluate((element: HTMLElement) => {
     const matrix = new DOMMatrixReadOnly(element.style.transform);
     return { x: matrix.m41, y: matrix.m42 };
   });
   const before = await position();
-  const box = await api.boundingBox();
-  expect(box).not.toBeNull();
-  const start = { x: box!.x + Math.min(30, box!.width / 4),
-    y: box!.y + Math.min(20, box!.height / 4) };
+  const box = (await api.boundingBox())!;
+  const start = { x: box.x + Math.min(30, box.width / 4), y: box.y + Math.min(20, box.height / 4) };
   await page.mouse.move(start.x, start.y);
   await page.mouse.down();
   await page.mouse.move(start.x + 40, start.y + 20, { steps: 8 });
+  const target = await position();
+  expect(target).not.toEqual(before);
   await page.mouse.up();
+  await expect(editor).toHaveValue(/api service @ \(/);
+  const moved = await editor.inputValue();
+  expect(moved.replace(/api service @ \([^)]+\)/, 'api service')).toBe(source);
+  await waitForEditorSettled(page);
+  const distanceFromTarget = async () => {
+    const current = await position();
+    return Math.hypot(current.x - target.x, current.y - target.y);
+  };
+  // CSS transforms round displayed coordinates; source keeps the full drag precision.
+  await expect.poll(distanceFromTarget).toBeLessThan(0.001);
+  await expect(page.getByLabel('Properties panel', { exact: true })).toHaveCount(0);
+  await page.keyboard.press('Control+z');
   await expect(editor).toHaveValue(source);
-  await expect.poll(position).toEqual(before);
-  await expect(page.getByRole('button', { name: /^Undo \(/ })).toHaveAttribute('aria-label', undoBefore!);
+  await page.keyboard.press('Control+Shift+z');
+  await expect(editor).toHaveValue(moved);
   const saved = await saveDocument(page);
-  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: source });
+  expect(saved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: moved });
+  await editor.fill('@diagram architecture\ntemporary service\n');
+  await waitForEditorSettled(page);
+  await openSavedDocument(page, saved.path);
+  await expect(editor).toHaveValue(moved);
+  await expect.poll(distanceFromTarget).toBeLessThan(0.001);
 });
 
 test('pointer drag moves a selected authored pair in one source history step', async ({ page }) => {

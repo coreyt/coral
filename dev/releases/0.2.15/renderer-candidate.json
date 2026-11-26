@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "version": "0.2.15",
+  "candidateRef": "refs/heads/release/0.2.15",
+  "integrationRef": "refs/heads/release/0.2.15",
+  "mergeTarget": "refs/heads/release/0.2.15",
+  "packages": [
+    "@coral-viz/language",
+    "@coral-viz/render",
+    "@coral-viz/browser",
+    "@coral-viz/viz",
+    "@coral-viz/mcp-server",
+    "tree-sitter-coral"
+  ],
+  "dependenciesManifest": "package-lock.json",
+  "identityState": "public dependencies adopted",
+  "publicationAuthorized": true,
+  "hostedEvidence": "Pending exact-SHA final-candidate CI and immutable artifact readback for Coral 0.2.15.",
+  "ownerBlockers": [
+    "The owner authorized publishing the reviewed editor fixes as Coral 0.2.15.",
+    "Every required cell and the final-candidate aggregate must pass for the exact committed SHA.",
+    "A fresh workspace audit and the six retained archive digests must pass before the first registry mutation.",
+    "Registry, publisher, Pages and immutable-release identities require independent readback against the selected proof.",
+    "Main must remain pinned to the verified 0.2.15 commit through release completion."
+  ]
+}

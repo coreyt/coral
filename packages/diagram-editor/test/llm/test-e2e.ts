@@ -22,7 +22,7 @@ import type { LLMConfig, LLMProviderId } from '../../src/llm/types';
 
 const validateDsl = (dsl: string) => validateOutput(dsl, 'coral');
 const convertToCoralDsl = (parsed: ReturnType<typeof parseMermaidDSL>) => printCoralDSL({
-  version: '1.0.0',
+  version: '3.0.0',
   id: 'current',
   nodes: parsed.nodes,
   edges: parsed.edges,

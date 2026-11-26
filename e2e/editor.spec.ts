@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { waitForEditorSettled, waitForRecoveryDraft } from './support/editorReadiness.js';
+import { showProperties } from './support/user-journey.js';
 
 /**
  * The cases jsdom cannot reach - R-029.
@@ -25,6 +26,7 @@ async function typeDiagram(page: Page, text = DSL, expectedNodes = 2) {
 }
 
 async function openDiagramSettings(page: Page) {
+  await showProperties(page);
   await page.getByRole('tab', { name: 'Diagram' }).click();
 }
 
@@ -328,6 +330,7 @@ test('selected portable font survives full recovery and matches vector/raster ex
   await expect(restore).toBeVisible();
   await restore.click();
   await expect(page.getByTestId('canvas-status')).toContainText(/2 nodes/i, { timeout: 10_000 });
+  await openDiagramSettings(page);
   await expect(page.getByLabel('Font Family')).toHaveValue('serif');
   await expect.poll(() => expectSceneFont(/Coral Source Serif 4/, 16)).toBe(true);
   const recoveredDownload = page.waitForEvent('download');

@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
-import {
+import { showProperties,
   canvasGeometry, expectBlockedPaletteCommand, openBuffer,
   startCleanEditor, waitForEditorSettled,
 } from './support/user-journey.js';
@@ -58,6 +58,7 @@ test('S94: a source update shows its Properties chip without moving the Close co
   await openBuffer(page, { name: 'chip.coral',
     buffer: Buffer.from('@diagram flowchart\nalpha process\n') });
   await page.locator('.react-flow__node[data-id="alpha"]').click();
+  await showProperties(page);
   const panel = page.getByLabel('Properties panel');
   const close = panel.getByRole('button', { name: 'Close panel' });
   await expect(close).toBeVisible();

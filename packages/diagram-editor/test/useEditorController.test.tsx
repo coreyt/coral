@@ -4,7 +4,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { findGraphNotationValueRange, planFileOpen, prepareDocumentReplacement,
-  symbolProvidedPorts, useEditorController } from '../src/useEditorController';
+  symbolProvidedPorts } from '../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
 import { cloneBundledExample } from './fixtures/graphIrInterchangeExamples';
 import { createBlankDocument } from '../src/blankDocument';
 import { legacyStartupSource } from './fixtures/legacyStartupSource';

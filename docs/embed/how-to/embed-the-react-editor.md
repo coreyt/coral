@@ -6,13 +6,13 @@ state ownership outside the component.
 ## Install the peers
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.14.tgz \
-  ./coral-viz-render-0.2.14.tgz ./coral-viz-viz-0.2.14.tgz \
+npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.15.tgz \
+  ./coral-viz-render-0.2.15.tgz ./coral-viz-viz-0.2.15.tgz \
   @xyflow/react@^12 react@^19 react-dom@^19
 ```
 
 Use matching React and React DOM majors. React 18 consumers use 18.3 or newer.
-Install verified 0.2.14 archives together. Coral pins published
+Install verified 0.2.15 archives together. Coral pins published
 `@graph-ir/core@0.2.4` for GraphIR 3.0 interchange.
 
 ## Mount the editor

@@ -10,13 +10,13 @@ import { manifestPaths, validatePublicationReadiness } from './release-guard.mjs
 
 const { sha, manifest, manifestBytes, env, needs, attemptJobs: jobs } = finalCandidateFixture();
 
-test('active 0.2.14 candidate records author-approved publication with public dependencies', () => {
+test('active 0.2.15 candidate records author-approved publication with public dependencies', () => {
   const publicManifests = manifestPaths.map(path => JSON.parse(readFileSync(path, 'utf8')))
     .filter(manifest => !manifest.private);
   assert.equal(publicManifests.length, 6);
   assert.doesNotThrow(() => validatePublicationReadiness(RENDERER_CANDIDATE, publicManifests));
   assert.equal(RENDERER_CANDIDATE.publicationAuthorized, true);
-  assert.equal(RENDERER_CANDIDATE.candidateRef, 'refs/heads/release/0.2.14');
+  assert.equal(RENDERER_CANDIDATE.candidateRef, 'refs/heads/release/0.2.15');
   assert.equal(RENDERER_CANDIDATE.integrationRef, RENDERER_CANDIDATE.candidateRef);
   assert.equal(RENDERER_CANDIDATE.mergeTarget, RENDERER_CANDIDATE.candidateRef);
   assert.equal(RENDERER_CANDIDATE.identityState, 'public dependencies adopted');
@@ -31,13 +31,13 @@ test('active 0.2.14 candidate records author-approved publication with public de
 test('active candidate CI producer, every retained consumer and aggregate pin the frozen version', () => {
   const ci = readFileSync('.github/workflows/ci.yml', 'utf8');
   assert.deepEqual(validateCandidateArtifactConsumers(ci), []);
-  assert.match(validateCandidateArtifactConsumers(ci.replaceAll('RELEASE_VERSION: 0.2.14',
+  assert.match(validateCandidateArtifactConsumers(ci.replaceAll('RELEASE_VERSION: 0.2.15',
     'RELEASE_VERSION: 0.2.6')).join('\n'), /active candidate version|retained candidate/);
 });
 
 test('active proof binds package version, exact SHA and manual candidate ref', () => {
   const proof = buildFinalCandidateProof({ env, needs, jobs, manifestBytes });
-  assert.equal(proof.version, '0.2.14');
+  assert.equal(proof.version, '0.2.15');
   assert.equal(proof.schemaVersion, 3);
   for (const mutation of [{ GITHUB_REF: 'refs/heads/main' }, { GITHUB_EVENT_NAME: 'push' }])
     assert.throws(() => buildFinalCandidateProof({ env: { ...env, ...mutation }, needs, jobs, manifestBytes }));
@@ -55,7 +55,7 @@ test('active hosted readback refuses wrong ref, proof version, attempt and artif
     { artifacts: [{ ...evidence.artifacts[0], id: 78 }, ...evidence.artifacts.slice(1)] }])
     assert.ok(validateFinalCandidateEvidence({ ...evidence, ...mutation }, identity).length > 0);
   assert.deepEqual(validateCandidateManifestBinding(proof, manifestBytes,
-    { version: '0.2.14', productSha: sha }).errors, []);
+    { version: '0.2.15', productSha: sha }).errors, []);
   assert.ok(validateCandidateManifestBinding(proof, manifestBytes,
     { version: '0.2.6', productSha: sha }).errors.length > 0);
 });

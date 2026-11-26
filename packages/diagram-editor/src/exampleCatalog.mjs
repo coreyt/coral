@@ -1,4 +1,4 @@
-const versions = { catalogVersion: '1.0.0', languageVersion: '1.3.0', sourceEdition: '0.2.8', runtimeVersion: '0.2.14' };
+const versions = { catalogVersion: '1.0.0', languageVersion: '1.3.0', sourceEdition: '0.2.8', runtimeVersion: '0.2.15' };
 const notations = new Set(['block', 'flowchart', 'bpmn', 'code', 'architecture', 'aiml', 'data-engineering', 'sketch', 'uml-class', 'uml-sequence']);
 const capabilities = new Set(['source-open', 'source-edit', 'source-save', 'svg-export']);
 const identity = /^[a-z][a-z0-9-]*$/;

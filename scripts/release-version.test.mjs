@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
-const RELEASE = '0.2.14';
+const RELEASE = '0.2.15';
 const manifests = [
   'package.json',
   'packages/language/package.json',
@@ -18,7 +18,7 @@ const internalPackages = new Set([
   '@coral-viz/diagram-editor', '@coral-viz/mcp-server', 'tree-sitter-coral',
 ]);
 
-test('the complete workspace is an atomic 0.2.14 release candidate', async () => {
+test('the complete workspace is an atomic 0.2.15 release candidate', async () => {
   for (const path of manifests) {
     const manifest = JSON.parse(await readFile(path, 'utf8'));
     assert.equal(manifest.version, RELEASE, `${path} version`);
@@ -29,15 +29,15 @@ test('the complete workspace is an atomic 0.2.14 release candidate', async () =>
     }
   }
   const server = await readFile('packages/mcp-server/src/server.ts', 'utf8');
-  assert.match(server, /version:\s*["']0\.2\.14["']/);
+  assert.match(server, /version:\s*["']0\.2\.15["']/);
   const browser = await readFile('packages/browser/src/version.ts', 'utf8');
-  assert.match(browser, /version\s*=\s*["']0\.2\.14["']/);
+  assert.match(browser, /version\s*=\s*["']0\.2\.15["']/);
   const guidance = await readFile('packages/diagram-editor/src/guidanceContent.ts', 'utf8');
-  assert.match(guidance, /EXPECTED_RELEASE_VERSION\s*=\s*["']0\.2\.14["']/);
+  assert.match(guidance, /EXPECTED_RELEASE_VERSION\s*=\s*["']0\.2\.15["']/);
   const editorController = await readFile(
     'packages/diagram-editor/src/useEditorController.ts', 'utf8',
   );
-  assert.match(editorController, /coral-welcome-seen:0\.2\.14/);
+  assert.match(editorController, /coral-welcome-seen:0\.2\.15/);
 
   const lock = JSON.parse(await readFile('package-lock.json', 'utf8'));
   assert.equal(lock.version, RELEASE, 'package-lock root version');
@@ -55,8 +55,8 @@ test('the complete workspace is an atomic 0.2.14 release candidate', async () =>
 
 // A consumer case gated to the previous release silently disappears from the
 // candidate run. Every case introduced for 0.2.5's current API must still run
-// against the 0.2.9 candidate; only explicitly historical variants may not.
-test('current-API consumer cases still apply to the 0.2.9 candidate', async () => {
+// against the 0.2.15 candidate; only explicitly historical variants may not.
+test('current-API consumer cases still apply to the 0.2.15 candidate', async () => {
   const smoke = await readFile('scripts/consumer-smoke.mjs', 'utf8');
   const gates = [...smoke.matchAll(/artifactVersions:\s*\[([^\]]*)\]/g)]
     .map(match => [...match[1].matchAll(/'([^']+)'/g)].map(([, version]) => version));
@@ -83,7 +83,7 @@ test('consumer cases install every internal Coral dependency from the candidate 
     const manifest = JSON.parse(await readFile(`packages/${name}/package.json`, 'utf8'));
     dependencies[manifest.name] = Object.keys(manifest.dependencies ?? {}).filter(dep => dep.startsWith('@coral-viz/'));
   }
-  const gated = [...smoke.matchAll(/artifactVersions: \[([^\]]*'0\.2\.14'[^\]]*)\][\s\S]*?install: \[([^\]]*)\]/g)]
+  const gated = [...smoke.matchAll(/artifactVersions: \[([^\]]*'0\.2\.15'[^\]]*)\][\s\S]*?install: \[([^\]]*)\]/g)]
     .map(match => [match[1], match[2]]);
   assert.ok(gated.length >= 3, 'expected the current viz consumer cases');
   for (const [, block] of gated) {
@@ -98,14 +98,14 @@ test('consumer cases install every internal Coral dependency from the candidate 
 
 // Package identity changes must not select historical source or skip current
 // installed consumers. Source028 remains an independent source edition.
-test('0.2.14 consumers retain source028 readers, writers and semantic assertions', async () => {
+test('0.2.15 consumers retain source028 readers, writers and semantic assertions', async () => {
   const smoke = await readFile('scripts/consumer-smoke.mjs', 'utf8');
   assert.doesNotMatch(smoke, /expectedArtifactVersion === '0\.2\.8'/);
-  assert.match(smoke, /const source028 = \['0\.2\.8', '0\.2\.9', '0\.2\.11', '0\.2\.12', '0\.2\.14'\]\.includes\(expectedArtifactVersion\)/);
+  assert.match(smoke, /const source028 = \['0\.2\.8', '0\.2\.9', '0\.2\.11', '0\.2\.12', '0\.2\.14', '0\.2\.15'\]\.includes\(expectedArtifactVersion\)/);
   for (const name of ['library-docs-render', 'installed-renderer']) {
     const index = smoke.indexOf(`name: '${name}',`);
     assert.ok(index >= 0, name);
-    assert.match(smoke.slice(index, index + 200), /artifactVersions: \[[^\]]*'0\.2\.14'/, name);
+    assert.match(smoke.slice(index, index + 200), /artifactVersions: \[[^\]]*'0\.2\.15'/, name);
   }
   assert.match(smoke, /HEADER_MANIFEST_028\['0\.2\.8'\]/);
   assert.match(smoke, /currentVersion: '0\.2\.8'/);

@@ -7,12 +7,15 @@ task pages.
 | --- | --- | --- |
 | Diagram editor | Canvas and visual selection | Main application region |
 | DSL editor region | Coral or Mermaid source | Upper-left source region |
-| Properties panel | Selected diagram and object fields | Right side |
+| Properties panel | Selected diagram and object fields | **Show Inspector** |
 | Bottom panel tabs | Diagnostics and activity | Lower region |
 | Canvas controls | Zoom and fit actions | Lower-right of the canvas |
 | Resize source | Changes source width | Separator beside the DSL editor |
 | Resize Properties | Changes Properties width | Separator beside Properties |
 | Resize bottom panel | Changes lower-panel height | Horizontal separator |
+
+Properties starts closed in each session. Selecting or moving an object does
+not open it; run **Command palette** > **Show Inspector** to inspect fields.
 
 The source pane, canvas or sequence pane, Properties panel, bottom panel,
 and header/dialogs form the five main editor areas. The controller coordinates

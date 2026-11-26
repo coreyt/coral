@@ -139,7 +139,7 @@ export function CommandPalette({ isOpen, onClose, commands, theme, themeName }: 
       closeLabel="Close command palette"
       onClose={onClose}
       initialFocus="first"
-      restoreFocusTo={invokerRef.current}
+      // The dialog captures this opening's invoker; our ref still holds the prior one during render.
       shouldRestoreFocus={() => !handoffRef.current}
     >
       <div

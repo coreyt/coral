@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openBuffer, saveDocument, startCleanEditor } from './support/user-journey.js';
+import { showProperties, openBuffer, saveDocument, startCleanEditor } from './support/user-journey.js';
 
 /**
  * Slice 93 browser evidence for the Slice 92 findings that need a real
@@ -14,6 +14,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 1024, height: 640
       Array.from({ length: 19 }, (_, index) => `n${index + 1} -> n${index + 2}`).join('\n') + '\n';
     await openBuffer(page, { name: 'fit-network.coral', buffer: Buffer.from(source) });
     await expect(page.getByLabel('DSL editor', { exact: true })).toHaveValue(source);
+    await showProperties(page);
     await page.getByRole('button', { name: 'Fit diagram to view' }).click();
     await expect.poll(async () => page.evaluate(() => {
       const rect = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();

@@ -4,7 +4,8 @@ import { parseMermaid } from '@coral-viz/language';
 import { parse } from '@coral-viz/language/parser';
 import { renderSvg } from '@coral-viz/render';
 import { validateIR } from '@graph-ir/core';
-import { planFileOpen, prepareDocumentReplacement, useEditorController } from '../src/useEditorController';
+import { planFileOpen, prepareDocumentReplacement } from '../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
 
 vi.mock('../src/transcriptArchive', async (importOriginal) => ({
   ...await importOriginal<typeof import('../src/transcriptArchive')>(),

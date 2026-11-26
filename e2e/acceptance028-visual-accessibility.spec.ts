@@ -74,6 +74,9 @@ for (const theme of ['light', 'dark'] as const) for (const target of targets) {
     await firstNode.focus();
     const focusedNodeId = await firstNode.getAttribute('data-id');
     await page.keyboard.press('Enter');
+    await page.keyboard.press('Control+k');
+    await page.getByLabel('Search commands').fill('Show Inspector');
+    await page.keyboard.press('Enter');
     const properties = page.getByLabel('Properties panel');
     await expect(properties).toBeVisible();
     await expect(firstNode).toBeFocused();
@@ -117,6 +120,9 @@ for (const theme of ['light', 'dark'] as const) {
     const source = await editor.inputValue();
     const firstNode = page.locator('.react-flow__node').first();
     await firstNode.focus();
+    await page.keyboard.press('Enter');
+    await page.keyboard.press('Control+k');
+    await page.getByLabel('Search commands').fill('Show Inspector');
     await page.keyboard.press('Enter');
     const properties = page.getByLabel('Properties panel');
     await expect(properties).toBeVisible();

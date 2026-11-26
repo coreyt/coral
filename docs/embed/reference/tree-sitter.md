@@ -9,7 +9,7 @@ has an earlier grammar; use that edition’s documentation for that package.
 
 | Concern | Contract |
 | --- | --- |
-| Package | `tree-sitter-coral@0.2.14` archive with peer `tree-sitter@0.25.1` |
+| Package | `tree-sitter-coral@0.2.15` archive with peer `tree-sitter@0.25.1` |
 | Build | Native addon compiled from source during install |
 | Syntax | Saved `@diagram` documents, ID-first declarations, keyed fields, ports, and recursive UML sequence blocks |
 | Not owned | semantic references, capabilities, canonicalization, repair, and rich diagnostics |
@@ -33,10 +33,10 @@ consumer's root `package.json`:
 }
 ```
 
-Then install the verified 0.2.14 archive and exact peer version:
+Then install the verified 0.2.15 archive and exact peer version:
 
 ```sh
-npm install ./tree-sitter-coral-0.2.14.tgz tree-sitter@0.25.1
+npm install ./tree-sitter-coral-0.2.15.tgz tree-sitter@0.25.1
 ```
 
 ## Parse Coral

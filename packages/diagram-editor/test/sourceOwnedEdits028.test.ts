@@ -23,6 +23,32 @@ describe('source-owned positioned keyboard movement', () => {
     expect(moved).toBe(source.replace('team group @ (100, 200)', 'team group @ (100, 190)'));
   });
 
+  it('adds first coordinates from displayed positions while preserving authored pins and comments', () => {
+    const source = '// keep exact bytes\r\n@diagram architecture\r\n' +
+      'a service @ (10, 20) pinned // anchor\r\nb database as "Store" // keep\r\na -> b\r\n';
+    const moved = editSourceOwnedNodePositions028(source, ['a', 'b'], { x: 10, y: -5 },
+      new Map([['a', { x: 999, y: 999 }], ['b', { x: 50, y: 60 }]]));
+    expect(moved).toBe(source.replace('@ (10, 20)', '@ (20, 15)')
+      .replace('as "Store" // keep', 'as "Store" @ (60, 55) // keep'));
+    expect(projectInstalledSourceToSuccessor028(moved).graph?.nodes).toMatchObject([
+      { id: 'a', position: { x: 20, y: 15 }, pinned: true },
+      { id: 'b', position: { x: 60, y: 55 } },
+    ]);
+  });
+
+  it('adds a moved group position once without authoring coordinates on selected descendants', () => {
+    const source = '@diagram architecture\nteam group {\n  api service\n}\n';
+    const displayed = new Map([['team', { x: 100, y: 200 }], ['team.api', { x: 10, y: 20 }]]);
+    expect(editSourceOwnedNodePositions028(source, ['team', 'team.api'], { x: 5, y: -10 }, displayed))
+      .toBe(source.replace('team group {', 'team group @ (105, 190) {'));
+    expect(editSourceOwnedNodePositions028(source, ['team.api'], { x: 5, y: -10 }, displayed))
+      .toBe(source.replace('api service', 'api service @ (15, 10)'));
+    expect(editSourceOwnedNodePositions028(source, ['team.api'], { x: 0, y: 0 }, displayed))
+      .toBe(source);
+    expect(() => editSourceOwnedNodePositions028(source, ['team.api'], { x: 1, y: 0 },
+      new Map([['team.api', { x: Infinity, y: 0 }]]))).toThrow('coral.editor.source-position.invalid');
+  });
+
   it('refuses an unpositioned node and malformed source without a partial edit', () => {
     const source = '@diagram architecture\na service @ (10, 20) pinned\nb database\n';
     expect(() => editSourceOwnedNodePositions028(source, ['a', 'b'], { x: 10, y: 0 }))

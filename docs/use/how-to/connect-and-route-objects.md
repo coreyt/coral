@@ -7,8 +7,9 @@ whether the document owns Coral source or GraphIR interchange.
    objects and ports, then select **Create edge**. A connection appears when the
    notation permits the pair.
 
-2. Select the connection and edit its label in **Properties panel**. The label
-   changes on the canvas and in the DSL editor.
+2. Select the connection, open **Command palette** > **Show Inspector**, and
+   edit its label in **Properties panel**. The label changes on the canvas and
+   in the DSL editor.
 3. For saved Coral source, waypoint gestures are unavailable. Edit the authored
    route in the DSL editor, using the [spatial source forms](../reference/coral-dsl.md).
    For GraphIR interchange documents, use the admitted waypoint controls to

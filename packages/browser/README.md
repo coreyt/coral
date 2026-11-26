@@ -1,8 +1,8 @@
 # @coral-viz/browser
 
-## Coral 0.2.14
+## Coral 0.2.15
 
-Install verified 0.2.14 archives together with the matching published GraphIR
+Install verified 0.2.15 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
@@ -25,7 +25,7 @@ Install the browser package with its Core type dependency. Language/render
 are bundled into the browser artifacts:
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-browser-0.2.14.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-browser-0.2.15.tgz
 ```
 
 ## Render from an ES module

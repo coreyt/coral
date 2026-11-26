@@ -4,7 +4,7 @@ import { inputCapMessage } from '../../src/onDeviceModel/eligibility';
 import OnDevicePanel, { MESSAGES, type OnDeviceHost } from '../../src/onDeviceModel/ui/OnDevicePanel';
 import OnDevicePreference from '../../src/onDeviceModel/ui/OnDevicePreference';
 import { UNCLEAR_QUESTION } from '../../src/onDeviceModel/contract';
-import { useEditorController } from '../../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from '../fixtures/useEditorControllerWithProperties';
 import { fakeModel, nodeHandle } from './fakeModel';
 import { describeChanges, describeLayoutWarnings } from '../../src/onDeviceModel/ui/changes';
 import { canvasGeometry, canvasRects } from '../../src/llm/plan/canvasMeasure';

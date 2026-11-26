@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { downloadFromPalette, openBuffer, openSavedDocument, saveDocument, startCleanEditor,
+import { showProperties, downloadFromPalette, openBuffer, openSavedDocument, saveDocument, startCleanEditor,
   waitForEditorSettled } from './support/user-journey.js';
 
 test('source-owned label placement handle and Properties share exact history, export and reopen', async ({ page }) => {
@@ -8,6 +8,7 @@ test('source-owned label placement handle and Properties share exact history, ex
     "api service as 'API' label below offset 12 @ (120, 80) pinned\n" +
     'store database @ (500, 80) pinned\n';
   await startCleanEditor(page);
+  await showProperties(page);
   await openBuffer(page, { name: 'label-placement.coral', buffer: Buffer.from(source) });
   await waitForEditorSettled(page);
   const editor = page.getByLabel('DSL editor', { exact: true });

@@ -64,7 +64,7 @@ vi.mock('elkjs/lib/elk.bundled.js', () => ({
 }));
 
 import App from '../src/App';
-import { useEditorController } from '../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
 
 describe('App LLM cancellation boundary', () => {
   beforeEach(() => {

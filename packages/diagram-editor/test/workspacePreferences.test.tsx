@@ -42,7 +42,7 @@ describe('workspace preference persistence', () => {
       sourceWidthPercent: 34,
       propertiesWidthPx: 320,
       bottomHeightPx: 220,
-      inspectorOpen: true,
+      inspectorOpen: false,
       bottomCollapsed: false,
       bottomTab: 'diagnostics',
       propertiesTab: 'selection',
@@ -149,6 +149,19 @@ describe('workspace preference persistence', () => {
     expect(reset).toEqual({ ok: true, preferences: DEFAULT_WORKSPACE_PREFERENCES });
     expect(loadWorkspacePreferences(storage)).toEqual(DEFAULT_WORKSPACE_PREFERENCES);
     expect(storage.getItem('unrelated')).toBe('keep');
+  });
+
+  it('starts Properties closed even when an earlier session persisted it open', () => {
+    const saved = { ...changedPreferences(), inspectorOpen: true };
+    const storage = memoryStorage({ [WORKSPACE_PREFERENCES_KEY]: JSON.stringify(saved) });
+    const first = renderHook(() => useWorkspacePreferences(storage));
+    expect(first.result.current.preferences).toEqual({ ...saved, inspectorOpen: false });
+    expect(storage.setItem).not.toHaveBeenCalled();
+    act(() => first.result.current.update({ inspectorOpen: true }));
+    expect(first.result.current.preferences.inspectorOpen).toBe(true);
+    first.unmount();
+    const reopened = renderHook(() => useWorkspacePreferences(storage));
+    expect(reopened.result.current.preferences).toEqual({ ...saved, inspectorOpen: false });
   });
 
   it('keeps hook state unchanged when persistence fails', () => {

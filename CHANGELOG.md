@@ -5,6 +5,20 @@ Notable changes to Coral are recorded here. The format follows
 Unreleased are planned for the named release and are updated when the owning
 slice closes.
 
+## 0.2.15
+
+### Fixed
+
+- Start Properties closed in each session, including workspaces saved by an
+  earlier version. Selection, inline editing, creation, and movement keep it
+  closed until explicitly opened.
+- Persist pointer and keyboard placement for objects without authored
+  coordinates, using their displayed local positions and existing Coral
+  coordinate syntax. Preserve comments, connections, grouping, pins, undo,
+  redo, saving, and reopening.
+- Restore focus to the current command-palette invoker after repeated opens,
+  including the Properties workflow.
+
 ## 0.2.14
 
 Release `0.2.14` intentionally skips `0.2.13`.

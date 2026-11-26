@@ -256,7 +256,11 @@ function renderApp() {
   if (!window.localStorage.getItem('coral-diagram-recovery')) {
     window.localStorage.setItem(`coral-welcome-seen:${EXPECTED_RELEASE_VERSION}`, 'true');
   }
-  return render(<App />);
+  const view = render(<App />);
+  // These historical Properties-control tests explicitly open their subject.
+  const toggle = view.container.querySelector('button[aria-label="Show inspector"]');
+  if (toggle) fireEvent.click(toggle);
+  return view;
 }
 
 function loadEditableCoralSource(container: HTMLElement, text: string, name = 'editable.coral.json') {

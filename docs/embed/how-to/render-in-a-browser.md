@@ -12,10 +12,10 @@ an element automatically.
 
 ## Install the package
 
-Use the verified 0.2.14 archive with the published Core dependency:
+Use the verified 0.2.15 archive with the published Core dependency:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.14.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-browser-0.2.15.tgz
 ```
 
 The archive bundles its Coral language and render implementation. Use local

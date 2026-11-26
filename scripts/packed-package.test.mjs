@@ -46,7 +46,7 @@ test('packed internal dependency versions and local dependency protocols fail', 
   ]) assert.ok(validate({ ...manifest, dependencies }).length, JSON.stringify(dependencies));
 });
 
-for (const version of ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14']) test(`${version} real current archives bind inventories, exports, dependencies and the closed archive set`, async () => {
+for (const version of ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15']) test(`${version} real current archives bind inventories, exports, dependencies and the closed archive set`, async () => {
   const { mkdtemp, mkdir, writeFile, readFile, rm } = await import('node:fs/promises');
   const { join } = await import('node:path');
   const { tmpdir } = await import('node:os');

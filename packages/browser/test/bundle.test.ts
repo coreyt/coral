@@ -177,7 +177,7 @@ describe('package artifacts', () => {
       },
       unpkg: './dist/coral-browser.iife.js', jsdelivr: './dist/coral-browser.iife.js',
       dependencies: { '@graph-ir/core': '0.2.4' },
-      devDependencies: { '@coral-viz/language': '0.2.14', '@coral-viz/render': '0.2.14' },
+      devDependencies: { '@coral-viz/language': '0.2.15', '@coral-viz/render': '0.2.15' },
       publishConfig: { access: 'public' },
     });
     expect(manifest.repository.directory).toBe('packages/browser');

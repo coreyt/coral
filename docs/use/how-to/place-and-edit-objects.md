@@ -15,9 +15,10 @@ Press `Ctrl/Command+Alt+N` to open the same create-node dialog directly.
    checkout process as "Checkout"
    ```
 
-2. Select the object and edit its fields in **Properties panel**, or edit its
-   declaration in **DSL editor region**. Both surfaces show the new label after
-   the edit commits.
+2. Double-click the object to edit its label, or open **Command palette** >
+   **Show Inspector** to edit its fields in **Properties panel**. You can also
+   edit its declaration in **DSL editor region**. The canvas and source show
+   the committed label.
 3. Drag the existing object to author an Exact position. **Properties panel**
    shows the position and offers **Pin** or **Release position**.
 4. Select **Release position** to return position ownership to layout. The

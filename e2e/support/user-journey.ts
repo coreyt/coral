@@ -12,6 +12,16 @@ export interface OpenBuffer {
   buffer: Buffer;
 }
 
+/** Explicit Properties action, including viewports where the header toggle is hidden. */
+export async function showProperties(page: Page) {
+  const panel = page.getByLabel('Properties panel', { exact: true });
+  if (await panel.count()) return;
+  await page.keyboard.press('Control+k');
+  await page.getByLabel('Search commands').fill('Show Inspector');
+  await page.getByRole('option', { name: 'Show Inspector', exact: true }).click();
+  await expect(panel).toBeVisible();
+}
+
 export async function startCleanEditor(page: Page) {
   await page.goto('/coral/');
   const closeWelcome = page.getByRole('button', { name: 'Close welcome' });

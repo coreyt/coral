@@ -2,7 +2,7 @@ import { act, fireEvent, render, renderHook, screen, waitFor } from '@testing-li
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { projectInstalledSourceToSuccessor028 } from '@coral-viz/render';
 import { parseCoralDSL } from '../src/parsers';
-import { useEditorController } from '../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
 import { InspectorPane } from '../src/components/InspectorPane';
 
 // Slice 60 C5: placement, inspector and symbol editor through the existing

@@ -103,7 +103,7 @@ highlighting:
 - **Web application:** the [hosted editor](https://coreyt.github.io/coral/) is
   online-hosted without installation, an offline shell, or a downloadable
   application archive.
-- **Source editions:** Coral 0.2.14 defaults to source edition `0.2.8`;
+- **Source editions:** Coral 0.2.15 defaults to source edition `0.2.8`;
   document-local custom symbols explicitly select `0.2.9`.
 - **Language specification:** the
   [Language 1.3.0 reference](docs/embed/reference/language-specification-1.3.0.md)

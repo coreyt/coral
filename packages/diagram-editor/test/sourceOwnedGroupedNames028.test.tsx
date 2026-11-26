@@ -1,6 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { useEditorController } from '../src/useEditorController';
+import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
 
 if (!window.matchMedia) {
   window.matchMedia = ((query: string) => ({

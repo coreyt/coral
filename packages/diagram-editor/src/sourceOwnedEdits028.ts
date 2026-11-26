@@ -1,4 +1,4 @@
-import { editionAdmitsUserSymbols029, setCandidateLabel } from '@coral-viz/language';
+import { editionAdmitsUserSymbols029, setCandidateLabel, type CandidateNodeSyntax } from '@coral-viz/language';
 import { validateGraphIRSuccessorWithCatalog } from '@graph-ir/core';
 import { assessSuccessorSourcePortLimits029, assessSuccessorSourcePortReferences028,
   printSourcePortLine029, verifyPortableSuccessorSource028,
@@ -130,9 +130,18 @@ export function sourceOwnedGraphForExport028(
   return core.graph;
 }
 
-/** Move only authored coordinate tokens; keep selected descendants local to a moved group. */
+/** The existing source writer places coordinates after the label and label placement. */
+function nodePositionInsertionOffset028(declaration: CandidateNodeSyntax): number {
+  const placement = declaration.labelPlacement;
+  return [declaration.nodeKind, declaration.label, declaration.bracketClose, placement?.side, placement?.offset]
+    .filter((token) => token !== undefined)
+    .reduce((end, token) => Math.max(end, token.range.end.offset), 0);
+}
+
+/** Move selected roots; displayed local coordinates admit a first authored position. */
 export function editSourceOwnedNodePositions028(
   source: string, nodeIds: readonly string[], delta: { x: number; y: number },
+  displayedPositions?: ReadonlyMap<string, { x: number; y: number }>,
 ): string {
   const before = projectInstalledSourceToSuccessor028(source);
   if (!before.graph || before.diagnostics.length ||
@@ -155,19 +164,25 @@ export function editSourceOwnedNodePositions028(
   for (const id of roots) {
     const declaration = declarations.find((item) => item.qualifiedId === id);
     const node = findNode(expected.nodes, id);
-    if (!declaration?.position || !node?.position) throw new Error(
+    const origin = node?.position ?? displayedPositions?.get(id);
+    if (!declaration || !node || !origin) throw new Error(
       `coral.editor.source-position.missing: node ${id} needs an authored @ (x, y) position`,
     );
-    const position = { x: node.position.x + delta.x, y: node.position.y + delta.y };
+    const position = { x: origin.x + delta.x, y: origin.y + delta.y };
     if (!Number.isFinite(position.x) || !Number.isFinite(position.y)) throw new Error(
       'coral.editor.source-position.invalid: movement exceeds finite coordinates',
     );
     node.position = position;
-    for (const axis of ['x', 'y'] as const) {
-      if (delta[axis] === 0) continue;
-      const token = declaration.position[axis];
-      replacements.push({ start: token.range.start.offset, end: token.range.end.offset,
-        text: String(position[axis]) });
+    if (declaration.position) {
+      for (const axis of ['x', 'y'] as const) {
+        if (delta[axis] === 0) continue;
+        const token = declaration.position[axis];
+        replacements.push({ start: token.range.start.offset, end: token.range.end.offset,
+          text: String(position[axis]) });
+      }
+    } else {
+      const at = nodePositionInsertionOffset028(declaration);
+      replacements.push({ start: at, end: at, text: ` @ (${position.x}, ${position.y})` });
     }
   }
   let edited = source;
@@ -200,11 +215,8 @@ export function setSourceOwnedNodePosition028(source: string, nodeId: string, po
     item.kind === 'node' && item.qualifiedId === nodeId);
   if (!node || !declaration || declaration.kind !== 'node') throw new Error(
     `coral.editor.source-position.missing: node ${nodeId} is not declared`);
-  const placement = declaration.labelPlacement;
   const authored = declaration.position;
-  const at = [declaration.nodeKind, declaration.label, declaration.bracketClose, placement?.side, placement?.offset]
-    .filter((token) => token !== undefined)
-    .reduce((end, token) => Math.max(end, token.range.end.offset), 0);
+  const at = nodePositionInsertionOffset028(declaration);
   // Existing coordinate tokens are replaced in place, so a pin and spacing stay.
   const edited = authored
     ? source.slice(0, authored.x.range.start.offset) + String(position.x) +

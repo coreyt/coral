@@ -1,8 +1,8 @@
 # @coral-viz/render
 
-## Coral 0.2.14
+## Coral 0.2.15
 
-Install verified 0.2.14 archives together with the matching published GraphIR
+Install verified 0.2.15 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
@@ -10,7 +10,7 @@ DOM-free Coral shapes, symbols, notations, text measurement, layout, SVG, and
 standalone HTML rendering.
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.14.tgz ./coral-viz-render-0.2.14.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.15.tgz ./coral-viz-render-0.2.15.tgz
 ```
 
 ```javascript
@@ -66,7 +66,7 @@ The existing supported source subset and refusals are unchanged.
 `createCharacterDebugView028(text)` returns numbered row/column inspection and
 a per-cell Unicode CSV for the returned preview text.
 
-Coral 0.2.14 keeps `lowfi` and `hifi` as basic monochrome black-and-white
+Coral 0.2.15 keeps `lowfi` and `hifi` as basic monochrome black-and-white
 outputs and exports `parrotfish` for modeled presentation styling without
 changing layout, flow, or routing.
 

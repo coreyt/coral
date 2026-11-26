@@ -1,9 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
-import { fieldByLabel, saveDocument, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, fieldByLabel, saveDocument, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
 
 // Waypoint gestures and Diagram-tab controls that 0.2.9 admits only
-// for GraphIR interchange documents, plus the Shift axis lock, which saved
-// Coral source admits but does not hold (Slice 70 matrix G-32).
+// for GraphIR interchange documents, plus the Shift axis lock shared with
+// source-owned movement.
 
 interface DocumentNode { id: string; type: string; label?: string; position?: { x: number; y: number } }
 
@@ -22,6 +22,7 @@ async function openInterchange(page: Page, nodes: DocumentNode[],
   });
   await expect(page.locator('.react-flow__node')).toHaveCount(nodes.length);
   await waitForEditorSettled(page);
+  await showProperties(page);
 }
 
 const positioned = [

@@ -1,15 +1,15 @@
 # @coral-viz/mcp-server
 
-## Coral 0.2.14
+## Coral 0.2.15
 
-Install verified 0.2.14 archives together with the matching published GraphIR
+Install verified 0.2.15 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
 Seven bounded Coral diagram tools over MCP stdio.
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.14.tgz ./coral-viz-render-0.2.14.tgz ./coral-viz-mcp-server-0.2.14.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.15.tgz ./coral-viz-render-0.2.15.tgz ./coral-viz-mcp-server-0.2.15.tgz
 ```
 
 Run the installed executable:

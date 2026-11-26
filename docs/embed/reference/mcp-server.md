@@ -22,8 +22,8 @@ font options are `fontSettings`, `fontFamily`, `fontSize`, `fontWeight`, and
 Install matching verified archives together:
 
 ```sh
-npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.14.tgz \
-  ./coral-viz-render-0.2.14.tgz ./coral-viz-mcp-server-0.2.14.tgz
+npm install @graph-ir/core@0.2.4 ./coral-viz-language-0.2.15.tgz \
+  ./coral-viz-render-0.2.15.tgz ./coral-viz-mcp-server-0.2.15.tgz
 ```
 
 Run the installed executable from that project directory. For a client that
@@ -44,7 +44,7 @@ directory to the installation directory:
 }
 ```
 
-Use the verified 0.2.14 archive set in managed environments. The command uses stdio;
+Use the verified 0.2.15 archive set in managed environments. The command uses stdio;
 don't wrap it in a process that writes unrelated output to stdout.
 
 ## Source conversion and verification

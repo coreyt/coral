@@ -8,10 +8,10 @@ the [roadmap](dev/ROADMAP.md), and the [active plan](PLAN.md) as the current
 project authorities. `PLAN.md` names the active release and links its release
 plan.
 
-The active release is **0.2.14** ([release plan](dev/releases/0.2.14/plan.md)),
-skipping `0.2.13` and advancing rendering quality, presentation styles
-(`anemone`/`ane` and `parrotfish`), and edition `0.2.14` notations across all
-six npm packages, live documentation, and the hosted diagram editor.
+The active release is **0.2.15** ([release plan](dev/releases/0.2.15/plan.md)),
+restoring opt-in Properties and persistent pointer and keyboard placement in
+the hosted editor. Language Specification `1.3.0` and saved-source editions
+`0.2.8`, `0.2.9`, and `0.2.14` remain independent and unchanged.
 
 Published releases are immutable. Active implementation belongs on the
 `release/<version>` branch for the release named in `PLAN.md`. Keep release

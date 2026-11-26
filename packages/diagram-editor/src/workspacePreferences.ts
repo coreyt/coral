@@ -36,7 +36,7 @@ export const DEFAULT_WORKSPACE_PREFERENCES: WorkspacePreferences = Object.freeze
   sourceWidthPercent: 34,
   propertiesWidthPx: 320,
   bottomHeightPx: 220,
-  inspectorOpen: true,
+  inspectorOpen: false,
   bottomCollapsed: false,
   bottomTab: 'diagnostics',
   propertiesTab: 'selection',
@@ -195,7 +195,8 @@ export function useWorkspacePreferences(
 ): WorkspacePreferencesController {
   const storageRef = useRef(storage);
   const [preferences, setPreferences] = useState<WorkspacePreferences>(
-    () => loadWorkspacePreferences(storageRef.current),
+    // Properties is opt-in for each session; older selections persisted it open.
+    () => ({ ...loadWorkspacePreferences(storageRef.current), inspectorOpen: false }),
   );
   const preferencesRef = useRef(preferences);
   const update = useCallback((changes: WorkspacePreferencesUpdate) => {

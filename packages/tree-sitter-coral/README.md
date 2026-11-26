@@ -1,8 +1,8 @@
 # tree-sitter-coral
 
-## Coral 0.2.14
+## Coral 0.2.15
 
-Install the verified 0.2.14 grammar archive with its exact Tree-sitter peer.
+Install the verified 0.2.15 grammar archive with its exact Tree-sitter peer.
 Existing examples retain their documented compatibility API contracts.
 
 Native Tree-sitter grammar for Coral syntax tooling. This package implements Language Specification 1.3.0 syntax for saved source/header
@@ -19,12 +19,12 @@ error must not prevent an author from saving malformed text.
 
 The package name remains `coral` for its native binding. Its grammar is kept in
 sync with `packages/language/spec/tree-sitter-028/grammar.js` by a repeatable
-test. The package manifest identifies this version as 0.2.14.
+test. The package manifest identifies this version as 0.2.15.
 
 ## Install the grammar
 
 ```sh
-npm install ./tree-sitter-coral-0.2.14.tgz tree-sitter@0.25.1
+npm install ./tree-sitter-coral-0.2.15.tgz tree-sitter@0.25.1
 ```
 
 Coral 0.2.8 is the compatibility baseline; 0.2.9 retains its default saved

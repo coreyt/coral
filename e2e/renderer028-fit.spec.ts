@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openBuffer, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
+import { showProperties, openBuffer, startCleanEditor, waitForEditorSettled } from './support/user-journey.js';
 
 for (const viewport of [{ width: 1280, height: 720 }, { width: 1024, height: 640 }]) {
   test(`S93-WI-06 current source: Fit keeps all 20 nodes selectable at ${viewport.width}px`, async ({ page }) => {
@@ -12,6 +12,7 @@ for (const viewport of [{ width: 1280, height: 720 }, { width: 1024, height: 640
     await waitForEditorSettled(page);
     await expect(page.getByLabel('DSL editor', { exact: true })).toHaveValue(source);
     await expect(page.locator('.react-flow__node')).toHaveCount(20);
+    await showProperties(page);
     await page.getByRole('button', { name: 'Fit diagram to view' }).click();
     await expect.poll(() => page.evaluate(() => {
       const rect = (selector: string) => document.querySelector(selector)?.getBoundingClientRect();
