@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Coral Anemone v2 — Visual Design Language & Mockup Showcase</title>
+  <style>
+    :root { --bg:#F8FAFC; --card:#FFFFFF; --ink:#0F172A; --muted:#475569; --border:#DDE4EE; --accent:#4338CA; --coral:#BE123C; --code-bg:#0F172A; --code-ink:#E2E8F0; }
+    [data-theme="dark"] { --bg:#0B101B; --card:#131B2B; --ink:#F1F5F9; --muted:#94A3B8; --border:#243149; --accent:#818CF8; --coral:#FB7185; --code-bg:#070B12; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--ink); line-height:1.5; }
+    header { position:sticky; top:0; z-index:20; backdrop-filter:blur(10px); background:color-mix(in srgb,var(--card) 88%,transparent); border-bottom:1px solid var(--border); padding:14px 28px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    .brand { display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:-0.02em; }
+    .dot { width:10px; height:10px; border-radius:999px; background:var(--coral); }
+    nav { display:flex; gap:8px; flex-wrap:wrap; }
+    button { font:inherit; font-size:13px; font-weight:500; padding:6px 12px; border-radius:8px; border:1px solid var(--border); background:var(--card); color:var(--ink); cursor:pointer; }
+    button:hover { border-color:var(--accent); }
+    button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    main { max-width:1360px; margin:0 auto; padding:28px; display:flex; flex-direction:column; gap:32px; }
+    .hero { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px 32px; }
+    .eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600; color:var(--coral); letter-spacing:0.08em; text-transform:uppercase; }
+    h1 { margin:6px 0 8px; font-size:28px; letter-spacing:-0.025em; }
+    .hero p { margin:0; color:var(--muted); max-width:860px; }
+    .card { background:var(--card); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+    .card-head { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .pill { display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600; padding:2px 8px; border-radius:6px; background:color-mix(in srgb,var(--accent) 12%,transparent); color:var(--accent); margin-bottom:6px; }
+    h2 { margin:0 0 4px; font-size:18px; letter-spacing:-0.015em; }
+    .desc { margin:0; font-size:13.5px; color:var(--muted); }
+    .actions { display:flex; gap:8px; align-items:center; }
+    .stage { padding:20px; background:color-mix(in srgb,var(--bg) 60%,var(--card)); display:flex; justify-content:center; overflow-x:auto; }
+    .stage img { max-width:100%; height:auto; border-radius:10px; border:1px solid var(--border); }
+    pre.source { display:none; margin:0; padding:18px 24px; background:var(--code-bg); color:var(--code-ink); font-family:'JetBrains Mono',monospace; font-size:12.5px; overflow-x:auto; border-top:1px solid var(--border); }
+    pre.source.open { display:block; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="dot"></span> Coral · Anemone v2 Design Language Showcase</div>
+    <nav>
+      <button id="themeBtn" onclick="toggleTheme()">Toggle Dark Shell</button>
+    </nav>
+  </header>
+  <main>
+    <section class="hero">
+      <div class="eyebrow">Anemone v2 · Visual Reference &amp; Mockup Pack</div>
+      <h1>Figma / IcePanel Precision + Excalidraw Tactile Warmth</h1>
+      <p>Standalone SVG mockups demonstrating Coral’s redesigned <strong>Anemone v2</strong> presentation language across C4 Architecture, Cloud Infrastructure, AI/ML, Crow’s Foot ERD, BPMN, UML Sequence, and Tactile Sketch — strictly decoupled from layout and routing via Parrotfish.</p>
+    </section>
+    
+    <article class="card" id="compare">
+      <div class="card-head">
+        <div>
+          <span class="pill">AUDIT</span>
+          <h2>01 · Before (Anemone v1) vs. After (Anemone v2)</h2>
+          <p class="desc">Direct visual diff of the exact same layout, coordinates, and orthogonal routes — pure presentation craft.</p>
+        </div>
+        <div class="actions">
+          
+          
+          
+          <a href="./diagrams/01-before-after-comparison.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-compare" src="./diagrams/01-before-after-comparison.svg" alt="01 · Before (Anemone v1) vs. After (Anemone v2)"/></div>
+      
+    </article>
+    <article class="card" id="symbols">
+      <div class="card-head">
+        <div>
+          <span class="pill">SYSTEM</span>
+          <h2>Symbol &amp; Component Kit (Light + Dark)</h2>
+          <p class="desc">Complete specimen sheet covering C4 Architecture, Cloud Infrastructure, AI/ML, Data Engineering, Crow’s Foot ERD, UML Class/State, BPMN, Flowchart, and Excalidraw-class Sketch.</p>
+        </div>
+        <div class="actions">
+          <button onclick="swapImg('symbols','./symbols/anemone-v2-symbol-kit-light.svg','./symbols/anemone-v2-symbol-kit-dark.svg',this)">Switch Light / Dark SVG</button>
+          
+          
+          <a href="./symbols/anemone-v2-symbol-kit-light.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-symbols" src="./symbols/anemone-v2-symbol-kit-light.svg" alt="Symbol &amp; Component Kit (Light + Dark)"/></div>
+      
+    </article>
+    <article class="card" id="arch">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram architecture</span>
+          <h2>02 · E-Commerce C4 Container Architecture</h2>
+          <p class="desc">Neutral elevated cards, 28px semantic icon squircles, 3-tier typography (Title · Tech Pill · Description), layered boundaries, and sync/async/data pill labels.</p>
+        </div>
+        <div class="actions">
+          <button onclick="swapImg('arch','./diagrams/02-architecture-c4-ecommerce.svg','./diagrams/02-architecture-c4-ecommerce-dark.svg',this)">Switch Light / Dark SVG</button>
+          
+          <button onclick="toggleSrc('arch',this)">View Coral Source</button>
+          <a href="./diagrams/02-architecture-c4-ecommerce.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-arch" src="./diagrams/02-architecture-c4-ecommerce.svg" alt="02 · E-Commerce C4 Container Architecture"/></div>
+      <pre class="source" id="src-arch">@diagram architecture
+@coralVersion &quot;0.2.14&quot;
+
+customer person [description: &quot;Places &amp; tracks orders&quot;] as &quot;Customer&quot;
+ops person [description: &quot;Handles refunds &amp; disputes&quot;] as &quot;Support Ops&quot;
+stripe externalSystem [technology: &quot;REST / HTTPS&quot;, description: &quot;Card capture &amp; 3DS&quot;] as &quot;Stripe&quot;
+postmark externalSystem [technology: &quot;SMTP / API&quot;, description: &quot;Transactional receipts&quot;] as &quot;Postmark&quot;
+
+platform systemBoundary as &quot;Commerce Platform&quot; {
+  edge containerBoundary as &quot;Client &amp; Edge Tier&quot; {
+    web container [technology: &quot;Next.js / SSR&quot;, description: &quot;Catalog, cart &amp; checkout UI&quot;] as &quot;Web Storefront&quot;
+    gw gateway [technology: &quot;Envoy / JWT&quot;, description: &quot;AuthN, rate limits &amp; routing&quot;] as &quot;API Gateway&quot;
+  }
+  orders container [technology: &quot;Go / gRPC&quot;, description: &quot;Cart validation &amp; state machine&quot;] as &quot;Order Service&quot;
+  bus queue [technology: &quot;Apache Kafka&quot;, description: &quot;Durable domain event topics&quot;] as &quot;Event Bus&quot;
+  worker container [technology: &quot;Rust / Consumer&quot;, description: &quot;Dispatches shipments &amp; emails&quot;] as &quot;Fulfillment Worker&quot;
+  db database [technology: &quot;PostgreSQL 16&quot;, description: &quot;ACID ledger &amp; outbox table&quot;] as &quot;Orders Database&quot;
+}
+
+customer -&gt; platform.edge.web [technology: &quot;HTTPS&quot;] as &quot;Browses&quot;
+ops -&gt; platform.edge.gw [technology: &quot;HTTPS&quot;] as &quot;Admin&quot;
+platform.edge.web -&gt; platform.edge.gw [technology: &quot;JSON&quot;] as &quot;Submits&quot;
+platform.edge.gw -&gt; platform.orders [technology: &quot;gRPC&quot;] as &quot;Creates&quot;
+platform.orders -&gt; platform.db [data, technology: &quot;SQL&quot;] as &quot;Writes&quot;
+platform.orders -&gt; platform.bus [async, technology: &quot;Avro&quot;] as &quot;OrderPlaced&quot;
+platform.bus -&gt; platform.worker [async] as &quot;Consumes&quot;
+platform.orders -&gt; stripe [technology: &quot;TLS&quot;] as &quot;Charges&quot;
+platform.worker -&gt; postmark [technology: &quot;HTTPS&quot;] as &quot;Emails&quot;
+</pre>
+    </article>
+    <article class="card" id="aws">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram infrastructure</span>
+          <h2>03 · Production 3-Tier AWS VPC Topology</h2>
+          <p class="desc">Uniform cloud resource cards with crisp AWS micro-tags and distinct nested Public / Private App / Isolated Data subnet frames.</p>
+        </div>
+        <div class="actions">
+          
+          
+          <button onclick="toggleSrc('aws',this)">View Coral Source</button>
+          <a href="./diagrams/03-infrastructure-cloud-aws.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-aws" src="./diagrams/03-infrastructure-cloud-aws.svg" alt="03 · Production 3-Tier AWS VPC Topology"/></div>
+      <pre class="source" id="src-aws">@diagram infrastructure
+@coralVersion &quot;0.2.14&quot;
+
+users users [technology: &quot;HTTPS / HTTP3&quot;] as &quot;End Users&quot;
+cdn cdn [provider: &quot;aws&quot;, technology: &quot;Edge PoPs&quot;] as &quot;CloudFront CDN&quot;
+waf waf [provider: &quot;aws&quot;, technology: &quot;Managed Rules&quot;] as &quot;AWS WAF&quot;
+
+vpc vpc [provider: &quot;aws&quot;] as &quot;Production VPC (us-east-1)&quot; {
+  pub subnet [variant: public] as &quot;Public Subnet&quot; {
+    alb loadBalancer [provider: &quot;aws&quot;, technology: &quot;ALB / TLS 1.3&quot;] as &quot;Application LB&quot;
+    nat gateway [provider: &quot;aws&quot;, technology: &quot;Managed Egress&quot;] as &quot;NAT Gateway&quot;
+  }
+  app subnet [variant: private] as &quot;Private App Subnet&quot; {
+    eks kubernetes [provider: &quot;aws&quot;, technology: &quot;Kubernetes 3-AZ&quot;] as &quot;EKS API Cluster&quot;
+    sqs queue [provider: &quot;aws&quot;, technology: &quot;FIFO Queue&quot;] as &quot;SQS + EventBridge&quot;
+    fn function [provider: &quot;aws&quot;, technology: &quot;ARM64 / Node 24&quot;] as &quot;Lambda Workers&quot;
+  }
+  data subnet [variant: private] as &quot;Private Data Subnet&quot; {
+    rds database [provider: &quot;aws&quot;, technology: &quot;Multi-AZ Cluster&quot;] as &quot;Aurora PostgreSQL&quot;
+    redis cache [provider: &quot;aws&quot;, technology: &quot;Cluster Mode&quot;] as &quot;ElastiCache Redis&quot;
+    s3 storage [provider: &quot;aws&quot;, technology: &quot;KMS Encrypted&quot;] as &quot;S3 Asset Vault&quot;
+  }
+}
+
+users -&gt; cdn [technology: &quot;HTTPS&quot;]
+cdn -&gt; waf
+waf -&gt; vpc.pub.alb [technology: &quot;443&quot;]
+vpc.pub.alb -&gt; vpc.app.eks [technology: &quot;HTTP/2&quot;]
+vpc.app.eks -&gt; vpc.app.sqs [async]
+vpc.app.sqs -&gt; vpc.app.fn [async]
+vpc.app.eks -&gt; vpc.data.rds [data, technology: &quot;5432&quot;]
+vpc.app.eks -&gt; vpc.data.redis [data, technology: &quot;6379&quot;]
+vpc.app.fn -&gt; vpc.data.s3 [data, technology: &quot;S3 API&quot;]
+vpc.app.fn -&gt; vpc.pub.nat [style: dashed] as &quot;Egress&quot;
+</pre>
+    </article>
+    <article class="card" id="aiml">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram aiml</span>
+          <h2>04 · Agentic RAG &amp; Guardrail Architecture</h2>
+          <p class="desc">Replaces unreadable clipart-over-text shapes (brain, neural-net, gear) with clean high-contrast cards in Abyssal Slate Dark &amp; Studio Light modes.</p>
+        </div>
+        <div class="actions">
+          
+          <button onclick="swapImg('aiml','./diagrams/04-aiml-rag-agent.svg','./diagrams/04-aiml-rag-agent-light.svg',this)">Switch Dark / Light SVG</button>
+          <button onclick="toggleSrc('aiml',this)">View Coral Source</button>
+          <a href="./diagrams/04-aiml-rag-agent.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-aiml" src="./diagrams/04-aiml-rag-agent.svg" alt="04 · Agentic RAG &amp; Guardrail Architecture"/></div>
+      <pre class="source" id="src-aiml">@diagram aiml
+@coralVersion &quot;0.2.14&quot;
+
+query prompt [description: &quot;Prompt + session ID&quot;] as &quot;User Query&quot;
+in_guard guardrail [description: &quot;Blocks unsafe prompts&quot;] as &quot;Input Guardrail&quot;
+out_guard guardrail [description: &quot;Verifies citations &amp; tone&quot;] as &quot;Output Guardrail&quot;
+fallback annotation [description: &quot;Escalates or redacts&quot;] as &quot;Safe Fallback&quot;
+vdb vectorStore [technology: &quot;pgvector / HNSW&quot;] as &quot;Vector Store&quot;
+mem memory [technology: &quot;Redis + Summary&quot;] as &quot;Session Memory&quot;
+
+runtime [label: &quot;Agent Runtime&quot;] {
+  agent agent [technology: &quot;ReAct / Max 6 Steps&quot;] as &quot;Agent Orchestrator&quot;
+  llm llm [technology: &quot;Structured JSON + Tools&quot;] as &quot;Frontier LLM&quot;
+  rag retriever [technology: &quot;Hybrid BM25&quot;] as &quot;RAG Retriever&quot;
+  tools tool [technology: &quot;Sandboxed&quot;] as &quot;MCP Tools&quot;
+}
+
+query -&gt; in_guard
+in_guard -&gt; runtime.agent [dataFlow] as &quot;Pass&quot;
+in_guard -&gt; fallback [error] as &quot;Blocked Prompt&quot;
+runtime.agent -&gt; runtime.llm [inference] as &quot;Prompt&quot;
+runtime.llm -&gt; runtime.agent [toolUse] as &quot;Tool Call&quot;
+runtime.llm -&gt; runtime.rag [dataFlow] as &quot;Retrieve&quot;
+runtime.llm -&gt; runtime.tools [toolUse] as &quot;Invoke&quot;
+runtime.rag -&gt; vdb [dataFlow] as &quot;Top-K Cosine&quot;
+runtime.agent -&gt; mem [dataFlow] as &quot;Read/Write&quot;
+runtime.agent -&gt; out_guard [inference] as &quot;Draft&quot;
+out_guard -&gt; fallback [error] as &quot;Fail&quot;
+</pre>
+    </article>
+    <article class="card" id="erd">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram erd</span>
+          <h2>05 · Multi-Tenant SaaS Crow’s Foot ERD</h2>
+          <p class="desc">Tinted header bands, PK/FK/UK pill badges, right-aligned monospace data types, and crisp Crow’s Foot cardinality endpoints.</p>
+        </div>
+        <div class="actions">
+          
+          
+          <button onclick="toggleSrc('erd',this)">View Coral Source</button>
+          <a href="./diagrams/05-erd-saas-crowsfoot.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-erd" src="./diagrams/05-erd-saas-crowsfoot.svg" alt="05 · Multi-Tenant SaaS Crow’s Foot ERD"/></div>
+      <pre class="source" id="src-erd">@diagram erd
+@coralVersion &quot;0.2.14&quot;
+
+organizations entity as &quot;organizations&quot; {
+  attributes {
+    + id: uuid [pk]
+    + slug: varchar(64) [uk]
+    + plan_tier: plan_enum
+    + created_at: timestamptz
+  }
+}
+
+workspaces entity as &quot;workspaces&quot; {
+  attributes {
+    + id: uuid [pk]
+    + org_id: uuid [fk]
+    + name: varchar(120)
+    + default_style: render_style
+  }
+}
+
+diagrams entity as &quot;diagrams&quot; {
+  attributes {
+    + id: uuid [pk]
+    + workspace_id: uuid [fk]
+    + notation: notation_id
+    + coral_source: text
+  }
+}
+
+users entity as &quot;users&quot; {
+  attributes {
+    + id: uuid [pk]
+    + org_id: uuid [fk]
+    + email: citext [uk]
+    + role: member_role
+  }
+}
+
+revisions entity as &quot;revisions&quot; {
+  attributes {
+    + id: uuid [pk]
+    + diagram_id: uuid [fk]
+    + author_id: uuid [fk]
+    + sha256_digest: char(64)
+  }
+}
+
+active_exports view as &quot;active_exports&quot; {
+  attributes {
+    + diagram_id: uuid [fk]
+    + format: enum
+    + render_style: render_style
+    + exported_at: timestamptz
+  }
+}
+
+organizations -&gt; workspaces [firstEnd: one, secondEnd: oneOrMany] as &quot;owns&quot;
+workspaces -&gt; diagrams [firstEnd: one, secondEnd: zeroOrMany] as &quot;contains&quot;
+organizations -&gt; users [firstEnd: one, secondEnd: oneOrMany] as &quot;has members&quot;
+users -&gt; revisions [firstEnd: one, secondEnd: zeroOrMany] as &quot;authors&quot;
+diagrams -&gt; revisions [firstEnd: one, secondEnd: oneOrMany] as &quot;snapshots&quot;
+diagrams -&gt; active_exports [firstEnd: one, secondEnd: zeroOrMany] as &quot;projects&quot;
+</pre>
+    </article>
+    <article class="card" id="bpmn">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram bpmn</span>
+          <h2>06 · BPMN 2.0 Swimlane Order Fulfillment</h2>
+          <p class="desc">Clean horizontal swimlanes, semantic emerald/amber/coral event rings, icon-badged task cards, and XOR/AND gateway diamonds.</p>
+        </div>
+        <div class="actions">
+          
+          
+          <button onclick="toggleSrc('bpmn',this)">View Coral Source</button>
+          <a href="./diagrams/06-bpmn-order-fulfillment.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-bpmn" src="./diagrams/06-bpmn-order-fulfillment.svg" alt="06 · BPMN 2.0 Swimlane Order Fulfillment"/></div>
+      <pre class="source" id="src-bpmn">@diagram bpmn
+@coralVersion &quot;0.2.14&quot;
+
+customer [symbol: bpmn-lane] as &quot;Customer&quot; {
+  start startEvent as &quot;Order Placed&quot;
+  submit task as &quot;Submit Order&quot;
+  receipt task as &quot;Receive Receipt&quot;
+  done endEvent as &quot;Complete&quot;
+}
+
+ops [symbol: bpmn-lane] as &quot;Order Ops&quot; {
+  auth task as &quot;Authorize Card&quot;
+  approved exclusiveGateway as &quot;Approved?&quot;
+  notify task as &quot;Notify Failure&quot;
+  cancelled endEvent as &quot;Cancelled&quot;
+  join parallelGateway as &quot;Join&quot;
+}
+
+warehouse [symbol: bpmn-lane] as &quot;Warehouse&quot; {
+  split parallelGateway as &quot;Parallel Split&quot;
+  pack task as &quot;Pick &amp; Pack Box&quot;
+  label task as &quot;Print Carrier Label&quot;
+}
+
+customer.start -&gt; customer.submit
+customer.submit -&gt; ops.auth
+ops.auth -&gt; ops.approved
+ops.approved -&gt; ops.notify as &quot;No&quot;
+ops.notify -&gt; ops.cancelled
+ops.approved -&gt; warehouse.split as &quot;Yes&quot;
+warehouse.split -&gt; warehouse.pack
+warehouse.pack -&gt; warehouse.label
+warehouse.label -&gt; ops.join
+ops.join -&gt; customer.receipt
+customer.receipt -&gt; customer.done
+</pre>
+    </article>
+    <article class="card" id="seq">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram uml-sequence</span>
+          <h2>07 · Idempotent Checkout Sequence Diagram</h2>
+          <p class="desc">Elevated participant cards, tinted activation bars, chamfered ALT combined fragment with guard pills, and folded sticky note.</p>
+        </div>
+        <div class="actions">
+          
+          
+          <button onclick="toggleSrc('seq',this)">View Coral Source</button>
+          <a href="./diagrams/07-sequence-checkout-auth.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-seq" src="./diagrams/07-sequence-checkout-auth.svg" alt="07 · Idempotent Checkout Sequence Diagram"/></div>
+      <pre class="source" id="src-seq">@diagram uml-sequence
+@coralVersion &quot;0.2.14&quot;
+
+shopper actor as &quot;Shopper&quot;
+web participant as &quot;Web App&quot;
+api participant as &quot;Order API&quot;
+stripe participant as &quot;Stripe&quot;
+bus participant as &quot;Event Bus&quot;
+
+shopper -&gt; web as &quot;Click Pay Now&quot;
+web -&gt; api as &quot;POST /orders (Idempotency-Key)&quot;
+api -&gt; stripe as &quot;createPaymentIntent(amount)&quot;
+stripe -.-&gt; api [return] as &quot;intent_status + 3ds_token&quot;
+
+alt &quot;payment_authorized&quot; {
+  api -&gt; bus [async] as &quot;publish OrderPaidEvent&quot;
+  api -.-&gt; web [return] as &quot;201 Created&quot;
+} else &quot;card_declined&quot; {
+  api -.-&gt; web [return] as &quot;402 Payment Required&quot;
+}
+
+web -.-&gt; shopper [return] as &quot;Render Confirmation / Retry UI&quot;
+</pre>
+    </article>
+    <article class="card" id="sketch">
+      <div class="card-head">
+        <div>
+          <span class="pill">@diagram sketch</span>
+          <h2>08 · Tactile Whiteboard Sketch (Excalidraw Parity)</h2>
+          <p class="desc">Warm studio paper, organic charcoal ink, soft pastel highlighter fills with diagonal hachure, sticky notes, and hand-drawn arrows.</p>
+        </div>
+        <div class="actions">
+          
+          
+          <button onclick="toggleSrc('sketch',this)">View Coral Source</button>
+          <a href="./diagrams/08-sketch-product-ideation.svg" target="_blank" style="text-decoration:none"><button>Open SVG ↗</button></a>
+        </div>
+      </div>
+      <div class="stage"><img id="img-sketch" src="./diagrams/08-sketch-product-ideation.svg" alt="08 · Tactile Whiteboard Sketch (Excalidraw Parity)"/></div>
+      <pre class="source" id="src-sketch">@diagram sketch
+@coralVersion &quot;0.2.14&quot;
+
+write step as &quot;1. Write DSL&quot;
+commit step as &quot;4. Commit SVG&quot;
+note1 label as &quot;Dragging writes one clean @ (x, y) pinned line back into source&quot;
+
+loop group as &quot;One Plain-Text .coral File&quot; {
+  layout box as &quot;2. Auto Layout&quot;
+  drag box as &quot;3. Drag One Box&quot;
+  check decision as &quot;Looks right?&quot;
+}
+
+write -&gt; loop.layout as &quot;parse&quot;
+loop.layout -&gt; loop.drag
+loop.drag -&gt; loop.check as &quot;1-line diff&quot;
+loop.check -&gt; loop.layout as &quot;No — tweak!&quot;
+loop.check -&gt; commit as &quot;Yes — export!&quot;
+note1 -&gt; loop
+</pre>
+    </article>
+  </main>
+  <script>
+    function toggleTheme() {
+      const root = document.documentElement;
+      root.dataset.theme = root.dataset.theme === 'dark' ? '' : 'dark';
+    }
+    function toggleSrc(id, btn) {
+      const el = document.getElementById('src-' + id);
+      const open = el.classList.toggle('open');
+      btn.classList.toggle('active', open);
+    }
+    function swapImg(id, a, b, btn) {
+      const img = document.getElementById('img-' + id);
+      const isB = img.dataset.alt === '1';
+      img.src = isB ? a : b;
+      img.dataset.alt = isB ? '0' : '1';
+      btn.classList.toggle('active', !isB);
+    }
+  </script>
+</body>
+</html>

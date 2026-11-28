@@ -1,0 +1,34 @@
+@diagram infrastructure
+@coralVersion "0.2.14"
+
+users users [technology: "HTTPS / HTTP3"] as "End Users"
+cdn cdn [provider: "aws", technology: "Edge PoPs"] as "CloudFront CDN"
+waf waf [provider: "aws", technology: "Managed Rules"] as "AWS WAF"
+
+vpc vpc [provider: "aws"] as "Production VPC (us-east-1)" {
+  pub subnet [variant: public] as "Public Subnet" {
+    alb loadBalancer [provider: "aws", technology: "ALB / TLS 1.3"] as "Application LB"
+    nat gateway [provider: "aws", technology: "Managed Egress"] as "NAT Gateway"
+  }
+  app subnet [variant: private] as "Private App Subnet" {
+    eks kubernetes [provider: "aws", technology: "Kubernetes 3-AZ"] as "EKS API Cluster"
+    sqs queue [provider: "aws", technology: "FIFO Queue"] as "SQS + EventBridge"
+    fn function [provider: "aws", technology: "ARM64 / Node 24"] as "Lambda Workers"
+  }
+  data subnet [variant: private] as "Private Data Subnet" {
+    rds database [provider: "aws", technology: "Multi-AZ Cluster"] as "Aurora PostgreSQL"
+    redis cache [provider: "aws", technology: "Cluster Mode"] as "ElastiCache Redis"
+    s3 storage [provider: "aws", technology: "KMS Encrypted"] as "S3 Asset Vault"
+  }
+}
+
+users -> cdn [technology: "HTTPS"]
+cdn -> waf
+waf -> vpc.pub.alb [technology: "443"]
+vpc.pub.alb -> vpc.app.eks [technology: "HTTP/2"]
+vpc.app.eks -> vpc.app.sqs [async]
+vpc.app.sqs -> vpc.app.fn [async]
+vpc.app.eks -> vpc.data.rds [data, technology: "5432"]
+vpc.app.eks -> vpc.data.redis [data, technology: "6379"]
+vpc.app.fn -> vpc.data.s3 [data, technology: "S3 API"]
+vpc.app.fn -> vpc.pub.nat [style: dashed] as "Egress"

@@ -277,7 +277,9 @@ export interface SceneOwnerLookup028 {
 export type SceneGeometry028 =
   | (Omit<StencilPathPrimitive028, 'transform'> & { readonly kind: 'stencil-path';
       readonly transform: Readonly<{ x: number; y: number; scale: number }>;
-      readonly innerTransform?: string })
+      readonly innerTransform?: string;
+      /** Optional presentation-only SVG filter ID suffix (e.g. `'anemone-shadow-sm'`). */
+      readonly filterId?: 'anemone-shadow-sm' | 'anemone-shadow-md' })
   | { readonly kind: 'route'; readonly points: readonly Position[]; readonly d: string;
       readonly stroke: string; readonly strokeWidth: number;
       readonly cornerRadii?: readonly number[];
@@ -287,7 +289,12 @@ export type SceneGeometry028 =
   | { readonly kind: 'marker'; readonly contact: Position;
       readonly marker: EndpointMarker; readonly stroke: string }
   | (TextRunPrimitive028 & { readonly kind: 'text'; readonly labelPlacement?: EdgeLabelPlacement;
-      readonly background?: string })
+      readonly background?: string;
+      /** Optional presentation-only pill framing for label backgrounds. */
+      readonly backgroundStroke?: string;
+      readonly backgroundRadius?: number;
+      readonly backgroundPadX?: number;
+      readonly backgroundPadY?: number })
   | { readonly kind: 'divider'; readonly x1: number; readonly y1: number;
       readonly x2: number; readonly y2: number; readonly stroke: string;
       readonly strokeWidth: number }

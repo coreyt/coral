@@ -1,0 +1,14 @@
+@diagram architecture
+shopper actor as "Shopper"
+stripe service as "Stripe API"
+platform group as "E-Commerce Platform" {
+  web service as "Web Storefront"
+  api service as "Order Service"
+  db database as "Orders DB"
+  events queue as "Order Events"
+}
+e1 = shopper -> platform.web [calls] as "HTTPS"
+e2 = platform.web -> platform.api [calls] as "Submit Order"
+e3 = platform.api -> platform.db [reads] as "SQL"
+e4 = platform.api -> platform.events [async] as "OrderPlaced"
+e5 = platform.api -> stripe [calls] as "Charge Card"

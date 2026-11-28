@@ -3,10 +3,11 @@
 ## Scope and authorization
 
 The owner authorized preparing **Coral 0.2.17** on `dev/0.2.17` from published
-`0.2.15` (`78b1c4cc`), leaving published `0.2.15` and the draft
-`release/0.2.16` worktree untouched. Release `0.2.17` folds in the unimplemented
-`0.2.16` draft release plan alongside Edition `0.2.17` visual UML State and the
-Mermaid-to-Coral transpiler, delivering four coordinated capabilities:
+`0.2.15` (`78b1c4cc`), leaving published `0.2.15` untouched. Release `0.2.17`
+folds in the unimplemented `0.2.16` draft release plan, the Anemone v2 &
+Parrotfish classic presentation work preserved from `release/0.2.16`, Edition
+`0.2.17` visual UML State, and the Mermaid-to-Coral transpiler, delivering five
+coordinated capabilities:
 
 - **Standalone `coral` CLI (`bin.coral` on `@coral-viz/render`)**: keeps the
   six-package `expectedPackages` inventory closed while exposing `coral
@@ -41,6 +42,14 @@ Mermaid-to-Coral transpiler, delivering four coordinated capabilities:
   `coral_convert`, and adds explicit zero-LLM "Convert to Editable Coral" UI
   with pre-commit loss review and single atomic Undo in
   `@coral-viz/diagram-editor`. See `dev/designs/mermaid-transpiler/`.
+- **Anemone v2 visual design language & Parrotfish classic preset**: upgrades
+  Coral's presentation layer (`@coral-viz/render`, `@coral-viz/browser`,
+  `@coral-viz/viz`) to elevated neutral cards, semantic accent badges, header
+  bands, technology/edge pills, subtle elevation filters, canvas dot patterns,
+  and sketch register styling with zero layout drift, and adds the separate
+  `'parrotfish'` / `'pf'` classic preset (`parrotfishClassic.ts`, tree-shaken
+  from browser embeds). See `dev/designs/anemone-v2/` and
+  `dev/designs/parrotfish/`.
 
 ## Independent identities
 

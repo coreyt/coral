@@ -1,0 +1,19 @@
+@diagram sketch
+@coralVersion "0.2.14"
+
+write step as "1. Write DSL"
+commit step as "4. Commit SVG"
+note1 label as "Dragging writes one clean @ (x, y) pinned line back into source"
+
+loop group as "One Plain-Text .coral File" {
+  layout box as "2. Auto Layout"
+  drag box as "3. Drag One Box"
+  check decision as "Looks right?"
+}
+
+write -> loop.layout as "parse"
+loop.layout -> loop.drag
+loop.drag -> loop.check as "1-line diff"
+loop.check -> loop.layout as "No — tweak!"
+loop.check -> commit as "Yes — export!"
+note1 -> loop

@@ -39,7 +39,8 @@ describe('@coral-viz/browser edition 0.2.14 and anemone/ane parity', () => {
     expect(hifi.svg).toContain('React SPA');
     expect(hifi.svg).toContain('JSON/REST');
     expect(anemone.svg).toContain('Orders API');
-    expect(anemone.svg).toContain('#0f766e');
+    expect(anemone.svg).toContain('#0e7490');
+    expect(anemone.svg).toContain('anemone-shadow-sm');
   });
 
   it('renders dedicated cloud infrastructure diagrams with nested VPC/subnet boundaries', async () => {

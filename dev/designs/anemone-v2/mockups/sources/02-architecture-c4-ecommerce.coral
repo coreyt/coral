@@ -1,0 +1,28 @@
+@diagram architecture
+@coralVersion "0.2.14"
+
+customer person [description: "Places & tracks orders"] as "Customer"
+ops person [description: "Handles refunds & disputes"] as "Support Ops"
+stripe externalSystem [technology: "REST / HTTPS", description: "Card capture & 3DS"] as "Stripe"
+postmark externalSystem [technology: "SMTP / API", description: "Transactional receipts"] as "Postmark"
+
+platform systemBoundary as "Commerce Platform" {
+  edge containerBoundary as "Client & Edge Tier" {
+    web container [technology: "Next.js / SSR", description: "Catalog, cart & checkout UI"] as "Web Storefront"
+    gw gateway [technology: "Envoy / JWT", description: "AuthN, rate limits & routing"] as "API Gateway"
+  }
+  orders container [technology: "Go / gRPC", description: "Cart validation & state machine"] as "Order Service"
+  bus queue [technology: "Apache Kafka", description: "Durable domain event topics"] as "Event Bus"
+  worker container [technology: "Rust / Consumer", description: "Dispatches shipments & emails"] as "Fulfillment Worker"
+  db database [technology: "PostgreSQL 16", description: "ACID ledger & outbox table"] as "Orders Database"
+}
+
+customer -> platform.edge.web [technology: "HTTPS"] as "Browses"
+ops -> platform.edge.gw [technology: "HTTPS"] as "Admin"
+platform.edge.web -> platform.edge.gw [technology: "JSON"] as "Submits"
+platform.edge.gw -> platform.orders [technology: "gRPC"] as "Creates"
+platform.orders -> platform.db [data, technology: "SQL"] as "Writes"
+platform.orders -> platform.bus [async, technology: "Avro"] as "OrderPlaced"
+platform.bus -> platform.worker [async] as "Consumes"
+platform.orders -> stripe [technology: "TLS"] as "Charges"
+platform.worker -> postmark [technology: "HTTPS"] as "Emails"

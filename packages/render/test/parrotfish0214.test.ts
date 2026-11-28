@@ -1,12 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   ANEMONE_MODEL_0214,
+  PARROTFISH_MODEL_0215,
   normalizeRenderStyle0214,
   parrotfish,
   prepareSpatialScene028,
   projectInstalledSourceToSuccessor028,
   renderSvg,
   resolveParrotfishModel,
+  successorSequenceDisplay028,
   successorSourceDisplayWithSemanticPorts028,
   type ParrotfishModel,
 } from '../src/index.js';
@@ -58,10 +60,10 @@ describe('0.2.14 Anemone peer output style & Parrotfish modeled renderer', () =>
     });
     expect(hifiSvg).toContain('fill="#ffffff"');
     expect(hifiSvg).toContain('stroke="#22272b"');
-    // Default monochrome hifi must NOT emit Anemone tinted surfaces
-    expect(hifiSvg).not.toContain('#f0fdfa');
-    expect(hifiSvg).not.toContain('#fff1f2');
-    expect(hifiSvg).not.toContain('#fffbeb');
+    // Default monochrome hifi must NOT emit Anemone v2 canvas, elevation, or tinted surfaces
+    expect(hifiSvg).not.toContain('#f8fafc');
+    expect(hifiSvg).not.toContain('anemone-shadow-sm');
+    expect(hifiSvg).not.toContain('anemone-dots');
   });
 
   it('renders anemone and its ane shorthand identically as a peer to hifi/lowfi', async () => {
@@ -74,12 +76,15 @@ describe('0.2.14 Anemone peer output style & Parrotfish modeled renderer', () =>
     const aneFull = renderSvg(laid, { ...common, renderStyle: 'anemone' });
     const aneShort = renderSvg(laid, { ...common, renderStyle: 'ane' });
     expect(aneShort).toBe(aneFull);
-    // Anemone distinguishes roles semantically (actor coral stroke, service teal, db amber, queue violet, container dashed tint)
+    // Anemone v2: Studio Paper canvas + dot grid, soft shadows, restrained semantic borders/accents, layered container tint
+    expect(aneFull).toContain('#f8fafc');
+    expect(aneFull).toContain('anemone-shadow-sm');
+    expect(aneFull).toContain('anemone-dots');
     expect(aneFull).toContain('#be123c');
-    expect(aneFull).toContain('#f0fdfa');
-    expect(aneFull).toContain('#fffbeb');
-    expect(aneFull).toContain('#f5f3ff');
-    expect(aneFull).toContain('#f4f7fb');
+    expect(aneFull).toContain('#a5f3fc');
+    expect(aneFull).toContain('#fde68a');
+    expect(aneFull).toContain('#e9d5ff');
+    expect(aneFull).toContain('#f1f5f9');
   });
 
   it.each(['hifi', 'anemone'] as const)('paints containers behind connectors in %s on shared scenes and SVG', async (renderStyle) => {
@@ -156,7 +161,127 @@ describe('0.2.14 Anemone peer output style & Parrotfish modeled renderer', () =>
       svgOptions: { edgeRoutes: laid.edgeRoutes, semanticGraph: display, successorSource },
     });
     expect(darkResult.theme).toBe('dark');
-    expect(darkResult.svg).toContain('fill="#0f172a"');
-    expect(darkResult.svg).toContain('#2dd4bf');
+    expect(darkResult.svg).toContain('fill="#0b101b"');
+    expect(darkResult.svg).toContain('#22d3ee');
+    expect(darkResult.svg).toContain('anemone-shadow-sm');
+  });
+
+  it('uses the dedicated warm tactile sketch register for @diagram sketch in anemone', async () => {
+    const SKETCH_SAMPLE = `@diagram sketch
+@coralVersion "0.2.14"
+idea step as "Rough Idea"
+check decision as "Looks right?"
+ship step as "Commit SVG"
+idea -> check as "draft"
+check -> ship as "Yes"
+`;
+    const { laid, display, successorSource } = await layoutSample(SKETCH_SAMPLE, 'hifi');
+    const svg = renderSvg(laid, {
+      renderStyle: 'anemone',
+      edgeRoutes: laid.edgeRoutes,
+      semanticGraph: display,
+      successorSource,
+    });
+    expect(svg).toContain('fill="#faf8f4"');
+    expect(svg).toContain('fill="#e0f2fe"');
+    expect(svg).toContain('fill="#fef3c7"');
+    expect(svg).toContain('stroke="#1e293b"');
+  });
+
+  it('parrotfish preset applies classic lavender/butter styling to non-UML diagrams without altering geometry', async () => {
+    expect(resolveParrotfishModel('parrotfish')).toBe(PARROTFISH_MODEL_0215);
+    expect(resolveParrotfishModel('pf')).toBe(PARROTFISH_MODEL_0215);
+
+    const { laid, display, successorSource } = await layoutSample(ARCH_SAMPLE, 'hifi');
+    const baseScene = prepareSpatialScene028(laid, {
+      style: 'hifi',
+      edgeRoutes: laid.edgeRoutes,
+      semanticGraph: display,
+      successorSource,
+    });
+    const res = parrotfish(baseScene, 'pf', { theme: 'light' });
+    expect(res.modelName).toBe('parrotfish');
+
+    // Geometry invariants preserved identically
+    expect(res.scene.viewport).toEqual(baseScene.viewport);
+    expect(res.scene.bounds).toEqual(baseScene.bounds);
+    expect(res.scene.portContacts).toEqual(baseScene.portContacts);
+
+    // Classic non-UML palette: lavender nodes, mediumpurple borders, butter solid clusters, gray edge labels, no left stripes
+    expect(res.svg).toContain('fill="#ececff"');
+    expect(res.svg).toContain('stroke="#9370db"');
+    expect(res.svg).toContain('fill="#ffffde"');
+    expect(res.svg).toContain('stroke="#aaaa33"');
+    expect(res.svg).toContain('stroke="#333333"');
+    expect(res.svg).toContain('fill="#e8e8e8"');
+    expect(res.svg).not.toContain('parrotfish-accent');
+    // Container border must be solid (not dashed)
+    const platformChunk = res.svg.slice(res.svg.indexOf('data-coral-node="platform"'), res.svg.indexOf('data-coral-edge="e1"'));
+    expect(platformChunk).not.toContain('stroke-dasharray');
+
+    // Dark variant
+    const darkRes = parrotfish(baseScene, 'parrotfish', { theme: 'dark' });
+    expect(darkRes.svg).toContain('fill="#1f2020"');
+    expect(darkRes.svg).toContain('stroke="#81b1db"');
+  });
+
+  it('parrotfish preset switches to classic parchment-and-maroon styling on UML Class diagrams', async () => {
+    const UML_CLASS_SAMPLE = `@diagram uml-class
+Order class as "Order" {
+  attributes {
+    + id: UUID
+  }
+  operations {
+    + total(): Money
+  }
+}
+Payable interface as "Payable" {
+  operations {
+    + charge(): Receipt
+  }
+}
+e1 = Order -> Payable [realization] as "implements"
+`;
+    const { laid, display, successorSource } = await layoutSample(UML_CLASS_SAMPLE, 'hifi');
+    const baseScene = prepareSpatialScene028(laid, {
+      style: 'hifi',
+      edgeRoutes: laid.edgeRoutes,
+      semanticGraph: display,
+      successorSource,
+    });
+    const res = parrotfish(baseScene, 'parrotfish', { theme: 'light' });
+    expect(res.scene.viewport).toEqual(baseScene.viewport);
+    expect(res.scene.portContacts).toEqual(baseScene.portContacts);
+
+    // Classic UML palette: parchment cream boxes, deep maroon strokes/dividers/arrows, black ink, zero lavender
+    expect(res.svg).toContain('fill="#fefece"');
+    expect(res.svg).toContain('stroke="#a80036"');
+    expect(res.svg).toContain('fill="#000000"');
+    expect(res.svg).not.toContain('#ececff');
+    expect(res.svg).not.toContain('parrotfish-accent');
+  });
+
+  it('parrotfish preset styles UML Sequence diagrams with classic parchment, maroon, and yellow notes', () => {
+    const SEQ_SAMPLE = `@diagram uml-sequence
+client participant as "Client"
+api participant as "Order API"
+m1 = client -> api [sync] as "POST /orders"
+note "Idempotent 24h" on api
+m2 = api -.-> client [return] as "201 Created"
+`;
+    const projected = projectInstalledSourceToSuccessor028(SEQ_SAMPLE);
+    const seqGraph = successorSequenceDisplay028(projected.graph!);
+    const res = parrotfish(seqGraph, 'pf', { theme: 'light' });
+    expect(res.modelName).toBe('parrotfish');
+    expect(res.scene.kind).toBe('sequence');
+    expect(res.svg).toContain('fill="#fefece"');
+    expect(res.svg).toContain('stroke="#a80036"');
+    expect(res.svg).toContain('fill="#fbfb77"');
+    expect(res.svg).toContain('fill="#000000"');
+    expect(res.svg).not.toContain('#ececff');
+
+    // Direct renderSvg option parity
+    const directSvg = renderSvg(seqGraph, { style: 'hifi', parrotfish: 'parrotfish' });
+    expect(directSvg).toBe(res.svg);
   });
 });

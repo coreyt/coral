@@ -1,0 +1,35 @@
+@diagram bpmn
+@coralVersion "0.2.14"
+
+customer [symbol: bpmn-lane] as "Customer" {
+  start startEvent as "Order Placed"
+  submit task as "Submit Order"
+  receipt task as "Receive Receipt"
+  done endEvent as "Complete"
+}
+
+ops [symbol: bpmn-lane] as "Order Ops" {
+  auth task as "Authorize Card"
+  approved exclusiveGateway as "Approved?"
+  notify task as "Notify Failure"
+  cancelled endEvent as "Cancelled"
+  join parallelGateway as "Join"
+}
+
+warehouse [symbol: bpmn-lane] as "Warehouse" {
+  split parallelGateway as "Parallel Split"
+  pack task as "Pick & Pack Box"
+  label task as "Print Carrier Label"
+}
+
+customer.start -> customer.submit
+customer.submit -> ops.auth
+ops.auth -> ops.approved
+ops.approved -> ops.notify as "No"
+ops.notify -> ops.cancelled
+ops.approved -> warehouse.split as "Yes"
+warehouse.split -> warehouse.pack
+warehouse.pack -> warehouse.label
+warehouse.label -> ops.join
+ops.join -> customer.receipt
+customer.receipt -> customer.done

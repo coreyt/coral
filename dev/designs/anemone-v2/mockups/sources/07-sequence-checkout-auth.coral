@@ -1,0 +1,22 @@
+@diagram uml-sequence
+@coralVersion "0.2.14"
+
+shopper actor as "Shopper"
+web participant as "Web App"
+api participant as "Order API"
+stripe participant as "Stripe"
+bus participant as "Event Bus"
+
+shopper -> web as "Click Pay Now"
+web -> api as "POST /orders (Idempotency-Key)"
+api -> stripe as "createPaymentIntent(amount)"
+stripe -.-> api [return] as "intent_status + 3ds_token"
+
+alt "payment_authorized" {
+  api -> bus [async] as "publish OrderPaidEvent"
+  api -.-> web [return] as "201 Created"
+} else "card_declined" {
+  api -.-> web [return] as "402 Payment Required"
+}
+
+web -.-> shopper [return] as "Render Confirmation / Retry UI"

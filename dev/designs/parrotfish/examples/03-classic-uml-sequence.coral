@@ -1,0 +1,12 @@
+@diagram uml-sequence
+shopper actor as "Shopper"
+web participant as "Web App"
+api participant as "Order API"
+stripe participant as "Stripe"
+m1 = shopper -> web [sync] as "Click Pay"
+m2 = web -> api [sync] as "POST /orders"
+m3 = api -> stripe [sync] as "createIntent()"
+note "Idempotent 24h key" on api
+m4 = stripe -.-> api [return] as "intent_ok"
+m5 = api -.-> web [return] as "201 Created"
+m6 = web -.-> shopper [return] as "Confirmation"

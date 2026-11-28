@@ -1,9 +1,11 @@
 # Active Plan
 
 The active release is **Coral 0.2.17**, adding saved-source edition `0.2.17`
-visual and hierarchical UML State support and the deterministic zero-LLM
-Mermaid.js-to-Coral transpiler across `@coral-viz/language`,
-`@coral-viz/render`, `@coral-viz/mcp-server`, and `@coral-viz/diagram-editor`.
+visual and hierarchical UML State support, the deterministic zero-LLM
+Mermaid.js-to-Coral transpiler, the standalone `coral` CLI, and the Anemone v2
+visual system & Parrotfish classic preset across `@coral-viz/language`,
+`@coral-viz/render`, `@coral-viz/browser`, `@coral-viz/viz`,
+`@coral-viz/mcp-server`, and `@coral-viz/diagram-editor`.
 The [release plan](dev/releases/0.2.17/plan.md) records the approved scope,
 identities, and verification gates.
 

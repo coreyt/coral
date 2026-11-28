@@ -1,0 +1,28 @@
+@diagram aiml
+@coralVersion "0.2.14"
+
+query prompt [description: "Prompt + session ID"] as "User Query"
+in_guard guardrail [description: "Blocks unsafe prompts"] as "Input Guardrail"
+out_guard guardrail [description: "Verifies citations & tone"] as "Output Guardrail"
+fallback annotation [description: "Escalates or redacts"] as "Safe Fallback"
+vdb vectorStore [technology: "pgvector / HNSW"] as "Vector Store"
+mem memory [technology: "Redis + Summary"] as "Session Memory"
+
+runtime [label: "Agent Runtime"] {
+  agent agent [technology: "ReAct / Max 6 Steps"] as "Agent Orchestrator"
+  llm llm [technology: "Structured JSON + Tools"] as "Frontier LLM"
+  rag retriever [technology: "Hybrid BM25"] as "RAG Retriever"
+  tools tool [technology: "Sandboxed"] as "MCP Tools"
+}
+
+query -> in_guard
+in_guard -> runtime.agent [dataFlow] as "Pass"
+in_guard -> fallback [error] as "Blocked Prompt"
+runtime.agent -> runtime.llm [inference] as "Prompt"
+runtime.llm -> runtime.agent [toolUse] as "Tool Call"
+runtime.llm -> runtime.rag [dataFlow] as "Retrieve"
+runtime.llm -> runtime.tools [toolUse] as "Invoke"
+runtime.rag -> vdb [dataFlow] as "Top-K Cosine"
+runtime.agent -> mem [dataFlow] as "Read/Write"
+runtime.agent -> out_guard [inference] as "Draft"
+out_guard -> fallback [error] as "Fail"

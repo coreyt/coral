@@ -70,7 +70,8 @@ export function SpatialScenePart028({ part, namespace }: {
         aria-hidden="true" />;
     case 'stencil-path': {
       const { x, y, scale } = geometry.transform;
-      return <g transform={`translate(${x},${y}) scale(${scale})`}>
+      return <g transform={`translate(${x},${y}) scale(${scale})`}
+        filter={geometry.filterId ? `url(#${namespace}-${geometry.filterId})` : undefined}>
         <path data-coral-part-id={partId} d={geometry.d} fill={geometry.fill}
           stroke={geometry.stroke} strokeWidth={Number(geometry.strokeWidth.toFixed(4))}
           strokeLinecap={geometry.strokeLinecap} strokeLinejoin={geometry.strokeLinejoin}
@@ -101,10 +102,17 @@ export function SpatialScenePart028({ part, namespace }: {
       return <line data-coral-part-id={partId} data-coral-classifier-separator={partId}
         x1={geometry.x1} y1={geometry.y1} x2={geometry.x2} y2={geometry.y2}
         stroke={geometry.stroke} strokeWidth={geometry.strokeWidth} />;
-    case 'text':
+    case 'text': {
+      const padX = geometry.backgroundPadX ?? 0;
+      const padY = geometry.backgroundPadY ?? 0;
+      const bgBounds = part.owner.kind === 'edge' ? geometry.inkBounds : part.bounds;
       return <>{geometry.background && <rect data-coral-label-background={partId}
-        x={geometry.inkBounds.x} y={geometry.inkBounds.y} width={geometry.inkBounds.width}
-        height={geometry.inkBounds.height} fill={geometry.background} aria-hidden="true" pointerEvents="none" />}<text data-coral-part-id={partId}
+        x={bgBounds.x - padX} y={bgBounds.y - padY}
+        width={bgBounds.width + padX * 2} height={bgBounds.height + padY * 2}
+        rx={geometry.backgroundRadius} ry={geometry.backgroundRadius}
+        fill={geometry.background} stroke={geometry.backgroundStroke}
+        strokeWidth={geometry.backgroundStroke ? 0.9 : undefined}
+        aria-hidden="true" pointerEvents="none" />}<text data-coral-part-id={partId}
         data-coral-classifier-row={part.role === 'classifier-row' ? geometry.compartmentId ?? '' : undefined}
         data-coral-classifier-name={part.role === 'classifier-name' ? '' : undefined}
         data-coral-classifier-stereotype={part.role === 'classifier-stereotype' ? '' : undefined}
@@ -118,6 +126,7 @@ export function SpatialScenePart028({ part, namespace }: {
         {geometry.text.includes('\n') ? geometry.text.split('\n').map((line, index) =>
           <tspan key={index} x={geometry.x} y={geometry.y + index * Math.ceil(geometry.fontSize * geometry.lineHeight)}>{line}</tspan>) : geometry.text}
       </text></>;
+    }
   }
 }
 
@@ -138,9 +147,39 @@ export function SpatialSceneSvg028({ scene, namespace, className, style,
     aria-describedby={decorative || !description ? undefined : descriptionId}>
     {!decorative && <title id={titleId}>{title ?? (scene.id || 'Coral diagram')}</title>}
     {!decorative && description && <desc id={descriptionId}>{description}</desc>}
-    <defs><style dangerouslySetInnerHTML={{ __html: embeddedFontCssFor(scene.fontFaces) }} /></defs>
+    <defs>
+      <style dangerouslySetInnerHTML={{ __html: embeddedFontCssFor(scene.fontFaces) }} />
+      {scene.elevationTheme0216 && <>
+        <filter id={`${domNamespace}-anemone-shadow-sm`} x="-14%" y="-16%" width="128%" height="140%">
+          <feDropShadow dx="0" dy="1" stdDeviation="1.4"
+            floodColor={scene.elevationTheme0216 === 'dark' ? '#000000' : '#0f172a'}
+            floodOpacity={scene.elevationTheme0216 === 'dark' ? 0.26 : 0.055} />
+          <feDropShadow dx="0" dy="4" stdDeviation="5.5"
+            floodColor={scene.elevationTheme0216 === 'dark' ? '#000000' : '#0f172a'}
+            floodOpacity={scene.elevationTheme0216 === 'dark' ? 0.2 : 0.05} />
+        </filter>
+        <filter id={`${domNamespace}-anemone-shadow-md`} x="-16%" y="-18%" width="132%" height="144%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2.5"
+            floodColor={scene.elevationTheme0216 === 'dark' ? '#000000' : '#0f172a'}
+            floodOpacity={scene.elevationTheme0216 === 'dark' ? 0.34 : 0.07} />
+          <feDropShadow dx="0" dy="8" stdDeviation="11"
+            floodColor={scene.elevationTheme0216 === 'dark' ? '#000000' : '#0f172a'}
+            floodOpacity={scene.elevationTheme0216 === 'dark' ? 0.26 : 0.075} />
+        </filter>
+      </>}
+      {scene.canvasPattern0216 && (
+        <pattern id={`${domNamespace}-anemone-dots`}
+          width={scene.canvasPattern0216.pitch} height={scene.canvasPattern0216.pitch}
+          patternUnits="userSpaceOnUse">
+          <circle cx={scene.canvasPattern0216.pitch / 2} cy={scene.canvasPattern0216.pitch / 2}
+            r="1" fill={scene.canvasPattern0216.color} opacity={scene.canvasPattern0216.opacity} />
+        </pattern>
+      )}
+    </defs>
     <SpatialSceneMarkerDefs028 scene={scene} namespace={domNamespace} />
     <SpatialSceneArtworkDefs029 scene={scene} namespace={domNamespace} />
+    {scene.background0214 && <rect width={scene.viewport.width} height={scene.viewport.height} fill={scene.background0214} />}
+    {scene.canvasPattern0216 && <rect width={scene.viewport.width} height={scene.viewport.height} fill={`url(#${domNamespace}-anemone-dots)`} aria-hidden="true" />}
     {scene.parts.map((part) => <SpatialScenePart028 key={part.id} part={part} namespace={domNamespace} />)}
   </svg>;
 }

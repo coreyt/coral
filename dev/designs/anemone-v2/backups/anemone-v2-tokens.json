@@ -1,0 +1,121 @@
+{
+  "$schema": "https://coral.dev/schemas/parrotfish-anemone-v2.json",
+  "name": "anemone-v2",
+  "version": "2.0.0-draft",
+  "supersedes": "anemone-0.2.14",
+  "registers": {
+    "precision": {
+      "description": "Figma / IcePanel / Linear grade technical precision for architecture, infrastructure, aiml, data-engineering, erd, uml, bpmn, flowchart, block, code, uml-state",
+      "fonts": {
+        "sans": "'Coral Inter', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        "mono": "'JetBrains Mono', 'SFMono-Regular', ui-monospace, Menlo, monospace"
+      },
+      "radii": {
+        "pill": 6,
+        "badge": 7,
+        "card": 10,
+        "zone": 14,
+        "chip": 4
+      },
+      "strokes": {
+        "card": 1.25,
+        "zone": 1.25,
+        "edgePrimary": 1.75,
+        "edgeSecondary": 1.5,
+        "edgeAnnotation": 1.1,
+        "icon": 1.75
+      },
+      "light": {
+        "canvas": "#F8FAFC",
+        "canvasDot": "#CBD5E1",
+        "zoneL1": "#F1F5F9",
+        "zoneL2": "#E8EFF7",
+        "card": "#FFFFFF",
+        "cardExternal": "#F8FAFC",
+        "cardNote": "#FFFBEB",
+        "pill": "#F1F5F9",
+        "borderSubtle": "#DDE4EE",
+        "borderStrong": "#94A3B8",
+        "borderZone": "#CBD5E1",
+        "inkPrimary": "#0F172A",
+        "inkSecondary": "#475569",
+        "inkMuted": "#64748B",
+        "edgeDefault": "#64748B",
+        "edgeStrong": "#334155",
+        "accents": {
+          "coral":   { "badge": "#FFE4E6", "ink": "#BE123C", "border": "#FDA4AF", "soft": "#FFF5F6" },
+          "indigo":  { "badge": "#EEF2FF", "ink": "#4338CA", "border": "#C7D2FE", "soft": "#F5F7FF" },
+          "teal":    { "badge": "#ECFEFF", "ink": "#0E7490", "border": "#A5F3FC", "soft": "#F2FCFD" },
+          "sky":     { "badge": "#E0F2FE", "ink": "#0369A1", "border": "#BAE6FD", "soft": "#F4FAFF" },
+          "amber":   { "badge": "#FEF3C7", "ink": "#B45309", "border": "#FDE68A", "soft": "#FFFDF5" },
+          "violet":  { "badge": "#F3E8FF", "ink": "#7E22CE", "border": "#E9D5FF", "soft": "#FAF5FF" },
+          "emerald": { "badge": "#D1FAE5", "ink": "#047857", "border": "#A7F3D0", "soft": "#F3FDF8" },
+          "slate":   { "badge": "#F1F5F9", "ink": "#475569", "border": "#CBD5E1", "soft": "#F8FAFC" }
+        }
+      },
+      "dark": {
+        "canvas": "#0B101B",
+        "canvasDot": "#334155",
+        "zoneL1": "#111827",
+        "zoneL2": "#172033",
+        "card": "#192235",
+        "cardExternal": "#121927",
+        "cardNote": "#272013",
+        "pill": "#222E44",
+        "borderSubtle": "#2A3750",
+        "borderStrong": "#475569",
+        "borderZone": "#334155",
+        "inkPrimary": "#F1F5F9",
+        "inkSecondary": "#94A3B8",
+        "inkMuted": "#7E8FA6",
+        "edgeDefault": "#7C8DA6",
+        "edgeStrong": "#CBD5E1",
+        "accents": {
+          "coral":   { "badge": "#3B1522", "ink": "#FB7185", "border": "#881337", "soft": "#241019" },
+          "indigo":  { "badge": "#1E254B", "ink": "#818CF8", "border": "#3730A3", "soft": "#161B36" },
+          "teal":    { "badge": "#102E38", "ink": "#22D3EE", "border": "#155E75", "soft": "#0E222B" },
+          "sky":     { "badge": "#102B42", "ink": "#38BDF8", "border": "#075985", "soft": "#0D2032" },
+          "amber":   { "badge": "#34240E", "ink": "#FBBF24", "border": "#92400E", "soft": "#241A0C" },
+          "violet":  { "badge": "#2A1944", "ink": "#C084FC", "border": "#6B21A8", "soft": "#1E1432" },
+          "emerald": { "badge": "#0E2E23", "ink": "#34D399", "border": "#065F46", "soft": "#0C221B" },
+          "slate":   { "badge": "#1F293B", "ink": "#94A3B8", "border": "#475569", "soft": "#151D2B" }
+        }
+      }
+    },
+    "sketch": {
+      "description": "Excalidraw-parity warm tactile whiteboard register for @diagram sketch and ideation",
+      "fonts": {
+        "hand": "'Coral Lowfi Caveat', 'Caveat', 'Virgil', 'Segoe Print', cursive",
+        "sans": "'Coral Inter', 'Inter', sans-serif"
+      },
+      "light": {
+        "canvas": "#FAF8F4",
+        "canvasDot": "#DDD6C8",
+        "ink": "#1E293B",
+        "softInk": "#57534E",
+        "fills": {
+          "paper": "#FFFDF9",
+          "butter": "#FEF3C7",
+          "sky": "#E0F2FE",
+          "coral": "#FFE4E6",
+          "sage": "#DCFCE7",
+          "lavender": "#F3E8FF"
+        }
+      },
+      "dark": {
+        "canvas": "#161513",
+        "canvasDot": "#33302B",
+        "ink": "#F3F0E8",
+        "softInk": "#A8A29E",
+        "fills": {
+          "paper": "#22201D",
+          "butter": "#3A2F17",
+          "sky": "#162A3A",
+          "coral": "#381B22",
+          "sage": "#162E22",
+          "lavender": "#2A1E3B"
+        }
+      }
+    }
+  }
+}

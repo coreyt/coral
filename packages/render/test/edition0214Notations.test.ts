@@ -68,7 +68,8 @@ describe('Coral 0.2.14 notations (block, architecture, infrastructure, erd, N1)'
     expect(hifi).toContain('#0000FF');
     expect(hifi).toContain('#FF0000');
     expect(hifi).toContain('6 4');
-    expect(ane).toContain('#fcfcfd');
+    expect(ane).toContain('#f8fafc');
+    expect(ane).toContain('anemone-shadow-sm');
     expect(evaluatePreparedSceneQuality0214(sceneHifi).tier1.pass).toBe(true);
     expect(evaluatePreparedSceneQuality0214(sceneHifi).livingCompositeScore).toBeGreaterThanOrEqual(85);
     expect(evaluatePreparedSceneQuality0214(sceneAne).tier1.pass).toBe(true);
@@ -97,9 +98,11 @@ describe('Coral 0.2.14 notations (block, architecture, infrastructure, erd, N1)'
     expect(hifi).toContain('Browses [HTTPS]');
     expect(hifi).toContain('6 3');
     // Default hifi stays monochrome (no anemone palette)
-    expect(hifi).not.toContain('#fcfcfd');
-    expect(ane).toContain('#fcfcfd');
-    expect(ane).toContain('#0f766e');
+    expect(hifi).not.toContain('#f8fafc');
+    expect(hifi).not.toContain('anemone-shadow-sm');
+    expect(ane).toContain('#f8fafc');
+    expect(ane).toContain('#0e7490');
+    expect(ane).toContain('anemone-shadow-sm');
     // Parrotfish custom model preserves exact layout/routes
     const custom = parrotfish(laid, { name: 'brand', extends: 'anemone', nodes: { 'platform.web': { stroke: '#123456' } } },
       { svgOptions: { notation: 'architecture', layoutDirection: 'DOWN', edgeRoutes: laid.edgeRoutes } });
@@ -171,6 +174,8 @@ describe('Coral 0.2.14 notations (block, architecture, infrastructure, erd, N1)'
       expect(svg).toContain('markerWidth="14" markerHeight="14"');
       expect(svg).toContain('markerWidth="10" markerHeight="10"');
     }
-    expect(ane).toContain('#b45309');
+    expect(ane).toContain('anemone-header-band');
+    expect(ane).toContain('#eef2ff');
+    expect(ane).toContain('#fffbeb');
   });
 });

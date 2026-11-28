@@ -1,0 +1,24 @@
+@diagram uml-class
+Order class as "Order" {
+  attributes {
+    + id: UUID
+    + totalCents: Int
+  }
+  operations {
+    + submit(): Receipt
+    + cancel(): void
+  }
+}
+LineItem class as "LineItem" {
+  attributes {
+    + sku: String
+    + qty: Int
+  }
+}
+Payable interface as "Payable" {
+  operations {
+    + charge(amount: Money): Receipt
+  }
+}
+e1 = Order -> Payable [realization] as "implements"
+e2 = Order -> LineItem [composition] as "contains"

@@ -1,0 +1,63 @@
+@diagram erd
+@coralVersion "0.2.14"
+
+organizations entity as "organizations" {
+  attributes {
+    + id: uuid [pk]
+    + slug: varchar(64) [uk]
+    + plan_tier: plan_enum
+    + created_at: timestamptz
+  }
+}
+
+workspaces entity as "workspaces" {
+  attributes {
+    + id: uuid [pk]
+    + org_id: uuid [fk]
+    + name: varchar(120)
+    + default_style: render_style
+  }
+}
+
+diagrams entity as "diagrams" {
+  attributes {
+    + id: uuid [pk]
+    + workspace_id: uuid [fk]
+    + notation: notation_id
+    + coral_source: text
+  }
+}
+
+users entity as "users" {
+  attributes {
+    + id: uuid [pk]
+    + org_id: uuid [fk]
+    + email: citext [uk]
+    + role: member_role
+  }
+}
+
+revisions entity as "revisions" {
+  attributes {
+    + id: uuid [pk]
+    + diagram_id: uuid [fk]
+    + author_id: uuid [fk]
+    + sha256_digest: char(64)
+  }
+}
+
+active_exports view as "active_exports" {
+  attributes {
+    + diagram_id: uuid [fk]
+    + format: enum
+    + render_style: render_style
+    + exported_at: timestamptz
+  }
+}
+
+organizations -> workspaces [firstEnd: one, secondEnd: oneOrMany] as "owns"
+workspaces -> diagrams [firstEnd: one, secondEnd: zeroOrMany] as "contains"
+organizations -> users [firstEnd: one, secondEnd: oneOrMany] as "has members"
+users -> revisions [firstEnd: one, secondEnd: zeroOrMany] as "authors"
+diagrams -> revisions [firstEnd: one, secondEnd: oneOrMany] as "snapshots"
+diagrams -> active_exports [firstEnd: one, secondEnd: zeroOrMany] as "projects"

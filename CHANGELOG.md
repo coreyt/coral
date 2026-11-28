@@ -49,6 +49,15 @@ Release `0.2.17` builds directly on `0.2.15`.
   - Explicit **Convert to Editable Coral** button and Command Palette action in
     `@coral-viz/diagram-editor` with pre-commit loss review, target-switching,
     fail-closed unsupported refusal, and single atomic Undo/Redo.
+- **Anemone v2** presentation upgrade and **Parrotfish classic** preset
+  (`parrotfish` / `pf`, separate from Anemone) across `@coral-viz/render`,
+  `@coral-viz/browser`, and `@coral-viz/viz`:
+  - Elevated neutral card surfaces, calibrated semantic accent badges,
+    structured header bands, technology/edge-label pills, dot-grid canvas
+    patterns, sketch register styling, and light/dark parity with zero layout
+    drift.
+  - Built-in `'parrotfish'` / `'pf'` classic preset module (tree-shaken out of
+    browser embeds that do not select it) with sequence-theme support.
 
 ### Fixed
 

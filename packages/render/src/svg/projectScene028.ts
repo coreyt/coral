@@ -17,7 +17,8 @@ export function serializeScenePart028(part: ScenePartRecord028, domNamespace: st
       return `<g${partId} data-coral-marker-contact="${geometry.contact.x},${geometry.contact.y}" aria-hidden="true"/>`;
     case 'stencil-path': {
       const { x, y, scale } = geometry.transform;
-      return `<g transform="translate(${x},${y}) scale(${scale})"><path${partId} d="${esc(geometry.d)}" fill="${esc(geometry.fill)}" stroke="${esc(geometry.stroke)}" stroke-width="${Number(geometry.strokeWidth.toFixed(4))}" stroke-linecap="${geometry.strokeLinecap}" stroke-linejoin="${geometry.strokeLinejoin}"${geometry.strokeDasharray ? ` stroke-dasharray="${esc(geometry.strokeDasharray)}"` : ''}${geometry.innerTransform ? ` transform="${esc(geometry.innerTransform)}"` : ''}/></g>`;
+      const filterAttr = geometry.filterId ? ` filter="url(#${domNamespace}-${geometry.filterId})"` : '';
+      return `<g transform="translate(${x},${y}) scale(${scale})"${filterAttr}><path${partId} d="${esc(geometry.d)}" fill="${esc(geometry.fill)}" stroke="${esc(geometry.stroke)}" stroke-width="${Number(geometry.strokeWidth.toFixed(4))}" stroke-linecap="${geometry.strokeLinecap}" stroke-linejoin="${geometry.strokeLinejoin}"${geometry.strokeDasharray ? ` stroke-dasharray="${esc(geometry.strokeDasharray)}"` : ''}${geometry.innerTransform ? ` transform="${esc(geometry.innerTransform)}"` : ''}/></g>`;
     }
     case 'decoration-path': {
       const transform = geometry.transform;
@@ -42,10 +43,13 @@ export function serializeScenePart028(part: ScenePartRecord028, domNamespace: st
             : part.role === 'endpoint-label' ? ` data-coral-endpoint-label="${geometry.endpoint}:${geometry.endpointLabelKind}"`
               : '';
       const text = `<text${partId}${role} class="coral-font-text" x="${geometry.x}" y="${geometry.y}" font-family="${esc(geometry.fontFamily)}" font-size="${geometry.fontSize}" font-weight="${geometry.fontWeight}" line-height="${geometry.lineHeight}" fill="${esc(geometry.fill)}"${geometry.fontStyle ? ` font-style="${geometry.fontStyle}"` : ''}${geometry.textDecoration ? ` text-decoration="${geometry.textDecoration}"` : ''} text-anchor="${geometry.anchor}">${geometry.text.includes('\n') ? geometry.text.split('\n').map((line, index) => `<tspan x="${geometry.x}" y="${geometry.y + index * Math.ceil(geometry.fontSize * geometry.lineHeight)}">${esc(line)}</tspan>`).join('') : esc(geometry.text)}</text>`;
-      const bounds = geometry.inkBounds;
-      return geometry.background
-        ? `<rect data-coral-label-background="${esc(part.id)}" x="${bounds.x}" y="${bounds.y}" width="${bounds.width}" height="${bounds.height}" fill="${esc(geometry.background)}" aria-hidden="true" pointer-events="none"/>${text}`
-        : text;
+      const bounds = part.owner.kind === 'edge' ? geometry.inkBounds : part.bounds;
+      if (!geometry.background) return text;
+      const padX = geometry.backgroundPadX ?? 0;
+      const padY = geometry.backgroundPadY ?? 0;
+      const rx = geometry.backgroundRadius;
+      const bgStroke = geometry.backgroundStroke;
+      return `<rect data-coral-label-background="${esc(part.id)}" x="${Number((bounds.x - padX).toFixed(2))}" y="${Number((bounds.y - padY).toFixed(2))}" width="${Number((bounds.width + padX * 2).toFixed(2))}" height="${Number((bounds.height + padY * 2).toFixed(2))}"${rx ? ` rx="${rx}" ry="${rx}"` : ''} fill="${esc(geometry.background)}"${bgStroke ? ` stroke="${esc(bgStroke)}" stroke-width="0.9"` : ''} aria-hidden="true" pointer-events="none"/>${text}`;
     }
   }
 }

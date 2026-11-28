@@ -30,6 +30,7 @@ import {
   ANEMONE_DARK_PALETTE_0214,
   ANEMONE_LIGHT_PALETTE_0214,
   applyParrotfishToScene0214,
+  resolveParrotfishSequenceTheme0215,
   type ParrotfishModelInput,
 } from '../parrotfishCore.js';
 import { bpmnEventFrame028, bpmnEventLabelLayout028, bpmnEventMinimumSize028,
@@ -158,15 +159,18 @@ export function prepareSequenceScene028(graph: SequenceGraph, options: SvgOption
   const visual = visualStyle028(base, dark ? 'dark' : 'light');
   const anemone = canonical === 'anemone';
   const anemonePalette = dark ? ANEMONE_DARK_PALETTE_0214 : ANEMONE_LIGHT_PALETTE_0214;
+  const parrotfishSeqTheme = options.parrotfish !== undefined
+    ? resolveParrotfishSequenceTheme0215(options.parrotfish, dark ? 'dark' : 'light')
+    : undefined;
   const scene = layoutSequence(graph, sequenceLayoutOptions(options));
-  const primitives = sequencePrimitives(scene, themeOverride ?? (anemone
+  const primitives = sequencePrimitives(scene, themeOverride ?? parrotfishSeqTheme ?? (anemone
     ? {
       background: anemonePalette.background,
-      fill: dark ? '#102a2e' : '#f0fdfa',
-      stroke: dark ? '#2dd4bf' : '#0f766e',
+      fill: anemonePalette.paper,
+      stroke: dark ? '#475569' : '#94a3b8',
       text: anemonePalette.ink,
       edge: anemonePalette.edge,
-      noteFill: dark ? '#2c2010' : '#fffbeb',
+      noteFill: dark ? '#282012' : '#fffbeb',
     }
     : {
       background: theme.background, fill: visual.paper, stroke: visual.ink,
@@ -367,6 +371,9 @@ export interface PreparedSpatialScene028 {
   readonly renderStyle0214?: RenderStyle0214;
   readonly background0214?: string;
   readonly parrotfishModel0214?: string;
+  /** Optional presentation-only dot grid and shadow theme for Anemone v2. */
+  readonly canvasPattern0216?: Readonly<{ color: string; opacity: number; pitch: number }>;
+  readonly elevationTheme0216?: 'light' | 'dark';
   readonly notationId?: string;
   readonly nodes: readonly PlacedNode[];
   readonly resolved: ReturnType<typeof resolveRenderScene>;
@@ -1202,8 +1209,21 @@ export function serializePreparedSpatialScene028(
     return `<marker id="${domNamespace}-${id}" viewBox="0 0 16 16" refX="14" refY="8" markerWidth="${markerSize028(definition.marker)}" markerHeight="${markerSize028(definition.marker)}" orient="auto-start-reverse" markerUnits="strokeWidth">${paths}</marker>`;
   }).join('');
   const artworkSvg = prepared.artwork029 ? sceneArtworkDefinitions029(prepared.artwork029, domNamespace) : '';
-  parts.push(`<defs><style>${fontCss}</style>${markerSvg}${artworkSvg}</defs>`);
+  const shadowDark = prepared.elevationTheme0216 === 'dark';
+  const shadowColor = shadowDark ? '#000000' : '#0f172a';
+  const dropShadow = (id: 'anemone-shadow-sm' | 'anemone-shadow-md', m: number) =>
+    prepared.parts.some((p) => p.geometry.kind === 'stencil-path' && p.geometry.filterId === id)
+      ? `<filter id="${domNamespace}-${id}" x="-16%" y="-18%" width="132%" height="144%"><feDropShadow dx="0" dy="${m}" stdDeviation="${1.4 * m}" flood-color="${shadowColor}" flood-opacity="${shadowDark ? (m > 1 ? '0.34' : '0.26') : (m > 1 ? '0.07' : '0.055')}"/><feDropShadow dx="0" dy="${4 * m}" stdDeviation="${5.5 * m}" flood-color="${shadowColor}" flood-opacity="${shadowDark ? (m > 1 ? '0.26' : '0.20') : (m > 1 ? '0.075' : '0.05')}"/></filter>`
+      : '';
+  const shadowDefs = dropShadow('anemone-shadow-sm', 1) + dropShadow('anemone-shadow-md', 2)
+    + (prepared.canvasPattern0216
+      ? `<pattern id="${domNamespace}-anemone-dots" width="${prepared.canvasPattern0216.pitch}" height="${prepared.canvasPattern0216.pitch}" patternUnits="userSpaceOnUse"><circle cx="${prepared.canvasPattern0216.pitch / 2}" cy="${prepared.canvasPattern0216.pitch / 2}" r="1" fill="${escapeXml(prepared.canvasPattern0216.color)}" opacity="${prepared.canvasPattern0216.opacity}"/></pattern>`
+      : '');
+  parts.push(`<defs><style>${fontCss}</style>${shadowDefs}${markerSvg}${artworkSvg}</defs>`);
   parts.push(`<rect width="${width}" height="${height}" fill="${prepared.background0214 ?? theme.background}"/>`);
+  if (prepared.canvasPattern0216) {
+    parts.push(`<rect width="${width}" height="${height}" fill="url(#${domNamespace}-anemone-dots)" aria-hidden="true"/>`);
+  }
 
   // The prepared scene owns the drawing order and geometry. The projector
   // only translates typed records into SVG elements and accessibility groups.
