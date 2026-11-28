@@ -39,31 +39,20 @@ export function CoralDialog({
   }
 
   useEffect(() => {
-    if (!open) return;
-    const timer = window.setTimeout(() => {
-      const active = document.activeElement;
-      if (contentRef.current?.contains(active) && active !== closeRef.current) return;
-      const primary = contentRef.current?.querySelector<HTMLElement>('[data-initial-focus], [data-primary]')
-        ?? contentRef.current?.querySelector<HTMLElement>(
-          'input:not([disabled]), select:not([disabled]), button:not([disabled])',
-        );
-      (initialFocus === 'first' ? primary : closeRef.current)?.focus();
-    }, 0);
-    return () => window.clearTimeout(timer);
-  }, [initialFocus, open]);
-
-  useEffect(() => {
     const wasOpen = wasOpenRef.current;
     wasOpenRef.current = open;
     if (!open && wasOpen && (shouldRestoreFocusRef.current?.() ?? true)) {
       queueMicrotask(() => {
+        if (document.activeElement?.closest('[role="dialog"][aria-modal="true"]')) return;
         if (invokerRef.current?.isConnected) invokerRef.current.focus();
       });
     }
     return () => {
       if (wasOpenRef.current && (shouldRestoreFocusRef.current?.() ?? true) && invokerRef.current?.isConnected) {
         const invoker = invokerRef.current;
-        queueMicrotask(() => invoker.isConnected && invoker.focus());
+        queueMicrotask(() => {
+          if (!document.activeElement?.closest('[role="dialog"][aria-modal="true"]') && invoker.isConnected) invoker.focus();
+        });
       }
     };
   }, [open]);
@@ -84,6 +73,11 @@ export function CoralDialog({
             aria-describedby={undefined}
             onOpenAutoFocus={(event) => {
               event.preventDefault();
+              const primary = contentRef.current?.querySelector<HTMLElement>('[data-initial-focus], [data-primary]')
+                ?? contentRef.current?.querySelector<HTMLElement>(
+                  'input:not([disabled]), select:not([disabled]), button:not([disabled])',
+                );
+              (initialFocus === 'first' ? primary : closeRef.current)?.focus();
             }}
             onCloseAutoFocus={(event) => event.preventDefault()}
           >

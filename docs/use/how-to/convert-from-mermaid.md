@@ -1,8 +1,8 @@
 # How to convert from Mermaid
 
 Open a supported Mermaid sequence file to create editable Coral source. The
-verified writer accepts messages, pre-message notes and successive flat
-`alt`, `loop` or `opt` fragments; it does not implement all Mermaid sequences.
+shared transpiler accepts messages, notes, recursive fragments and verified
+activations. Conversion diagnostics describe unsupported or lossy constructs.
 
 1. Save this text as `request.mmd` on your computer:
 
@@ -21,23 +21,21 @@ verified writer accepts messages, pre-message notes and successive flat
    reopen preserve the resulting Coral source. Keep the original Mermaid file
    if you need its original formatting.
 
-The new general deterministic conversion to editable Coral is deferred to
-0.2.10. Existing bounded sequence conversion remains available.
+Flowchart, Sequence, Class, ER, and State diagrams use the deterministic
+Mermaid-to-Coral transpiler. For a Mermaid draft, choose **Convert to Editable
+Coral**. Review any conversion notes before accepting a lossy conversion.
+An accepted conversion is one Undo step.
 
-Other Mermaid files can open as Mermaid source. Imported foreign source stays
-in its original format; switching it to Coral is refused when there is no
-verified source writer. A saved `@diagram` Coral document also refuses the
-format switch to Mermaid. Opening a file is the supported import path; changing
-the format selector is not a general conversion command.
-
-An out-of-subset Mermaid sequence returns `coral.open.import.sequence.unsupported`
-or an unverified-import diagnostic without replacing current work.
+Lossless sequence files open directly as verified Coral source. Other Mermaid
+files and lossy or refused sequences retain their original Mermaid text for
+review. Save preserves that original text until you accept conversion. Saved
+Coral documents keep their source ownership when using the format selector.
 
 ## Result
 
-The admitted sequence becomes editable Coral source. A refused import leaves
-current and recovery work intact; rendering alone does not prove conversion
-fidelity.
+Accepted source becomes editable Coral. Diagnostics identify unsupported or
+omitted constructs. Keep the original Mermaid file when its formatting or
+unsupported details matter to your workflow.
 
 ## Related
 

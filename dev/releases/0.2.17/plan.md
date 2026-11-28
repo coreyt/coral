@@ -6,7 +6,7 @@ The owner authorized preparing **Coral 0.2.17** on `dev/0.2.17` from published
 `0.2.15` (`78b1c4cc`), leaving published `0.2.15` untouched. Release `0.2.17`
 folds in the unimplemented `0.2.16` draft release plan, the Anemone v2 &
 Parrotfish classic presentation work preserved from `release/0.2.16`, Edition
-`0.2.17` visual UML State, the Mermaid-to-Coral transpiler, and the planned
+`0.2.17` visual UML State, the Mermaid-to-Coral transpiler, and the completed
 Plain-Text & ASCII Diagram Renderer, delivering six coordinated capabilities:
 
 - **Standalone `coral` CLI (`bin.coral` on `@coral-viz/render`)**: keeps the
@@ -50,7 +50,7 @@ Plain-Text & ASCII Diagram Renderer, delivering six coordinated capabilities:
   `'parrotfish'` / `'pf'` classic preset (`parrotfishClassic.ts`, tree-shaken
   from browser embeds). See `dev/designs/anemone-v2/` and
   `dev/designs/parrotfish/`.
-- **Plain-Text and ASCII Diagram Renderer (planned for `0.2.17`, replacing
+- **Plain-Text and ASCII Diagram Renderer (all 13 notations, replacing
   hard-deprecated `0.2.8` character preview):** hard-deprecates the unsupported
   `0.2.8` character preview (`renderInstalledCharacterPreview028` /
   `renderCharacterGraph028`) and implements the clean-slate `renderText` engine
@@ -72,13 +72,23 @@ Plain-Text & ASCII Diagram Renderer, delivering six coordinated capabilities:
 - Build runtime: Node.js `26.8.2`, npm `12.0.2`, TypeScript `6.0.3`.
 - Minimum published consumer runtime: Node.js `24.19.0`.
 
-Frozen `0.2.8`, `0.2.9`, and `0.2.14` catalogs remain byte-identical. Browser
-IIFE gzip remains strictly below the 800 KiB (`819,200` B) hard ceiling.
+Frozen `0.2.8`, `0.2.9`, and `0.2.14` catalogs remain byte-identical.
+The owner approved keeping `renderText` in both self-contained browser formats
+and raising the IIFE ceiling from 800 to 816 KiB (835,584 bytes at gzip level
+9). The ESM bundle must be at most as large as the IIFE at the same setting.
 
 ## Verification and promotion
 
 Local verification runs `npm run check:toolchain`, `npm run build`, browser
-bundle size verification (`<= 800 KiB` gzip), and full `npm run verify`
+bundle size verification (`<= 816 KiB` gzip), and full `npm run verify`
 (`node scripts/ci-local.mjs`) on `dev/0.2.17`. Remote push, CI dispatch,
 registry publication, Pages deployment, and GitHub release remain gated on
 explicit owner authorization.
+
+## Final scope authorization
+
+The owner authorized finishing all six Phase 2 text adapters, aligning sequence
+file opening with the shared transpiler, fixing intermittent browser failures,
+rerunning every gate, committing, pushing and publishing the consolidated
+0.2.17 release. Unfinished roadmap work assigned to 0.2.17 moves to 0.2.18
+after release closure.

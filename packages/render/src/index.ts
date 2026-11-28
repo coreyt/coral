@@ -99,3 +99,4 @@ export { artworkPlacement029, frameFitPoint029, isUserOutlineShape029, resolveUs
 export { selectsUserSymbol029, userSymbolNotices029, type UserSymbolNotice029 } from './userSymbolNotices029.js';
 export { transpileAndVerifyMermaidToCoral } from './transpileMermaid0214.js';
 export * from './parrotfish.js';
+export * from './textRenderer/index.js';

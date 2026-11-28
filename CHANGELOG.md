@@ -31,8 +31,15 @@ Release `0.2.17` builds directly on `0.2.15`.
     `anemone` themes.
   - Edition `0.2.17` U2 conformance ruleset (`CORAL.UML.STATE.*`) and full
     multi-consumer parity across `@coral-viz/browser`, `@coral-viz/mcp-server`,
-    and `@coral-viz/diagram-editor`, while keeping the browser IIFE gzip bundle
-    below the 800 KiB ceiling.
+    and `@coral-viz/diagram-editor`.
+- Plain-text document and code-comment rendering through `renderText` in the
+  main browser ESM and IIFE bundles. The browser IIFE budget is 816 KiB at
+  gzip level 9. Both text profiles support all 13 notations, including compact
+  BPMN events and gateways and typed AI/ML, data, code, and sketch cues.
+- Sequence file opening uses the verified Mermaid transpiler. Lossy imports
+  retain their original source for conversion review.
+- Dialog focus initializes synchronously on opening and respects focus handed
+  to another modal when closing.
 - Deterministic zero-LLM **Mermaid.js-to-Coral transpiler** across
   `@coral-viz/language`, `@coral-viz/render`, `@coral-viz/mcp-server`, and
   `@coral-viz/diagram-editor`:

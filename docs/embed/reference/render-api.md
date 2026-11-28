@@ -1,11 +1,11 @@
 # Render API
 
 Use the render package for DOM-free registries, deterministic text measurement,
-layout, SVG or standalone HTML serialization, and bounded character output.
+layout, SVG or standalone HTML serialization, and paginated or comment-ready text.
 
 | Entry point | Main exports | Boundary |
 | --- | --- | --- |
-| `@coral-viz/render` | shapes, symbols, notations, text metrics, `renderSvg`, `renderHtml` | Serializes supplied geometry |
+| `@coral-viz/render` | shapes, symbols, notations, text metrics, `renderSvg`, `renderHtml`, `renderText`, `renderTextGraph` | Serializes supplied geometry or lays out text |
 | `@coral-viz/render/layout` | `computeElkLayout`, `resolveSpatialLayout`, option normalization, layout diagnostics | Computes and resolves geometry |
 | `@coral-viz/render/svg-layout` | `layoutGraphForSvg` | Lays out a validated graph for `renderSvg`: sequence graphs keep their interaction without ELK; other graphs get ELK positions and routes |
 | `@coral-viz/render/artwork-import` | `prepareSvgIconImport029`, `checkSvgIconBounds029`, `ICON_IMPORT_LIMITS_029` | Bounds SVG normalization and reports import measures; supply a bounds engine before previewing. It does not provide storage or a browser worker. |
@@ -42,51 +42,36 @@ source-to-scene path and returns the faithful portable `sourceGraph`.
 
 ## Character output
 
-::: warning Deprecated and no longer supported
-The legacy `0.2.8` character renderer (`renderInstalledCharacterPreview028`,
-`renderCharacterGraph028`, `adaptCharacterGraph028`, and
-`createCharacterDebugView028`) is **hard-deprecated as of Coral `0.2.17` and is
-no longer supported**. Do not build new integrations against these APIs. They
-are being replaced in `0.2.17` by the Plain-Text and ASCII Diagram Renderer
-(`dev/designs/text-renderer-spec.md`).
-:::
+Call `await renderText(source, options)` to lay out saved Coral source as text.
+Use `renderTextGraph(graph, options)` for GraphIR 3 input. The browser ESM and
+the standalone `Coral.renderText` entry accept the same source and options.
 
-`renderInstalledCharacterPreview028(source, { columns: 120 })` reads current
-Coral source and returns `text`, `charset`, `width`, `height`, `diagnostics` and
-a copied GraphIR 3 display `graph`. Saved source remains authoritative. The API
-validates its exact successor/catalog and U1/U2 before composing a picture.
-`renderCharacterGraph028` retains the strict Block/Flowchart ledger contract.
+The default document profile emits printable ASCII on US Letter pages of up
+to 72 columns by 55 lines. Choose `page: 'a4'` for 60 lines or set
+`pageWidth` and `pageHeight` for custom pages. A form feed and the selected
+line ending separate pages. Follow matching lettered markers across pages.
+The result includes `text`, individual `pages`, `pageCount`, `continuationLinks`,
+`profile`, effective `charset`, occupied `width` and `height`, and `diagnostics`.
 
-| Family | Character subset |
-| --- | --- |
-| Block | Flat generic blocks and directed captioned connections |
-| Flowchart | Start/end, process, decision, branches and feedback |
-| BPMN | Flat none start/end events, tasks, exclusive gateways and Sequence Flow |
-| UML Class | Flat classes, supported compartments, association, composition and inheritance |
-| UML Sequence | Flat participants and synchronous, asynchronous and return messages, including reverse direction |
-| UML State | One initial, one final, 1–8 named simple states, at most 20 reachable transitions, branches, joins and feedback |
+For source comments, select `profile: 'comment'`. The default is compact
+UTF-8 box drawing at 80 columns. Set `commentStyle` to `slash`, `hash`, `dash`,
+`block-c`, `html`, or `none`. A custom `commentPrefix` counts toward `columns`.
+The renderer separates closing delimiters inside the comment body.
 
-Choose 40, 80 or 120 columns. Copy/export contains printable ASCII and LF.
-Controlled MonoTrue output requires the exact supported font-face hash and all
-required validated glyph roles; missing capability falls back to ASCII for the
-whole output. `createCharacterDebugView028(text)` adds a coordinate grid and CSV
-for inspecting an existing preview.
+Both profiles support architecture, infrastructure, flowchart, ERD, UML
+sequence, UML state, UML class, block, BPMN, AI/ML, data engineering, code,
+and sketch. Positions guide relative order. Visual
+styles and custom symbol artwork produce diagnostics. Set `strict: true` to
+refuse lossy output. Long labels wrap or appear in a keyed legend. A structure
+that cannot fit raises `TextRenderError` with code `text.width.unfit`.
 
-Validated text fields are limited to 2,048 UTF-16 units each. Block, Flowchart
-and BPMN also limit their aggregate fields to 8,192 units. UML class, sequence
-and state retain their finite family sizes and per-field limits; that aggregate
-limit does not apply to them. Every complete preview is bounded at 1,024 rows
-and 65,536 cells, and all rows fit the requested width. Aliased state pictures
-retain separate IDs and captions, including initial/final captions.
+Controlled displays can request `charset: 'monotrue-v1'` with the MonoTrue
+v0.2.0 Regular SHA-256 and verified glyph roles. An absent or mismatched
+capability selects ASCII for the whole output.
 
-::: info
-Character output has bounded capability. Authored placement, semantic ports,
-routes, constraints, layout controls, nonbaseline proximity and unsupported
-family constructs throw `CharacterRenderError`; its `code` and `diagnostics`
-identify the refusal. Source-level placement refusals include line/column paths.
-UML State is a source/character edition; SVG and editor visual authoring refuse
-it.
-:::
+The legacy `renderInstalledCharacterPreview028`, `renderCharacterGraph028`,
+`adaptCharacterGraph028`, and `createCharacterDebugView028` exports are
+deprecated and unsupported.
 
 ## Explicit conformance reports
 
@@ -140,3 +125,8 @@ notices.
 - [Language API](language-api.md)
 - [Viz API](viz-api.md)
 - [Export a diagram](../../use/how-to/export-a-diagram.md)
+
+The CLI accepts the same custom document dimensions through `--page-width`
+and `--page-height`. Supply `--monotrue-capability FILE` with a JSON
+`MonoTrueCapability` when using a verified MonoTrue display. The engine checks
+its Regular face, SHA-256 and complete role list before emitting MonoTrue.

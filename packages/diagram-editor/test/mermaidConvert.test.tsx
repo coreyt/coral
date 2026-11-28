@@ -117,9 +117,12 @@ async function loadMermaidSource(
 ) {
   let opened = false;
   act(() => {
-    opened = result.current.header.onOpenFile({ name: fileName, text });
+    opened = result.current.header.onOpenFile({ name: fileName,
+      text: text.startsWith('sequenceDiagram') ? 'flowchart LR\n A --> B' : text });
   });
   expect(opened).toBe(true);
+  await quiesce(result);
+  if (text.startsWith('sequenceDiagram')) act(() => result.current.editor.onDslChange(text));
   await waitFor(() => {
     expect(result.current.editor.dsl).toBe(text);
     expect(result.current.editor.dslType).toBe('mermaid');

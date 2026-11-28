@@ -438,7 +438,7 @@ Verification Acceptance Criteria (`VerAC`).
 - **Verification ACs:**
   - **VerAC-F1.1:** Packed bundle contains zero React/editor dependencies,
     registers zero globals on ESM import, and satisfies the IIFE/ESM gzip size
-    (`<= 770 KiB`), zero runtime fetch, and controlled-Chrome 25-node latency
+    (`<= 816 KiB`), zero runtime fetch, and controlled-Chrome 25-node latency
     budgets in [budgets-and-ceilings.md](specs/budgets-and-ceilings.md).
   - **VerAC-F1.2:** Invalid Coral source in a DOM scan or custom element
     surfaces an isolated diagnostic without breaking sibling diagrams; foreign

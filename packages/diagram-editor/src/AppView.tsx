@@ -1,3 +1,4 @@
+import { TextExportDialog } from './components/TextExportDialog';
 import { MyIcons029 } from './components/MyIcons029';
 import { DiagramFontFaces } from '@coral-viz/viz';
 import { CommandPalette } from './CommandPalette';
@@ -294,6 +295,7 @@ export function AppView({ controller }: AppViewProps) {
 
       <CommandPalette {...commandPalette} themeName={themeName} />
       {authoring && <AuthoringDialog {...authoring} themeName={themeName} />}
+      {controller.textExport && <TextExportDialog {...controller.textExport} themeName={themeName} />}
       <MyIcons029 {...controller.myIcons} />
       <PreferencesDialog {...preferences} themeName={themeName}
         onDeviceSection={OnDevicePreference ? <Suspense fallback={null}>

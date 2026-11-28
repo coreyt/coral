@@ -43,7 +43,7 @@ with positions and labeled edges:
 
 | Artifact / Surface | Metric | Budget / Ceiling | Owning REQ / ENG |
 | --- | --- | --- | --- |
-| `@coral-viz/browser` self-contained IIFE | Gzip level 9 size | `<= 770 KiB` | `REQ-F1`, `ENG-03` |
+| `@coral-viz/browser` self-contained IIFE | Gzip level 9 size | `<= 816 KiB` | `REQ-F1`, `ENG-03` |
 | `@coral-viz/browser` ESM path | Compressed bytes for equivalent render | `<=` IIFE gzip-9 bytes | `REQ-F1`, `ENG-03` |
 | `@coral-viz/browser` standalone runtime | External runtime chunk/network fetches | `0` fetches | `REQ-F1`, `ENG-03` |
 

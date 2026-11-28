@@ -296,8 +296,9 @@ test('bounded Mermaid sequence fragments become editable Coral with exact save a
     name: 'activation.mmd', mimeType: 'text/plain',
     buffer: Buffer.from('sequenceDiagram\nparticipant A\nparticipant B\nA->>+B: yes\nB-->>-A: no'),
   });
-  await expect(page.getByRole('alert').filter({ hasText: 'coral.open.import.sequence.unsupported' })).toBeVisible();
-  await expect(editor).toHaveValue(retry);
+  await expect(editor).toHaveValue(/activation B \{/);
+  const activationSaved = await saveDocument(page);
+  expect(activationSaved.document.content).toEqual({ format: 'dsl', dslType: 'coral', text: await editor.inputValue() });
 });
 
 for (const fixture of [

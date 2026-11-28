@@ -18,6 +18,7 @@ const dist = resolve(packageRoot, 'dist');
 const ESM = resolve(dist, 'coral-browser.js');
 const IIFE = resolve(dist, 'coral-browser.iife.js');
 const KIB = 1024;
+const IIFE_BUDGET_KIB = 816;
 const fixture = (name: string): string => readFileSync(resolve(import.meta.dirname, 'fixtures', name), 'utf8');
 const FIXTURES = ACTIVE_RENDERER_SOURCE_CASES_028.map((name: string) => `acceptance028/${name}.coral`);
 
@@ -32,11 +33,10 @@ beforeAll(() => {
 });
 
 describe('bundle size (R-061 AC-4)', () => {
-  // 800 KiB since 0.2.11 (Gate D1.3, 2026-11-23: layout/routing overhaul).
-  it('keeps the IIFE within 800 KiB gzip and the ESM no larger', () => {
+  it(`keeps the IIFE within ${IIFE_BUDGET_KIB} KiB gzip and the ESM no larger`, () => {
     const sizes = { iife: gzip(iife), esm: gzip(esm) };
     console.info(`gzip -9: IIFE ${(sizes.iife / KIB).toFixed(1)} KiB, ESM ${(sizes.esm / KIB).toFixed(1)} KiB`);
-    expect(sizes.iife).toBeLessThanOrEqual(800 * KIB);
+    expect(sizes.iife).toBeLessThanOrEqual(IIFE_BUDGET_KIB * KIB);
     expect(sizes.esm).toBeLessThanOrEqual(sizes.iife);
   });
 });

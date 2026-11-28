@@ -10,6 +10,7 @@ notation checks, and target support have separate guarantees.
 
 | ID | Status | Claim and boundary |
 | --- | --- | --- |
+| `boundary-text-renderer` | Supported | Paginated documents and code comments across five surfaces for all 13 notations. |
 | `boundary-online` | Supported | The application is online-hosted; the root `sw.js` only retires the 0.2.5 worker. |
 | `my-icons` | Supported | [Import icons](../how-to/import-icons.md), store them in this browser, and place self-contained definitions in saved Coral source; bounded SVG profile and browser storage limits apply. |
 | `boundary-local-ownership` | Supported | Documents, recovery state, and ordinary exports stay in the browser or files you save. |
@@ -31,17 +32,13 @@ Monochrome `lowfi` and `hifi` stay basic black-and-white outputs; the
 `parrotfish` renderer in `@coral-viz/render` adds the `anemone` (`ane`) modeled
 presentation style without altering layout or edge routing.
 
-The legacy `0.2.8` six-family character/ASCII renderer (Block, Flowchart, BPMN,
-UML class, sequence, and bounded flat UML state) is **deprecated and no longer
-supported** as of Coral `0.2.17`, where it is superseded by the Plain-Text and
-ASCII Diagram Renderer. MonoTrue v0.2.0 Diagram Set 1 is integrated and has
-actual-font and packed-consumer checks. Controlled MonoTrue pictures require the
-supported host font capability; missing or wrong capability and ordinary
-copy/export use whole-picture ASCII. This does not certify a new native terminal
-host. See the
-[character API](../../embed/reference/render-api.md#character-output) for the
-deprecation notice, legacy family sizes, refused constructs, and font
-requirements.
+The plain-text renderer supports architecture, infrastructure, flowchart,
+ERD, UML sequence, UML state, UML class, block, BPMN, AI/ML, data engineering,
+code, and sketch. Export a paginated ASCII document
+or copy a compact code comment from the editor. The CLI, browser, MCP, and
+render package use the same text profiles. Controlled displays can select
+MonoTrue v0.2.0 Regular with a verified font capability. See the
+[character API](../../embed/reference/render-api.md#character-output).
 
 ## Tested notation subsets
 

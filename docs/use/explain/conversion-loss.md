@@ -11,11 +11,15 @@ different diagram families and styling or layout concepts.
 
 ## Loss is directional
 
-A Mermaid flowchart import can produce graph interchange for rendering without
-carrying every style directive. The editor retains the Mermaid source; this
-is not a general flowchart-to-Coral source writer. Printing an imported graph
-into another format cannot reconstruct discarded syntax, comments, ordering
-or unsupported metadata.
+Mermaid imports retain their source until an explicit conversion succeeds.
+The deterministic transpiler covers Flowchart, Sequence, Class, ER and State
+and reports omitted constructs in a loss summary. The editor presents lossy
+conversion for review before replacing the source. Verified lossless sequence
+files can open directly as Coral.
+
+Keep the original file when you need its formatting, comments, unsupported
+style directives or metadata. Rendering a supported preview and writing Coral
+source have separate verification steps.
 
 ## Changing a saved-source notation
 

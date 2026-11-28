@@ -3,6 +3,8 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { renderText } from '../src/textRenderer/index.js';
+import { CHARACTER_GLYPH_ROLES_028, FONT_SHA_BY_FACE_029 } from '../src/characterGlyphRoles028.js';
 import { CLI_VERSION, runCoralCli, type CoralCliIo } from '../src/cliMain.js';
 
 function createMemoryIo(stdinText: string, files: Record<string, string> = {}) {
@@ -74,7 +76,7 @@ describe('Coral CLI (bin.coral on @coral-viz/render)', () => {
       ['render', '--format', 'pdf'],
       ['render', '--format', 'svg', '--style', 'neon'],
       ['render', '--format', 'svg', '--theme', 'sepia'],
-      ['render', '--format', 'ascii', '--columns', '60'],
+      ['render', '--format', 'ascii', '--columns', '30'],
       ['convert', '--from', 'yaml', '--to', 'coral'],
       ['convert', '--from', 'mermaid', '--to', 'svg'],
     ]) {
@@ -169,11 +171,10 @@ describe('Coral CLI (bin.coral on @coral-viz/render)', () => {
     expect(legacyStateSvg.getStdout()).toBe('');
     expect(legacyStateSvg.getStderr()).toContain('character-only');
 
-    // Six-family ASCII limits refuse unsupported diagram families (e.g. erd)
-    const unsupportedAscii = createMemoryIo('@diagram erd\n@coralVersion "0.2.14"\nuser entity\norder entity\nuser ||--o{ order as "places"\n');
-    expect(await runCoralCli(['render', '--format', 'ascii'], unsupportedAscii.io)).toBe(1);
-    expect(unsupportedAscii.getStdout()).toBe('');
-    expect(unsupportedAscii.getStderr().length).toBeGreaterThan(0);
+    const badText = createMemoryIo('@diagram flowchart\na -> missing\n');
+    expect(await runCoralCli(['render', '--format', 'ascii'], badText.io)).toBe(1);
+    expect(badText.getStdout()).toBe('');
+    expect(badText.getStderr().length).toBeGreaterThan(0);
   });
 
   it('converts Coral-to-Coral byte-identically, Coral-to-JSON as GraphIR 4, and Top-5 Mermaid to Coral', async () => {
@@ -244,4 +245,21 @@ describe('Coral CLI (bin.coral on @coral-viz/render)', () => {
       await rm(dir, { recursive: true, force: true });
     }
   });
+});
+
+
+it('matches the text API for all three charsets and custom page dimensions', async () => {
+  const capability = { profile: 'monotrue-v1', selected: true, face: 'Regular',
+    fontSha256: FONT_SHA_BY_FACE_029.Regular, validatedRoles: Object.keys(CHARACTER_GLYPH_ROLES_028) } as const;
+  for (const charset of ['ascii', 'utf8-box', 'monotrue-v1'] as const) {
+    const memory = createMemoryIo(VALID_ARCH_028, { 'font.json': JSON.stringify(capability) });
+    const code = await runCoralCli(['render', '--format', 'txt', '--charset', charset,
+      '--page-width', '50', '--page-height', '30', '--monotrue-capability', 'font.json'], memory.io);
+    expect(code, memory.getStderr()).toBe(0);
+    expect(memory.getStdout()).toBe((await renderText(VALID_ARCH_028,
+      { charset, pageWidth: 50, pageHeight: 30, monoTrue: capability })).text);
+  }
+  const invalid = createMemoryIo(VALID_ARCH_028, { 'font.json': '{' });
+  expect(await runCoralCli(['render', '--format', 'txt', '--monotrue-capability', 'font.json'], invalid.io)).toBe(1);
+  expect(invalid.getStdout()).toBe('');
 });

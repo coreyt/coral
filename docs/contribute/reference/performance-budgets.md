@@ -58,9 +58,11 @@ repository.
 
 ## Browser package gate (0.2.6)
 
-The self-contained `@coral-viz/browser` IIFE must be at most 770 KiB at gzip
-level 9 (750 KiB before 0.2.9); the ESM path must load no more compressed
-bytes for the same work. A 25-node flowchart runs in the pinned Playwright
+The 0.2.17 browser IIFE includes `renderText` and must be at most 816 KiB
+(835,584 bytes) at gzip level 9. The self-contained ESM bundle must be at
+most the measured IIFE size at the same compression level.
+
+A 25-node flowchart runs in the pinned Playwright
 Chromium fixture with 30 fresh browser contexts for cold p95 and 50 warm
 renders for repeat p95. Cold render must be at most 500 ms and repeat render
 at most 200 ms.

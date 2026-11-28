@@ -6,7 +6,7 @@ successful preview does not imply that Coral can write another source format.
 | Operation | Supported behavior | Limit |
 | --- | --- | --- |
 | Open saved Coral | Retain exact authored text, including malformed drafts | Rendering and semantic export require accepted current meaning |
-| Open Mermaid sequence | Verified messages, pre-message notes, and successive flat `alt`/`loop`/`opt` fragments become Coral source | Unsupported sequence constructs refuse automatic file-open conversion |
+| Open Mermaid sequence | The shared transpiler verifies messages, recursive fragments, notes and activations before automatic conversion | Lossy or refused inputs retain exact Mermaid source for explicit review |
 | Open other Mermaid, DOT, or PlantUML | Retain the imported source and its format; show supported parsed meaning | Unsupported constructs have diagnostics; use explicit conversion for Mermaid |
 | Deterministic Mermaid to Coral (Editor, MCP `coral_convert`, CLI `coral convert`) | Direct zero-LLM 5-stage transpiler for Flowchart (`flowchart`, opt-in `block`/`architecture`), Sequence (`uml-sequence`), Class (`uml-class`), ER (`erd`), and State (`uml-state` Edition `0.2.17` visual default or `0.2.8` opt-in) with mandatory parse-back verification | Non-Top-5 Mermaid types refuse cleanly (`mermaid.diagram.unsupported`); lossy constructs emit located diagnostics and pre-commit review in the editor |
 | Switch a saved Coral document's format | Source ownership refuses graph-only format replacement | Use an explicit supported export or keep the original source |

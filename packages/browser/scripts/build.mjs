@@ -242,3 +242,14 @@ const body = esm.slice(0, exportClause.index);
 writeFileSync(esmFile, `${banner}\n${esm}\n`);
 writeFileSync(resolve(packageRoot, 'dist/coral-browser.iife.js'),
   `${banner}\nvar Coral=(function(){"use strict";${body}return Object.freeze({${members.join(',')}})})();\n`);
+
+// The embed tarball has no render runtime dependency. Ship the canonical
+// text contract beside the browser declarations, as we do for the JS code.
+const browserIndex = resolve(packageRoot, 'dist/index.d.ts');
+writeFileSync(browserIndex, readFileSync(browserIndex, 'utf8').replace("from '@coral-viz/render'", "from './renderText.js'"));
+const textContract = readFileSync(resolve(renderDist, 'textRenderer/publicTypes.d.ts'), 'utf8');
+const textDeclaration = readFileSync(resolve(renderDist, 'textRenderer/index.d.ts'), 'utf8')
+  .split('\n').find(line => line.startsWith('export declare function renderText('));
+if (!textDeclaration) throw new Error('Missing public renderText declaration.');
+writeFileSync(resolve(packageRoot, 'dist/renderText.d.ts'),
+  textContract.replace(/\/\/# sourceMappingURL=.*$/m, '') + textDeclaration + '\n');

@@ -34,7 +34,6 @@ import {
 } from './editorProjection';
 import { EditorRevision, type PublicationEnvelope } from './editorRevision';
 import { parse as parseCanonicalCoral } from '@coral-viz/language/parser';
-import { validateGraphIRSuccessorWithCatalog } from '@graph-ir/core';
 import {
   createIndexedDbTranscriptStore,
   createTranscriptArchive,
@@ -71,7 +70,7 @@ import { appendSourceOwnedEdge028, appendSourceOwnedNode028, canAppendSourceOwne
 import { parseCoralDSL, parseMermaidDSL, editorDiagnostic, type GraphNode, type GraphEdge, type EditorParseError,
   type ParseResult as EditorParseResult } from './parsers';
 import {
-  canonicalSimpleMermaidSequence028, writeSupplementalMermaidSequence028, detectFormat, isSequenceGraph, OPEN_FILE_ACCEPT,
+  detectFormat, isSequenceGraph, OPEN_FILE_ACCEPT,
   parseDot, parseMermaid, parsePlantUml, validateSequenceInteraction,
   type SourceFormat,
   type MermaidTranspileResult,
@@ -143,12 +142,10 @@ import {
   parseInstalledDocument028,
   successorSequenceDisplay028,
   printInstalledSource028,
-  successorCoreValidationInput029,
   documentCatalog029,
   catalogSymbol029,
   documentSymbolDefinition029,
   type SuccessorUserSymbol029,
-  verifyPortableSuccessorSource028,
   svgFontFaceRequests,
   type ConformanceLevel,
   type ConformanceReport,
@@ -1391,34 +1388,12 @@ export function planFileOpen(file: OpenFileInput): FileOpenPlan {
 
   const openImport = (text: string, format: 'mermaid' | 'dot' | 'plantuml', base?: CoralDocument): FileOpenPlan => {
     if (format !== 'mermaid') return openText(text, format, base);
-    const imported = parseMermaid(text);
-    const errors = imported.diagnostics.filter(isBlocking);
-    if (errors.length || !imported.graph) {
-      // Malformed Mermaid remains saveable text with semantic export blocked.
-      return openText(text, 'mermaid', base);
-    }
-    if (imported.graph.metadata?.notation === 'uml-sequence') {
-      const canonical = imported.diagnostics.length === 0
-        ? canonicalSimpleMermaidSequence028(imported.graph) : undefined;
-      const supplemental = imported.diagnostics.length === 0
-        ? writeSupplementalMermaidSequence028(imported.graph) : undefined;
-      if (!canonical && !supplemental) return blocked('coral.open.import.sequence.unsupported', [
-        'This Mermaid sequence is outside the verified message, pre-message note, or flat alt/loop/opt fragment subset; no Coral source was generated.',
-      ]);
-      const written = canonical ? printInstalledSource028(canonical, 'uml-sequence') :
-        { text: supplemental, diagnostics: [] };
-      if (!written.text) return blocked('coral.open.import.sequence.unsupported',
-        written.diagnostics.map((diagnostic) => diagnostic.message));
-      const verified = verifyPortableSuccessorSource028(written.text);
-      if (!verified.graph || verified.diagnostics.length) return blocked('coral.open.import.sequence.unverified',
-        verified.diagnostics.map((diagnostic) => diagnostic.message));
-      const core = successorCoreValidationInput029(verified.graph);
-      const model = validateGraphIRSuccessorWithCatalog(core.graph, core.snapshot, core.options);
-      if (!model.valid || !model.verification.complete || model.verification.scope !== 'full')
-        return blocked('coral.open.import.sequence.unverified',
-          [...model.errors, ...model.warnings, ...model.verification.obligations]
-            .map(({ code, path }) => `${code} at ${path}`));
-      const plan = openText(written.text, 'coral', base);
+    if (/^\s*sequenceDiagram\b/m.test(text)) {
+      const convertedSequence = transpileAndVerifyMermaidToCoral(text, { mode: 'best-effort' });
+      // Lossy or refused inputs stay exact until the user reviews conversion.
+      if (!convertedSequence.ok || !convertedSequence.coral || convertedSequence.lossSummary.lossy)
+        return openText(text, 'mermaid', base);
+      const plan = openText(convertedSequence.coral, 'coral', base);
       if (plan.kind !== 'open') return plan;
       const formatLabel = FORMAT_LABELS[format];
       const converted: EditorParseError = { severity: 'info', code: 'coral.open.converted',
@@ -1473,6 +1448,7 @@ export function planFileOpen(file: OpenFileInput): FileOpenPlan {
 
 export function useEditorController() {
   const myIconsLibrary029 = useMyIcons029();
+  const [textExport, setTextExport] = useState<'document' | 'comment' | null>(null);
   const [myIconsOpen029, setMyIconsOpen029] = useState(false);
   const [dslType, setDslType] = useState<DSLType>(startupSource.format);
   const [notation, setNotation] = useState<NotationType>('flowchart');
@@ -7128,6 +7104,8 @@ export function useEditorController() {
       action: () => handleCheckConformance(), disabled: dslType !== 'coral' || !isAuthored028Source(dsl) },
     { id: 'save', label: 'Save Document', shortcut: 'Ctrl+S', category: 'File', action: handleSaveDownload },
     { id: 'export', label: graphExportLabel, category: 'File', action: handleExportGraphIR },
+    { id: 'export-text', label: 'Export Plain Text (.txt)', category: 'File', action: () => setTextExport('document') },
+    { id: 'copy-comment', label: 'Copy as Code Comment', category: 'File', action: () => setTextExport('comment') },
     { id: 'export-svg', label: 'Export SVG', category: 'File', action: handleExportSvg },
     { id: 'export-html', label: 'Export HTML', category: 'File', action: handleExportHtml },
     { id: 'export-png', label: 'Export PNG', category: 'File', action: handleExportPng },
@@ -7269,6 +7247,7 @@ export function useEditorController() {
       onEnabledChange: changeOnDeviceEnabled,
       host: onDeviceHost,
     },
+    textExport: textExport && { profile: textExport, source: dsl, onClose: () => setTextExport(null), onDownload: downloadBlob },
     myIcons: {
       open: myIconsOpen029, onClose: () => setMyIconsOpen029(false),
       themeName: theme === lightTheme ? 'light' as const : 'dark' as const,
@@ -7335,6 +7314,8 @@ export function useEditorController() {
       overflowItems: [
         { label: 'My Icons', action: () => setMyIconsOpen029(true) },
         { label: graphExportLabel, action: handleExportGraphIR },
+        { label: 'Export Plain Text (.txt)', action: () => setTextExport('document') },
+        { label: 'Copy as Code Comment', action: () => setTextExport('comment') },
         { label: 'Export SVG', action: handleExportSvg },
         { label: 'Export HTML', action: handleExportHtml },
         { label: 'Export PNG', action: handleExportPng },

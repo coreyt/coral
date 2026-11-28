@@ -81,6 +81,7 @@ describe('no global fallback for user symbols', () => {
         // Import validates the given GraphIR form with the interchange admission list.
         ['render/src/successorSourceWriter028.ts', 'graph, snapshot, { artworkAdmission: graphIrArtworkAdmission029 }'],
         ['mcp-server/src/tools/validate.ts', 'value, snapshot, options']]);
-    expect(calls.length).toBe(11);
+    // Sequence file opening now delegates to the verified transpiler.
+    expect(calls.length).toBe(10);
   });
 });

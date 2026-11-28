@@ -11,7 +11,7 @@ pipelines and CI scripts without MCP, use the standalone `coral` CLI shipped on
 | `coral_validate` | `content` | `strict`; validates saved Coral (`0.2.8`, `0.2.9`, `0.2.14`, `0.2.17`) or GraphIR JSON |
 | `coral_convert` | `content` | `from`, `to`, `strict`, `flowchartTarget`, `edgeStyleMode`, `stateTargetEdition`; deterministic Top-5 Mermaid-to-Coral transpilation and GraphIR export |
 | `coral_layout` | `content` | `options.direction`, `nodeSpacing`, `layerSpacing`, `algorithm` (layered/mrtree/force/box) |
-| `coral_render` | `content` | `options.format` (svg/html), `direction`, `theme`, `style` (lowfi/hifi/anemone/ane/parrotfish/pf), `nodeSpacing`, font settings, and `notation` |
+| `coral_render` | `content` | `options.format` (svg/html/txt/ascii), `direction`, `theme`, `style` (lowfi/hifi/anemone/ane/parrotfish/pf), `nodeSpacing`, font settings, and `notation` |
 | `coral_explain` | `content` | `level`, `focus`; `detailed` currently follows the standard form |
 | `coral_check_conformance` | `content` | `level`, `notificationLevel`; versioned bounded-profile findings |
 
@@ -130,6 +130,10 @@ clients should enforce their own bounds and cancellation policy.
 Reference owners: [Language Specification
 1.3.0](language-specification-1.3.0.md), [Language evolution
 policy](../../contribute/reference/language-evolution.md).
+
+For text output, set `options.profile` to `document` or `comment`. The
+response includes the text in `content` and page, link, and diagnostic
+metadata in `structuredContent`.
 
 ## Related
 

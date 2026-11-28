@@ -428,6 +428,45 @@ The document-local custom-symbol assignment moved to
 custom SVG artwork is confirmed; storage and attachment contracts are proposed there.
 No remaining custom-symbol implementation is assigned here by this move.
 
+## Early-market priorities
+
+The current feature train follows the market research and ranked top-ten
+assessment in the local `website-early-market-strategy` worktree. Both inputs
+are versioned on branch `website-early-market-strategy` at commit `b36d2cec`.
+Their repository paths are
+`website/early-market-strategy/01-market-research-chasm-report.md` and
+`website/early-market-strategy/04-top-10-missing-features-early-market.md`.
+
+The first audience is engineers maintaining architecture and RFC diagrams in
+Git, followed by developers integrating rendering and MCP into their tools.
+Their adoption test is concrete: open a useful example, edit the source, drag
+and pin a node, and reflow while preserving authored placement. The roadmap
+prioritizes that first-session proof, reusable document workflows, and precise
+edits. Market sizing, platform shares, and benchmark comparisons in the input
+reports are research claims requiring their own evidence before public use.
+
+The feature ranks below preserve the top-ten assessment. Release targets are
+planning allocations. Each release still needs an approved implementation plan
+and verification against its own exit criteria. Odd patch versions are
+reserved for hotfixes and interaction fixes.
+
+| Rank | Capability | Target | Exit evidence |
+| --- | --- | --- | --- |
+| 1 | Deterministic Mermaid to editable Coral | 0.2.17 candidate | Flowchart, Sequence, Class, ER and State convert, parse back, render, and report conversion loss. |
+| 2 | Standalone CLI and verified MCP install | 0.2.17 candidate | Validate, render and convert work through installed executables with reconciled docs. |
+| 3 | Loaded example links and onboarding | 0.2.18 | A shared example URL opens the intended diagram and teaches source edit, drag/pin and Reflow. |
+| 7 | Curated starter packs in My Icons | 0.2.18 | A licensed starter pack imports in one action and survives save/reopen. |
+| 5 | Render Action and documentation plugins | 0.2.20 | Source renders reproducibly in PRs with conformance findings, visual diffs and docs embeds. |
+| 4 | MCP preservation-first semantic edits | 0.2.22 | Typed operations preserve unrelated bytes and pins over stdio with deterministic diagnostics. |
+| 6 | Canvas bends saved into Coral routes | 0.2.24 | Bend gestures persist as route blocks, respect obstacles and support atomic Undo/Redo. |
+| 8 | Browser breadth and mobile inspection | 0.2.26+ / 0.3.0 | Firefox/Safari flows are verified and narrow screens can inspect source and diagrams. |
+| 9 | Source/diagram navigation and sequence editing | 0.2.26+ / 0.3.0 | Explicit navigation works on large diagrams and sequence mutations survive save/reopen. |
+| 10 | Local workbench runner | 0.2.26+ / 0.3.0 | A local CLI server supports documented offline authoring without external resource requests. |
+
+The 0.2.17 text renderer adds paginated document and code-comment workflows to
+the first two priorities. All 13 notation adapters are included in 0.2.17.
+Browser payload management is tracked below.
+
 ## Planned for 0.2.17
 
 - **Plain-Text and ASCII Diagram Renderer.** Replace the hard-deprecated
@@ -440,8 +479,19 @@ No remaining custom-symbol implementation is assigned here by this move.
   opt-in third charset. Phase 1 targets `architecture`, `infrastructure`,
   `flowchart`, `erd`, `uml-sequence`, `uml-state` (`0.2.17`), and `uml-class`
   across all five surfaces (`@coral-viz/render`, CLI, MCP, `@coral-viz/browser`,
-  and `@coral-viz/diagram-editor`); Phase 2 covers the remaining six notations.
+  and `@coral-viz/diagram-editor`). Phase 2 adds block, BPMN, AI/ML, data
+  engineering, code, and sketch.
   See [text-renderer-spec.md](designs/text-renderer-spec.md).
+
+## Planned follow-up for 0.2.18
+
+- **Manage browser payload sizes.** Measure what an embed and the editor each
+  download on first load and when a user first invokes an optional feature.
+  Record compressed bytes by entry point and identify the largest contributors,
+  including layout code, fonts, and notation data. Use those measurements to
+  set budgets, report changes against the previous release, and decide which
+  features belong in the initial download. The 0.2.17 browser bundle includes
+  `renderText` within its 816 KiB gzip ceiling.
 
 ## Exploration before 0.3.0
 

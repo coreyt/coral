@@ -9,3 +9,4 @@ export { renderTo, scan, type CoralScanResult } from './dom.js';
 export { defineCustomElement, type CoralDiagramElement } from './element.js';
 export { CoralRenderError, type CoralDiagnostic, type CoralErrorCode } from './errors.js';
 export { version } from './version.js';
+export { renderText, type RenderTextOptions, type RenderTextResult } from '@coral-viz/render';

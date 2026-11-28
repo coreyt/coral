@@ -2,6 +2,17 @@
   "schemaVersion": 1,
   "boundaries": [
     {
+      "id": "boundary-text-renderer",
+      "audiences": ["user", "embedder", "release"],
+      "status": "supported",
+      "summary": "renderText produces paginated ASCII or compact code comments across the CLI, MCP, editor and browser.",
+      "limitations": ["Text adapters cover all 13 diagram notations. Visual artwork degrades with structured diagnostics."],
+      "surfaces": [
+        { "name": "package", "evidence": [{ "path": "packages/render/test/textNotationCorpus.test.ts", "caseId": "AC-4 notation corpus" }] },
+        { "name": "editor", "evidence": [{ "path": "packages/diagram-editor/test/textExportParity.test.tsx", "caseId": "AC-9 five-surface byte parity" }] }
+      ]
+    },
+    {
       "id": "boundary-online",
       "audiences": ["user", "contributor", "in-product", "release"],
       "status": "supported",
@@ -134,10 +145,10 @@
   ],
   "packages": [
     { "id": "package-language", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/language owns runtime Coral parsing, printing, import, diagnostics, and repair.", "limitations": ["Tree-sitter is separate syntax tooling."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/language" }] }] },
-    { "id": "package-render", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/render owns DOM-free layout, SVG/HTML/ASCII rendering, parrotfish/anemone, verified Mermaid transpilation, and the standalone coral CLI.", "limitations": ["Root renderSvg/renderHtml require supplied geometry; the svg-layout entry and coral CLI perform layout."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/render" }, { "path": "packages/render/test/cli.test.ts", "caseId": "Coral CLI (bin.coral on @coral-viz/render)" }] }] },
+    { "id": "package-render", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/render owns DOM-free layout, SVG/HTML and paginated or comment-ready text rendering, parrotfish/anemone, verified Mermaid transpilation, and the standalone coral CLI.", "limitations": ["Root renderSvg/renderHtml require supplied geometry; the svg-layout entry and coral CLI perform layout."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/diagram-editor/test/textExportParity.test.tsx", "caseId": "AC-9 five-surface byte parity" }, { "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/render" }, { "path": "packages/render/test/cli.test.ts", "caseId": "Coral CLI (bin.coral on @coral-viz/render)" }] }] },
     { "id": "package-browser", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/browser renders Coral source through ESM/IIFE, DOM helpers, and a custom element without React/editor or implicit network use.", "limitations": ["Input is Coral source only; nothing scans or registers automatically."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/browser/test/bundle.test.ts", "caseId": "declares a complete, publishable manifest" }] }, { "name": "browser", "evidence": [{ "path": "e2e/slice80-browser-package.spec.ts", "caseId": "renderTo, scan, and the element render accessibly" }] }] },
     { "id": "package-viz", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/viz supplies React 18/19 editing components and GraphIR/view helpers.", "limitations": ["The host owns file loading, persistence, layout orchestration, and sizing."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/viz" }] }] },
-    { "id": "package-mcp", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/mcp-server supplies six general diagram tools over MCP stdio.", "limitations": ["It is not a repository-indexing or codebase-specific server."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/mcp-server/test/stdio.test.ts", "caseId": "starts on stdio and identifies itself as Coral" }] }] },
+    { "id": "package-mcp", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/mcp-server supplies seven diagram and conformance tools over MCP stdio.", "limitations": ["It is not a repository-indexing or codebase-specific server."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/mcp-server/test/stdio.test.ts", "caseId": "starts on stdio and identifies itself as Coral" }] }] },
     { "id": "package-tree-sitter", "audiences": ["embedder"], "status": "partial", "summary": "tree-sitter-coral supplies native syntax tooling for the documented Language 1 subset.", "limitations": ["It compiles from source and does not own semantic validation, canonicalization, or repair."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "tree-sitter-coral" }] }] }
   ],
   "platforms": [

@@ -403,6 +403,18 @@
     }
   },
   "entries": [
+    {"id": "parrotfish-design-examples", "match": "dev/designs/parrotfish/examples/*.coral", "mode": "valid"},
+    {
+      "id": "anemone-v2-design-mockups",
+      "match": "dev/designs/anemone-v2/mockups/sources/*.coral",
+      "mode": "installed-028",
+      "codes": {
+        "03-infrastructure-cloud-aws.coral": ["coral.syntax.node.field.quoted-required", "coral.reference.target.unresolved", "coral.reference.source.unresolved"],
+        "04-aiml-rag-agent.coral": ["coral.syntax.node.kind-required", "coral.reference.target.unresolved", "coral.relation.unknown", "coral.reference.source.unresolved"],
+        "05-erd-saas-crowsfoot.coral": ["coral.erd.compartment.invalid"],
+        "06-bpmn-order-fulfillment.coral": ["coral.syntax.node.kind-required", "coral.reference.source.unresolved", "coral.reference.target.unresolved"]
+      }
+    },
     {"id": "character-gallery-028", "match": "packages/render/test/fixtures/character-gallery/*.coral", "mode": "installed-028"},
     {"id": "character-integration-028", "match": "packages/render/test/fixtures/character-integration/*.coral", "mode": "installed-028"},
     {"id": "conformance", "match": "packages/language/spec/conformance/**/*.coral", "mode": "manifest"},

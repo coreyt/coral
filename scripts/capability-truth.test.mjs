@@ -307,12 +307,15 @@ test('Mermaid user recipe follows file import rather than a refused format switc
   assert.match(guide, /request\.mmd/);
   assert.match(guide, /sequenceDiagram/);
   assert.match(guide, /Open local file/);
-  assert.match(guide, /coral\.open\.import\.sequence\.unsupported/);
+  assert.match(guide, /shared transpiler/);
+  assert.match(guide, /Lossless sequence files open directly/);
+  assert.match(guide, /lossy or refused sequences retain/);
   assert.doesNotMatch(guide, /Select \*\*Mermaid\*\*|> \*\*Switch to Coral DSL\*\*/);
   assert.match(support, /Retain the imported source and its format/);
   const loss = await read('docs/use/explain/conversion-loss.md');
   const files = await read('docs/use/reference/file-and-export-formats.md');
-  assert.match(loss, /not a general flowchart-to-Coral source writer/);
+  assert.match(loss, /transpiler covers Flowchart, Sequence, Class, ER and State/);
+  assert.match(loss, /review before replacing the source/);
   assert.match(files, /other admitted Mermaid stays Mermaid source/);
   assert.match(files, /DOT and PlantUML source/);
 

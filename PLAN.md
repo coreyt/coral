@@ -3,7 +3,7 @@
 The active release is **Coral 0.2.17**, adding saved-source edition `0.2.17`
 visual and hierarchical UML State support, the deterministic zero-LLM
 Mermaid.js-to-Coral transpiler, the standalone `coral` CLI, the Anemone v2
-visual system & Parrotfish classic preset, and the planned Plain-Text & ASCII
+visual system & Parrotfish classic preset, and the Plain-Text & ASCII
 Diagram Renderer (replacing the hard-deprecated, unsupported `0.2.8` character
 preview) across `@coral-viz/language`, `@coral-viz/render`,
 `@coral-viz/browser`, `@coral-viz/viz`, `@coral-viz/mcp-server`, and
@@ -26,3 +26,6 @@ Current [requirements](dev/requirements.md),
 [architecture](dev/ARCHITECTURE.md), [roadmap](dev/ROADMAP.md), and
 [contributor guidance](CLAUDE.md) remain authoritative. Coral markup is the
 saved source authority.
+
+The roadmap records the market-informed 0.2.18 through 0.2.24 feature train,
+with explicit exit evidence for all ten ranked early-market capabilities.

@@ -49,7 +49,7 @@ workflows:
 | Comment profile defaults | Default charset `utf8-box`, picture-only (no `CHAR-PREVIEW/1` or `LEDGER` boilerplate), deduplicated labels (omit redundant `[id]` when labels are unique), compact 3-row boxes/decisions, built-in comment wrappers subtracting prefix width and preventing closing-delimiter collisions. |
 | Charset support | Three charsets: `ascii` (strict 7-bit, default for `document`), `utf8-box` (standard Unicode box-drawing, default for `comment`), and `monotrue-v1` (retained opt-in for controlled MonoTrue environments with hash/face/role verification). |
 | Overflow policy | Progressive 4-step readability ladder (wrap -> demote secondary metadata to footnote -> key-abbreviate long labels with legend -> fail closed only on indivisible overflow). Zero silent truncation. |
-| Product surfaces | Expose everywhere: `@coral-viz/render`, `coral` CLI, `@coral-viz/mcp-server` (`coral_render`), `@coral-viz/diagram-editor` (Export `.txt` and Copy as Comment), and `@coral-viz/browser` (with explicit bundle budget review if ceiling > 800 KiB gzip is required). |
+| Product surfaces | Expose everywhere: `@coral-viz/render`, `coral` CLI, `@coral-viz/mcp-server` (`coral_render`), `@coral-viz/diagram-editor` (Export `.txt` and Copy as Comment), and the main `@coral-viz/browser` bundle (816 KiB gzip ceiling). |
 
 ## 3. Functional requirements
 
@@ -391,10 +391,9 @@ coral render --format txt|ascii \
   (comment syntax selector, width `72`/`80`/`100`, charset toggle `utf8-box` /
   `ascii`, and live width/line indicator).
 - **Browser (`@coral-viz/browser`):** Export `renderText` in ESM and IIFE
-  (`Coral.renderText(...)`). Because `@coral-viz/browser` sits near the 800 KiB
-  gzip ceiling, record an explicit owner-approved bundle-budget gate when
-  scheduling implementation (estimated +8-15 KiB gzip since ELK and
-  `@coral-viz/language` are already bundled).
+  (`Coral.renderText(...)`). Each format includes the text renderer in its
+  main bundle. The owner approved an IIFE ceiling of 816 KiB at gzip level 9
+  for 0.2.17. The ESM bundle must fit within the measured IIFE size.
 
 ## 7. Acceptance criteria matrix
 

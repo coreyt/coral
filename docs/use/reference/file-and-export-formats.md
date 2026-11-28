@@ -8,6 +8,8 @@ covered by the conversion reference.
 | `.coral.json` | Save and open | Source-owned Coral documents keep exact authored text and document settings |
 | GraphIR JSON | Deliberate interchange | Portable graph; not the authored Coral text or full document settings |
 | SVG | Scalable export | Uses verified geometry |
+| Plain text (`.txt`) | Paginated ASCII diagram | Letter or A4 with form-feed page breaks |
+| Code comment | Copy a text diagram | 72, 80, or 100 columns including comment syntax |
 | HTML | Standalone export | Uses verified geometry |
 | PNG | Raster export | Fixed resolution |
 | JPEG | Lossy raster export | Fixed resolution |
@@ -24,13 +26,8 @@ A Coral source document retains its exact text even when syntax, conformance,
 or render-capability findings prevent projection or export. Saving and closing
 do not require a successful diagram render.
 
-The legacy `0.2.8` bounded six-family character preview in the
-[Render API](../../embed/reference/render-api.md#character-output) is
-**deprecated and no longer supported** as of Coral `0.2.17`. The application's
-export menu does not expose it. Edition `0.2.8` UML State source can still be
-saved and rendered through that deprecated API (canvas and SVG paths report no
-visual display capability for edition `0.2.8`); use `@coralVersion "0.2.17"` for
-visual UML State.
+Choose **Export Plain Text (.txt)** for a page preview and download. Choose
+**Copy as Code Comment** to set comment syntax, width, and character set.
 
 ## Related
 

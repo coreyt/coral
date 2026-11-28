@@ -35,52 +35,25 @@ registry, notation edge styles, and independent GraphIR source/target endpoint
 semantics into deterministic JSON-safe values. Unknown advertised glyphs fail
 closed instead of silently substituting a placeholder.
 
-> **Deprecated (no longer supported):** The legacy `0.2.8` character renderer
-> (`renderInstalledCharacterPreview028`, `renderCharacterGraph028`,
-> `adaptCharacterGraph028`, and `createCharacterDebugView028`) is
-> hard-deprecated as of Coral `0.2.17` and is **no longer supported**. It is
-> being replaced in `0.2.17` by the clean-slate Plain-Text and ASCII Diagram
-> Renderer (`dev/designs/text-renderer-spec.md`). Do not build new integrations
-> against the `0.2.8` character APIs.
+Use `await renderText(source)` for US Letter ASCII pages or
+`await renderText(source, { profile: 'comment', commentStyle: 'slash' })`
+for a UTF-8 code comment. Use `renderTextGraph` with GraphIR 3. Both return
+the complete text, individual pages, dimensions, continuation links, and
+diagnostics. Architecture, infrastructure, flowchart, ERD, UML class,
+UML sequence, UML state, block, BPMN, AI/ML, data engineering, code, and
+sketch have text adapters.
 
-The legacy 0.2.8 `renderInstalledCharacterPreview028(source, options)` API
-renders bounded Block, Flowchart, BPMN, UML Class, UML Sequence and UML State
-source. It validates the exact source successor/catalog and shared U1/U2 before
-making a picture and ledger. Use `columns: 40`, `80` or `120`. Copy/export is
-printable ASCII plus LF; controlled MonoTrue needs its exact font-face hash and
-validated glyph roles, otherwise the whole output falls back to ASCII.
-Unsupported placement, ports, routes, constraints, controls, nonbaseline
-proximity and family constructs throw `CharacterRenderError` without changing
-the source. State is a bounded source/character edition; SVG/editor visual paths
-refuse it.
-
-Coral 0.2.9 adopts **MonoTrue v0.2.0** at
-`1dfda76a564716e6148a342592b264a5b8b211e4`, **Diagram Set 1**. Character pictures
-continue to require the Regular face; its TTF SHA-256 is
-`1725392f1253a23ce6131879ec279e68e3a83695b838586ff7afe6268a55fd89`.
-The older face hashes do not enable this update. Hosts provide the font and
-validate every required role before supplying `monoTrue.validatedRoles`.
-Coral does not bundle or embed these fonts. The selected upstream license and
-attribution are retained under `third_party/monotrue/`.
-
-Controlled pictures use Diagram Set endpoints with the correct shaft approach
-and wall tees. UML synchronous calls use filled triangles; asynchronous calls
-and returns use open arrows, with dashed return shafts. Class composition and
-inheritance markers stay at their authored ends. These private-use characters
-require the verified font; copying them into an unknown-font destination would
-lose that guarantee, so `target: 'copy-export'` always returns ASCII. Missing
-roles or a mismatched face/hash also select ASCII for the complete picture.
-The existing supported source subset and refusals are unchanged.
-
-`createCharacterDebugView028(text)` returns numbered row/column inspection and
-a per-cell Unicode CSV for the returned preview text.
+The legacy `renderInstalledCharacterPreview028`, `renderCharacterGraph028`,
+`adaptCharacterGraph028`, and `createCharacterDebugView028` exports are
+deprecated and unsupported. Controlled `monotrue-v1` displays supply the
+MonoTrue v0.2.0 Regular font and its verified roles.
 
 Coral 0.2.17 keeps `lowfi` and `hifi` as basic monochrome black-and-white
 outputs, exports `parrotfish` (`anemone`) for modeled presentation styling
 without changing layout, flow, or routing, adds visual and hierarchical
 `@diagram uml-state` in edition `0.2.17`, exports
 `transpileAndVerifyMermaidToCoral` for verified Top-5 Mermaid transpilation, and
-ships the standalone `coral` CLI (`validate`, `render --format svg|html|ascii`,
+ships the standalone `coral` CLI (`validate`, `render --format svg|html|txt|ascii`,
 `convert --from ... --to coral|json`):
 
 ```sh
@@ -99,3 +72,7 @@ and the executable
 [rendering workflow](https://coreyt.github.io/coral/docs/embed/how-to/render-a-diagram).
 
 Apache-2.0. See `LICENSE`.
+
+For custom text pages, use `coral render --format txt --page-width 50
+--page-height 30`. Controlled MonoTrue environments can supply their capability
+JSON with `--charset monotrue-v1 --monotrue-capability font.json`.

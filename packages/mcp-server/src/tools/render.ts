@@ -15,6 +15,9 @@ import {
   resolveSuccessorGraphNodes028,
   RenderCapabilityError,
   renderHtml,
+  renderText,
+  renderTextGraph,
+  TextRenderError,
   renderSvg,
   sourceLayoutCapabilityNotices028,
   sourceSpatialFailureDiagnostics028,
@@ -39,7 +42,7 @@ import { installedSourceDiagnostics028, readCoralSource028 } from './coralSource
 
 export const renderTool = {
   name: 'coral_render',
-  description: 'Generate a deterministic SVG or standalone HTML visualization of a Coral diagram or Graph-IR.',
+  description: 'Generate a deterministic SVG, standalone HTML, or plain-text visualization of a Coral diagram or Graph-IR.',
   inputSchema: {
     type: 'object' as const,
     properties: {
@@ -50,10 +53,28 @@ export const renderTool = {
         properties: {
           format: {
             type: 'string',
-            enum: ['svg', 'html'],
+            enum: ['svg', 'html', 'txt', 'ascii'],
             description: 'Output document format',
             default: 'svg',
           },
+          profile: { type: 'string', enum: ['document', 'comment'] },
+          page: { type: 'string', enum: ['letter', 'a4'] },
+          charset: { type: 'string', enum: ['ascii', 'utf8-box', 'monotrue-v1'] },
+          density: { type: 'string', enum: ['compact', 'standard'] },
+          commentStyle: { type: 'string', enum: ['none', 'slash', 'hash', 'dash', 'block-c', 'html'] },
+          legend: { type: 'string', enum: ['auto', 'always', 'none'] },
+          eol: { type: 'string', enum: ['lf', 'crlf'] },
+          columns: { type: 'integer', minimum: 32 },
+          pageWidth: { type: 'integer', minimum: 40 },
+          pageHeight: { type: 'integer', minimum: 1 },
+          monoTrue: { type: 'object', properties: {
+            profile: { const: 'monotrue-v1' }, selected: { const: true },
+            face: { enum: ['Regular', 'Bold', 'Italic', 'BoldItalic'] },
+            fontSha256: { type: 'string' }, validatedRoles: { type: 'array', items: { type: 'string' } },
+          }, required: ['profile', 'selected', 'face', 'fontSha256', 'validatedRoles'] },
+          commentPrefix: { type: 'string' },
+          strict: { type: 'boolean' },
+          header: { type: 'boolean' },
           direction: {
             type: 'string',
             enum: ['RIGHT', 'DOWN', 'LEFT', 'UP'],
@@ -131,7 +152,23 @@ const DiagramFontSettingsSchema = z.object({
 }).strict();
 
 const RenderOptionsSchema = z.object({
-  format: z.enum(['svg', 'html']).default('svg'),
+  profile: z.enum(['document', 'comment']).optional(),
+  page: z.enum(['letter', 'a4']).optional(),
+  charset: z.enum(['ascii', 'utf8-box', 'monotrue-v1']).optional(),
+  density: z.enum(['compact', 'standard']).optional(),
+  commentStyle: z.enum(['none', 'slash', 'hash', 'dash', 'block-c', 'html']).optional(),
+  legend: z.enum(['auto', 'always', 'none']).optional(),
+  eol: z.enum(['lf', 'crlf']).optional(),
+  columns: z.number().int().min(32).optional(),
+  pageWidth: z.number().int().min(40).optional(),
+  pageHeight: z.number().int().min(1).optional(),
+  monoTrue: z.object({ profile: z.literal('monotrue-v1'), selected: z.literal(true),
+    face: z.enum(['Regular', 'Bold', 'Italic', 'BoldItalic']), fontSha256: z.string(),
+    validatedRoles: z.array(z.string()) }).optional(),
+  commentPrefix: z.string().optional(),
+  strict: z.boolean().optional(),
+  header: z.boolean().optional(),
+  format: z.enum(['svg', 'html', 'txt', 'ascii']).default('svg'),
   direction: z.enum(['RIGHT', 'DOWN', 'LEFT', 'UP']).default('RIGHT'),
   theme: z.enum(['light', 'dark']).default('light'),
   style: z.enum(['lowfi', 'hifi', 'anemone', 'ane', 'parrotfish', 'pf']).default('lowfi'),
@@ -330,6 +367,21 @@ export async function handleRender(args: unknown) {
         message: `Source selects notation "${selected}"; the render option cannot replace it with "${options.notation}".` };
       return { content: [{ type: 'text' as const, text: diagnostic.message }],
         structuredContent: { diagnostics: [diagnostic] }, isError: true as const };
+    }
+  }
+  if (options.format === 'txt' || options.format === 'ascii') {
+    const settings = { ...options, charset: options.charset ?? (options.format === 'ascii' ? 'ascii' : undefined) };
+    try {
+      const result = detectFormat(parsed.content).format === 'graphir-json'
+        ? await renderTextGraph(readGraph(parsed.content), settings)
+        : await renderText(parsed.content, settings);
+      return { content: [{ type: 'text' as const, text: result.text }], structuredContent: { ...result } };
+    } catch (error) {
+      if (error instanceof GraphInputFailure) return inputFailureResponse(error);
+      const message = error instanceof Error ? error.message : String(error);
+      return { isError: true as const, content: [{ type: 'text' as const, text: message }],
+        structuredContent: { diagnostics: error instanceof TextRenderError ? error.diagnostics :
+          [{ severity: 'error', code: 'text.render.failed', message }] } };
     }
   }
   const scalarFontOption = options.fontFamily !== undefined

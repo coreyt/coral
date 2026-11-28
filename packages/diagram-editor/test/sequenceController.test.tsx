@@ -2,7 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { parseMermaid } from '@coral-viz/language';
 import { parse } from '@coral-viz/language/parser';
-import { renderSvg } from '@coral-viz/render';
+import { renderSvg, transpileAndVerifyMermaidToCoral } from '@coral-viz/render';
 import { validateIR } from '@graph-ir/core';
 import { planFileOpen, prepareDocumentReplacement } from '../src/useEditorController';
 import { useEditorControllerWithProperties as useEditorController } from './fixtures/useEditorControllerWithProperties';
@@ -79,7 +79,7 @@ describe('UML sequence import, GraphIR interchange, and saved source', () => {
     vi.spyOn(window, 'confirm').mockReturnValue(true);
   });
 
-  it('plans a bounded Mermaid sequence as source-owned Coral and blocks advanced input atomically', () => {
+  it('opens verified Mermaid sequences through the shared transpiler and retains lossy source', () => {
     const opened = planFileOpen({ name: 'simple.mmd',
       text: 'sequenceDiagram\nparticipant A\nparticipant B\nA->>B: hi' });
     expect(opened.kind).toBe('open');
@@ -90,9 +90,9 @@ describe('UML sequence import, GraphIR interchange, and saved source', () => {
       expect(opened.prepared.source).toContain('@diagram uml-sequence\n');
       expect(opened.prepared.source).toContain('msg_1 = A -#> B as "hi"');
     }
-    expect(planFileOpen({ name: 'advanced.mmd', text: MERMAID })).toMatchObject({
-      kind: 'blocked', reasons: [expect.objectContaining({ code: 'coral.open.import.sequence.unsupported' })],
-    });
+    const advanced = planFileOpen({ name: 'advanced.mmd', text: MERMAID });
+    expect(advanced.kind).toBe('open');
+    if (advanced.kind === 'open') expect(advanced.prepared.source).toBe(MERMAID);
     const numberedSource = 'sequenceDiagram\nautonumber\nA->>B: x';
     const numbered = planFileOpen({ name: 'numbered.mmd', text: numberedSource });
     expect(numbered.kind, JSON.stringify(numbered)).toBe('open');
@@ -136,16 +136,14 @@ describe('UML sequence import, GraphIR interchange, and saved source', () => {
     });
   });
 
-  it('keeps a malformed Mermaid alt saveable with a stable sequence code (CR70-1)', () => {
+  it('opens a valid single-branch Mermaid alt through the shared transpiler', () => {
     const source = 'sequenceDiagram\nalt ok\nA->>B: hi\nend';
     const opened = planFileOpen({ name: 'alt.mmd', text: source });
-    expect(opened.kind, JSON.stringify(opened)).toBe('open');
+    expect(opened.kind).toBe('open');
     if (opened.kind === 'open') {
-      expect(opened.textOpen?.diagnostics).toEqual(expect.arrayContaining([
-        expect.objectContaining({ code: 'mermaid.sequence.fragment.invalid' }),
-      ]));
-      expect(opened.textOpen?.blockWith).toBeTruthy();
-      expect(opened.prepared.graph.interaction).toBeUndefined();
+      expect(opened.prepared.source).toContain('@diagram uml-sequence');
+      expect(opened.prepared.source).toBe(transpileAndVerifyMermaidToCoral(source).coral);
+      expect(opened.textOpen?.blockWith).toBeUndefined();
     }
   });
 

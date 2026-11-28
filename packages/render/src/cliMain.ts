@@ -28,7 +28,7 @@ import {
 import {
   assessInstalledSuccessorSourceIntegrity028,
   assessSuccessorSourcePortReferences028,
-  CharacterRenderError,
+  TextRenderError,
   graphIrExportRefusal029,
   installedWrittenPortReferenceRanges028,
   PARROTFISH_MODEL_0215,
@@ -36,7 +36,7 @@ import {
   projectInstalledSourceToSuccessor028,
   RenderCapabilityError,
   renderHtml,
-  renderInstalledCharacterPreview028,
+  renderText,
   renderSvg,
   resolveSuccessorGraphNodes028,
   sequenceFragmentDisplayDiagnostics028,
@@ -53,10 +53,11 @@ import {
   successorSourceDisplayWithSemanticPorts028,
   transpileAndVerifyMermaidToCoral,
   verifyPortableSuccessorSource028,
-  type CharacterColumns028,
+  type RenderTextOptions,
   type SuccessorSourceGraph028,
   type SvgOptions,
 } from './index.js';
+import { settings as textSettings } from './textRenderer/format.js';
 import { SpatialLayoutError } from './layout/index.js';
 import { layoutGraphForSvg } from './svg/layout.js';
 
@@ -72,7 +73,7 @@ export interface CoralCliIo {
 const USAGE = [
   'Usage:',
   '  coral validate [--strict] [file]',
-  '  coral render --format svg|html|ascii [--style lowfi|hifi|anemone|ane|parrotfish|pf] [--theme light|dark] [--direction RIGHT|DOWN|LEFT|UP] [--columns 40|80|120] [file]',
+  '  coral render --format svg|html|txt|ascii [--style lowfi|hifi|anemone|ane|parrotfish|pf] [--theme light|dark] [--direction RIGHT|DOWN|LEFT|UP] [--profile document|comment] [--page letter|a4] [--columns N] [--page-width N] [--page-height N] [--charset ascii|utf8-box|monotrue-v1] [--monotrue-capability FILE] [--density compact|standard] [--comment none|slash|hash|dash|block-c|html] [--comment-prefix STRING] [--legend auto|always|none] [--eol lf|crlf] [--strict] [file]',
   '  coral convert [--from auto|coral|mermaid|dot|plantuml] [--to coral|json] [--strict] [--flowchart-target flowchart|block|architecture] [--edge-style-mode visual-safe|portable] [--state-target-edition 0.2.17|0.2.8] [file]',
   '',
   'Reads stdin when [file] is omitted or "-".',
@@ -301,8 +302,9 @@ async function handleValidateCommand(args: readonly string[], io: CoralCliIo): P
 async function handleRenderCommand(args: readonly string[], io: CoralCliIo): Promise<number> {
   const parsed = parseCommandArgs(
     args,
-    new Set(['--format', '--style', '--theme', '--direction', '--columns']),
-    new Set(['--help']),
+    new Set(['--format', '--style', '--theme', '--direction', '--columns', '--profile', '--page', '--page-height',
+      '--charset', '--density', '--comment', '--comment-prefix', '--legend', '--eol', '--page-width', '--monotrue-capability']),
+    new Set(['--help', '--strict']),
   );
   if (!parsed.ok) return usageError(io, parsed.message);
   if (parsed.parsed.flags.has('--help')) {
@@ -314,8 +316,8 @@ async function handleRenderCommand(args: readonly string[], io: CoralCliIo): Pro
   }
 
   const format = parsed.parsed.flags.get('--format');
-  if (format !== 'svg' && format !== 'html' && format !== 'ascii') {
-    return usageError(io, 'render requires --format svg|html|ascii.');
+  if (format !== 'svg' && format !== 'html' && format !== 'ascii' && format !== 'txt') {
+    return usageError(io, 'render requires --format svg|html|txt|ascii.');
   }
 
   const rawStyle = (parsed.parsed.flags.get('--style') as string | undefined) ?? 'lowfi';
@@ -351,50 +353,44 @@ async function handleRenderCommand(args: readonly string[], io: CoralCliIo): Pro
     return usageError(io, `Unsupported --direction "${rawDirection}". Expected RIGHT, DOWN, LEFT, or UP.`);
   }
 
-  const rawColumns = parsed.parsed.flags.get('--columns') as string | undefined;
-  let columns: CharacterColumns028 = 80;
-  if (rawColumns !== undefined) {
-    const num = Number(rawColumns);
-    if (num !== 40 && num !== 80 && num !== 120) {
-      return usageError(io, `Unsupported --columns "${rawColumns}". Expected 40, 80, or 120.`);
+  const textOptions: RenderTextOptions = {};
+  const textFlags = { '--profile': 'profile', '--page': 'page', '--columns': 'columns', '--page-height': 'pageHeight', '--page-width': 'pageWidth',
+    '--charset': 'charset', '--density': 'density', '--comment': 'commentStyle', '--comment-prefix': 'commentPrefix',
+    '--eol': 'eol', '--legend': 'legend', '--strict': 'strict' } as const;
+  for (const [flag, key] of Object.entries(textFlags)) {
+    const value = parsed.parsed.flags.get(flag);
+    if (value === undefined) continue;
+    if (format !== 'ascii' && format !== 'txt') {
+      if (flag === '--columns' && [40, 80, 120].includes(Number(value))) continue;
+      return usageError(io, `${flag} requires txt or ascii.`);
     }
-    columns = num;
+    Object.assign(textOptions, { [key]: key === 'columns' || key === 'pageHeight' || key === 'pageWidth' ? Number(value) : value });
   }
-
+  const capabilityFile = parsed.parsed.flags.get('--monotrue-capability');
+  if (typeof capabilityFile === 'string') {
+    if (format !== 'ascii' && format !== 'txt') return usageError(io, '--monotrue-capability requires txt or ascii.');
+    try {
+      textOptions.monoTrue = JSON.parse(await io.readFileText(capabilityFile));
+    } catch (error) {
+      writeDiagnostics(io, [{ severity: 'error', code: 'coral.cli.capability.invalid', message: String(error) }]);
+      return 1;
+    }
+  }
+  if (format === 'ascii') textOptions.charset ??= 'ascii';
+  try { textSettings(textOptions, []); }
+  catch (error) { return usageError(io, error instanceof Error ? error.message : String(error)); }
   const input = await readInput(parsed.parsed.positionals[0], io);
   if (!input.ok) return input.code;
   const source = input.text;
-
-  if (format === 'ascii') {
+  if (format === 'ascii' || format === 'txt') {
     try {
-      const preview = await renderInstalledCharacterPreview028(source, { columns });
-      if (preview.diagnostics.length > 0) {
-        writeDiagnostics(
-          io,
-          preview.diagnostics.map((notice) => ({
-            severity: 'warning',
-            code: notice.code,
-            message: notice.message,
-          })),
-        );
-      }
-      const output = preview.text.endsWith('\n') ? preview.text : `${preview.text}\n`;
-      io.writeStdout(output);
+      const result = await renderText(source, textOptions);
+      writeDiagnostics(io, result.diagnostics);
+      io.writeStdout(result.text);
       return 0;
     } catch (error) {
-      if (error instanceof CharacterRenderError) {
-        writeDiagnostics(io, [{
-          severity: 'error',
-          code: error.code,
-          message: error.message,
-        }]);
-        return 1;
-      }
-      writeDiagnostics(io, [{
-        severity: 'error',
-        code: 'coral.cli.render.failed',
-        message: error instanceof Error ? error.message : String(error),
-      }]);
+      writeDiagnostics(io, error instanceof TextRenderError ? error.diagnostics :
+        [{ severity: 'error', code: 'coral.cli.render.failed', message: String(error) }]);
       return 1;
     }
   }

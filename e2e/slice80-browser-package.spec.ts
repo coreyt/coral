@@ -100,7 +100,15 @@ test.describe('Slice 80 browser package', () => {
     await tab.goto(`${ORIGIN}/`);
     expect(await tab.evaluate(() => (window as unknown as { __coral: { afterEval: string[] } }).__coral.afterEval)).toEqual(['Coral']);
     expect(await tab.evaluate(() => Object.keys((window as unknown as { Coral: object }).Coral).sort()))
-      .toEqual(['CoralRenderError', 'defineCustomElement', 'render', 'renderTo', 'scan', 'version']);
+      .toEqual(['CoralRenderError', 'defineCustomElement', 'render', 'renderText', 'renderTo', 'scan', 'version']);
+
+    const source = fixture('flowchart-25.coral');
+    const { renderText } = await import('@coral-viz/render');
+    const text = await tab.evaluate(async (input) => {
+      const { Coral } = window as unknown as { Coral: typeof import('@coral-viz/browser') };
+      return (await Coral.renderText(input)).text;
+    }, source);
+    expect(text).toBe((await renderText(source)).text);
 
     const expected = await nodeOutputs();
     for (const name of FIXTURES) {

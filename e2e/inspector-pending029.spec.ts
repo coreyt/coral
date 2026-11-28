@@ -32,13 +32,9 @@ test('inspector connector label retains keyboard focus after its commit', async 
   await startCleanEditor(page);
   await showProperties(page);
   await openBuffer(page, { name: 'pending.coral', buffer: Buffer.from(SOURCE) });
-  await page.getByRole('button', { name: 'Fit diagram to view' }).click();
-  const point = await page.locator('.react-flow__edge[data-id="read"] path').first().evaluate(element => {
-    const path = element as SVGPathElement;
-    const point = path.getPointAtLength(path.getTotalLength() / 2).matrixTransform(path.getScreenCTM()!);
-    return { x: point.x, y: point.y };
-  });
-  await page.mouse.click(point.x, point.y);
+  const edge = page.locator('.react-flow__edge[data-id="read"]');
+  await edge.focus();
+  await edge.press('Enter');
   const input = page.getByLabel('Connector label', { exact: true });
   await input.fill('Reads values');
   await input.press('Enter');
