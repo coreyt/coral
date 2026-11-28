@@ -184,15 +184,18 @@ export {successorBrowserCases028} from ${JSON.stringify(casesModule)};`);
     const publicSources = sources.active;
     const runner = (path) => `import * as core from '/probe.js';
 ${path === '/runner-esm.js' ? "import * as Coral from '/browser.js';" : 'const Coral = globalThis.Coral;'}
+let currentCase = 'initialization';
 try {
   let blocked = false;
   try { new Function('return 1')(); } catch (error) { blocked = error instanceof EvalError; }
   if (!blocked) throw new Error('Positive control: CSP failed to block runtime code generation');
   const modes = [undefined, { mode: 'schema' }, { mode: 'semantic' }];
   const records = core.successorBrowserCases028(${JSON.stringify(base)}, ${JSON.stringify(catalog)}, ${JSON.stringify(additional)})
-    .flatMap(({ id, graph, snapshot }) => modes.map((option) => ({ id, mode: option?.mode ?? 'full',
+    .flatMap(({ id, graph, snapshot }) => modes.map((option) => {
+      currentCase = id + '/' + (option?.mode ?? 'full');
+      return { id, mode: option?.mode ?? 'full',
       schemaAndLocal: core.validateGraphIRSuccessor(graph, option),
-      catalog: core.validateGraphIRSuccessorWithCatalog(graph, snapshot, option) })));
+      catalog: core.validateGraphIRSuccessorWithCatalog(graph, snapshot, option) }; }));
   // renderTo draws inside a Coral shadow-root surface (Slice 60 C4).
   const coralSurface = () => {
     const host = document.querySelector('#diagram');
@@ -226,7 +229,7 @@ try {
   try { await Coral.render(${JSON.stringify(publicSources[0].source)}, { edition: '0.2.8-preview' }); } catch (error) { retired = error; }
   if (retired?.code !== 'coral.browser.option.invalid') throw new Error('Retired preview option was accepted');
   window.successorProof = { blocked, records, renders };
-} catch (error) { window.successorError = String(error.stack ?? error); }`;
+} catch (error) { window.successorError = currentCase + ': ' + String(error.stack ?? error); }`;
     ({ server } = await serve({ '/probe.js': probe, '/browser.js': bundles.esm, '/browser.iife.js': bundles.iife,
       '/runner-esm.js': runner, '/runner-iife.js': runner,
       page: (path) => PAGE + (path === '/iife' ? '<script src="/browser.iife.js"></script>' : '') +

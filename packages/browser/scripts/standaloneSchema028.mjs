@@ -197,6 +197,8 @@ export function foldStandaloneSchema028(code) {
     const mGe0 = messageIndex.get('must be >= 0') ?? 0;
     const mConst = messageIndex.get('must be equal to constant') ?? 0;
     const mArr = messageIndex.get('must be array') ?? 0;
+    // Nested validators can overwrite the helper result slot. Accumulate
+    // loop error counts locally and publish them only when the loop returns.
     const helper = `const _m=${JSON.stringify(messagePool)};let _d=0,_v=null;` +
       'function _p(v,e){return v===null?[e]:(v.push(e),v);}' +
       'function _c(v,e){return v===null?e:v.concat(e);}' +
@@ -206,16 +208,16 @@ export function foldStandaloneSchema028(code) {
       'function _ev(f,p,d){f.evaluated=p?{props:true,dynamicProps:!!d,dynamicItems:false}:{dynamicProps:!!d,dynamicItems:false};}' +
       'function _o(d){return Boolean(d&&typeof d==="object"&&!Array.isArray(d));}' +
       'function _n(d){return typeof d==="number"&&isFinite(d);}' +
-      'function _in(v,s){return typeof v==="string"&&("|"+s+"|").includes("|"+v+"|");}' +
+      'function _in(v,s){return typeof v==="string"&&!v.includes("|")&&("|"+s+"|").includes("|"+v+"|");}' +
       'function _e(p,m,k,v){const e={instancePath:p,message:m===0?(k===1?"must have required property \'"+v+"\'":"must NOT have additional properties"):typeof m==="number"?_m[m-1]:m};if(k){e.keyword=k===1?"required":"additionalProperties";e.params=k===1?{missingProperty:v}:{additionalProperty:v};}return e;}' +
       'function _pe(v,p,m,k,x){return _p(v,_e(p,m,k,x));}' +
       'function _rq(d,p,s,v){_d=0;for(const k of s.split("|"))if(d[k]===void 0){v=_pe(v,p,0,1,k);_d++;}return v;}' +
       'function _ak(d,p,s,v){_d=0;for(const k in d)if(!_in(k,s)){v=_pe(v,p,0,2,k);_d++;}return v;}' +
-      'function _ops(d,p,v,e,a){_d=e;for(let i=0;i<a.length;i+=2){const k=a[i];if(d[k]!==void 0&&_s(a[i+1],d[k],p+"/"+k,v)){v=_v;_d=v.length;}}return v;}' +
+      'function _ops(d,p,v,e,a){let n=e;for(let i=0;i<a.length;i+=2){const k=a[i];if(d[k]!==void 0&&_s(a[i+1],d[k],p+"/"+k,v)){v=_v;n=v.length;}}_d=n;return v;}' +
       `function _en(d,p,s,v){_d=0;if(typeof d!=="string"){v=_pe(v,p,${mStr});_d++;}if(!_in(d,s)){v=_pe(v,p,${mEnum});_d++;}return v;}` +
       `function _nn(d,p,v){_d=0;if(!_n(d)){v=_pe(v,p,${mNum});_d=1;}else if(d<0){v=_pe(v,p,${mGe0});_d=1;}return v;}` +
       `function _ck(d,k,c,p,v){_d=0;if(d[k]!==void 0&&c!==d[k]){v=_pe(v,p+"/"+k,${mConst});_d=1;}return v;}` +
-      `function _as(a,p,f,v,e){_d=e;for(let i=0;i<a.length;i++)if(_s(f,a[i],p+"/"+i,v)){v=_v;_d=v.length;}return v;}` +
+      `function _as(a,p,f,v,e){let n=e;for(let i=0;i<a.length;i++)if(_s(f,a[i],p+"/"+i,v)){v=_v;n=v.length;}_d=n;return v;}` +
       `function _ar(d,k,p,f,v,e){_d=e;if(d[k]!==void 0){const a=d[k];if(Array.isArray(a))v=_as(a,p+"/"+k,f,v,e);else{v=_pe(v,p+"/"+k,${mArr});_d=e+1;}}return v;}` +
       'function _uq(a,p,eq,v){_d=0;for(let i=a.length;i--;)for(let j=i;j--;)if(eq(a[i],a[j])){_d=1;return _pe(v,p,_dm(j,i));}return v;}' +
       'function _dm(j,i){return "must NOT have duplicate items (items ## "+j+" and "+i+" are identical)";}\n';

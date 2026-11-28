@@ -38,6 +38,8 @@ Release `0.2.17` builds directly on `0.2.15`.
   BPMN events and gateways and typed AI/ML, data, code, and sketch cues.
 - Sequence file opening uses the verified Mermaid transpiler. Lossy imports
   retain their original source for conversion review.
+- Browser schema validation preserves nested errors across later valid fields
+  and rejects combined enum values in compact lookup tables.
 - Dialog focus initializes synchronously on opening and respects focus handed
   to another modal when closing.
 - Deterministic zero-LLM **Mermaid.js-to-Coral transpiler** across
