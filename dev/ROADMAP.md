@@ -428,6 +428,21 @@ The document-local custom-symbol assignment moved to
 custom SVG artwork is confirmed; storage and attachment contracts are proposed there.
 No remaining custom-symbol implementation is assigned here by this move.
 
+## Planned for 0.2.26
+
+- **Plain-Text and ASCII Diagram Renderer.** Replace the bounded `0.2.8`
+  character preview with a clean plain-text/ASCII renderer supporting two
+  first-class profiles: regulated plain-text documents (US Letter `72x55` and
+  A4 `72x60` with mandatory `\f` page breaks, non-splitting boxes, and paired
+  off-page continuation markers in strict 7-bit ASCII) and compact source-code
+  comments (default `utf8-box`, comment-prefix width budgeting, and closing
+  delimiter safety), retaining `monotrue-v1` as an opt-in third charset.
+  Phase 1 targets `architecture`, `infrastructure`, `flowchart`, `erd`,
+  `uml-sequence`, `uml-state` (`0.2.17`), and `uml-class` across all five
+  surfaces (`@coral-viz/render`, CLI, MCP, `@coral-viz/browser`, and
+  `@coral-viz/diagram-editor`); Phase 2 covers the remaining six notations.
+  See [text-renderer-spec.md](designs/text-renderer-spec.md).
+
 ## Exploration before 0.3.0
 
 - Compare immediate AI application with in-place review/accept/discard after
