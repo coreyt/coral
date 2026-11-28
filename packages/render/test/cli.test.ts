@@ -126,6 +126,23 @@ describe('Coral CLI (bin.coral on @coral-viz/render)', () => {
     expect(html.getStdout()).toContain('<!doctype html>');
     expect(html.getStdout()).toContain('<svg');
 
+    // Parrotfish classic preset via --style parrotfish and --style pf (spatial + UML + HTML)
+    const pfArch = createMemoryIo(VALID_ARCH_028);
+    expect(await runCoralCli(['render', '--format', 'svg', '--style', 'parrotfish'], pfArch.io)).toBe(0);
+    expect(pfArch.getStdout()).toContain('fill="#ececff"');
+    expect(pfArch.getStdout()).toContain('stroke="#9370db"');
+
+    const pfState = createMemoryIo(VALID_STATE_0217);
+    expect(await runCoralCli(['render', '--format', 'svg', '--style', 'pf', '--theme', 'light'], pfState.io)).toBe(0);
+    expect(pfState.getStdout()).toContain('fill="#fefece"');
+    expect(pfState.getStdout()).toContain('stroke="#a80036"');
+    expect(pfState.getStdout()).toContain('fill="#222222"');
+
+    const pfHtml = createMemoryIo(VALID_ARCH_028);
+    expect(await runCoralCli(['render', '--format', 'html', '--style', 'pf', '--theme', 'dark'], pfHtml.io)).toBe(0);
+    expect(pfHtml.getStdout()).toContain('<!doctype html>');
+    expect(pfHtml.getStdout()).toContain('stroke="#81b1db"');
+
     const asciiFlow = [
       '@diagram flowchart',
       'start terminal [variant: "start"] as "Start"',

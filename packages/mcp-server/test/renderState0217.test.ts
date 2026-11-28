@@ -44,4 +44,26 @@ describe('@coral-viz/mcp-server edition 0.2.17 UML State visual rendering', () =
     expect(htmlText.toLowerCase()).toContain('<!doctype html>');
     expect(htmlText).toContain('<svg');
   });
+
+  it('renders 0.2.17 uml-state, non-UML, and sequence diagrams with parrotfish and pf styles', async () => {
+    const pfState = await handleRender({ content: source, options: { format: 'svg', style: 'parrotfish', direction: 'DOWN' } });
+    expect(pfState.isError).toBeFalsy();
+    const pfStateSvg = textOf(pfState);
+    expect(pfStateSvg).toContain('fill="#fefece"');
+    expect(pfStateSvg).toContain('stroke="#a80036"');
+    expect(pfStateSvg).toMatch(/data-coral-part-id="start:outline"[^>]*fill="#222222"/);
+    expect(pfStateSvg).toMatch(/data-coral-part-id="done:inner-outline"[^>]*fill="#222222"/);
+
+    const archSource = '@diagram architecture\napi service as "API"\ndb database as "DB"\napi -> db\n';
+    const pfArch = await handleRender({ content: archSource, options: { format: 'html', style: 'pf', theme: 'light' } });
+    expect(pfArch.isError).toBeFalsy();
+    expect(textOf(pfArch)).toContain('<!doctype html>');
+    expect(textOf(pfArch)).toContain('fill="#ececff"');
+
+    const seqSource = '@diagram uml-sequence\na participant as "A"\nb participant as "B"\na -> b [sync] as "call"\n';
+    const pfSeq = await handleRender({ content: seqSource, options: { format: 'svg', style: 'pf', theme: 'dark' } });
+    expect(pfSeq.isError).toBeFalsy();
+    expect(textOf(pfSeq)).toContain('fill="#2b2a22"');
+    expect(textOf(pfSeq)).toContain('stroke="#d46a84"');
+  });
 });

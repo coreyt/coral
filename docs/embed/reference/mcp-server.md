@@ -11,14 +11,15 @@ pipelines and CI scripts without MCP, use the standalone `coral` CLI shipped on
 | `coral_validate` | `content` | `strict`; validates saved Coral (`0.2.8`, `0.2.9`, `0.2.14`, `0.2.17`) or GraphIR JSON |
 | `coral_convert` | `content` | `from`, `to`, `strict`, `flowchartTarget`, `edgeStyleMode`, `stateTargetEdition`; deterministic Top-5 Mermaid-to-Coral transpilation and GraphIR export |
 | `coral_layout` | `content` | `options.direction`, `nodeSpacing`, `layerSpacing`, `algorithm` (layered/mrtree/force/box) |
-| `coral_render` | `content` | `options.format` (svg/html), `direction`, `theme`, `style` (lowfi/hifi/anemone/ane), `nodeSpacing`, font settings, and `notation` |
+| `coral_render` | `content` | `options.format` (svg/html), `direction`, `theme`, `style` (lowfi/hifi/anemone/ane/parrotfish/pf), `nodeSpacing`, font settings, and `notation` |
 | `coral_explain` | `content` | `level`, `focus`; `detailed` currently follows the standard form |
 | `coral_check_conformance` | `content` | `level`, `notificationLevel`; versioned bounded-profile findings |
 
 Layout and render settings above belong inside the `options` object. Render
 font options are `fontSettings`, `fontFamily`, `fontSize`, `fontWeight`, and
 `lineHeight`. `style` defaults to `lowfi`; `anemone` (shorthand `ane`) selects
-the modeled presentation theme; `thx` is reserved.
+the modeled presentation theme; `parrotfish` (shorthand `pf`) selects the
+classic presentation preset; `thx` is reserved.
 
 ## Install and configure
 

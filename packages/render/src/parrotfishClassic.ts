@@ -88,10 +88,21 @@ export const PARROTFISH_MODEL_0215: ParrotfishModel = Object.freeze<ParrotfishMo
   },
   resolveNode(ctx: ParrotfishNodeContext) {
     if (ctx.container) return undefined;
-    const key = `${ctx.symbolId ?? ''} ${ctx.type ?? ''}`.toLowerCase();
+    const notation = (ctx.notationId ?? '').toLowerCase();
+    const sym = (ctx.symbolId ?? '').toLowerCase();
+    const type = (ctx.type ?? '').toLowerCase();
+    const key = `${sym} ${type}`;
     const dark = ctx.theme === 'dark';
     const isNote = /\b(note|annotation|callout|comment)\b/.test(key);
-    if (isUmlNotation0215(ctx.notationId)) {
+    if (isUmlNotation0215(notation)) {
+      if (sym === 'uml-state-initial' || sym === 'uml-state-fork' || sym === 'uml-state-join') {
+        const solid = dark ? '#d46a84' : '#222222';
+        return { fill: solid, stroke: solid, strokeWidth: 1.5, accentPosition: 'none' };
+      }
+      if (sym === 'uml-state-final') {
+        const ring = dark ? '#d46a84' : '#222222';
+        return { fill: dark ? '#1b1b1b' : '#ffffff', stroke: ring, strokeWidth: 1.5, accentPosition: 'none' };
+      }
       if (isNote) {
         return dark
           ? mkNode('#3d3816', '#d46a84', '#f5f2d0', '#dcd8b0', '#d46a84')
@@ -100,6 +111,15 @@ export const PARROTFISH_MODEL_0215: ParrotfishModel = Object.freeze<ParrotfishMo
       return dark
         ? mkNode('#2b2a22', '#d46a84', '#f1f1eb', '#c8c6ba', '#d46a84')
         : mkNode('#fefece', '#a80036', '#000000', '#333333', '#a80036');
+    }
+    if (notation === 'sketch' && (sym.includes('label') || type === 'label')) {
+      return {
+        fill: 'none',
+        stroke: 'none',
+        textColor: dark ? '#e0dfdf' : '#333333',
+        secondaryTextColor: dark ? '#b8b8b8' : '#555555',
+        accentPosition: 'none',
+      };
     }
     if (isNote) {
       return dark
@@ -111,16 +131,20 @@ export const PARROTFISH_MODEL_0215: ParrotfishModel = Object.freeze<ParrotfishMo
         ? mkNode('#2a2d30', '#7a8288', '#e0dfdf', '#b8b8b8', '#e0dfdf', 1.4)
         : mkNode('#f4f4f4', '#999999', '#333333', '#555555', '#333333', 1.4);
     }
+    const strokeWidth = notation === 'bpmn' && (sym.includes('end') || type === 'end') ? 3 : 1.5;
     return dark
-      ? mkNode('#1f2020', '#81b1db', '#e0dfdf', '#b8b8b8', '#e0dfdf')
-      : mkNode('#ececff', '#9370db', '#333333', '#555555', '#333333');
+      ? mkNode('#1f2020', '#81b1db', '#e0dfdf', '#b8b8b8', '#e0dfdf', strokeWidth)
+      : mkNode('#ececff', '#9370db', '#333333', '#555555', '#333333', strokeWidth);
   },
   resolveEdge(ctx: ParrotfishEdgeContext) {
     const dark = ctx.theme === 'dark';
-    if (isUmlNotation0215(ctx.notationId)) {
+    const notation = (ctx.notationId ?? '').toLowerCase();
+    const rel = (ctx.relationType ?? '').toLowerCase();
+    if (isUmlNotation0215(notation)) {
+      const dash = notation === 'uml-state' && rel === 'annotation' ? '4 3' : undefined;
       return dark
-        ? { stroke: '#d46a84', strokeWidth: 1.4, markerColor: '#d46a84', labelColor: '#f1f1eb', labelBackground: '#1b1b1b' }
-        : { stroke: '#a80036', strokeWidth: 1.4, markerColor: '#a80036', labelColor: '#000000', labelBackground: '#ffffff' };
+        ? { stroke: '#d46a84', strokeWidth: 1.4, ...(dash ? { dash } : {}), markerColor: '#d46a84', labelColor: '#f1f1eb', labelBackground: '#1b1b1b' }
+        : { stroke: '#a80036', strokeWidth: 1.4, ...(dash ? { dash } : {}), markerColor: '#a80036', labelColor: '#000000', labelBackground: '#ffffff' };
     }
     return dark
       ? { stroke: '#cccccc', strokeWidth: 1.5, markerColor: '#cccccc', labelColor: '#e0dfdf', labelBackground: '#333333' }

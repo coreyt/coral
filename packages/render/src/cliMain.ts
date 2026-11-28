@@ -31,6 +31,7 @@ import {
   CharacterRenderError,
   graphIrExportRefusal029,
   installedWrittenPortReferenceRanges028,
+  PARROTFISH_MODEL_0215,
   parseInstalledDocument028,
   projectInstalledSourceToSuccessor028,
   RenderCapabilityError,
@@ -71,7 +72,7 @@ export interface CoralCliIo {
 const USAGE = [
   'Usage:',
   '  coral validate [--strict] [file]',
-  '  coral render --format svg|html|ascii [--style lowfi|hifi|anemone|ane] [--theme light|dark] [--direction RIGHT|DOWN|LEFT|UP] [--columns 40|80|120] [file]',
+  '  coral render --format svg|html|ascii [--style lowfi|hifi|anemone|ane|parrotfish|pf] [--theme light|dark] [--direction RIGHT|DOWN|LEFT|UP] [--columns 40|80|120] [file]',
   '  coral convert [--from auto|coral|mermaid|dot|plantuml] [--to coral|json] [--strict] [--flowchart-target flowchart|block|architecture] [--edge-style-mode visual-safe|portable] [--state-target-edition 0.2.17|0.2.8] [file]',
   '',
   'Reads stdin when [file] is omitted or "-".',
@@ -318,10 +319,21 @@ async function handleRenderCommand(args: readonly string[], io: CoralCliIo): Pro
   }
 
   const rawStyle = (parsed.parsed.flags.get('--style') as string | undefined) ?? 'lowfi';
-  if (rawStyle !== 'lowfi' && rawStyle !== 'hifi' && rawStyle !== 'anemone' && rawStyle !== 'ane') {
-    return usageError(io, `Unsupported --style "${rawStyle}". Expected lowfi, hifi, anemone, or ane.`);
+  if (
+    rawStyle !== 'lowfi' &&
+    rawStyle !== 'hifi' &&
+    rawStyle !== 'anemone' &&
+    rawStyle !== 'ane' &&
+    rawStyle !== 'parrotfish' &&
+    rawStyle !== 'pf'
+  ) {
+    return usageError(io, `Unsupported --style "${rawStyle}". Expected lowfi, hifi, anemone, ane, parrotfish, or pf.`);
   }
-  const normalizedStyle = rawStyle === 'ane' ? 'anemone' : rawStyle;
+  const normalizedStyle = rawStyle === 'ane'
+    ? 'anemone'
+    : rawStyle === 'pf'
+      ? 'parrotfish'
+      : rawStyle;
 
   const rawTheme = (parsed.parsed.flags.get('--theme') as string | undefined) ?? 'light';
   if (rawTheme !== 'light' && rawTheme !== 'dark') {
@@ -512,10 +524,12 @@ async function handleRenderCommand(args: readonly string[], io: CoralCliIo): Pro
   }
 
   const direction = rawDirection ?? installedDocument.syntax.layoutOptions028?.direction ?? 'RIGHT';
+  const isParrotfish = normalizedStyle === 'parrotfish';
   const svgOptions: SvgOptions = {
     theme: rawTheme,
     style: normalizedStyle === 'lowfi' ? 'lowfi' : 'hifi',
-    renderStyle: normalizedStyle,
+    renderStyle: isParrotfish ? 'hifi' : normalizedStyle,
+    ...(isParrotfish ? { parrotfish: PARROTFISH_MODEL_0215 } : {}),
     layoutDirection: direction,
     notation: installedDocument.header.header.diagramType,
   };

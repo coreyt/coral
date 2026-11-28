@@ -9,6 +9,7 @@ import {
   assessSuccessorSourcePortReferences028,
   installedWrittenPortReferenceRanges028,
   notationRegistry,
+  PARROTFISH_MODEL_0215,
   parseInstalledDocument028,
   projectInstalledSourceToSuccessor028,
   resolveSuccessorGraphNodes028,
@@ -66,8 +67,9 @@ export const renderTool = {
             default: 'light',
           },
           style: {
-            type: 'string', enum: ['lowfi', 'hifi', 'anemone', 'ane'],
-            description: 'Visual style: monochrome lowfi or hifi, or peer anemone (shorthand ane); thx is reserved', default: 'lowfi',
+            type: 'string', enum: ['lowfi', 'hifi', 'anemone', 'ane', 'parrotfish', 'pf'],
+            description: 'Visual style: monochrome lowfi or hifi, modeled anemone (shorthand ane), or classic parrotfish (shorthand pf); thx is reserved',
+            default: 'lowfi',
           },
           nodeSpacing: { type: 'number', description: 'Spacing between nodes', default: 50 },
           fontSettings: {
@@ -132,7 +134,7 @@ const RenderOptionsSchema = z.object({
   format: z.enum(['svg', 'html']).default('svg'),
   direction: z.enum(['RIGHT', 'DOWN', 'LEFT', 'UP']).default('RIGHT'),
   theme: z.enum(['light', 'dark']).default('light'),
-  style: z.enum(['lowfi', 'hifi', 'anemone', 'ane']).default('lowfi'),
+  style: z.enum(['lowfi', 'hifi', 'anemone', 'ane', 'parrotfish', 'pf']).default('lowfi'),
   nodeSpacing: z.number().positive().default(50),
   fontSettings: DiagramFontSettingsSchema.optional(),
   fontFamily: z.string().trim().min(1).optional(),
@@ -334,11 +336,17 @@ export async function handleRender(args: unknown) {
     || options.fontSize !== undefined
     || options.fontWeight !== undefined
     || options.lineHeight !== undefined;
-  const normalizedStyle = options.style === 'ane' ? 'anemone' : options.style;
+  const normalizedStyle = options.style === 'ane'
+    ? 'anemone'
+    : options.style === 'pf'
+      ? 'parrotfish'
+      : options.style;
+  const isParrotfish = normalizedStyle === 'parrotfish';
   const svgOptions: SvgOptions = {
     theme: options.theme,
     style: normalizedStyle === 'lowfi' ? 'lowfi' : 'hifi',
-    renderStyle: normalizedStyle,
+    renderStyle: isParrotfish ? 'hifi' : normalizedStyle,
+    ...(isParrotfish ? { parrotfish: PARROTFISH_MODEL_0215 } : {}),
     layoutDirection: options.direction,
     ...(options.fontSettings !== undefined || scalarFontOption
       ? { fontSettings: (options.fontSettings ?? {}) as DiagramRenderFontSettings }

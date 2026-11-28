@@ -284,4 +284,85 @@ m2 = api -.-> client [return] as "201 Created"
     const directSvg = renderSvg(seqGraph, { style: 'hifi', parrotfish: 'parrotfish' });
     expect(directSvg).toBe(res.svg);
   });
+
+  it('parrotfish preset styles 0.2.17 UML State markers, notes, annotations, sketch labels, and BPMN end rings', async () => {
+    const STATE_0217 = `@diagram uml-state
+@coralVersion "0.2.17"
+start initial
+idle state as "Idle"
+fork1 fork
+running state as "Running"
+done final
+n1 note as "Check"
+start -> idle
+idle -> fork1
+fork1 -> running
+running -> done
+n1 -.- running [annotation]
+`;
+    const { laid, display, successorSource } = await layoutSample(STATE_0217, 'hifi');
+    const baseScene = prepareSpatialScene028(laid, {
+      style: 'hifi',
+      notation: 'uml-state',
+      edgeRoutes: laid.edgeRoutes,
+      semanticGraph: display,
+      successorSource,
+    });
+    const light = parrotfish(baseScene, 'parrotfish', { theme: 'light' });
+    expect(light.svg).toMatch(/data-coral-part-id="start:outline"[^>]*fill="#222222"[^>]*stroke="#222222"/);
+    expect(light.svg).toMatch(/data-coral-part-id="fork1:outline"[^>]*fill="#222222"[^>]*stroke="#222222"/);
+    expect(light.svg).toMatch(/data-coral-part-id="done:outline"[^>]*fill="#ffffff"[^>]*stroke="#222222"/);
+    expect(light.svg).toMatch(/data-coral-part-id="done:inner-outline"[^>]*fill="#222222"/);
+    expect(light.svg).toMatch(/data-coral-part-id="idle:outline"[^>]*fill="#fefece"[^>]*stroke="#a80036"/);
+    expect(light.svg).toMatch(/data-coral-part-id="n1:outline"[^>]*fill="#fbfb77"[^>]*stroke="#a80036"/);
+    expect(light.svg).toContain('stroke-dasharray="4 3"');
+
+    const dark = parrotfish(baseScene, 'pf', { theme: 'dark' });
+    expect(dark.svg).toMatch(/data-coral-part-id="start:outline"[^>]*fill="#d46a84"[^>]*stroke="#d46a84"/);
+    expect(dark.svg).toMatch(/data-coral-part-id="done:outline"[^>]*fill="#1b1b1b"[^>]*stroke="#d46a84"/);
+    expect(dark.svg).toMatch(/data-coral-part-id="done:inner-outline"[^>]*fill="#d46a84"/);
+
+    // Sketch labels stay borderless and unboxed in parrotfish preset
+    const SKETCH_SAMPLE = `@diagram sketch
+a box as "Idea"
+lbl label as "Loose Note"
+a -> lbl
+`;
+    const sketchLay = await layoutSample(SKETCH_SAMPLE, 'hifi');
+    const sketchScene = prepareSpatialScene028(sketchLay.laid, {
+      style: 'hifi',
+      notation: 'sketch',
+      edgeRoutes: sketchLay.laid.edgeRoutes,
+      semanticGraph: sketchLay.display,
+      successorSource: sketchLay.successorSource,
+    });
+    const sketchPf = parrotfish(sketchScene, 'parrotfish', { theme: 'light' });
+    expect(sketchPf.svg).toMatch(/data-coral-part-id="lbl:outline"[^>]*fill="none"[^>]*stroke="none"/);
+
+    // BPMN end events keep thick outer ring in parrotfish preset
+    const BPMN_SAMPLE = `@diagram bpmn
+s start as "Start"
+t task as "Work"
+e end as "End"
+s -> t
+t -> e
+`;
+    const bpmnLay = await layoutSample(BPMN_SAMPLE, 'hifi');
+    const bpmnScene = prepareSpatialScene028(bpmnLay.laid, {
+      style: 'hifi',
+      notation: 'bpmn',
+      edgeRoutes: bpmnLay.laid.edgeRoutes,
+      semanticGraph: bpmnLay.display,
+      successorSource: bpmnLay.successorSource,
+    });
+    const bpmnPf = parrotfish(bpmnScene, 'parrotfish', { theme: 'light' });
+    const startPart = bpmnPf.scene.parts.find((p) => p.id === 's:outline');
+    const endPart = bpmnPf.scene.parts.find((p) => p.id === 'e:outline');
+    expect(startPart?.geometry.kind).toBe('stencil-path');
+    expect(endPart?.geometry.kind).toBe('stencil-path');
+    if (startPart?.geometry.kind === 'stencil-path' && endPart?.geometry.kind === 'stencil-path') {
+      expect(endPart.geometry.strokeWidth * endPart.geometry.transform.scale).toBeCloseTo(3, 4);
+      expect(startPart.geometry.strokeWidth * startPart.geometry.transform.scale).toBeCloseTo(1.5, 4);
+    }
+  });
 });

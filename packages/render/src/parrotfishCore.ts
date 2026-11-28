@@ -272,12 +272,13 @@ function resolveAnemoneV2Node(ctx: ParrotfishNodeContext): ParrotfishNodeStyle |
 
   if (notation === 'sketch') {
     const ink = dark ? '#f3f0e8' : '#1e293b';
-    const fill = sym.includes('decision') ? (dark ? '#3a2f17' : '#fef3c7')
-      : sym.includes('circle') ? (dark ? '#162e22' : '#dcfce7')
-      : sym.includes('cloud') ? (dark ? '#381b22' : '#ffe4e6')
-      : sym.includes('box') ? (dark ? '#2a1e3b' : '#f3e8ff')
-      : sym.includes('label') ? 'none' : (dark ? '#162a3a' : '#e0f2fe');
-    return { fill, stroke: sym.includes('label') ? 'none' : ink, strokeWidth: 2, textColor: ink,
+    const isSketchLabel = sym.includes('label') || (ctx.type ?? '').toLowerCase() === 'label';
+    const fill = key.includes('decision') ? (dark ? '#3a2f17' : '#fef3c7')
+      : key.includes('circle') ? (dark ? '#162e22' : '#dcfce7')
+      : key.includes('cloud') ? (dark ? '#381b22' : '#ffe4e6')
+      : key.includes('box') ? (dark ? '#2a1e3b' : '#f3e8ff')
+      : isSketchLabel ? 'none' : (dark ? '#162a3a' : '#e0f2fe');
+    return { fill, stroke: isSketchLabel ? 'none' : ink, strokeWidth: 2, textColor: ink,
       secondaryTextColor: dark ? '#a8a29e' : '#57534e', glyphStroke: ink, glyphFill: ink, accentPosition: 'none' };
   }
   if (/(note|annot|callout|comment)/.test(key)) {
