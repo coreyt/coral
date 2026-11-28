@@ -529,90 +529,85 @@ function tryParseInlineLabeledConnector(
   pos: number,
   edgeId?: string,
 ): ParsedConnector | null {
-  // Check `-- text -->`, `-- text ---`, `-. text .->`, `-. text .-`, `== text ==>`, `== text ===`
+  // Check `-- text -->`/`-- text ----> `/`-- text ---`, `-. text .->`/`-. text .-`, `== text ==>`/`== text ===`
   if (s.startsWith('-- ', pos) || s.startsWith('--\t', pos)) {
     const contentStart = pos + 2;
-    const arrowIdx = findInlineEnd(s, contentStart, '-->');
-    const openIdx = findInlineEnd(s, contentStart, '---');
-    if (arrowIdx >= 0 && (openIdx < 0 || arrowIdx < openIdx)) {
-      return {
-        ...(edgeId ? { edgeId } : {}),
-        lineStyle: 'solid',
-        firstEnd: 'none',
-        secondEnd: 'arrow',
-        shaftLength: 1,
-        rawLabel: s.slice(contentStart, arrowIdx).trim(),
-        nextIndex: arrowIdx + 3,
-      };
-    }
-    if (openIdx >= 0) {
-      return {
-        ...(edgeId ? { edgeId } : {}),
-        lineStyle: 'solid',
-        firstEnd: 'none',
-        secondEnd: 'none',
-        shaftLength: 2,
-        rawLabel: s.slice(contentStart, openIdx).trim(),
-        nextIndex: openIdx + 3,
-      };
+    const match = findInlineShaftRun(s, contentStart, '-', 2);
+    if (match) {
+      if (match.endKind !== 'none') {
+        return {
+          ...(edgeId ? { edgeId } : {}),
+          lineStyle: 'solid',
+          firstEnd: 'none',
+          secondEnd: match.endKind,
+          shaftLength: Math.max(1, match.runLength - 1),
+          rawLabel: s.slice(contentStart, match.start).trim(),
+          nextIndex: match.nextIndex,
+        };
+      }
+      if (match.runLength >= 3) {
+        return {
+          ...(edgeId ? { edgeId } : {}),
+          lineStyle: 'solid',
+          firstEnd: 'none',
+          secondEnd: 'none',
+          shaftLength: Math.max(2, match.runLength - 1),
+          rawLabel: s.slice(contentStart, match.start).trim(),
+          nextIndex: match.nextIndex,
+        };
+      }
     }
   } else if (s.startsWith('-. ', pos) || s.startsWith('-.\t', pos)) {
     const contentStart = pos + 2;
-    const arrowIdx = findInlineEnd(s, contentStart, '.->');
-    const openIdx = findInlineEnd(s, contentStart, '.-');
-    if (arrowIdx >= 0 && (openIdx < 0 || arrowIdx <= openIdx)) {
+    const match = findInlineDottedEnd(s, contentStart);
+    if (match) {
       return {
         ...(edgeId ? { edgeId } : {}),
         lineStyle: 'dashed',
         firstEnd: 'none',
-        secondEnd: 'arrow',
-        shaftLength: 1,
-        rawLabel: s.slice(contentStart, arrowIdx).trim(),
-        nextIndex: arrowIdx + 3,
-      };
-    }
-    if (openIdx >= 0) {
-      return {
-        ...(edgeId ? { edgeId } : {}),
-        lineStyle: 'dashed',
-        firstEnd: 'none',
-        secondEnd: 'none',
-        shaftLength: 1,
-        rawLabel: s.slice(contentStart, openIdx).trim(),
-        nextIndex: openIdx + 2,
+        secondEnd: match.endKind,
+        shaftLength: match.shaftLength,
+        rawLabel: s.slice(contentStart, match.start).trim(),
+        nextIndex: match.nextIndex,
       };
     }
   } else if (s.startsWith('== ', pos) || s.startsWith('==\t', pos)) {
     const contentStart = pos + 2;
-    const arrowIdx = findInlineEnd(s, contentStart, '==>');
-    const openIdx = findInlineEnd(s, contentStart, '===');
-    if (arrowIdx >= 0 && (openIdx < 0 || arrowIdx < openIdx)) {
-      return {
-        ...(edgeId ? { edgeId } : {}),
-        lineStyle: 'thick',
-        firstEnd: 'none',
-        secondEnd: 'arrow',
-        shaftLength: 1,
-        rawLabel: s.slice(contentStart, arrowIdx).trim(),
-        nextIndex: arrowIdx + 3,
-      };
-    }
-    if (openIdx >= 0) {
-      return {
-        ...(edgeId ? { edgeId } : {}),
-        lineStyle: 'thick',
-        firstEnd: 'none',
-        secondEnd: 'none',
-        shaftLength: 2,
-        rawLabel: s.slice(contentStart, openIdx).trim(),
-        nextIndex: openIdx + 3,
-      };
+    const match = findInlineShaftRun(s, contentStart, '=', 2);
+    if (match) {
+      if (match.endKind !== 'none') {
+        return {
+          ...(edgeId ? { edgeId } : {}),
+          lineStyle: 'thick',
+          firstEnd: 'none',
+          secondEnd: match.endKind,
+          shaftLength: Math.max(1, match.runLength - 1),
+          rawLabel: s.slice(contentStart, match.start).trim(),
+          nextIndex: match.nextIndex,
+        };
+      }
+      if (match.runLength >= 3) {
+        return {
+          ...(edgeId ? { edgeId } : {}),
+          lineStyle: 'thick',
+          firstEnd: 'none',
+          secondEnd: 'none',
+          shaftLength: Math.max(2, match.runLength - 1),
+          rawLabel: s.slice(contentStart, match.start).trim(),
+          nextIndex: match.nextIndex,
+        };
+      }
     }
   }
   return null;
 }
 
-function findInlineEnd(s: string, start: number, token: string): number {
+function findInlineShaftRun(
+  s: string,
+  start: number,
+  ch: '-' | '=',
+  minCount: number,
+): { start: number; runLength: number; endKind: FlowchartEdgeEndKind; nextIndex: number } | null {
   let inDouble = false;
   for (let i = start; i < s.length; i++) {
     if (inDouble) {
@@ -621,14 +616,58 @@ function findInlineEnd(s: string, start: number, token: string): number {
       continue;
     }
     if (s[i] === '"') { inDouble = true; continue; }
-    if (s.startsWith(token, i)) {
+    if (s[i] === ch) {
       const before = s[i - 1];
-      if (before === ' ' || before === '\t') {
-        return i;
+      if (before !== ' ' && before !== '\t') continue;
+      let j = i;
+      while (j < s.length && s[j] === ch) j++;
+      const runLength = j - i;
+      if (runLength < minCount) { i = j - 1; continue; }
+      let endKind: FlowchartEdgeEndKind = 'none';
+      let nextIndex = j;
+      if (s[j] === '>') { endKind = 'arrow'; nextIndex = j + 1; }
+      else if (s[j] === 'o') { endKind = 'circle'; nextIndex = j + 1; }
+      else if (s[j] === 'x') { endKind = 'cross'; nextIndex = j + 1; }
+      const after = s[nextIndex];
+      if ((endKind !== 'none' || runLength >= 3) && (after === undefined || after === ' ' || after === '\t')) {
+        return { start: i, runLength, endKind, nextIndex };
       }
+      i = j - 1;
     }
   }
-  return -1;
+  return null;
+}
+
+function findInlineDottedEnd(
+  s: string,
+  start: number,
+): { start: number; shaftLength: number; endKind: FlowchartEdgeEndKind; nextIndex: number } | null {
+  let inDouble = false;
+  for (let i = start; i < s.length; i++) {
+    if (inDouble) {
+      if (s[i] === '\\') { i++; continue; }
+      if (s[i] === '"') inDouble = false;
+      continue;
+    }
+    if (s[i] === '"') { inDouble = true; continue; }
+    if (s[i] === '.' && s[i + 1] === '-') {
+      const before = s[i - 1];
+      if (before !== ' ' && before !== '\t') continue;
+      let j = i + 1;
+      while (j < s.length && (s[j] === '-' || s[j] === '.')) j++;
+      let endKind: FlowchartEdgeEndKind = 'none';
+      let nextIndex = j;
+      if (s[j] === '>') { endKind = 'arrow'; nextIndex = j + 1; }
+      else if (s[j] === 'o') { endKind = 'circle'; nextIndex = j + 1; }
+      else if (s[j] === 'x') { endKind = 'cross'; nextIndex = j + 1; }
+      const after = s[nextIndex];
+      if (after === undefined || after === ' ' || after === '\t') {
+        return { start: i, shaftLength: Math.max(1, j - i - 1), endKind, nextIndex };
+      }
+      i = j - 1;
+    }
+  }
+  return null;
 }
 
 function parseNodeGroup(

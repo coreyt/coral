@@ -170,7 +170,7 @@ export function transpileMermaidToCoral(
       break;
     }
     case 'er': {
-      const ast = parseErDiagram(pre.bodyLines, pre.lineIndex, diagnostics);
+      const ast = parseErDiagram(pre.bodyLines, pre.lineIndex, diagnostics, maxNestingDepth);
       const lowered = lowerErDiagram(ast, { comments: pre.comments }, diagnostics);
       ir = lowered.ir;
       idMap = lowered.idMap;

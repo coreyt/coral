@@ -1,5 +1,12 @@
 import { normalizeMermaidText } from '../lexer.js';
-import type { ErAst, ErAttributeAst, ErCardinality, ErRelationStmt } from '../parsers/er.js';
+import type {
+  ErAst,
+  ErAttributeAst,
+  ErCardinality,
+  ErRelationStmt,
+  ErStmt,
+  ErSubgraphStmt,
+} from '../parsers/er.js';
 import type {
   CoralEdgeIr,
   CoralErdColumnIr,
@@ -19,10 +26,26 @@ import {
 
 interface EntityRecord {
   rawId: string;
-  coralId: string;
+  localId: string;
+  qualifiedId: string;
+  parentGroup: ErGroupRecord | null;
   label?: string;
   attributes: ErAttributeAst[];
   range: TranspileSourceRange;
+}
+
+interface ErGroupRecord {
+  rawId?: string;
+  rawTitle?: string;
+  localId: string;
+  qualifiedId: string;
+  takenLocalIds: Set<string>;
+  childrenOrder: Array<EntityRecord | ErGroupRecord>;
+  range: TranspileSourceRange;
+}
+
+function isGroupRecord(item: EntityRecord | ErGroupRecord): item is ErGroupRecord {
+  return 'childrenOrder' in item;
 }
 
 function mapDirection(dir: 'TD' | 'TB' | 'BT' | 'LR' | 'RL'): CoralLayoutDirection {
@@ -59,7 +82,6 @@ function sanitizeErColumnType(
   range: TranspileSourceRange,
 ): string {
   const trimmed = rawType.trim();
-  // M7: Valid Coral ERD type: bare ASCII id, optionally followed by safe `(params)` like `varchar(255)` or `decimal(10, 2)`
   const paramMatch = /^([A-Za-z_][A-Za-z0-9_]*)(\([A-Za-z0-9_,\s.]+\))$/.exec(trimmed);
   if (paramMatch) {
     return `${paramMatch[1]}${paramMatch[2]}`;
@@ -67,7 +89,6 @@ function sanitizeErColumnType(
   if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(trimmed)) {
     return trimmed;
   }
-  // Convert `string[]` -> `string_array`, `List~int~` -> `List_int`, `double-precision` -> `double_precision`
   const transformed = trimmed
     .replace(/\[\]/g, '_array')
     .replace(/~/g, '_')
@@ -88,68 +109,117 @@ export function lowerErDiagram(
   diagnostics: TranspileDiagnostic[],
 ): { ir: CoralSourceIr; idMap: Record<string, string> } {
   const idMap = createNullMap<string>();
-  const takenIds = new Set<string>();
+  const rootTakenIds = new Set<string>();
+  const rootOrder: Array<EntityRecord | ErGroupRecord> = [];
   const entitiesByRaw = new Map<string, EntityRecord>();
-  const entityOrder: EntityRecord[] = [];
   const relations: ErRelationStmt[] = [];
   const classDefs = new Map<string, ParsedCssNodeStyle>();
   const classAssignments = new Map<string, string[]>();
   const inlineStyles = new Map<string, ParsedCssNodeStyle>();
+  let anonSubgraphCounter = 0;
 
-  const ensureEntity = (rawId: string, range: TranspileSourceRange, rawAlias?: string): EntityRecord => {
+  const addClassAssignment = (rawId: string, className: string) => {
+    const list = classAssignments.get(rawId) ?? [];
+    if (!list.includes(className)) list.push(className);
+    classAssignments.set(rawId, list);
+  };
+
+  const ensureEntity = (
+    rawId: string,
+    range: TranspileSourceRange,
+    parentGroup: ErGroupRecord | null,
+    rawAlias?: string,
+  ): EntityRecord => {
     let rec = entitiesByRaw.get(rawId);
     const aliasLabel = rawAlias !== undefined ? normalizeMermaidText(rawAlias, diagnostics, range) : undefined;
     if (!rec) {
-      const { coralId, renamed } = allocateSanitizedId(rawId, takenIds, diagnostics, range);
-      idMap[coralId] = rawId;
+      const taken = parentGroup ? parentGroup.takenLocalIds : rootTakenIds;
+      const { coralId: localId, renamed } = allocateSanitizedId(rawId, taken, diagnostics, range);
+      const qualifiedId = parentGroup ? `${parentGroup.qualifiedId}.${localId}` : localId;
+      idMap[qualifiedId] = rawId;
       const fallbackLabel = renamed ? normalizeMermaidText(rawId, diagnostics, range, { unquote: false }) : undefined;
       rec = {
         rawId,
-        coralId,
+        localId,
+        qualifiedId,
+        parentGroup,
         ...(aliasLabel !== undefined ? { label: aliasLabel } : fallbackLabel !== undefined ? { label: fallbackLabel } : {}),
         attributes: [],
         range,
       };
       entitiesByRaw.set(rawId, rec);
-      entityOrder.push(rec);
+      if (parentGroup) parentGroup.childrenOrder.push(rec);
+      else rootOrder.push(rec);
     } else if (aliasLabel !== undefined) {
       rec.label = aliasLabel;
     }
     return rec;
   };
 
-  for (const stmt of ast.statements) {
-    switch (stmt.kind) {
-      case 'entity': {
-        const rec = ensureEntity(stmt.rawId, stmt.range, stmt.rawAlias);
-        for (const attr of stmt.attributes) rec.attributes.push(attr);
-        break;
-      }
-      case 'relation': {
-        ensureEntity(stmt.leftId, stmt.range);
-        ensureEntity(stmt.rightId, stmt.range);
-        relations.push(stmt);
-        break;
-      }
-      case 'classDef':
-        classDefs.set(stmt.name, parseCssStyleString(stmt.rawStyle, diagnostics, stmt.range));
-        break;
-      case 'class':
-        for (const id of stmt.targetIds) {
-          const list = classAssignments.get(id) ?? [];
-          if (!list.includes(stmt.className)) list.push(stmt.className);
-          classAssignments.set(id, list);
+  const createGroup = (stmt: ErSubgraphStmt, parentGroup: ErGroupRecord | null): ErGroupRecord => {
+    const taken = parentGroup ? parentGroup.takenLocalIds : rootTakenIds;
+    const rawBasis = stmt.rawId ?? stmt.rawTitle ?? `group_${++anonSubgraphCounter}`;
+    const { coralId: localId } = allocateSanitizedId(rawBasis, taken, diagnostics, stmt.range);
+    const qualifiedId = parentGroup ? `${parentGroup.qualifiedId}.${localId}` : localId;
+    if (stmt.rawId ?? stmt.rawTitle) {
+      idMap[qualifiedId] = stmt.rawId ?? stmt.rawTitle!;
+    }
+    const group: ErGroupRecord = {
+      ...(stmt.rawId !== undefined ? { rawId: stmt.rawId } : {}),
+      ...(stmt.rawTitle !== undefined ? { rawTitle: stmt.rawTitle } : {}),
+      localId,
+      qualifiedId,
+      takenLocalIds: new Set<string>(),
+      childrenOrder: [],
+      range: stmt.range,
+    };
+    if (parentGroup) parentGroup.childrenOrder.push(group);
+    else rootOrder.push(group);
+    return group;
+  };
+
+  const walkStatements = (stmts: readonly ErStmt[], parentGroup: ErGroupRecord | null) => {
+    for (const stmt of stmts) {
+      switch (stmt.kind) {
+        case 'subgraph': {
+          const group = createGroup(stmt, parentGroup);
+          walkStatements(stmt.statements, group);
+          break;
         }
-        break;
-      case 'style': {
-        const parsed = parseCssStyleString(stmt.rawStyle, diagnostics, stmt.range);
-        inlineStyles.set(stmt.targetId, mergeParsedStyles(inlineStyles.get(stmt.targetId), parsed));
-        break;
+        case 'entity': {
+          const rec = ensureEntity(stmt.rawId, stmt.range, parentGroup, stmt.rawAlias);
+          for (const attr of stmt.attributes) rec.attributes.push(attr);
+          if (stmt.className) addClassAssignment(stmt.rawId, stmt.className);
+          break;
+        }
+        case 'relation': {
+          ensureEntity(stmt.leftId, stmt.range, parentGroup);
+          ensureEntity(stmt.rightId, stmt.range, parentGroup);
+          if (stmt.leftClassName) addClassAssignment(stmt.leftId, stmt.leftClassName);
+          if (stmt.rightClassName) addClassAssignment(stmt.rightId, stmt.rightClassName);
+          relations.push(stmt);
+          break;
+        }
+        case 'classDef':
+          classDefs.set(stmt.name, parseCssStyleString(stmt.rawStyle, diagnostics, stmt.range));
+          break;
+        case 'class':
+          for (const id of stmt.targetIds) {
+            addClassAssignment(id, stmt.className);
+          }
+          break;
+        case 'style': {
+          const parsed = parseCssStyleString(stmt.rawStyle, diagnostics, stmt.range);
+          inlineStyles.set(stmt.targetId, mergeParsedStyles(inlineStyles.get(stmt.targetId), parsed));
+          break;
+        }
       }
     }
-  }
+  };
 
-  const nodes: CoralNodeIr[] = entityOrder.map((rec) => {
+  walkStatements(ast.statements, null);
+
+  const lowerEntityNode = (rec: EntityRecord): CoralNodeIr => {
     const columns: CoralErdColumnIr[] = [];
     const seenCols = new Set<string>();
     for (const attr of rec.attributes) {
@@ -200,19 +270,35 @@ export function lowerErDiagram(
     if (inline) mergedStyle = mergeParsedStyles(mergedStyle, inline);
     const styleStr = formatCoralNodeStyle(mergedStyle);
 
-    const label = rec.label !== undefined && rec.label !== rec.coralId ? rec.label : undefined;
+    const label = rec.label !== undefined && rec.label !== rec.localId ? rec.label : undefined;
     return {
-      id: rec.coralId,
+      id: rec.localId,
       kind: 'entity',
       ...(label !== undefined ? { label } : {}),
       ...(styleStr ? { style: styleStr } : {}),
       ...(columns.length > 0 ? { columns } : {}),
     };
-  });
+  };
+
+  const lowerItem = (item: EntityRecord | ErGroupRecord): CoralNodeIr => {
+    if (!isGroupRecord(item)) return lowerEntityNode(item);
+    const title = item.rawTitle !== undefined
+      ? normalizeMermaidText(item.rawTitle, diagnostics, item.range)
+      : undefined;
+    const label = title !== undefined && title !== item.localId ? title : undefined;
+    return {
+      id: item.localId,
+      kind: 'group',
+      ...(label !== undefined ? { label } : {}),
+      children: item.childrenOrder.map(lowerItem),
+    };
+  };
+
+  const nodes: CoralNodeIr[] = rootOrder.map(lowerItem);
 
   const edges: CoralEdgeIr[] = relations.map((rel) => {
-    const source = entitiesByRaw.get(rel.leftId)!.coralId;
-    const target = entitiesByRaw.get(rel.rightId)!.coralId;
+    const source = entitiesByRaw.get(rel.leftId)!.qualifiedId;
+    const target = entitiesByRaw.get(rel.rightId)!.qualifiedId;
     const operator = `${mapLeftCard(rel.leftCard)}${rel.identifying ? '--' : '..'}${mapRightCard(rel.rightCard)}`;
     const label = rel.rawLabel !== undefined
       ? normalizeMermaidText(rel.rawLabel, diagnostics, rel.range)

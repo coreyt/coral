@@ -282,4 +282,36 @@ describe('transpileAndVerifyMermaidToCoral Stage 4B end-to-end verification', ()
     expect(strictRefused.coral).toBeUndefined();
     expect(strictRefused.diagnostics.some((d) => d.code === 'coral.transpile.strict.refused')).toBe(true);
   });
+
+  it('verifies and renders extended flowchart inline arrows, class realization -.-|>, and nested ER subgraphs to SVG', async () => {
+    const flow = transpileAndVerifyMermaidToCoral('flowchart TD\n  A[Start] --> B{Check}\n  B -- No ----> E[End]\n');
+    expect(flow.ok).toBe(true);
+    expect(flow.visualRenderable).toBe(true);
+    await renderCoralToSvg(flow.coral!);
+
+    const cls = transpileAndVerifyMermaidToCoral('classDiagram\n  Service ..|> IService : implements\n  Impl <|.. Base\n');
+    expect(cls.ok).toBe(true);
+    expect(cls.visualRenderable).toBe(true);
+    await renderCoralToSvg(cls.coral!);
+
+    const er = transpileAndVerifyMermaidToCoral([
+      'erDiagram',
+      '  subgraph "Customer Domain"',
+      '    CUSTOMER {',
+      '      string name',
+      '    }',
+      '  end',
+      '  subgraph title2',
+      '    CAR ||--o{ NAMED-DRIVER : allows',
+      '    subgraph title3',
+      '      PERSON {',
+      '        string firstName',
+      '      }',
+      '    end',
+      '  end',
+    ].join('\n'));
+    expect(er.ok).toBe(true);
+    expect(er.visualRenderable).toBe(true);
+    await renderCoralToSvg(er.coral!);
+  });
 });

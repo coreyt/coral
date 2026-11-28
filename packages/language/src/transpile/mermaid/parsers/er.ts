@@ -16,6 +16,7 @@ export interface ErEntityDecl {
   kind: 'entity';
   rawId: string;
   rawAlias?: string;
+  className?: string;
   attributes: ErAttributeAst[];
   range: TranspileSourceRange;
 }
@@ -23,11 +24,21 @@ export interface ErEntityDecl {
 export interface ErRelationStmt {
   kind: 'relation';
   leftId: string;
+  leftClassName?: string;
   rightId: string;
+  rightClassName?: string;
   leftCard: ErCardinality;
   rightCard: ErCardinality;
   identifying: boolean;
   rawLabel?: string;
+  range: TranspileSourceRange;
+}
+
+export interface ErSubgraphStmt {
+  kind: 'subgraph';
+  rawId?: string;
+  rawTitle?: string;
+  statements: ErStmt[];
   range: TranspileSourceRange;
 }
 
@@ -55,6 +66,7 @@ export interface ErClassAssignStmt {
 export type ErStmt =
   | ErEntityDecl
   | ErRelationStmt
+  | ErSubgraphStmt
   | ErStyleStmt
   | ErClassDefStmt
   | ErClassAssignStmt;
@@ -70,6 +82,8 @@ const LEFT_SYMBOLIC: Readonly<Record<string, ErCardinality>> = {
   'o|': 'zero-or-one',
   '}|': 'one-or-many',
   '}o': 'zero-or-many',
+  '|{': 'one-or-many',
+  'o{': 'zero-or-many',
 };
 
 const RIGHT_SYMBOLIC: Readonly<Record<string, ErCardinality>> = {
@@ -78,6 +92,8 @@ const RIGHT_SYMBOLIC: Readonly<Record<string, ErCardinality>> = {
   '|o': 'zero-or-one',
   '|{': 'one-or-many',
   'o{': 'zero-or-many',
+  '}|': 'one-or-many',
+  '}o': 'zero-or-many',
 };
 
 const ENGLISH_CARDINALITIES: ReadonlyArray<[string, ErCardinality]> = [
@@ -90,6 +106,8 @@ const ENGLISH_CARDINALITIES: ReadonlyArray<[string, ErCardinality]> = [
   ['only one', 'one'],
   ['many(0+)', 'zero-or-many'],
   ['many(1+)', 'one-or-many'],
+  ['many(0)', 'zero-or-many'],
+  ['many(1)', 'one-or-many'],
   ['many', 'zero-or-many'],
   ['one', 'one'],
   ['0+', 'zero-or-many'],
@@ -103,10 +121,11 @@ function unquoteEntity(raw: string): string {
   return t;
 }
 
-function readEntityToken(s: string, pos: number): { id: string; next: number } | null {
+function readEntityToken(s: string, pos: number): { id: string; className?: string; next: number } | null {
   let i = pos;
   while (i < s.length && (s[i] === ' ' || s[i] === '\t')) i++;
   if (i >= s.length) return null;
+  let id: string;
   if (s[i] === '"') {
     const start = i + 1;
     i++;
@@ -115,12 +134,25 @@ function readEntityToken(s: string, pos: number): { id: string; next: number } |
       i++;
     }
     if (i >= s.length) return null;
-    return { id: s.slice(start, i), next: i + 1 };
+    id = s.slice(start, i);
+    i++;
+  } else {
+    const start = i;
+    while (i < s.length && !/\s/.test(s[i]!) && s[i] !== '{' && s[i] !== '}' && s[i] !== ':' && s[i] !== '|') i++;
+    if (i === start) return null;
+    id = s.slice(start, i);
   }
-  const start = i;
-  while (i < s.length && !/\s/.test(s[i]!) && s[i] !== '{' && s[i] !== '}' && s[i] !== ':' && s[i] !== '|') i++;
-  if (i === start) return null;
-  return { id: s.slice(start, i), next: i };
+  let className: string | undefined;
+  if (s.startsWith(':::', i)) {
+    const clsStart = i + 3;
+    let j = clsStart;
+    while (j < s.length && /[A-Za-z0-9_-]/.test(s[j]!)) j++;
+    if (j > clsStart) {
+      className = s.slice(clsStart, j);
+      i = j;
+    }
+  }
+  return { id, ...(className ? { className } : {}), next: i };
 }
 
 function matchCardinality(s: string, pos: number, side: 'left' | 'right'): { card: ErCardinality; next: number } | null {
@@ -188,7 +220,9 @@ function tryParseErRelation(trimmed: string, range: TranspileSourceRange): ErRel
   return {
     kind: 'relation',
     leftId: leftTok.id,
+    ...(leftTok.className ? { leftClassName: leftTok.className } : {}),
     rightId: rightTok.id,
+    ...(rightTok.className ? { rightClassName: rightTok.className } : {}),
     leftCard: leftCard.card,
     rightCard: rightCard.card,
     identifying,
@@ -258,12 +292,38 @@ function parseErAttributeLine(trimmed: string, range: TranspileSourceRange): ErA
   };
 }
 
+function parseSubgraphHeader(rest: string): { rawId?: string; rawTitle?: string } {
+  const t = rest.trim();
+  if (!t) return {};
+  // `id [Title]` or `id["Title"]`
+  const bracketIdx = t.indexOf('[');
+  if (bracketIdx > 0 && t.endsWith(']')) {
+    const rawId = unquoteEntity(t.slice(0, bracketIdx).trim());
+    const inside = t.slice(bracketIdx + 1, -1).trim();
+    const rawTitle = unquoteEntity(inside);
+    return { ...(rawId ? { rawId } : {}), ...(rawTitle ? { rawTitle } : {}) };
+  }
+  // `"Customer Domain"` -> title only (no explicit id)
+  if (t.startsWith('"') && t.endsWith('"') && t.length >= 2) {
+    return { rawTitle: t.slice(1, -1) };
+  }
+  // Single bare token `title1` -> id & title
+  if (!/\s/.test(t)) {
+    return { rawId: t, rawTitle: t };
+  }
+  return { rawTitle: t };
+}
+
 export function parseErDiagram(
   bodyLines: readonly BodyLine[],
   lineIndex: LineIndex,
   diagnostics: TranspileDiagnostic[],
+  maxNestingDepth = 32,
 ): ErAst {
-  const statements: ErStmt[] = [];
+  const rootStatements: ErStmt[] = [];
+  const subgraphStack: ErSubgraphStmt[] = [];
+  const currentStatements = (): ErStmt[] =>
+    subgraphStack.length > 0 ? subgraphStack[subgraphStack.length - 1]!.statements : rootStatements;
   let direction: ErAst['direction'];
   let activeEntity: ErEntityDecl | null = null;
 
@@ -293,10 +353,42 @@ export function parseErDiagram(
       continue;
     }
 
+    // 0. `subgraph ...` and `end`
+    if (/^subgraph(?:\s+|$)/i.test(trimmed)) {
+      if (subgraphStack.length >= maxNestingDepth) {
+        diagnostics.push({
+          severity: 'error',
+          code: 'mermaid.input.nesting.exceeded',
+          message: `ER subgraph nesting depth exceeds maximum allowed (${maxNestingDepth}).`,
+          range: stmtRange,
+        });
+        continue;
+      }
+      const header = parseSubgraphHeader(trimmed.slice('subgraph'.length));
+      const sg: ErSubgraphStmt = {
+        kind: 'subgraph',
+        ...(header.rawId !== undefined ? { rawId: header.rawId } : {}),
+        ...(header.rawTitle !== undefined ? { rawTitle: header.rawTitle } : {}),
+        statements: [],
+        range: stmtRange,
+      };
+      currentStatements().push(sg);
+      subgraphStack.push(sg);
+      continue;
+    }
+    if (/^end$/i.test(trimmed)) {
+      if (subgraphStack.length > 0) {
+        subgraphStack.pop();
+        continue;
+      }
+    }
+
     // 1. `direction TB|BT|LR|RL`
     const dirMatch = /^direction\s+(TD|TB|BT|LR|RL)$/i.exec(trimmed);
     if (dirMatch) {
-      direction = dirMatch[1]!.toUpperCase() as ErAst['direction'];
+      if (subgraphStack.length === 0) {
+        direction = dirMatch[1]!.toUpperCase() as ErAst['direction'];
+      }
       continue;
     }
 
@@ -305,7 +397,7 @@ export function parseErDiagram(
       const rest = trimmed.slice('classDef'.length).trim();
       const sp = rest.search(/\s/);
       if (sp > 0) {
-        statements.push({
+        currentStatements().push({
           kind: 'classDef',
           name: rest.slice(0, sp).trim(),
           rawStyle: rest.slice(sp + 1).trim(),
@@ -318,7 +410,7 @@ export function parseErDiagram(
       const rest = trimmed.slice('class'.length).trim();
       const split = splitTrailingToken(rest);
       if (split) {
-        statements.push({
+        currentStatements().push({
           kind: 'class',
           targetIds: split.head.split(',').map((s) => s.trim()).filter(Boolean),
           className: split.tail,
@@ -331,7 +423,7 @@ export function parseErDiagram(
       const rest = trimmed.slice('style'.length).trim();
       const sp = rest.search(/\s/);
       if (sp > 0) {
-        statements.push({
+        currentStatements().push({
           kind: 'style',
           targetId: rest.slice(0, sp).trim(),
           rawStyle: rest.slice(sp + 1).trim(),
@@ -344,14 +436,23 @@ export function parseErDiagram(
     // 3. Relationship
     const rel = tryParseErRelation(trimmed, stmtRange);
     if (rel) {
-      statements.push(rel);
+      currentStatements().push(rel);
       continue;
     }
 
-    // 4. Entity block `ENTITY {` or `ENTITY {}` or `p["Person"] {` or standalone `ENTITY` / `p["Person"]`
+    // 4. Entity block `ENTITY {` or `ENTITY {}` or `p["Person"] {` or standalone `ENTITY` / `ENTITY:::cls`
     const opensBlock = trimmed.endsWith('{');
     const emptyBlock = trimmed.endsWith('{}');
     let head = emptyBlock ? trimmed.slice(0, -2).trim() : opensBlock ? trimmed.slice(0, -1).trim() : trimmed;
+    let className: string | undefined;
+    const clsIdx = head.indexOf(':::');
+    if (clsIdx > 0) {
+      const afterCls = head.slice(clsIdx + 3).trim();
+      if (/^[A-Za-z0-9_-]+$/.test(afterCls)) {
+        className = afterCls;
+        head = head.slice(0, clsIdx).trim();
+      }
+    }
     let rawAlias: string | undefined;
     const aliasIdx = head.indexOf('[');
     if (aliasIdx > 0 && head.endsWith(']')) {
@@ -366,10 +467,11 @@ export function parseErDiagram(
         kind: 'entity',
         rawId,
         ...(rawAlias !== undefined ? { rawAlias } : {}),
+        ...(className ? { className } : {}),
         attributes: [],
         range: stmtRange,
       };
-      statements.push(entity);
+      currentStatements().push(entity);
       if (opensBlock && !emptyBlock) {
         activeEntity = entity;
       }
@@ -394,5 +496,14 @@ export function parseErDiagram(
     });
   }
 
-  return { ...(direction ? { direction } : {}), statements };
+  for (const unclosed of subgraphStack) {
+    diagnostics.push({
+      severity: 'error',
+      code: 'mermaid.er.subgraph.unclosed',
+      message: `ER subgraph "${unclosed.rawTitle ?? unclosed.rawId ?? 'subgraph'}" is missing a closing "end".`,
+      range: unclosed.range,
+    });
+  }
+
+  return { ...(direction ? { direction } : {}), statements: rootStatements };
 }

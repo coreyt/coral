@@ -1085,4 +1085,57 @@ describe('FIX-1 Adversarial Security & Compiler Review Regressions (C1-C3, M1-M7
     expect(codes(cls)).toContain('mermaid.class.member.duplicate.dropped');
     expect(transpileMermaidToCoral('classDiagram\n  class Box {\n    +String id\n    +int id\n  }', { mode: 'strict' }).ok).toBe(false);
   });
+
+  it('Real-world corpus regressions: extended inline arrows, class -.-|> realization, ER nested subgraphs, :::class, and many(0)', () => {
+    const flow = transpileMermaidToCoral([
+      'flowchart TD',
+      '  A[Start] --> B{Is it?}',
+      '  B -- Yes --> C[OK]',
+      '  B -- No ----> E[End]',
+      '  C == Fast ====> E',
+      '  A -. Async .---> E',
+    ].join('\n'));
+    expect(flow.ok).toBe(true);
+    expect(flow.coral).toContain('B ---> E as "No"');
+    expect(flow.coral).toContain('C ---> E as "Fast"');
+    expect(flow.coral).toContain('A -.-> E as "Async"');
+
+    const cls = transpileMermaidToCoral([
+      'classDiagram',
+      '  classA ..|> classB : Realization',
+      '  classC <|.. classD',
+      '  classO .. classP : Link(Dashed)',
+    ].join('\n'));
+    expect(cls.ok).toBe(true);
+    expect(cls.coral).toContain('classA -.-|> classB [realization] as "Realization"');
+    expect(cls.coral).toContain('classD -.-|> classC [realization]');
+    expect(cls.coral).toContain('classO -.- classP [association] as "Link(Dashed)"');
+
+    const er = transpileMermaidToCoral([
+      'erDiagram',
+      '  subgraph "Customer Domain"',
+      '    CUSTOMER {',
+      '      string name',
+      '    }',
+      '  end',
+      '  subgraph title2',
+      '    CAR:::foo ||--o{ NAMED-DRIVER : allows',
+      '    subgraph title3',
+      '      PERSON o{--|| HOUSE:::bar : has',
+      '    end',
+      '  end',
+      '  PERSON many(0) optionally to 0+ CUSTOMER : links',
+      '  classDef foo stroke:#f00',
+      '  classDef bar stroke:#0f0',
+    ].join('\n'));
+    expect(er.ok).toBe(true);
+    expect(er.coral).toContain('group as "Customer Domain"');
+    expect(er.coral).toContain('title2 group {');
+    expect(er.coral).toContain('title3 group {');
+    expect(er.coral).toContain('title2.CAR ||--o{ title2.NAMED_DRIVER as "allows"');
+    expect(er.coral).toContain('title2.title3.PERSON }o--|| title2.title3.HOUSE as "has"');
+    expect(er.coral).toContain('title2.title3.PERSON }o..o{ Customer_Domain.CUSTOMER as "links"');
+    expect(er.coral).toContain('CAR entity [style: "stroke: #ff0000"]');
+    expect(er.coral).toContain('HOUSE entity [style: "stroke: #00ff00"]');
+  });
 });

@@ -635,11 +635,11 @@ export function lowerClassDiagram(
         break;
       case '<|..':
         flip();
-        operator = '-.|>';
+        operator = '-.-|>';
         relation = 'realization';
         break;
       case '..|>':
-        operator = '-.|>';
+        operator = '-.-|>';
         relation = 'realization';
         break;
       case '*--':
@@ -705,7 +705,7 @@ export function lowerClassDiagram(
         firstEnd = 'triangle';
         break;
       case '<|..|>':
-        operator = '-.|>';
+        operator = '-.-|>';
         relation = 'realization';
         firstEnd = 'triangle';
         break;

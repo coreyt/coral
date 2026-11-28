@@ -16,8 +16,8 @@ TypeScript `6.0.3`, and `@graph-ir/core@0.2.4`.
 | `check-docs-structure.mjs` & `check-markdown-links.mjs` | Passed (56 pages, 24 features) |
 | `npm run audit:dependencies` | Passed (`highOrCritical: 0`) |
 | Source & contract script suites (`api-compat`, `release-version`, `capability-truth`, `library-docs`, `coral-corpus`, `fuzz-model`, `verify-language-spec`, `verify-graphir-adoption`) | Passed |
-| `@coral-viz/language` (`test:run`) | Passed (44/44 files, 1,715/1,715 tests) |
-| `@coral-viz/render` (`test:run`) | Passed (139/139 files, 3,112/3,112 tests, including `cli.test.ts` 9/9) |
+| `@coral-viz/language` (`test:run`) | Passed (44/44 files, 1,716/1,716 tests) |
+| `@coral-viz/render` (`test:run`) | Passed (139/139 files, 3,113/3,113 tests, including `cli.test.ts` 9/9 and `mermaidTranspileVerify.test.ts` 11/11) |
 | `@coral-viz/browser` (`test:run` + gzip gate) | Passed (21/21 files, 354/354 tests; IIFE `gzip -9` = `815,833` B < `819,200` B / 800 KiB) |
 | `@coral-viz/viz` (`test:coverage`) | Passed (51/51 files, 922/922 tests) |
 | `@coral-viz/mcp-server` (`test:coverage`) | Passed (23/23 files, 455/455 tests) |
@@ -25,6 +25,7 @@ TypeScript `6.0.3`, and `@graph-ir/core@0.2.4`.
 | `tree-sitter-coral` native build, corpus, `test:parity`, and `verify-packed-tree-sitter.mjs` | Passed (136/136 parity tests) |
 | `scripts/verify-packed-language.mjs` | Passed |
 | `npm run smoke:consumer -- --cases=render,mcp-server` (Gate 2 npm bin resolution for `coral` and `coral-mcp` + `installed-renderer`) | Passed on `linux-x64` |
+| 60-diagram real-world Mermaid.js complexity-stratified corpus (12 each: Flowchart/FlowSight, Sequence, Class, ER, State) | Passed: 60/60 `mermaid.js` Chromium render, 60/60 Coral transpilation (41/60 lossless), 60/60 Coral `anemone` SVG render + Chromium DOM bbox check |
 
 ## Pending owner-gated steps
 
