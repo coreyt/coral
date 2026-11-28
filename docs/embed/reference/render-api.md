@@ -42,6 +42,15 @@ source-to-scene path and returns the faithful portable `sourceGraph`.
 
 ## Character output
 
+::: warning Deprecated and no longer supported
+The legacy `0.2.8` character renderer (`renderInstalledCharacterPreview028`,
+`renderCharacterGraph028`, `adaptCharacterGraph028`, and
+`createCharacterDebugView028`) is **hard-deprecated as of Coral `0.2.17` and is
+no longer supported**. Do not build new integrations against these APIs. They
+are being replaced in `0.2.17` by the Plain-Text and ASCII Diagram Renderer
+(`dev/designs/text-renderer-spec.md`).
+:::
+
 `renderInstalledCharacterPreview028(source, { columns: 120 })` reads current
 Coral source and returns `text`, `charset`, `width`, `height`, `diagnostics` and
 a copied GraphIR 3 display `graph`. Saved source remains authoritative. The API

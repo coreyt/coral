@@ -1,8 +1,9 @@
 # Coral Plain-Text and ASCII Diagram Renderer Specification
 
 Status: Approved design specification (`2026-11-28`), scheduled for **Coral
-`0.2.26`** (docs-only record on `dev/0.2.17`; no implementation code changes in
-`0.2.17`).
+`0.2.17`** (the active unreleased release candidate on `dev/0.2.17`). The
+legacy `0.2.8` character preview (`renderInstalledCharacterPreview028` and
+`renderCharacterGraph028`) is **hard-deprecated and no longer supported**.
 
 Inputs: Owner design interview (`2026-11-28`) and audit of the current `0.2.8`
 character preview modules
@@ -39,8 +40,8 @@ workflows:
 
 | Decision area | Agreed choice |
 | --- | --- |
-| Delivery mode | Approved requirements, architecture, and acceptance spec recorded first; scheduled for Coral `0.2.26`. |
-| Legacy compatibility | No backward compatibility for `renderInstalledCharacterPreview028`; migrate reusable code/practices (byte verifier, `\u{HEX}` escaping, ELK cell routing, MonoTrue endpoint/role tables, debug view) into a new clean module tree. |
+| Delivery mode | Approved requirements, architecture, and acceptance spec scheduled for implementation in **Coral `0.2.17`** (unreleased). |
+| Legacy compatibility | Legacy `0.2.8` character preview (`renderInstalledCharacterPreview028`, `renderCharacterGraph028`) is **hard-deprecated (no longer supported)** with no backward-compatibility obligation; migrate reusable code/practices (byte verifier, `\u{HEX}` escaping, ELK cell routing, MonoTrue endpoint/role tables, debug view) into a new clean module tree. |
 | Phased notation scope | Phase 1 (7 notations): `architecture`, `infrastructure`, `flowchart`, `erd`, `uml-sequence`, `uml-state` (Edition `0.2.17`), `uml-class`. Phase 2 (6 notations): `block`, `bpmn`, `aiml`, `data-engineering`, `code`, `sketch`. |
 | Authored intent and visual attributes | Respect authored `@ (x, y)` relative ordering (top-to-bottom / left-to-right rank and in-layer hints). Gracefully ignore pixel geometry, RGB/inline `[style]`, and custom `@symbol` SVG artwork (rendered as labelled boxes) with structured non-fatal notices (opt-in `--strict` to refuse). |
 | Document page geometry | Conservative 72 columns for both US Letter (`72x55`) and A4 (`72x60`) (1-inch margins at 10 cpi / 6 lpi), mandatory ASCII form-feed (`\f`, `0x0C`) between pages, strict 7-bit ASCII default (`0x20-0x7E`, LF or CRLF), plus custom `pageWidth x pageHeight` overrides. |
@@ -411,10 +412,14 @@ coral render --format txt|ascii \
 
 ## 8. Phased execution and API-compatibility note
 
-- **API compatibility (`npm run api-compat`):** When implementing, either keep
-  `renderInstalledCharacterPreview028` as a thin deprecated delegating wrapper
-  for `0.2.x` additive compatibility (removing it at `0.3.0`), or record an
-  explicit `api-compat` transition baseline.
+- **Legacy deprecation and API compatibility (`npm run api-compat`):** The
+  older `0.2.8` character renderer APIs (`renderInstalledCharacterPreview028`,
+  `renderCharacterGraph028`, `adaptCharacterGraph028`,
+  `createCharacterDebugView028`) are marked **hard-deprecated (no longer
+  supported)** in source JSDoc and public docs. During `0.2.17` implementation,
+  keep those legacy symbols exported only as deprecated compatibility shims
+  (or record an explicit `api-compat` and `online-delivery.integration.test`
+  transition baseline) until full removal in `0.3.0`.
 - **Execution phases:**
   - **Phase 1A:** Core engine (`textScene`, `orderHints`, `cellLayout`/
     `cellRouter`, 4-stage overflow ladder, 3 charsets, comment wrappers,

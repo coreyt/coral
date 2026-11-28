@@ -1,6 +1,15 @@
 # Character renderer 0.2.8 first slice: requirements and design
 
-Status: implementation design checkpoint, 2026-10-13. Authority is the
+> **DEPRECATED — NO LONGER SUPPORTED (Coral `0.2.17`):** The `0.2.8` character
+> renderer (`renderInstalledCharacterPreview028`, `renderCharacterGraph028`,
+> `adaptCharacterGraph028`, and `createCharacterDebugView028`) is
+> hard-deprecated and no longer supported. This document is retained only as
+> historical reference. It is superseded by the Coral `0.2.17` Plain-Text and
+> ASCII Diagram Renderer specification in
+> [text-renderer-spec.md](text-renderer-spec.md).
+
+Status: deprecated historical design checkpoint (`2026-10-13`, retired in Coral
+`0.2.17`). Authority is the
 selected-type plan,
 profile ontology and
 evidence table. This first

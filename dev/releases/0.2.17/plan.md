@@ -6,8 +6,8 @@ The owner authorized preparing **Coral 0.2.17** on `dev/0.2.17` from published
 `0.2.15` (`78b1c4cc`), leaving published `0.2.15` untouched. Release `0.2.17`
 folds in the unimplemented `0.2.16` draft release plan, the Anemone v2 &
 Parrotfish classic presentation work preserved from `release/0.2.16`, Edition
-`0.2.17` visual UML State, and the Mermaid-to-Coral transpiler, delivering five
-coordinated capabilities:
+`0.2.17` visual UML State, the Mermaid-to-Coral transpiler, and the planned
+Plain-Text & ASCII Diagram Renderer, delivering six coordinated capabilities:
 
 - **Standalone `coral` CLI (`bin.coral` on `@coral-viz/render`)**: keeps the
   six-package `expectedPackages` inventory closed while exposing `coral
@@ -50,6 +50,17 @@ coordinated capabilities:
   `'parrotfish'` / `'pf'` classic preset (`parrotfishClassic.ts`, tree-shaken
   from browser embeds). See `dev/designs/anemone-v2/` and
   `dev/designs/parrotfish/`.
+- **Plain-Text and ASCII Diagram Renderer (planned for `0.2.17`, replacing
+  hard-deprecated `0.2.8` character preview):** hard-deprecates the unsupported
+  `0.2.8` character preview (`renderInstalledCharacterPreview028` /
+  `renderCharacterGraph028`) and implements the clean-slate `renderText` engine
+  for regulated US Letter (`72x55`) and A4 (`72x60`) paginated ASCII documents
+  (mandatory `\f` breaks, atomic boxes, paired off-page continuation markers)
+  and compact `utf8-box`/`ascii` source-code comments (`//`, `#`, `--`,
+  `/* */`, `<!-- -->`), retaining `monotrue-v1` as opt-in, across all five
+  surfaces (`@coral-viz/render`, `coral` CLI, MCP `coral_render`,
+  `@coral-viz/browser`, and `@coral-viz/diagram-editor`). See
+  `dev/designs/text-renderer-spec.md`.
 
 ## Independent identities
 

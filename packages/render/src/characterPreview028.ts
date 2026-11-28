@@ -1,4 +1,8 @@
-/** Source-owned character target with exact successor admission. */
+/**
+ * @deprecated No longer supported as of Coral 0.2.17.
+ * Legacy 0.2.8 source-owned character preview target; replaced by the Coral
+ * 0.2.17 Plain-Text and ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 import { validateGraphIRSuccessorWithCatalog, type GraphIR } from '@graph-ir/core';
 import { projectInstalledSourceToSuccessor028, type SuccessorSourceGraph028 } from './successorSourceProjection028.js';
 import { resolveSuccessorGraphNodes028, successorCoreValidationInput029 } from './successorInterpretation028.js';
@@ -14,7 +18,15 @@ import { renderRoutedCharacters028 } from './characterRouted028.js';
 import { renderUmlClassCharacters028, renderUmlSequenceCharacters028 } from './characterUml028.js';
 import { renderUmlStateCharacters028, stateCharacterUsesChain028 } from './characterState028.js';
 
+/**
+ * @deprecated No longer supported as of Coral 0.2.17. Replaced by the Coral
+ * 0.2.17 Plain-Text and ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 export type CharacterPreviewOptions028 = CharacterOptions028;
+/**
+ * @deprecated No longer supported as of Coral 0.2.17. Replaced by the Coral
+ * 0.2.17 Plain-Text and ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 export interface CharacterPreviewResult028 {
   text: string;
   charset: CharacterCharset028;
@@ -141,7 +153,12 @@ function validateBpmnGraph(graph: GraphIR): void {
   }
 }
 
-/** Validate the exact accepted semantic subset, then make only display-copy additions. */
+/**
+ * Validate the exact accepted semantic subset, then make only display-copy additions.
+ *
+ * @deprecated No longer supported as of Coral 0.2.17. Replaced by the Coral
+ * 0.2.17 Plain-Text and ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 export function adaptCharacterGraph028(graph: GraphIR, columns: CharacterColumns028): GraphIR {
   if (![40, 80, 120].includes(columns)) {
     fail('character.width.unsupported', 'Width must be 40, 80 or 120 columns.', 'columns');
@@ -355,6 +372,13 @@ function userSymbolCharacterFallback029(graph: GraphIR, successor: SuccessorSour
     }) } };
 }
 
+/**
+ * Legacy 0.2.8 bounded character preview renderer.
+ *
+ * @deprecated No longer supported as of Coral 0.2.17. Do not build new
+ * integrations against this API; migrate to the Coral 0.2.17 Plain-Text and
+ * ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 export async function renderInstalledCharacterPreview028(
   source: string, options: CharacterPreviewOptions028,
 ): Promise<CharacterPreviewResult028> {

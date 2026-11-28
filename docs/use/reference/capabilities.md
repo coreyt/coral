@@ -31,14 +31,17 @@ Monochrome `lowfi` and `hifi` stay basic black-and-white outputs; the
 `parrotfish` renderer in `@coral-viz/render` adds the `anemone` (`ane`) modeled
 presentation style without altering layout or edge routing.
 
-The six-family character/ASCII renderer covers Block, Flowchart, BPMN, UML
-class, sequence, and bounded flat UML state. MonoTrue v0.2.0 Diagram Set 1 is
-integrated and has actual-font and packed-consumer checks. Controlled MonoTrue
-pictures require the supported host font capability; missing or wrong capability
-and ordinary copy/export use whole-picture ASCII. This does not certify a new
-native terminal host. See the
-[character API](../../embed/reference/render-api.md#character-output) for exact
-family sizes, refused constructs, and font requirements.
+The legacy `0.2.8` six-family character/ASCII renderer (Block, Flowchart, BPMN,
+UML class, sequence, and bounded flat UML state) is **deprecated and no longer
+supported** as of Coral `0.2.17`, where it is superseded by the Plain-Text and
+ASCII Diagram Renderer. MonoTrue v0.2.0 Diagram Set 1 is integrated and has
+actual-font and packed-consumer checks. Controlled MonoTrue pictures require the
+supported host font capability; missing or wrong capability and ordinary
+copy/export use whole-picture ASCII. This does not certify a new native terminal
+host. See the
+[character API](../../embed/reference/render-api.md#character-output) for the
+deprecation notice, legacy family sizes, refused constructs, and font
+requirements.
 
 ## Tested notation subsets
 

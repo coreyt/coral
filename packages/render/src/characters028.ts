@@ -1,4 +1,9 @@
 /** Bounded, DOM-free character ledger for installed Block and flowchart GraphIR. */
+/**
+ * @deprecated No longer supported as of Coral 0.2.17.
+ * Legacy 0.2.8 GraphIR character ledger renderer; replaced by the Coral 0.2.17
+ * Plain-Text and ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 import type { GraphIR } from '@graph-ir/core';
 import { FONT_SHA_BY_FACE_029 as FONT_SHA_BY_FACE } from './characterGlyphRoles028.js';
 
@@ -335,6 +340,13 @@ export function monoTrueReady028(options: CharacterOptions028, requiredRoles: re
     requiredRoles.every((role) => capability.validatedRoles.includes(role));
 }
 
+/**
+ * Legacy 0.2.8 GraphIR character ledger renderer.
+ *
+ * @deprecated No longer supported as of Coral 0.2.17. Do not build new
+ * integrations against this API; migrate to the Coral 0.2.17 Plain-Text and
+ * ASCII Diagram Renderer (`dev/designs/text-renderer-spec.md`).
+ */
 export function renderCharacterGraph028(graph: GraphIR, options: CharacterOptions028): CharacterResult028 {
   if (![40, 80, 120].includes(options.columns)) {
     fail('character.width.unsupported', 'Width must be 40, 80 or 120 columns.', 'columns');

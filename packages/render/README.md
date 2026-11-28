@@ -35,15 +35,24 @@ registry, notation edge styles, and independent GraphIR source/target endpoint
 semantics into deterministic JSON-safe values. Unknown advertised glyphs fail
 closed instead of silently substituting a placeholder.
 
-The 0.2.8 `renderInstalledCharacterPreview028(source, options)` API renders
-bounded Block, Flowchart, BPMN, UML Class, UML Sequence and UML State source.
-It validates the exact source successor/catalog and shared U1/U2 before making
-a picture and ledger. Use `columns: 40`, `80` or `120`. Copy/export is printable
-ASCII plus LF; controlled MonoTrue needs its exact font-face hash and validated
-glyph roles, otherwise the whole output falls back to ASCII. Unsupported
-placement, ports, routes, constraints, controls, nonbaseline proximity and
-family constructs throw `CharacterRenderError` without changing the source.
-State is a bounded source/character edition; SVG/editor visual paths refuse it.
+> **Deprecated (no longer supported):** The legacy `0.2.8` character renderer
+> (`renderInstalledCharacterPreview028`, `renderCharacterGraph028`,
+> `adaptCharacterGraph028`, and `createCharacterDebugView028`) is
+> hard-deprecated as of Coral `0.2.17` and is **no longer supported**. It is
+> being replaced in `0.2.17` by the clean-slate Plain-Text and ASCII Diagram
+> Renderer (`dev/designs/text-renderer-spec.md`). Do not build new integrations
+> against the `0.2.8` character APIs.
+
+The legacy 0.2.8 `renderInstalledCharacterPreview028(source, options)` API
+renders bounded Block, Flowchart, BPMN, UML Class, UML Sequence and UML State
+source. It validates the exact source successor/catalog and shared U1/U2 before
+making a picture and ledger. Use `columns: 40`, `80` or `120`. Copy/export is
+printable ASCII plus LF; controlled MonoTrue needs its exact font-face hash and
+validated glyph roles, otherwise the whole output falls back to ASCII.
+Unsupported placement, ports, routes, constraints, controls, nonbaseline
+proximity and family constructs throw `CharacterRenderError` without changing
+the source. State is a bounded source/character edition; SVG/editor visual paths
+refuse it.
 
 Coral 0.2.9 adopts **MonoTrue v0.2.0** at
 `1dfda76a564716e6148a342592b264a5b8b211e4`, **Diagram Set 1**. Character pictures

@@ -26,6 +26,10 @@ function csvField(character: string): string {
  * Each source code point must occupy exactly one terminal cell. Coordinates are
  * zero-based. The terminal line ending is not a cell, and shorter rows are padded
  * with spaces to the longest row so the CSV and grid have the same rectangle.
+ *
+ * @deprecated No longer supported as of Coral 0.2.17. Part of the retired 0.2.8
+ * character preview surface replaced by the Coral 0.2.17 Plain-Text and ASCII
+ * Diagram Renderer (`dev/designs/text-renderer-spec.md`).
  */
 export function createCharacterDebugView028(text: string): CharacterDebugView028 {
   if (!text) throw new Error('A nonempty character preview is required.');
