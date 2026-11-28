@@ -1,6 +1,6 @@
 import type { GraphIR, GraphNode } from '@graph-ir/core';
 import { allGraphNodes028 } from './graphNodes028.js';
-import { resolveNotationNode028 } from './notations/index.js';
+import { installedCatalogSnapshotForEdition, resolveNotationNode028 } from './notations/index.js';
 import type { NodeInterpretation028 } from './interpretation028.js';
 import { assertSemanticSidecar028 } from './semanticSidecar028.js';
 import { assessPortReferences028, type PortReferenceAssessment028,
@@ -74,8 +74,12 @@ export function assessGraphPortReferences028(graph: GraphIR, profileId: string,
     if (target.ports === undefined && edge.targetPort !== undefined)
       supersededGraphIrPaths.add(`/edges/${index}/targetPort`);
     const tokenRanges = edgeIdCounts.get(edge.id) === 1 ? ranges?.get(edge.id) : undefined;
+    const edition = typeof graph.metadata?.custom?.coralEdition === 'string'
+      ? graph.metadata.custom.coralEdition : undefined;
+    const editionCatalog = !semanticInterpretations && edition
+      ? installedCatalogSnapshotForEdition(profileId, edition) : undefined;
     const interpretation = (node: GraphNode): NodeInterpretation028 => {
-      if (!semanticInterpretations) return resolveNotationNode028(node, profileId);
+      if (!semanticInterpretations) return resolveNotationNode028(node, profileId, editionCatalog);
       const resolved = semanticInterpretations.get(node.id);
       if (!resolved) throw new Error(`coral.port.interpretation.missing: ${node.id}`);
       return resolved;

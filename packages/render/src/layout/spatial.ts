@@ -31,6 +31,7 @@ import { renderSymbolId, resolveEdgeAppearance, resolveSymbolIndex } from '../sc
 import { effectiveGraphNotationId028 } from '../graphNotation028.js';
 import { bpmnGatewayFrame028, isBpmnGatewaySymbol028 } from '../bpmnGatewayVisual028.js';
 import { bpmnEventCaptionBox028, bpmnEventFrame028, isBpmnEventSymbol028 } from '../bpmnEventVisual028.js';
+import { isStateCircleSymbol0217, isStateSyncBarSymbol0217, stateCircleRadius0217 } from '../stateVisual0217.js';
 import { cornerAnchorForAttachment028, stencilAnchorPoint028, stencilFitPoint028,
   stencilRayPoint028, stencilFit028, StencilAnchorGeometryCapabilityError } from '../stencilAnchorGeometry028.js';
 import type {
@@ -1740,11 +1741,19 @@ function portPoint(rect: MutableRect, port: Port, record?: NodeRecord): Point {
       y: rect.absolutePosition.y + frame.y + fitted.y * frame.height };
   }
   if (outline) {
+    const portSymbolId = record ? renderSymbolId(record.node, record.notationId, record.catalog) : undefined;
+    if (isStateCircleSymbol0217(portSymbolId)) {
+      const r = stateCircleRadius0217(rect.width, rect.height);
+      return {
+        x: rect.absolutePosition.x + rect.width / 2 + (outline.x - 0.5) * 2 * r,
+        y: rect.absolutePosition.y + rect.height / 2 + (outline.y - 0.5) * 2 * r,
+      };
+    }
     const shapeId = derived.stencilShapeId ?? derived.freeStencil?.shapeId;
     const shape = layoutPortShape029(derived);
     if (shapeId && !shape) throw new StencilAnchorGeometryCapabilityError(shapeId);
-    const fittedShape = shape && containerStencilShape028(shape, rect.width, rect.height, record && isContainerNode028(record.node));
-    const portSymbolId = record ? renderSymbolId(record.node, record.notationId, record.catalog) : undefined;
+    const elastic = Boolean(record && isContainerNode028(record.node)) || isStateSyncBarSymbol0217(portSymbolId);
+    const fittedShape = shape && containerStencilShape028(shape, rect.width, rect.height, elastic);
     const point = fittedShape
       ? frameFitPoint029(fittedShape, outline, rect.width, rect.height,
         { notationId: record?.notationId, symbolId: portSymbolId, layoutDirection: record?.direction })
@@ -4157,6 +4166,8 @@ function parallelCrossSpan028(rect: MutableRect, records: Map<string, NodeRecord
   const record = records.get(rect.id)!;
   const appearance = resolveNodeAppearance(record.node,
     { fill: '#fff', stroke: '#000', text: '#000', edge: '#000' }, record.notationId, record.catalog);
+  if (isStateCircleSymbol0217(appearance.symbolId)) return 2 * stateCircleRadius0217(rect.width, rect.height);
+  if (isStateSyncBarSymbol0217(appearance.symbolId)) return horizontal ? rect.height : rect.width;
   const shape = containerStencilShape028(sceneNodeShape029(appearance)!, rect.width, rect.height, isContainerNode028(record.node));
   // A user outline is frame geometry and spans the whole box.
   if (isUserOutlineShape029(shape)) return horizontal ? rect.height : rect.width;
@@ -5241,8 +5252,11 @@ async function resolveSpatialLayoutOnce029(request: SpatialLayoutRequest,
       const symbolId = renderSymbolId(rec.node, rec.notationId, rec.catalog);
       const isGateway = isBpmnGatewaySymbol028(symbolId);
       const isEvent = isBpmnEventSymbol028(symbolId);
+      const isStateCircle = isStateCircleSymbol0217(symbolId);
+      const isStateBar = isStateSyncBarSymbol0217(symbolId);
       const shapeId = isGateway ? 'diamond'
-        : isEvent ? 'circle'
+        : (isEvent || isStateCircle) ? 'circle'
+        : isStateBar ? 'rectangle'
         : (symbolId ? catalogSymbol029(symbolId, rec.catalog)?.shape : undefined)
         ?? 'rectangle';
       const isCaptionedIcon = isCaptionedIcon029(id, records);
@@ -5263,22 +5277,29 @@ async function resolveSpatialLayoutOnce029(request: SpatialLayoutRequest,
             const ev = bpmnEventFrame028(rect.width, rect.height, direction);
             return { absolutePosition: { x: rect.absolutePosition.x + ev.x, y: rect.absolutePosition.y + ev.y }, width: ev.width, height: ev.height };
           })()
-          : isCaptionedIcon
-            ? attachmentFrame029(rect, rec)
-            : (!isContainer ? (() => {
-              const shape = catalogShape029(shapeId, rec.catalog);
-              if (!shape || shape.type !== 'path') return undefined;
-              const fit = stencilFit028(shape, rect.width, rect.height);
-              return {
-                absolutePosition: { x: rect.absolutePosition.x + fit.offsetX, y: rect.absolutePosition.y + fit.offsetY },
-                width: fit.fittedWidth,
-                height: fit.fittedHeight,
-              };
-            })() : undefined);
+          : isStateCircle
+            ? (() => {
+              const r = stateCircleRadius0217(rect.width, rect.height);
+              return { absolutePosition: { x: rect.absolutePosition.x + rect.width / 2 - r, y: rect.absolutePosition.y + rect.height / 2 - r }, width: r * 2, height: r * 2 };
+            })()
+            : isStateBar
+              ? undefined
+              : isCaptionedIcon
+                ? attachmentFrame029(rect, rec)
+                : (!isContainer ? (() => {
+                  const shape = catalogShape029(shapeId, rec.catalog);
+                  if (!shape || shape.type !== 'path') return undefined;
+                  const fit = stencilFit028(shape, rect.width, rect.height);
+                  return {
+                    absolutePosition: { x: rect.absolutePosition.x + fit.offsetX, y: rect.absolutePosition.y + fit.offsetY },
+                    width: fit.fittedWidth,
+                    height: fit.fittedHeight,
+                  };
+                })() : undefined);
       const rawFrame = gf
         ? { x: gf.absolutePosition.x, y: gf.absolutePosition.y, width: gf.width, height: gf.height }
         : { x: rect.absolutePosition.x, y: rect.absolutePosition.y, width: rect.width, height: rect.height };
-      const frame = isContainer ? rawFrame : inkBoundsForFrame0211(shapeId, rawFrame);
+      const frame = (isContainer || isStateCircle || isStateBar) ? rawFrame : inkBoundsForFrame0211(shapeId, rawFrame);
       const cap = rec.reservedLabel029
         ? reservedLabelBox029(rect, rec.reservedLabel029, 4)
         : nodeCaptionBox028(rect, records);

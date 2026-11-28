@@ -71,9 +71,9 @@
       "id": "notation-erd",
       "audiences": ["user", "in-product"],
       "status": "partial",
-      "summary": "The Customer orders example tests entity, relationship, attribute, primary-key variant, and endpoint multiplicity.",
-      "limitations": ["This is not a complete logical or physical data-modeling system."],
-      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+      "summary": "Edition 0.2.14 enables Crow's Foot ERD (entity, typed columns with PK/FK/UK/nullability, and Crow's Foot cardinality connectors); Chen ERD remains disabled in 0.2.8 and retired in 0.2.14.",
+      "limitations": ["This is not a complete logical or physical data-modeling system; Chen ERD remains retired."],
+      "surfaces": [{ "name": "coral-source", "evidence": [{ "path": "packages/render/test/edition0214Notations.test.ts", "caseId": "Slice 60: renders Crow\\'s Foot @diagram erd entity tables, cardinality markers, and endpoint labels" }] }]
     },
     {
       "id": "notation-code",
@@ -87,9 +87,9 @@
       "id": "notation-architecture",
       "audiences": ["user", "in-product"],
       "status": "partial",
-      "summary": "The Service and database example tests actor, service, database, API glyph, sync, and data edges.",
-      "limitations": ["C4 and vendor-specific cloud icon sets are unsupported."],
-      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }]
+      "summary": "Edition 0.2.8 tests actor, service, database, API glyph, sync, and data edges; edition 0.2.14 adds C4-grade nodes/boundaries and dedicated cloud infrastructure with built-in geometric glyphs.",
+      "limitations": ["Individual diagram scope; proprietary vendor-specific cloud icon packs are not bundled."],
+      "surfaces": [{ "name": "example", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "executes the generic-notation canvas and SVG capability matrix" }] }, { "name": "canvas", "evidence": [{ "path": "packages/diagram-editor/test/examples.test.ts", "caseId": "projects the %s example onto the editor canvas" }] }, { "name": "svg", "evidence": [{ "path": "packages/render/test/edition0214Notations.test.ts", "caseId": "Slice 50: renders C4-grade @diagram architecture with technology/description in monochrome hifi and anemone" }] }]
     },
     {
       "id": "notation-aiml",
@@ -134,7 +134,7 @@
   ],
   "packages": [
     { "id": "package-language", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/language owns runtime Coral parsing, printing, import, diagnostics, and repair.", "limitations": ["Tree-sitter is separate syntax tooling."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/language" }] }] },
-    { "id": "package-render", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/render owns DOM-free layout and SVG/HTML rendering.", "limitations": ["Root renderSvg/renderHtml require supplied geometry; the svg-layout entry performs layout."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/render" }] }] },
+    { "id": "package-render", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/render owns DOM-free layout, SVG/HTML/ASCII rendering, parrotfish/anemone, verified Mermaid transpilation, and the standalone coral CLI.", "limitations": ["Root renderSvg/renderHtml require supplied geometry; the svg-layout entry and coral CLI perform layout."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/render" }, { "path": "packages/render/test/cli.test.ts", "caseId": "Coral CLI (bin.coral on @coral-viz/render)" }] }] },
     { "id": "package-browser", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/browser renders Coral source through ESM/IIFE, DOM helpers, and a custom element without React/editor or implicit network use.", "limitations": ["Input is Coral source only; nothing scans or registers automatically."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/browser/test/bundle.test.ts", "caseId": "declares a complete, publishable manifest" }] }, { "name": "browser", "evidence": [{ "path": "e2e/slice80-browser-package.spec.ts", "caseId": "renderTo, scan, and the element render accessibly" }] }] },
     { "id": "package-viz", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/viz supplies React 18/19 editing components and GraphIR/view helpers.", "limitations": ["The host owns file loading, persistence, layout orchestration, and sizing."], "surfaces": [{ "name": "package", "evidence": [{ "path": "scripts/consumer-smoke.mjs", "caseId": "@coral-viz/viz" }] }] },
     { "id": "package-mcp", "audiences": ["embedder"], "status": "supported", "summary": "@coral-viz/mcp-server supplies six general diagram tools over MCP stdio.", "limitations": ["It is not a repository-indexing or codebase-specific server."], "surfaces": [{ "name": "package", "evidence": [{ "path": "packages/mcp-server/test/stdio.test.ts", "caseId": "starts on stdio and identifies itself as Coral" }] }] },

@@ -65,8 +65,6 @@ describe('no global fallback for user symbols', () => {
       return calls ? [[path, calls]] : [];
     }));
     expect(withoutCatalog).toEqual({
-      'render/src/graphConformance028.ts': 3, // GraphIR 3 conformance without a source sidecar
-      'render/src/graphPortReferences028.ts': 1, // GraphIR 3 port references without a source sidecar
       'render/src/rulesets/flowchart028.ts': 2, // decision detection; an unresolved user symbol is never a decision
       'diagram-editor/src/hooks/diagramUtils.ts': 1, // interpretationForNode without a sidecar (GraphIR 3)
       'diagram-editor/src/useEditorController.ts': 1, // symbolProvidedPorts: GraphIR 3 documents only
@@ -83,6 +81,6 @@ describe('no global fallback for user symbols', () => {
         // Import validates the given GraphIR form with the interchange admission list.
         ['render/src/successorSourceWriter028.ts', 'graph, snapshot, { artworkAdmission: graphIrArtworkAdmission029 }'],
         ['mcp-server/src/tools/validate.ts', 'value, snapshot, options']]);
-    expect(calls.length).toBe(10);
+    expect(calls.length).toBe(11);
   });
 });

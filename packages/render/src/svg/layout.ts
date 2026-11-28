@@ -40,7 +40,7 @@ export interface SvgLayoutGraph {
   name?: string;
   nodes: GraphNode[];
   edges: GraphEdge[];
-  metadata?: { notation?: string };
+  metadata?: { notation?: string; custom?: Record<string, unknown> };
   profile?: GraphIR['profile'];
   interaction?: GraphIR['interaction'];
   recursiveFragments028?: SequenceDisplayTree028;
@@ -142,18 +142,11 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
     if (timeline) Object.defineProperty(sequence, 'sourceTimeline028', { value: timeline, enumerable: false });
     return sequence;
   }
-  const metadata = graph.metadata?.notation ? { metadata: { notation: graph.metadata.notation } } : {};
-  const profile = graph.profile ? { profile: graph.profile } : {};
-  if (graph.nodes.length === 0) return { nodes: [], edges: graph.edges, ...metadata, ...profile, edgeRoutes: new Map() };
-
   const authoredDirection = (graph as SpatialSidecar028).layoutOptions028?.direction;
   if (authoredDirection) options = { ...options, direction: authoredDirection };
   const svgOptions = { ...options.svgOptions,
     layoutDirection: options.direction ?? 'RIGHT',
     notation: options.svgOptions?.notation ?? effectiveGraphNotationId028(graph) };
-  const hifiDefaults = svgOptions.style === 'hifi' && svgOptions.notation !== 'uml-class';
-  const nodeSpacing = options.nodeSpacing ?? (hifiDefaults ? 36 : 50);
-  const layerSpacing = options.layerSpacing ?? (hifiDefaults ? 54 : nodeSpacing + 30);
   // A user symbol's frame is exactly its definition size; labels never resize it.
   const graphEdition = typeof graph.metadata?.custom?.coralEdition === 'string'
     ? graph.metadata.custom.coralEdition : undefined;
@@ -164,16 +157,37 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
       : is0214 ? documentCatalog029(svgOptions.notation, [], graphEdition) : undefined
     : undefined;
   const catalog = documentCatalog && (documentCatalog.userSymbols.size > 0 || is0214) ? documentCatalog : undefined;
+  const catalogSvgOptions = catalog ? { ...svgOptions, documentCatalog029: catalog } : svgOptions;
+  const metadata = graph.metadata?.notation || graph.metadata?.custom
+    ? { metadata: {
+      ...(graph.metadata?.notation ? { notation: graph.metadata.notation } : {}),
+      ...(graph.metadata?.custom ? { custom: graph.metadata.custom } : {}),
+    } }
+    : {};
+  const profile = graph.profile ? { profile: graph.profile } : {};
+  if (graph.nodes.length === 0) {
+    const empty: SvgLayoutGraph = { nodes: [], edges: graph.edges, ...metadata, ...profile, edgeRoutes: new Map() };
+    if (catalog) {
+      Object.defineProperty(empty, 'documentCatalog029', { value: catalog, enumerable: false });
+      Object.defineProperty(empty, 'semanticInterpretations029',
+        { value: options.semanticInterpretations, enumerable: false });
+    }
+    return empty;
+  }
+
+  const hifiDefaults = svgOptions.style === 'hifi' && svgOptions.notation !== 'uml-class';
+  const nodeSpacing = options.nodeSpacing ?? (hifiDefaults ? 36 : 50);
+  const layerSpacing = options.layerSpacing ?? (hifiDefaults ? 54 : nodeSpacing + 30);
   const frameOf = (node: GraphNode) => options.semanticInterpretations?.get(node.id)?.userSymbol029?.outline;
   const automaticPadding028 = new Map<string, NonNullable<NonNullable<GraphNode['layoutOptions']>['padding']>>();
   const addMissingDimensions = (nodes: GraphNode[]): GraphNode[] => nodes.map((node) => {
-    const automatic = containerAutomaticPadding028(node, svgOptions);
+    const automatic = containerAutomaticPadding028(node, catalogSvgOptions);
     if (automatic) automaticPadding028.set(node.id, automatic);
     return {
     ...node,
-    layoutOptions: containerLayoutOptions028(node, svgOptions),
-    ...(!node.dimensions && !node.children?.length && usesPortableSvgFonts(svgOptions)
-      ? { dimensions: measureSvgNode(node, catalog ? { ...svgOptions, documentCatalog029: catalog } : svgOptions) } : {}),
+    layoutOptions: containerLayoutOptions028(node, catalogSvgOptions),
+    ...(!node.dimensions && !node.children?.length && usesPortableSvgFonts(catalogSvgOptions)
+      ? { dimensions: measureSvgNode(node, catalogSvgOptions) } : {}),
     ...(frameOf(node) ? { dimensions: { width: frameOf(node)!.width, height: frameOf(node)!.height } } : {}),
     ...(node.children ? { children: addMissingDimensions(node.children) } : {}),
   };
@@ -187,7 +201,7 @@ export async function layoutGraphForSvg(graph: GraphIR, options: SvgLayoutOption
     revision: `svg:${graph.id}`,
     graph: layoutGraph,
     operation: 'load',
-    proximitySceneOptions: catalog ? { ...svgOptions, documentCatalog029: catalog } : svgOptions,
+    proximitySceneOptions: catalogSvgOptions,
     ...(automaticPadding028.size ? { automaticPadding028 } : {}),
     ...(catalog ? { documentCatalog029: catalog } : {}),
     defaults: {

@@ -294,7 +294,11 @@ export interface NotationDefinition {
   symbols: string[]; // references to symbol ids
   /** Additive symbols introduced in edition 0.2.14 (keeps 0.2.8 digests immutable). */
   symbols0214?: string[];
+  /** Additive symbols introduced in edition 0.2.17 (keeps 0.2.8/0.2.14 digests immutable). */
+  symbols0217?: string[];
   edgeStyles?: Record<string, NotationEdgeStyle>;
+  /** Additive edge styles introduced in edition 0.2.17 (keeps 0.2.8/0.2.14 digests immutable). */
+  edgeStyles0217?: Record<string, NotationEdgeStyle>;
   defaultEdgeStyle: string | NotationEdgeStyle;
   connectionRules: ConnectionRule[];
   validation?: NotationValidation;

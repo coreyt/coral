@@ -1,6 +1,6 @@
 {
   "name": "@coral-viz/language",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "description": "Coral DSL parser and printer",
   "homepage": "https://coreyt.github.io/coral/",
   "bugs": {

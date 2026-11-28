@@ -21,6 +21,7 @@ import { bpmnEventCaptionOffsetX028, bpmnEventFrame028, bpmnEventPathPrimitives0
   isBpmnEventSymbol028 } from './bpmnEventVisual028.js';
 import { bpmnGatewayCaptionOffsetX028, bpmnGatewayFrame028,
   isBpmnGatewaySymbol028 } from './bpmnGatewayVisual028.js';
+import { isStateMarkerSymbol0217, stateMarkerPathPrimitives0217 } from './stateVisual0217.js';
 import type { LayoutDirection } from './layout/types.js';
 import type { SuccessorSourceGraph028 } from './successorSourceProjection028.js';
 
@@ -809,16 +810,20 @@ export function spatialPartManifest028(
       ?? ((Boolean(layout.node.children?.length) || Boolean(node.container) || layout.node.type === 'group') && !layout.node.classifier
         ? 'none' : visual.paper);
     const nodeStroke = authoredNodeStyle?.strokeColor ?? visual.ink;
+    const stateMarker = isStateMarkerSymbol0217(node.symbolId);
     const stencil = node.artwork029 ? [] : eventFrame
       ? bpmnEventPathPrimitives028(node.id, node.symbolId!, options.style,
         visual.paper, visual.ink)
-      : stencilPathPrimitives028({ ownerId: node.id, style: options.style,
-        shapeId: node.shapeId, parameters: node.shapeParameters,
-        fill: nodeFill,
-        stroke: nodeStroke, strokeWidth: nodeStrokeWidth,
-        strokeDasharray: nodeStrokeDash,
-        doubleOutline: node.style.doubleOutline, scale: fit!.scale,
-        ...(elasticFrame && node.shapeId === 'rectangle' ? { containerFrame: { width: layout.width, height: layout.height } } : {}) });
+      : stateMarker
+        ? stateMarkerPathPrimitives0217(node.id, node.symbolId!, options.style,
+          layout.width, layout.height, authoredNodeStyle?.fillColor ?? nodeStroke, nodeStroke, visual.paper)
+        : stencilPathPrimitives028({ ownerId: node.id, style: options.style,
+          shapeId: node.shapeId, parameters: node.shapeParameters,
+          fill: nodeFill,
+          stroke: nodeStroke, strokeWidth: nodeStrokeWidth,
+          strokeDasharray: nodeStrokeDash,
+          doubleOutline: node.style.doubleOutline, scale: fit!.scale,
+          ...(elasticFrame && node.shapeId === 'rectangle' ? { containerFrame: { width: layout.width, height: layout.height } } : {}) });
     for (const primitive of stencil) {
       const partX = x + (eventFrame?.x ?? frame.x);
       const partY = y + (eventFrame?.y ?? frame.y);
@@ -826,15 +831,18 @@ export function spatialPartManifest028(
         owner: { kind: 'node', id: node.id }, role: primitive.role,
         bounds: eventFrame
           ? box(partX, partY, eventFrame.width, eventFrame.height)
-          : primitive.role === 'corner-overdraw'
-            ? box(partX - 6 * fit!.scale, partY - 6 * fit!.scale,
-              frame.width + 12 * fit!.scale, frame.height + 12 * fit!.scale)
-            : box(partX, partY, frame.width, frame.height),
+          : stateMarker
+            ? box(x, y, layout.width, layout.height)
+            : primitive.role === 'corner-overdraw'
+              ? box(partX - 6 * fit!.scale, partY - 6 * fit!.scale,
+                frame.width + 12 * fit!.scale, frame.height + 12 * fit!.scale)
+              : box(partX, partY, frame.width, frame.height),
         geometry: { ...primitive, kind: 'stencil-path',
           ...(primitive.transform ? { innerTransform: primitive.transform } : {}),
           transform: eventFrame ? { x: partX, y: partY, scale: 1 }
-            : { x: partX + fit!.offsetX - fit!.viewX * fit!.scale,
-              y: partY + fit!.offsetY - fit!.viewY * fit!.scale, scale: fit!.scale } },
+            : stateMarker ? { x, y, scale: 1 }
+              : { x: partX + fit!.offsetX - fit!.viewX * fit!.scale,
+                y: partY + fit!.offsetY - fit!.viewY * fit!.scale, scale: fit!.scale } },
         presentationOnly: primitive.role === 'corner-overdraw' });
     }
     if (node.glyph) {

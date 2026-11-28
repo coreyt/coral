@@ -1,6 +1,6 @@
 # Browser support
 
-Support boundaries for using Coral 0.2.15.
+Support boundaries for using Coral 0.2.17.
 
 | Environment | Status | Boundary |
 | --- | --- | --- |

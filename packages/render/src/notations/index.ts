@@ -9,7 +9,7 @@ import type {
   NotationDefinition,
   NotationRegistry,
 } from '../types.js';
-import { editionAdmits0214, HEADER_MANIFEST_028 } from '@coral-viz/language';
+import { editionAdmits0214, editionAdmits0217, HEADER_MANIFEST_028 } from '@coral-viz/language';
 import { symbolRegistry } from '../symbols/index.js';
 import { shapeRegistry } from '../shapes/index.js';
 import { glyphRegistry } from '../glyphs/index.js';
@@ -60,6 +60,7 @@ function contentFingerprint(value: unknown): string {
 
 const catalogSnapshots = new Map<string, CatalogSnapshot028>();
 const catalogSnapshots0214 = new Map<string, CatalogSnapshot028>();
+const catalogSnapshots0217 = new Map<string, CatalogSnapshot028>();
 const approvedTypeWords: Readonly<Record<string, Readonly<Record<string, string>>>> = {
   block: { block: 'block-unit' },
   architecture: {
@@ -147,6 +148,21 @@ const approvedTypeWords0214Extra: Readonly<Record<string, Readonly<Record<string
   },
 };
 const UPGRADED_IN_0214 = new Set(['aiml', 'data-engineering', 'code', 'sketch', 'block', 'architecture', 'erd']);
+/** Edition 0.2.17 additive type-word mappings (UML State visual & hierarchical). */
+const approvedTypeWords0217Extra: Readonly<Record<string, Readonly<Record<string, string>>>> = {
+  'uml-state': {
+    initial: 'uml-state-initial',
+    state: 'uml-state',
+    final: 'uml-state-final',
+    choice: 'uml-state-choice',
+    fork: 'uml-state-fork',
+    join: 'uml-state-join',
+    composite: 'uml-state-composite',
+    group: 'uml-state-composite',
+    note: 'uml-state-note',
+  },
+};
+const UPGRADED_IN_0217 = new Set(['uml-state']);
 /** Author-facing implicit type words approved for this profile edition. */
 export function approvedNotationTypeWords028(notationId: string): readonly string[] {
   if (notationId === 'infrastructure') return Object.keys(approvedTypeWords0214Extra.infrastructure ?? {});
@@ -160,6 +176,14 @@ export function approvedNotationTypeWords0214(notationId: string): readonly stri
     : { ...(approvedTypeWords[notationId] ?? {}), ...(approvedTypeWords0214Extra[notationId] ?? {}) };
   return Object.keys(merged);
 }
+/** Author-facing implicit type words approved for edition 0.2.17. */
+export function approvedNotationTypeWords0217(notationId: string): readonly string[] {
+  if (!notationMap.has(notationId)) return [];
+  const base = notationId === 'erd'
+    ? (approvedTypeWords0214Extra.erd ?? {})
+    : { ...(approvedTypeWords[notationId] ?? {}), ...(approvedTypeWords0214Extra[notationId] ?? {}) };
+  return Object.keys({ ...base, ...(approvedTypeWords0217Extra[notationId] ?? {}) });
+}
 function snapshotFor(notation: NotationDefinition): CatalogSnapshot028 {
   // infrastructure was introduced in edition 0.2.14 (no 0.2.8 digest exists).
   if (notation.id === 'infrastructure') return snapshotFor0214(notation);
@@ -172,8 +196,8 @@ function snapshotFor(notation: NotationDefinition): CatalogSnapshot028 {
   const glyphs = glyphRegistry.getAll().filter((g) => !g.addedInEdition);
   const baselineSymbolIds = new Set(symbols.map((s) => s.id));
   const baselineNotationSymbols = notation.symbols.filter((id) => baselineSymbolIds.has(id));
-  const { symbols0214: _omit0214, ...baselineNotation } = notation;
-  void _omit0214;
+  const { symbols0214: _omit0214, symbols0217: _omit0217, edgeStyles0217: _omitEdge0217, ...baselineNotation } = notation;
+  void [_omit0214, _omit0217, _omitEdge0217];
   const typeSymbols = new Map(baselineNotationSymbols.map((id) => [id, id]));
   for (const [word, symbolId] of Object.entries(approvedTypeWords[notation.id] ?? {})) {
     typeSymbols.set(word, symbolId);
@@ -200,10 +224,15 @@ function snapshotFor0214(notation: NotationDefinition): CatalogSnapshot028 {
   }
   const prior = installed ? catalogSnapshots0214.get(notation.id) : undefined;
   if (prior) return prior;
-  const symbols = symbolRegistry.getAll();
-  const shapes = shapeRegistry.getAll();
-  const glyphs = glyphRegistry.getAll();
+  // Isolate 0.2.14 items so 0.2.17+ additions never mutate frozen 0.2.14 digests.
+  const in0214 = (item: { addedInEdition?: string }) =>
+    !item.addedInEdition || !editionAdmits0217(item.addedInEdition);
+  const symbols = symbolRegistry.getAll().filter(in0214);
+  const shapes = shapeRegistry.getAll().filter(in0214);
+  const glyphs = glyphRegistry.getAll().filter(in0214);
   const allNotationSymbols = [...notation.symbols, ...(notation.symbols0214 ?? [])];
+  const { symbols0217: _omit0217, edgeStyles0217: _omitEdge0217, ...notation0214 } = notation;
+  void [_omit0217, _omitEdge0217];
   const typeSymbols = new Map(allNotationSymbols.map((id) => [id, id]));
   const words0214 = notation.id === 'erd'
     ? (approvedTypeWords0214Extra.erd ?? {})
@@ -214,7 +243,7 @@ function snapshotFor0214(notation: NotationDefinition): CatalogSnapshot028 {
   const version = notation.id === 'infrastructure' ? notation.version : '1.1.0';
   const snapshot: CatalogSnapshot028 = {
     identity: { id: notation.id, version,
-      digest: contentFingerprint({ notation: { ...notation, symbols: allNotationSymbols, version },
+      digest: contentFingerprint({ notation: { ...notation0214, symbols: allNotationSymbols, version },
         symbols: [...symbols].sort((a, b) => a.id.localeCompare(b.id)),
         shapes: [...shapes].sort((a, b) => a.id.localeCompare(b.id)),
         glyphs: [...glyphs].sort((a, b) => a.id.localeCompare(b.id)),
@@ -225,6 +254,46 @@ function snapshotFor0214(notation: NotationDefinition): CatalogSnapshot028 {
     typeSymbols,
   };
   if (installed) catalogSnapshots0214.set(notation.id, snapshot);
+  return snapshot;
+}
+function snapshotFor0217(notation: NotationDefinition): CatalogSnapshot028 {
+  const installed = notationMap.get(notation.id) === notation;
+  if (!UPGRADED_IN_0217.has(notation.id)) return snapshotFor0214(notation);
+  const prior = installed ? catalogSnapshots0217.get(notation.id) : undefined;
+  if (prior) return prior;
+  const symbols = symbolRegistry.getAll();
+  const shapes = shapeRegistry.getAll();
+  const glyphs = glyphRegistry.getAll();
+  const allNotationSymbols = [...notation.symbols, ...(notation.symbols0214 ?? []), ...(notation.symbols0217 ?? [])];
+  const { symbols0214: _o14, symbols0217: _o17, edgeStyles0217: _e17, ...baseNotation } = notation;
+  void [_o14, _o17, _e17];
+  const mergedEdgeStyles = notation.edgeStyles0217
+    ? { ...notation.edgeStyles, ...notation.edgeStyles0217 } : notation.edgeStyles;
+  const typeSymbols = new Map(allNotationSymbols.map((id) => [id, id]));
+  const words0217 = {
+    ...(approvedTypeWords[notation.id] ?? {}),
+    ...(approvedTypeWords0214Extra[notation.id] ?? {}),
+    ...(approvedTypeWords0217Extra[notation.id] ?? {}),
+  };
+  for (const [word, symbolId] of Object.entries(words0217)) {
+    typeSymbols.set(word, symbolId);
+  }
+  const version = '1.1.0';
+  const snapshot: CatalogSnapshot028 = {
+    identity: { id: notation.id, version,
+      digest: contentFingerprint({
+        notation: { ...baseNotation, ...(mergedEdgeStyles ? { edgeStyles: mergedEdgeStyles } : {}), symbols: allNotationSymbols, version },
+        symbols: [...symbols].sort((a, b) => a.id.localeCompare(b.id)),
+        shapes: [...shapes].sort((a, b) => a.id.localeCompare(b.id)),
+        glyphs: [...glyphs].sort((a, b) => a.id.localeCompare(b.id)),
+        typeSymbols: [...typeSymbols].sort(([a], [b]) => a.localeCompare(b)),
+      }) },
+    profileId: notation.id,
+    symbols: new Map(symbols.map((symbol) => [symbol.id, symbol])),
+    allowedSymbolIds: new Set(allNotationSymbols),
+    typeSymbols,
+  };
+  if (installed) catalogSnapshots0217.set(notation.id, snapshot);
   return snapshot;
 }
 
@@ -238,6 +307,19 @@ export function notationCatalogIdentity028(notationId: string): CatalogSnapshot0
 export function notationCatalogIdentity0214(notationId: string): CatalogSnapshot028['identity'] | undefined {
   const notation = notationRegistry.get(notationId);
   return notation ? { ...snapshotFor0214(notation).identity } : undefined;
+}
+
+/** Exact installed catalog identity for edition 0.2.17. */
+export function notationCatalogIdentity0217(notationId: string): CatalogSnapshot028['identity'] | undefined {
+  const notation = notationRegistry.get(notationId);
+  return notation ? { ...snapshotFor0217(notation).identity } : undefined;
+}
+
+/** Edition-aware installed catalog identity selector. */
+export function notationCatalogIdentityForEdition(notationId: string, edition?: string): CatalogSnapshot028['identity'] | undefined {
+  if (edition !== undefined && editionAdmits0217(edition)) return notationCatalogIdentity0217(notationId);
+  if (edition !== undefined && editionAdmits0214(edition)) return notationCatalogIdentity0214(notationId);
+  return notationCatalogIdentity028(notationId);
 }
 
 /** The frozen installed snapshot for a notation; document overlays build on it. */
@@ -254,11 +336,18 @@ export function installedCatalogSnapshot0214(notationId: string): CatalogSnapsho
   return snapshotFor0214(notation);
 }
 
+/** The frozen edition 0.2.17 installed snapshot for a notation. */
+export function installedCatalogSnapshot0217(notationId: string): CatalogSnapshot028 {
+  const notation = notationRegistry.get(notationId);
+  if (!notation) throw new Error(`Unknown notation ${notationId}`);
+  return snapshotFor0217(notation);
+}
+
 /** Edition-aware installed snapshot selector (defaults to 0.2.8 when omitted). */
 export function installedCatalogSnapshotForEdition(notationId: string, edition?: string): CatalogSnapshot028 {
-  return edition !== undefined && editionAdmits0214(edition)
-    ? installedCatalogSnapshot0214(notationId)
-    : installedCatalogSnapshot028(notationId);
+  if (edition !== undefined && editionAdmits0217(edition)) return installedCatalogSnapshot0217(notationId);
+  if (edition !== undefined && editionAdmits0214(edition)) return installedCatalogSnapshot0214(notationId);
+  return installedCatalogSnapshot028(notationId);
 }
 
 /** Installed-catalog adapter for the pure U1 interpretation seam. A document
@@ -323,6 +412,15 @@ export function getAvailableNotations0214(): NotationDefinition[] {
   return allNotations.filter((notation) => {
     const edition = editions?.[notation.id];
     return edition !== undefined && edition.enabled !== false && notation.id !== 'uml-state';
+  });
+}
+
+/** Diagram types offered for new visual Coral 0.2.17 documents (includes visual UML State). */
+export function getAvailableNotations0217(): NotationDefinition[] {
+  const editions = HEADER_MANIFEST_028['0.2.17'];
+  return allNotations.filter((notation) => {
+    const edition = editions?.[notation.id];
+    return edition !== undefined && edition.enabled !== false;
   });
 }
 

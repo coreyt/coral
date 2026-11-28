@@ -122,6 +122,21 @@ edition0214.infrastructure = {
 };
 manifest['0.2.14'] = edition0214;
 
+/** Edition 0.2.17 extends Coral 0.2.14 with full visual & hierarchical UML State
+ * machine support (initial, state, final, choice, fork, join, composite/group, note). */
+const edition0217 = JSON.parse(JSON.stringify(edition0214)) as HeaderManifest028[string];
+edition0217['uml-state'] = {
+  profiles: [{ id: 'uml-state', version: '1.0.0' }],
+  catalogs: [{
+    id: 'uml-state',
+    version: '1.1.0',
+    digest: 'sha256-528426177521c593c78acfbb60541dd1e92e88d5054bb6caceeae1f773d07489',
+  }],
+  compatible: [['1.0.0', '1.1.0']],
+  defaults: ['1.0.0', '1.1.0'],
+};
+manifest['0.2.17'] = edition0217;
+
 function freezeDeep(value: unknown): void {
   if (!value || typeof value !== 'object' || Object.isFrozen(value)) return;
   for (const child of Object.values(value)) freezeDeep(child);

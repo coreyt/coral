@@ -11,7 +11,7 @@ import type { PortReferenceRanges028 } from './graphPortReferences028.js';
 import type { SourceRange028 } from './portReferences028.js';
 import type { SuccessorWrittenPortRanges028 } from './successorSourcePortReferences028.js';
 import type { ConformanceReport, ConformanceRequest, RuleFinding } from './conformance028.js';
-import { notationCatalogIdentity028, notationCatalogIdentity0214, notationRegistry } from './notations/index.js';
+import { notationCatalogIdentity028, notationCatalogIdentity0214, notationCatalogIdentity0217, notationRegistry } from './notations/index.js';
 import type { NodeInterpretation028 } from './interpretation028.js';
 import { sourceEdgeDirection028 } from './sourceDirection028.js';
 
@@ -24,6 +24,8 @@ function installedHeaderRuntime028(): HeaderRuntime028 {
     trustedDigests[`${identity.id}@${identity.version}`] = identity.digest;
     const identity0214 = notationCatalogIdentity0214(notation.id);
     if (identity0214) trustedDigests[`${identity0214.id}@${identity0214.version}`] = identity0214.digest;
+    const identity0217 = notationCatalogIdentity0217(notation.id);
+    if (identity0217) trustedDigests[`${identity0217.id}@${identity0217.version}`] = identity0217.digest;
   }
   return { manifest: HEADER_MANIFEST_028, currentVersion: '0.2.8', trustedDigests };
 }
@@ -211,13 +213,32 @@ export function checkInstalledDocumentConformance028(
           ? token?.value === 'endEvent'
       : finding.id === 'CORAL.FLOWCHART.DECISION.SINGLE_ENTRY' ||
         finding.id === 'CORAL.FLOWCHART.DECISION.ALTERNATIVES'
-        ? token?.value === 'decision' : false;
+        ? token?.value === 'decision'
+      : finding.id === 'CORAL.UML.STATE.INITIAL.NO_INCOMING' ||
+        finding.id === 'CORAL.UML.STATE.INITIAL.OUTGOING_REQUIRED'
+        ? token?.value === 'initial'
+      : finding.id === 'CORAL.UML.STATE.FINAL.NO_OUTGOING'
+        ? token?.value === 'final'
+      : finding.id === 'CORAL.UML.STATE.CHOICE.BRANCHES'
+        ? token?.value === 'choice'
+      : finding.id === 'CORAL.UML.STATE.FORK_JOIN.DEGREE'
+        ? token?.value === 'fork' || token?.value === 'join' : false;
     const explicitChoice = finding.id === 'CORAL.SYMBOL.OUT_OF_PROFILE' ||
       finding.id === 'coral.symbol.unknown' ? declaration?.symbol
       : finding.id === 'coral.variant.unknown' ? declaration?.variant
       : (finding.id === 'CORAL.FLOWCHART.DECISION.SINGLE_ENTRY' ||
         finding.id === 'CORAL.FLOWCHART.DECISION.ALTERNATIVES') &&
-        declaration?.symbol?.value === 'flowchart-decision' ? declaration.symbol : undefined;
+        declaration?.symbol?.value === 'flowchart-decision' ? declaration.symbol
+      : (finding.id === 'CORAL.UML.STATE.INITIAL.NO_INCOMING' ||
+        finding.id === 'CORAL.UML.STATE.INITIAL.OUTGOING_REQUIRED') &&
+        declaration?.symbol?.value === 'uml-state-initial' ? declaration.symbol
+      : finding.id === 'CORAL.UML.STATE.FINAL.NO_OUTGOING' &&
+        declaration?.symbol?.value === 'uml-state-final' ? declaration.symbol
+      : finding.id === 'CORAL.UML.STATE.CHOICE.BRANCHES' &&
+        declaration?.symbol?.value === 'uml-state-choice' ? declaration.symbol
+      : finding.id === 'CORAL.UML.STATE.FORK_JOIN.DEGREE' &&
+        (declaration?.symbol?.value === 'uml-state-fork' || declaration?.symbol?.value === 'uml-state-join')
+        ? declaration.symbol : undefined;
     const exceptionChoice = finding.id === 'CORAL.CONFORMANCE.EXCEPTION.INVALID'
       ? declaration?.conformanceException : undefined;
     const routePort = finding.id === 'GRAPHIR.INVALID_ROUTE_PORT_REFERENCE'

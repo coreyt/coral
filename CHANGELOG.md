@@ -5,6 +5,57 @@ Notable changes to Coral are recorded here. The format follows
 Unreleased are planned for the named release and are updated when the owning
 slice closes.
 
+## 0.2.17
+
+Release `0.2.17` builds directly on `0.2.15`.
+
+### Added
+
+- Standalone **`coral` CLI** (`bin.coral` on `@coral-viz/render`, keeping the
+  six-package release inventory unchanged) with `coral validate [file]`,
+  `coral render --format svg|html|ascii [file]`, and
+  `coral convert --from auto|coral|mermaid|dot|plantuml --to coral|json [file]`,
+  supporting stdin (`-` or omitted), strict exit codes (`0`/`1`/`2`), zero
+  partial stdout on failure, and npm bin-resolution executable smoke coverage
+  for both `coral` and `coral-mcp`.
+- Documentation and capability-truth updates across `docs/use/reference/` and
+  `docs/embed/` covering `0.2.14` Crow's Foot ERD, C4-grade architecture, cloud
+  infrastructure, `parrotfish`/`anemone`, `0.2.17` visual UML State, public
+  `npx` CLI/MCP workflows, and the deterministic Mermaid-to-Coral transpiler.
+- Saved-source edition **`0.2.17`** (`@coralVersion "0.2.17"`, leaving `0.2.8`,
+  `0.2.9`, and `0.2.14` catalogs immutable) enabling visual and hierarchical
+  `@diagram uml-state` (`uml-state@1.1.0`):
+  - Visual symbols for `state`, nested `composite` containers, `initial`,
+    `final`, `choice`, `fork`, `join`, and `note`, plus `[description]`,
+    `[style]`, `[annotation]`, and `layout` support across `lowfi`, `hifi`, and
+    `anemone` themes.
+  - Edition `0.2.17` U2 conformance ruleset (`CORAL.UML.STATE.*`) and full
+    multi-consumer parity across `@coral-viz/browser`, `@coral-viz/mcp-server`,
+    and `@coral-viz/diagram-editor`, while keeping the browser IIFE gzip bundle
+    below the 800 KiB ceiling.
+- Deterministic zero-LLM **Mermaid.js-to-Coral transpiler** across
+  `@coral-viz/language`, `@coral-viz/render`, `@coral-viz/mcp-server`, and
+  `@coral-viz/diagram-editor`:
+  - Full 30-diagram-type Mermaid detection in `detect.ts` and direct 5-stage
+    transpilation (`transpileMermaidToCoral` + Stage 4B verified
+    `transpileAndVerifyMermaidToCoral`) for the Top 5 Mermaid diagram types:
+    Flowchart (`flowchart` / opt-in `block` / `architecture`), Sequence
+    (`uml-sequence`), Class (`uml-class`), ER (`erd`), and State (`uml-state`
+    defaulting to Edition `0.2.17` visual hierarchical output, with `'0.2.8'`
+    opt-in for legacy flat character-only output).
+  - Upgraded MCP `coral_convert` (`from: "mermaid", to: "coral"`) with
+    `flowchartTarget`, `edgeStyleMode`, and `stateTargetEdition` options while
+    preserving backward-compatible `structuredContent`.
+  - Explicit **Convert to Editable Coral** button and Command Palette action in
+    `@coral-viz/diagram-editor` with pre-commit loss review, target-switching,
+    fail-closed unsupported refusal, and single atomic Undo/Redo.
+
+### Fixed
+
+- Added `'inheritance'` to `KNOWN_RELATIONS_0214['uml-class']` in
+  `@coral-viz/language` so `[inheritance]` annotations on UML class edges align
+  with the `uml-class` catalog without emitting `coral.relation.unknown`.
+
 ## 0.2.15
 
 ### Fixed

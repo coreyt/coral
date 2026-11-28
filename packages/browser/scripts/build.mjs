@@ -61,8 +61,11 @@ const SCHEMA_STUB = '\0coral-browser:schema-stub';
 let elkRewritten = false;
 let successorRewritten = false;
 let caveatSourceRewritten = false;
+let sansSourceRewritten = false;
 const fontsModulePosix = posix(resolve(renderDist, 'text/fonts.js'));
+const reducedFontModulePosix = posix(reducedFontModule);
 const CAVEAT_SOURCE_RE = /\n\s*source:\s*\{\s*packageName:\s*'Caveat Latin variable'[\s\S]*?metricsSha256:\s*'generated-by-scripts\/generate-caveat-metrics028\.mjs',\s*\},/;
+const SANS_SOURCE_RE = /source:\{"packageName":[^}]+\},/;
 const rewrites = {
   name: 'coral-browser-rewrites',
   resolveId(source, importer) {
@@ -100,6 +103,11 @@ const rewrites = {
       successorRewritten = true;
       return successorCode;
     }
+    if (posix(id) === reducedFontModulePosix) {
+      if (!SANS_SOURCE_RE.test(code)) throw new Error(`Expected Inter build-time provenance block in ${id}.`);
+      sansSourceRewritten = true;
+      return code.replace(SANS_SOURCE_RE, '');
+    }
     if (posix(id) === fontsModulePosix) {
       if (!CAVEAT_SOURCE_RE.test(code)) throw new Error(`Expected Caveat build-time provenance block in ${id}.`);
       caveatSourceRewritten = true;
@@ -119,6 +127,7 @@ const rewrites = {
     if (!elkRewritten) throw new Error('The ELK window.goog rewrite did not run.');
     if (!successorRewritten) throw new Error('The successor standalone validator binding did not run.');
     if (!caveatSourceRewritten) throw new Error('The Caveat build-time provenance rewrite did not run.');
+    if (!sansSourceRewritten) throw new Error('The Inter build-time provenance rewrite did not run.');
   },
 };
 

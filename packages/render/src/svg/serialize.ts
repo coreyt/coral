@@ -11,6 +11,7 @@ import { verifySpatialConstraints028, type SpatialSidecar028 } from '../layout/t
  */
 
 import type { GraphIR, NotationProfile, Position } from '@graph-ir/core';
+import { editionAdmits0214 } from '@coral-viz/language';
 import type { GraphNode, GraphEdge } from '../types.js';
 import type { LayoutSection } from '../layout/types.js';
 import type { LayoutDirection } from '../layout/types.js';
@@ -35,6 +36,8 @@ import { bpmnEventFrame028, bpmnEventLabelLayout028, bpmnEventMinimumSize028,
   isBpmnEventSymbol028 } from '../bpmnEventVisual028.js';
 import { bpmnGatewayFrame028, bpmnGatewayLabelLayout028,
   bpmnGatewayMinimumSize028, isBpmnGatewaySymbol028 } from '../bpmnGatewayVisual028.js';
+import { isStateCircleSymbol0217, isStateMarkerSymbol0217, isStateSyncBarSymbol0217,
+  isUnlabeledStateChoice0217, stateCircleRadius0217, stateMarkerSize0217 } from '../stateVisual0217.js';
 import { semanticManifest028, spatialOwnerLookup028, spatialPartManifest028, shiftSpatialParts028,
   type SceneOwnerLookup028, type ScenePartRecord028, type SemanticManifest028 } from '../renderScene028.js';
 import { serializeScenePart028 } from './projectScene028.js';
@@ -489,6 +492,12 @@ export function measureSvgNode(node: GraphNode, options: SvgOptions): { width: n
   const user = symbolId ? options.documentCatalog029?.userSymbols?.get(symbolId) : undefined;
   if (user) return { width: user.outline.width, height: user.outline.height };
   const shapeId = catalogSymbol029(symbolId ?? '', options.documentCatalog029)?.shape ?? 'rectangle';
+  if (isStateMarkerSymbol0217(symbolId)) {
+    return stateMarkerSize0217(symbolId, options.layoutDirection ?? 'RIGHT');
+  }
+  if (isUnlabeledStateChoice0217(node, symbolId)) {
+    return { width: 38, height: 38 };
+  }
   if (isBpmnEventSymbol028(renderSymbolId(node, options.notation, options.documentCatalog029))) {
     const selected = bpmnEventMinimumSize028(displayText, font, options.layoutDirection ?? 'RIGHT');
     const alternate = alternateVisualFont028(node, options);
@@ -727,7 +736,9 @@ function place(nodes: GraphNode[], options: SvgOptions, portable: boolean, conta
           ...childFrames.map(child => child.y + child.height + 8));
       }
       let labelLayout = portable && !node.labelPlacement
-        ? containers.has(node.id) ? containerTitleLayout028(node, width, font!)
+        ? isStateMarkerSymbol0217(symbolId) || isUnlabeledStateChoice0217(node, symbolId)
+          ? undefined
+          : containers.has(node.id) ? containerTitleLayout028(node, width, font!)
           : isBpmnEventSymbol028(symbolId)
           ? (() => {
             const minimum = bpmnEventMinimumSize028(label, font!, options.layoutDirection ?? 'RIGHT');
@@ -839,8 +850,15 @@ function idlePortContacts028(
           stencilRayPoint028(shape, toward), gatewayFrame.width, gatewayFrame.height).x) / width,
         y: (gatewayFrame.y + gatewayFrame.height * stencilFitPoint028(shape,
           stencilRayPoint028(shape, toward), gatewayFrame.width, gatewayFrame.height).y) / height,
-      } : undefined;
-      const contourPoint = shape && !eventFrame
+      } : isStateCircleSymbol0217(symbolId) ? (() => {
+        const radius = stateCircleRadius0217(width, height);
+        const dx = toward.x - 0.5;
+        const dy = toward.y - 0.5;
+        const len = Math.hypot(dx, dy) || 1;
+        return { x: (width / 2 + (dx / len) * radius) / width,
+          y: (height / 2 + (dy / len) * radius) / height };
+      })() : isStateSyncBarSymbol0217(symbolId) ? toward : undefined;
+      const contourPoint = shape && !eventFrame && !framePoint
         ? frameFitPoint029(shape, stencilRayPoint028(shape, toward), width, height, { notationId, symbolId }) : undefined;
       const point = framePoint ?? contourPoint ?? toward;
       nodeContacts[port.id] = { x: item.x + shiftX + point.x * width,
@@ -916,6 +934,8 @@ function sourceIdlePortContacts028(
         ? bpmnEventFrame028(item.width, item.height, direction) : undefined;
       const gatewayFrame = isBpmnGatewaySymbol028(interpreted.effectiveSymbolId)
         ? bpmnGatewayFrame028(item.width, item.height, direction) : undefined;
+      const isStateCircle = isStateCircleSymbol0217(interpreted.effectiveSymbolId);
+      const isStateSyncBar = isStateSyncBarSymbol0217(interpreted.effectiveSymbolId);
       const fitted = eventFrame
         ? { x: eventFrame.x + 4 + outlinePoint.x * 48,
           y: eventFrame.y + 4 + outlinePoint.y * 48 }
@@ -926,11 +946,23 @@ function sourceIdlePortContacts028(
             return { x: gatewayFrame.x + point.x * gatewayFrame.width,
               y: gatewayFrame.y + point.y * gatewayFrame.height };
           })()
-          : frameFitPoint029(shape, outlinePoint, item.width, item.height, { notationId, symbolId: interpreted.effectiveSymbolId, layoutDirection: direction });
+          : isStateCircle
+            ? (() => {
+              const radius = stateCircleRadius0217(item.width, item.height);
+              const dx = outlinePoint.x - 0.5;
+              const dy = outlinePoint.y - 0.5;
+              const len = Math.hypot(dx, dy) || 1;
+              return { x: item.width / 2 + (dx / len) * radius,
+                y: item.height / 2 + (dy / len) * radius };
+            })()
+            : isStateSyncBar
+              ? { x: outlinePoint.x * item.width, y: outlinePoint.y * item.height }
+              : frameFitPoint029(shape, outlinePoint, item.width, item.height, { notationId, symbolId: interpreted.effectiveSymbolId, layoutDirection: direction });
+      const absoluteFitted = Boolean(eventFrame || gatewayFrame || isStateCircle || isStateSyncBar);
       nodeContacts[port.id] = { x: item.x + shiftX +
-        (eventFrame || gatewayFrame ? fitted.x : fitted.x * item.width),
+        (absoluteFitted ? fitted.x : fitted.x * item.width),
       y: item.y + shiftY +
-        (eventFrame || gatewayFrame ? fitted.y : fitted.y * item.height) };
+        (absoluteFitted ? fitted.y : fitted.y * item.height) };
     }
     contacts[item.node.id] = nodeContacts;
   }
@@ -954,8 +986,19 @@ export function prepareSpatialScene028(
   // by the SVG layout graph, or built from the source-owned successor.
   const carried = (graph as { documentCatalog029?: CatalogSnapshot028 }).documentCatalog029;
   const sourceSymbols = options.successorSource?.userSymbols029;
+  const derivedEdition = (() => {
+    const semEdition = (options.semanticGraph?.metadata?.custom as { coralEdition?: unknown } | undefined)?.coralEdition;
+    if (typeof semEdition === 'string') return semEdition;
+    const graphEdition = (graph.metadata as { custom?: { coralEdition?: unknown } } | undefined)?.custom?.coralEdition;
+    if (typeof graphEdition === 'string') return graphEdition;
+    const srcCat = options.successorSource?.catalog;
+    if (srcCat?.id === 'uml-state' && srcCat.version === '1.1.0') return '0.2.17';
+    if (srcCat && (srcCat.version === '1.1.0' || srcCat.id === 'infrastructure')) return '0.2.14';
+    return undefined;
+  })();
   const catalog = options.documentCatalog029 ?? carried ??
-    (sourceSymbols?.length && notationId ? documentCatalog029(notationId, sourceSymbols) : undefined);
+    (notationId && (sourceSymbols?.length || (derivedEdition !== undefined && editionAdmits0214(derivedEdition)))
+      ? documentCatalog029(notationId, sourceSymbols ?? [], derivedEdition) : undefined);
   if (catalog) options = { ...options, documentCatalog029: catalog };
   // Escapes of authored ports need the parse interpretations: the GraphIR 3
   // display node no longer carries them.

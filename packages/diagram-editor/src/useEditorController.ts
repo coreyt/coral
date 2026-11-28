@@ -74,8 +74,13 @@ import {
   canonicalSimpleMermaidSequence028, writeSupplementalMermaidSequence028, detectFormat, isSequenceGraph, OPEN_FILE_ACCEPT,
   parseDot, parseMermaid, parsePlantUml, validateSequenceInteraction,
   type SourceFormat,
+  type MermaidTranspileResult,
   editionAdmitsUserSymbols029,
 } from '@coral-viz/language';
+import type {
+  MermaidConversionState,
+  MermaidConvertRequestOptions,
+} from './components/MermaidConversionBanner';
 import {
   applySequenceOperation, canEnterSequenceNotation, canonicalizeSequenceGraph, sequenceCanonicalGraph, type SequenceOperation, type SequenceOperationResult,
 } from './sequenceEditing';
@@ -157,6 +162,7 @@ import {
   type RenderStyle028,
   type RenderStyleInput0214,
   type PreparedSpatialScene028,
+  transpileAndVerifyMermaidToCoral,
   visualStyle028,
   resolveDiagramFont,
 } from '@coral-viz/render';
@@ -318,6 +324,7 @@ type DslHistoryEntry = {
   sequence: number;
   dsl: string;
   dslType: string;
+  mermaidFileSource?: boolean;
   graphIRPreviewSource?: boolean;
   sourceErrorsLocked?: boolean;
   graph?: GraphIR;
@@ -456,7 +463,7 @@ const TEXT_TO_DIAGRAM_DEBOUNCE_MS = 300;
 const TEXT_ORIGIN_SETTLE_MS = 100;
 const INTERNAL_TEXT_GUARD_MS = 1000;
 const DOCUMENT_LOAD_GUARD_MS = 400;
-const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.15';
+const WELCOME_SEEN_KEY = 'coral-welcome-seen:0.2.17';
 
 // layoutNodes, convertEdges, LayoutResult imported from './hooks/diagramUtils'
 const layoutNodes = layoutNodesUtil;
@@ -1472,6 +1479,12 @@ export function useEditorController() {
   const [dsl, setDsl] = useState(startupSource.text);
   // Raw and saved Mermaid files own their source text.
   const [mermaidFileSource, setMermaidFileSource] = useState(false);
+  const mermaidFileSourceRef = useRef(mermaidFileSource);
+  mermaidFileSourceRef.current = mermaidFileSource;
+  const [mermaidConversion, setMermaidConversion] = useState<MermaidConversionState | null>(null);
+  useEffect(() => {
+    setMermaidConversion((prev) => (prev && prev.sourceText === dsl && dslType === 'mermaid' ? prev : null));
+  }, [dsl, dslType]);
   const [nodes, setNodes, onNodesChangeBase] = useNodesState<Node<SymbolNodeData>>([]);
   const [edges, setEdges, onEdgesChangeBase] = useEdgesState<Edge>([]);
   const [rasterExportError, setRasterExportError] = useState<string | null>(null);
@@ -2034,6 +2047,7 @@ export function useEditorController() {
       sequence,
       dsl,
       dslType,
+      mermaidFileSource: mermaidFileSourceRef.current,
       graphIRPreviewSource: graphIRPreviewSourceRef.current === dslRef.current,
       sourceErrorsLocked: sourceErrorsLockedRef.current,
       graph: structuredClone(graph),
@@ -5019,6 +5033,101 @@ export function useEditorController() {
   }, [captureCurrentGraph, invalidateEditIntent, llmChat.isMutationPending, pushContentHistory, refuseDuringUpdate, revisions,
     setNodes, setEdges, dsl, dslType, mermaidFileSource, nodes, notation, captureCanonicalProjection]);
 
+  // Explicit, deterministic, zero-LLM Mermaid-to-Coral conversion (TR-10 / SPEC-18).
+  const handleCancelMermaidConversion = useCallback(() => {
+    setMermaidConversion(null);
+  }, []);
+
+  const handleConvertMermaidToCoral = useCallback((
+    options?: MermaidConvertRequestOptions,
+  ): MermaidTranspileResult | null => {
+    if (dslType !== 'mermaid') return null;
+    if (llmChat.isMutationPending) {
+      setGuidanceAnnouncement(AI_MUTATION_LOCK_MESSAGE);
+      return null;
+    }
+    if (refuseDuringUpdate('edit') !== null) return null;
+
+    const flowchartTarget = options?.flowchartTarget ?? 'flowchart';
+    const stateTargetEdition = options?.stateTargetEdition ?? '0.2.17';
+    const currentText = dslRef.current;
+    const result = transpileAndVerifyMermaidToCoral(currentText, {
+      mode: 'best-effort',
+      flowchartTarget,
+      stateTargetEdition,
+    });
+
+    if (!result.ok || !result.coral) {
+      setMermaidConversion({ kind: 'refused', sourceText: currentText, flowchartTarget, result });
+      const firstError = result.diagnostics.find((d) => d.severity === 'error');
+      setGuidanceAnnouncement(
+        firstError
+          ? `Could not convert Mermaid to Coral: ${firstError.message}`
+          : 'Could not convert Mermaid to Coral; original Mermaid source preserved.',
+      );
+      return result;
+    }
+
+    if (result.lossSummary.lossy && !options?.force) {
+      setMermaidConversion({ kind: 'loss-review', sourceText: currentText, flowchartTarget, result });
+      setGuidanceAnnouncement(
+        `Review ${result.lossSummary.warningCount} conversion ${result.lossSummary.warningCount === 1 ? 'note' : 'notes'} before converting Mermaid to Coral.`,
+      );
+      return result;
+    }
+
+    const conversionNotes: EditorParseError[] = result.diagnostics
+      .filter((item) => item.severity !== 'error')
+      .map((item) => editorDiagnostic({
+        severity: item.severity,
+        code: item.code,
+        message: item.message,
+        ...(item.range ? { range: item.range, position: item.range.start } : {}),
+      }));
+
+    // Commit text replacement + format switch in ONE single atomic Undo step.
+    sourceEditSessionRef.current = false;
+    replacementNeedsConfirmationRef.current = true;
+    acceptTextSource();
+    cancelActiveGesture();
+    invalidateEditIntent();
+    // Snapshot the pre-conversion 'current' publication envelope BEFORE starting
+    // the new Coral source revision so Undo restores cleanly without triggering
+    // a spurious pending-source re-parse (and immediate Redo stays unlocked).
+    pushContentHistory(captureCurrentGraph(), waypointMapRef.current, {
+      settings: structuredClone(documentSettingsRef.current),
+    });
+    revisions.beginSource();
+
+    formatSwitchDiagnosticsRef.current = conversionNotes;
+    setFormatSwitchDiagnostics(conversionNotes);
+    setNodes([]);
+    setEdges([]);
+    setMermaidFileSource(false);
+    graphIRPreviewSourceRef.current = null;
+    setSourceErrorsLocked(false);
+    setDslType('coral');
+    setDsl(result.coral);
+    needsFullLayoutRef.current = true;
+    previousGraphRef.current = { nodes: [], edges: [] };
+    setFormatSwitchPending(true);
+    setMermaidConversion(null);
+    setGuidanceAnnouncement(`Converted Mermaid to editable Coral (${result.targetNotation ?? 'coral'}).`);
+    return result;
+  }, [
+    acceptTextSource,
+    cancelActiveGesture,
+    captureCurrentGraph,
+    dslType,
+    invalidateEditIntent,
+    llmChat.isMutationPending,
+    pushContentHistory,
+    refuseDuringUpdate,
+    revisions,
+    setEdges,
+    setNodes,
+  ]);
+
   // Switch notation - re-render with new symbols
   const handleNotationChange = useCallback((newNotation: NotationType) => {
     if (refuseDuringUpdate(isAuthored028Source(dslRef.current) ? 'source-edit' : 'edit') !== null) return;
@@ -5358,6 +5467,7 @@ export function useEditorController() {
         sequence: prev.sequence,
         dsl,
         dslType,
+        mermaidFileSource: mermaidFileSourceRef.current,
         graphIRPreviewSource: graphIRPreviewSourceRef.current === dslRef.current,
         sourceErrorsLocked: sourceErrorsLockedRef.current,
         graph: structuredClone(sourceGraphRef.current),
@@ -5396,6 +5506,7 @@ export function useEditorController() {
       const restoredDiagnostics = (prev.diagnostics ?? []).map((diagnostic) => ({ ...diagnostic }));
       formatSwitchDiagnosticsRef.current = restoredDiagnostics;
       setFormatSwitchDiagnostics(restoredDiagnostics);
+      setMermaidFileSource(Boolean(prev.mermaidFileSource));
       setDslType(prev.dslType as DSLType);
       revisions.restorePublication(prev.publication);
       graphIRPreviewSourceRef.current = prev.graphIRPreviewSource ? prev.dsl : null;
@@ -5478,6 +5589,7 @@ export function useEditorController() {
         sequence: next.sequence,
         dsl,
         dslType,
+        mermaidFileSource: mermaidFileSourceRef.current,
         graphIRPreviewSource: graphIRPreviewSourceRef.current === dslRef.current,
         sourceErrorsLocked: sourceErrorsLockedRef.current,
         graph: structuredClone(sourceGraphRef.current),
@@ -5516,6 +5628,7 @@ export function useEditorController() {
       const restoredDiagnostics = (next.diagnostics ?? []).map((diagnostic) => ({ ...diagnostic }));
       formatSwitchDiagnosticsRef.current = restoredDiagnostics;
       setFormatSwitchDiagnostics(restoredDiagnostics);
+      setMermaidFileSource(Boolean(next.mermaidFileSource));
       setDslType(next.dslType as DSLType);
       revisions.restorePublication(next.publication);
       graphIRPreviewSourceRef.current = next.graphIRPreviewSource ? next.dsl : null;
@@ -7021,6 +7134,7 @@ export function useEditorController() {
     { id: 'export-jpg', label: 'Export JPEG', category: 'File', action: handleExportJpg },
     { id: 'format-mermaid', label: 'Switch to Mermaid', category: 'Editor', action: () => handleDslTypeChange('mermaid'), disabled: authoredMutationLocked || dslType === 'mermaid' },
     { id: 'format-coral', label: 'Switch to Coral DSL', category: 'Editor', action: () => handleDslTypeChange('coral'), disabled: authoredMutationLocked || dslType === 'coral' },
+    { id: 'convert-mermaid-to-coral', label: 'Convert to Editable Coral', category: 'Editor', action: () => handleConvertMermaidToCoral(), disabled: dslType !== 'mermaid' || historyMutationLocked },
     { id: 'notation-flowchart', label: 'Notation: Flowchart', category: 'View', action: () => handleNotationChange('flowchart'), disabled: historyMutationLocked || notation === 'flowchart' },
     { id: 'notation-arch', label: 'Notation: Architecture', category: 'View', action: () => handleNotationChange('architecture'), disabled: historyMutationLocked || notation === 'architecture' },
     { id: 'notation-bpmn', label: 'Notation: BPMN', category: 'View', action: () => handleNotationChange('bpmn'), disabled: historyMutationLocked || notation === 'bpmn' },
@@ -7039,7 +7153,7 @@ export function useEditorController() {
     { id: 'welcome', label: 'Welcome and Examples', category: 'Help', transfersFocus: true, action: (context) => openGuidance('welcome', context?.invoker) },
     { id: 'help', label: 'Help', category: 'Help', transfersFocus: true, action: (context) => openGuidance('help', context?.invoker) },
     { id: 'about', label: 'About Coral', category: 'Help', transfersFocus: true, action: (context) => openGuidance('about', context?.invoker) },
-  ], [authoredMutationLocked, nodeCreationLocked, edgeCreationLocked, historyMutationLocked, historyControlsLocked, dsl, openRefused, handleReflow, handleUndo, handleRedo, handleCheckConformance, handleSaveDownload, chooseFileToOpen, handleExportGraphIR, handleExportSvg, handleExportHtml, handleExportPng, handleExportJpg, canUndo, canRedo, dslUndoCount, dslRedoCount, dslType, notation, inspectorCollapsed, handleDslTypeChange, handleNotationChange, authoringEdgeAvailable, passiveVisualPending, sourceOwned028, sourceReflowReady, openAuthoring, openGuidance, openPreferences, graphExportLabel]);
+  ], [authoredMutationLocked, nodeCreationLocked, edgeCreationLocked, historyMutationLocked, historyControlsLocked, dsl, openRefused, handleReflow, handleUndo, handleRedo, handleCheckConformance, handleSaveDownload, chooseFileToOpen, handleExportGraphIR, handleExportSvg, handleExportHtml, handleExportPng, handleExportJpg, canUndo, canRedo, dslUndoCount, dslRedoCount, dslType, notation, inspectorCollapsed, handleDslTypeChange, handleConvertMermaidToCoral, handleNotationChange, authoringEdgeAvailable, passiveVisualPending, sourceOwned028, sourceReflowReady, openAuthoring, openGuidance, openPreferences, graphExportLabel]);
 
   // Command Palette theme
   const commandPaletteTheme = useMemo<CommandPaletteTheme>(() => ({
@@ -7301,6 +7415,9 @@ export function useEditorController() {
       onEditSessionEnd: () => { sourceEditSessionRef.current = false; },
       // handleDslTypeChange announces the AI, owner, and source-error refusals.
       onDslTypeChange: (type: DSLType) => handleDslTypeChange(type),
+      mermaidConversion,
+      onConvertMermaidToCoral: handleConvertMermaidToCoral,
+      onCancelMermaidConversion: handleCancelMermaidConversion,
       bottomPanelTab,
       onBottomPanelTabChange: setBottomPanelTab,
       diagnosticsCollapsed,

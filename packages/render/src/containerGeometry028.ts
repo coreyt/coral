@@ -3,7 +3,7 @@ import type { GraphNode } from '@graph-ir/core';
 import type { ShapeDefinition } from './types.js';
 
 const CONTAINER_TYPES_0214 = new Set([
-  'group', 'boundary', 'systemBoundary', 'containerBoundary',
+  'group', 'composite', 'boundary', 'systemBoundary', 'containerBoundary',
   'account', 'subscription', 'project', 'region', 'az', 'availabilityZone',
   'vpc', 'vnet', 'subnet', 'cluster', 'securityGroup',
 ]);
@@ -12,6 +12,7 @@ export function isContainerNode028(node: Pick<GraphNode, 'type' | 'children' | '
   return !node.classifier && (
     CONTAINER_TYPES_0214.has(node.type)
     || node.symbol === 'infra-boundary'
+    || node.symbol === 'uml-state-composite'
     || Boolean(node.children?.length)
   );
 }

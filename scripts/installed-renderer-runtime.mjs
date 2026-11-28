@@ -147,9 +147,20 @@ try {
   const activation = await client.callTool({ name: 'coral_convert', arguments: {
     content: 'sequenceDiagram\nparticipant A\nparticipant B\nA->>+B: hi\nB-->>-A: done',
     from: 'mermaid', to: 'coral', strict: true } });
-  assert.equal(activation.isError, true, 'installed Mermaid import boundary');
-  assert.ok(activation.structuredContent?.diagnostics.some((item) => item.code === 'mcp.coral028.import.unsupported'));
-  assert.ok(!activation.content.some((item) => item.type === 'text' && item.text.includes('@diagram')));
+  if (mcpManifest.version === '0.2.17') {
+    assert.equal(activation.isError, false, '0.2.17 transpiler supports Mermaid sequence activations');
+    assert.ok(activation.content.some((item) => item.type === 'text' && item.text.includes('activation ')));
+    const unsupported = await client.callTool({ name: 'coral_convert', arguments: {
+      content: 'gantt\n  title Plan\n  section A\n  Task :a1, 2026-01-01, 5d',
+      from: 'mermaid', to: 'coral', strict: true } });
+    assert.equal(unsupported.isError, true, '0.2.17 installed Mermaid import boundary');
+    assert.ok(unsupported.structuredContent?.diagnostics.some((item) => item.code === 'mermaid.diagram.unsupported'));
+    assert.ok(!unsupported.content.some((item) => item.type === 'text' && item.text.includes('@diagram')));
+  } else {
+    assert.equal(activation.isError, true, 'installed Mermaid import boundary');
+    assert.ok(activation.structuredContent?.diagnostics.some((item) => item.code === 'mcp.coral028.import.unsupported'));
+    assert.ok(!activation.content.some((item) => item.type === 'text' && item.text.includes('@diagram')));
+  }
 
   for (const name of DISABLED_RENDERER_SOURCE_CASES_028) {
     const source = fixture(name);

@@ -1,8 +1,8 @@
 # @coral-viz/render
 
-## Coral 0.2.15
+## Coral 0.2.17
 
-Install verified 0.2.15 archives together with the matching published GraphIR
+Install verified 0.2.17 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 Existing examples retain their documented compatibility API contracts.
 
@@ -10,7 +10,7 @@ DOM-free Coral shapes, symbols, notations, text measurement, layout, SVG, and
 standalone HTML rendering.
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.15.tgz ./coral-viz-render-0.2.15.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.17.tgz ./coral-viz-render-0.2.17.tgz
 ```
 
 ```javascript
@@ -66,9 +66,18 @@ The existing supported source subset and refusals are unchanged.
 `createCharacterDebugView028(text)` returns numbered row/column inspection and
 a per-cell Unicode CSV for the returned preview text.
 
-Coral 0.2.15 keeps `lowfi` and `hifi` as basic monochrome black-and-white
-outputs and exports `parrotfish` for modeled presentation styling without
-changing layout, flow, or routing.
+Coral 0.2.17 keeps `lowfi` and `hifi` as basic monochrome black-and-white
+outputs, exports `parrotfish` (`anemone`) for modeled presentation styling
+without changing layout, flow, or routing, adds visual and hierarchical
+`@diagram uml-state` in edition `0.2.17`, exports
+`transpileAndVerifyMermaidToCoral` for verified Top-5 Mermaid transpilation, and
+ships the standalone `coral` CLI (`validate`, `render --format svg|html|ascii`,
+`convert --from ... --to coral|json`):
+
+```sh
+npx -y --package=@coral-viz/render -- coral validate diagram.coral
+npx -y --package=@coral-viz/render -- coral render --format svg diagram.coral > diagram.svg
+```
 
 The default SVG path embeds one deterministic Inter face. Portable per-family
 and per-weight font embedding is enabled by font settings, weight, or line

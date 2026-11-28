@@ -40,6 +40,17 @@ export function foldStandaloneSchema028(code) {
     return { value };
   };
   let folded = 0;
+  const messagePool = [];
+  const messageIndex = new Map();
+  const internMessage = (text) => {
+    let idx = messageIndex.get(text);
+    if (idx === undefined) {
+      idx = messagePool.length;
+      messagePool.push(text);
+      messageIndex.set(text, idx);
+    }
+    return ts.factory.createNumericLiteral(idx);
+  };
   const transformed = ts.transform(source, [(context) => {
     const visit = (node) => {
       if (ts.isVariableStatement(node) && node.declarationList.declarations.some((declaration) =>
@@ -63,8 +74,9 @@ export function foldStandaloneSchema028(code) {
           (p.name.text === 'missingProperty' || p.name.text === 'additionalProperty'));
         if (!keep) return undefined;
       }
-      // Factor repeated error-object keys without changing Core's observable
-      // paths or Ajv-generated messages. No validation branch is rewritten.
+      // Factor repeated error-object keys and repeated static Ajv messages
+      // without changing Core's observable paths or Ajv-generated messages.
+      // No validation branch is rewritten.
       if (ts.isObjectLiteralExpression(node)) {
         const props = new Map(node.properties.filter((p) =>
           ts.isPropertyAssignment(p) || ts.isShorthandPropertyAssignment(p))
@@ -74,14 +86,43 @@ export function foldStandaloneSchema028(code) {
             const p = props.get(key);
             return ts.isShorthandPropertyAssignment(p) ? p.name : ts.visitNode(p.initializer, visit);
           };
-          const args = [value('instancePath'), value('message')];
+          const msgNode = value('message');
           const keyword = props.get('keyword').initializer.text;
-          if (['required', 'additionalProperties'].includes(keyword)) {
+          if (keyword === 'required' || keyword === 'additionalProperties') {
             const key = keyword === 'required' ? 'missingProperty' : 'additionalProperty';
             const param = props.get('params').initializer.properties.find((p) => p.name.getText(source) === key);
-            args.push(ts.factory.createNumericLiteral(keyword === 'required' ? 1 : 2), ts.visitNode(param.initializer, visit));
+            const paramNode = ts.visitNode(param.initializer, visit);
+            const requiredPropText = (() => {
+              if (!ts.isStringLiteral(paramNode)) return undefined;
+              if (ts.isStringLiteral(msgNode) && msgNode.text === `must have required property '${paramNode.text}'`) return paramNode.text;
+              // Ajv emits `"must have required property '" + "prop" + "'"` as nested BinaryExpression.
+              if (ts.isBinaryExpression(msgNode) && msgNode.operatorToken.kind === ts.SyntaxKind.PlusToken
+                && ts.isStringLiteral(msgNode.right) && msgNode.right.text === "'"
+                && ts.isBinaryExpression(msgNode.left) && msgNode.left.operatorToken.kind === ts.SyntaxKind.PlusToken
+                && ts.isStringLiteral(msgNode.left.left) && msgNode.left.left.text === "must have required property '"
+                && ts.isStringLiteral(msgNode.left.right) && msgNode.left.right.text === paramNode.text) {
+                return paramNode.text;
+              }
+              return undefined;
+            })();
+            const standardRequired = keyword === 'required' && requiredPropText !== undefined;
+            const standardAdditional = keyword === 'additionalProperties' && ts.isStringLiteral(msgNode)
+              && msgNode.text === 'must NOT have additional properties';
+            const msgArg = (standardRequired || standardAdditional)
+              ? ts.factory.createNull()
+              : (ts.isStringLiteral(msgNode) ? internMessage(msgNode.text) : msgNode);
+            return ts.factory.createCallExpression(ts.factory.createIdentifier('_e'), undefined, [
+              value('instancePath'),
+              msgArg,
+              ts.factory.createNumericLiteral(keyword === 'required' ? 1 : 2),
+              paramNode,
+            ]);
           }
-          return ts.factory.createCallExpression(ts.factory.createIdentifier('_e'), undefined, args);
+          const msgArg = ts.isStringLiteral(msgNode) ? internMessage(msgNode.text) : msgNode;
+          return ts.factory.createCallExpression(ts.factory.createIdentifier('_e'), undefined, [
+            value('instancePath'),
+            msgArg,
+          ]);
         }
       }
       const constant = (ts.isPropertyAccessExpression(node) || ts.isIdentifier(node)) ? staticValue(node) : undefined;
@@ -103,10 +144,32 @@ export function foldStandaloneSchema028(code) {
   try {
     if (!folded) throw new Error('No standalone schema references were folded; review compiler binding.');
     let out = ts.createPrinter({ removeComments: false }).printFile(transformed.transformed[0]);
-    const helper = 'function _p(v,e){return v===null?[e]:(v.push(e),v);}' +
-      'function _e(p,m,k,v){const e={instancePath:p,message:m};if(k){e.keyword=k===1?"required":"additionalProperties";e.params=k===1?{missingProperty:v}:{additionalProperty:v};}return e;}\n';
+    const helper = `const _M=${JSON.stringify(messagePool)};` +
+      'function _o(x){return x&&typeof x=="object"&&!Array.isArray(x);}' +
+      'function _n(x){return typeof x=="number"&&isFinite(x);}' +
+      'function _v(e){if(e.dynamicProps)e.props=undefined;if(e.dynamicItems)e.items=undefined;return e;}' +
+      'function _p(v,e){return v===null?[e]:(v.push(e),v);}' +
+      'function _m(v,e){return v===null?e:v.concat(e);}' +
+      'function _e(p,m,k,v){const e={instancePath:p,message:k&&m===null?(k===1?"must have required property \'"+v+"\'":"must NOT have additional properties"):typeof m==="number"?_M[m]:m};if(k){e.keyword=k===1?"required":"additionalProperties";e.params=k===1?{missingProperty:v}:{additionalProperty:v};}return e;}' +
+      'function _q(v,p,m,k,x){return _p(v,_e(p,m,k,x));}\n';
+    const exportMatch = /module\.exports = (validate\d+);/.exec(out);
+    if (!exportMatch) throw new Error('Root validator export was not found; review compiler binding.');
+    const rootValidator = exportMatch[1];
     out = out
-      .replace(/const err\d+ = (_e\([^;]+\));\s*if \(vErrors === null\) \{\s*vErrors = \[err\d+\];\s*\}\s*else \{\s*vErrors\.push\(err\d+\);\s*\}\s*errors\+\+;/g, 'vErrors=_p(vErrors,$1);errors++;');
+      .replace(/const err(\d+) = _e\(([^;]+)\);\s*if \(vErrors === null\) \{\s*vErrors = \[err\1\];\s*\}\s*else \{\s*vErrors\.push\(err\1\);\s*\}\s*errors\+\+;/g, 'vErrors=_q(vErrors,$2);errors++;')
+      .replace(/const err\d+ = \{\};\s*if \(vErrors === null\) \{\s*vErrors = \[err\d+\];\s*\}\s*else \{\s*vErrors\.push\(err\d+\);\s*\}\s*errors\+\+;/g, 'vErrors=_p(vErrors,{});errors++;')
+      .replace(/const evaluated0 = (validate\d+\.evaluated);\s*if \(evaluated0\.dynamicProps\) \{\s*evaluated0\.props = undefined;\s*\}\s*if \(evaluated0\.dynamicItems\) \{\s*evaluated0\.items = undefined;\s*\}/g, 'const evaluated0=_v($1);')
+      .replace(/if \(!\(((?:validate\d+|wrapper\d+\.validate))\(([^,]+), \{ instancePath: ([^,]+), parentData: [^,]+, parentDataProperty: [^,]+, rootData, dynamicAnchors \}\)\)\) \{\s*vErrors = vErrors === null \? \1\.errors : vErrors\.concat\(\1\.errors\);\s*errors = vErrors\.length;\s*\}/g, 'if(!$1($2,$3)){vErrors=_m(vErrors,$1.errors);errors=vErrors.length;}')
+      .replace(/if \(!\(((?:validate\d+|wrapper\d+\.validate))\(([^,]+), \{ instancePath, parentData, parentDataProperty, rootData, dynamicAnchors \}\)\)\) \{\s*vErrors = vErrors === null \? \1\.errors : vErrors\.concat\(\1\.errors\);\s*errors = vErrors\.length;\s*\}/g, 'if(!$1($2,instancePath)){vErrors=_m(vErrors,$1.errors);errors=vErrors.length;}')
+      .replace(/function (validate\d+)\(data, \{ instancePath = "", parentData, parentDataProperty, rootData = data, dynamicAnchors = \{\} \} = \{\}\)/g,
+        (_match, fn) => fn === rootValidator
+          ? `function ${fn}(data, { instancePath = "" } = {})`
+          : `function ${fn}(data, instancePath = "")`)
+      .replace(/\b(\w+) && typeof \1 == "object" && !Array\.isArray\(\1\)/g, '_o($1)')
+      .replace(/\(typeof (\w+) == "number"\) && \(isFinite\(\1\)\)/g, '_n($1)');
+    if (/\b(?:parentData|parentDataProperty|rootData|dynamicAnchors)\b/.test(out)) {
+      throw new Error('Unexpected live Ajv context field remained after folding; review compiler binding.');
+    }
     return { code: out.replace('"use strict";', `"use strict";\n${helper}`), folded };
   } finally { transformed.dispose(); }
 }

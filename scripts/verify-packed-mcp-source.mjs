@@ -157,10 +157,10 @@ try {
   assert.ok(!checkedGraph.isError, JSON.stringify(checkedGraph.structuredContent));
   assert.deepEqual(checkedGraph.structuredContent?.diagnostics, []);
   for (const [unsupported, expectedCode] of [
-    ['sequenceDiagram\\nparticipant A\\nparticipant B\\nA->>+B: hi\\nB-->>-A: done',
-      'mcp.coral028.import.unsupported'],
-    ['sequenceDiagram\\nparticipant A\\nparticipant B\\nloop retry\\nopt ok\\nA->>B: hi\\nend\\nend',
-      'mermaid.sequence.fragment.nested'],
+    ['gantt\\n  title Plan\\n  section A\\n  Task :a1, 2026-01-01, 5d',
+      'mermaid.diagram.unsupported'],
+    ['flowchart LR\\n  api[API] --> db[(Database)]',
+      'mermaid.flowchart.shape.degraded'],
   ]) {
     const refusal = await client.callTool({ name: 'coral_convert', arguments: {
       content: unsupported, from: 'mermaid', to: 'coral', strict: true,

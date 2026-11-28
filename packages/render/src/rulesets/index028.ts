@@ -1,9 +1,11 @@
 import type { GraphIR } from '@graph-ir/core';
 import type { RulesetDefinition } from '../conformance028.js';
+import { editionAdmits0217 } from '@coral-viz/language';
 import { bpmnRuleset028, bpmnRulesetWithSourceDirections028 } from './bpmn028.js';
 import { flowchartRuleset028, flowchartRulesetWithSourceDirections028 } from './flowchart028.js';
 import { umlClassRuleset028 } from './umlClass028.js';
 import { umlSequenceRuleset028 } from './umlSequence028.js';
+import { umlStateRuleset0217, umlStateRulesetWithSourceDirections0217 } from './umlState0217.js';
 import type { SourceEdgeDirection028 } from '../sourceDirection028.js';
 
 /** Shared-only inventories explicitly approved in Slice 10. */
@@ -64,4 +66,19 @@ export function profileRuleCard028(profileId: string,
   if (profileId === 'bpmn' && sourceDirections) return freezeCard(
     bpmnRulesetWithSourceDirections028(sourceDirections));
   return card;
+}
+
+const umlStateCard0217 = freezeCard(umlStateRuleset0217);
+
+export function profileRuleCardForEdition0217(
+  profileId: string,
+  edition?: string,
+  sourceDirections?: ReadonlyMap<string, SourceEdgeDirection028>,
+): RulesetDefinition<GraphIR> {
+  if (profileId === 'uml-state' && edition !== undefined && editionAdmits0217(edition)) {
+    return sourceDirections
+      ? freezeCard(umlStateRulesetWithSourceDirections0217(sourceDirections))
+      : umlStateCard0217;
+  }
+  return profileRuleCard028(profileId, sourceDirections);
 }

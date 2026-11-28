@@ -290,9 +290,11 @@ test('current capability and notation guides consume current inventory and catal
     assert(capabilities.includes(`\`notation-${id}\``), id);
     assert(notations.includes(`{#${id}}`), id);
   }
-  assert.match(capabilities, /`notation-erd` \| Disabled/);
+  assert.match(capabilities, /`notation-erd` \| `0\.2\.14` Crow's Foot ERD/);
   assert.match(capabilities, /Seven/);
   assert.match(capabilities, /MonoTrue v0\.2\.0/);
+  assert.match(capabilities, /`0\.2\.17`[\s\S]*uml-state/i);
+  assert.match(capabilities, /standalone `coral` CLI/);
   assert.doesNotMatch(capabilities, /acceptance[\s\S]{0,50}remain pending|private 0\.2\.8/);
   assert.match(notations, /https:\/\/coreyt\.github\.io\/coral\/examples\//);
   for (const entry of catalog.entries) assert(!notations.includes(`| ${entry.name} |`), `duplicate example fact ${entry.id}`);

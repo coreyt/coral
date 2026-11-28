@@ -14,6 +14,11 @@ import { AI_FEATURES_AVAILABLE } from '../releaseFeatures029.js';
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { TextEditor, type EditorDecoration, type EditorDiagnostic } from '@coral-viz/viz';
 import type { ActivityEntry, ChatEntry, BottomPanelTab, DiagnosticEntry } from '../BottomPanel';
+import {
+  MermaidConversionBanner,
+  type MermaidConversionState,
+  type MermaidConvertRequestOptions,
+} from './MermaidConversionBanner';
 
 export interface EditorPaneProps {
   dsl: string;
@@ -38,6 +43,10 @@ export interface EditorPaneProps {
   onEditSessionStart?: () => void;
   onEditSessionEnd?: () => void;
   onDslTypeChange: (type: 'coral' | 'mermaid') => void;
+  /** Deterministic zero-LLM Mermaid-to-Coral conversion action & pre-commit review banner. */
+  mermaidConversion?: MermaidConversionState | null;
+  onConvertMermaidToCoral?: (options?: MermaidConvertRequestOptions) => void;
+  onCancelMermaidConversion?: () => void;
   // Bottom panel
   bottomPanelTab: BottomPanelTab;
   onBottomPanelTabChange: (tab: BottomPanelTab) => void;
@@ -77,6 +86,9 @@ export function EditorPane({
   onEditSessionStart,
   onEditSessionEnd,
   onDslTypeChange,
+  mermaidConversion = null,
+  onConvertMermaidToCoral,
+  onCancelMermaidConversion,
   onFixSourceError,
   onPinEdition029,
   isGenerating,
@@ -298,10 +310,39 @@ export function EditorPane({
           </span>
         )}
 
+        {dslType === 'mermaid' && onConvertMermaidToCoral && (
+          <button
+            type="button"
+            className="coral-button coral-button--quiet"
+            disabled={isDslReadOnly}
+            onClick={() => onConvertMermaidToCoral()}
+            style={{
+              padding: '2px 8px',
+              fontSize: '10px',
+              borderRadius: '3px',
+              border: `1px solid ${theme.lineNumbersBorder}`,
+              background: theme.controlBg,
+              color: theme.controlText,
+              cursor: isDslReadOnly ? 'default' : 'pointer',
+            }}
+          >
+            Convert to Editable Coral
+          </button>
+        )}
+
         <span style={{ marginLeft: 'auto', color: theme.lineNumbersText }}>
           {lineCount} lines
         </span>
       </div>
+
+      {mermaidConversion && onConvertMermaidToCoral && onCancelMermaidConversion && (
+        <MermaidConversionBanner
+          conversion={mermaidConversion}
+          onConvert={onConvertMermaidToCoral}
+          onCancel={onCancelMermaidConversion}
+          theme={theme}
+        />
+      )}
 
       {/* Editor Content */}
       <div style={{ flex: 1, position: 'relative', overflow: 'auto' }}>

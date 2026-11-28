@@ -27,7 +27,7 @@ import {
   type SpatialSidecar028,
   type NodeInterpretation028,
 } from '@coral-viz/render';
-import { editionAdmitsUserSymbols029, type CandidateFragmentSyntax, type CandidateNodeSyntax,
+import { editionAdmits0217, editionAdmitsUserSymbols029, type CandidateFragmentSyntax, type CandidateNodeSyntax,
   type CandidatePortSyntax } from '@coral-viz/language';
 
 function spatialSidecar028(graph: CanonicalGraphIR): SpatialSidecar028 {
@@ -120,6 +120,8 @@ export const KNOWN_NODE_TYPES: ReadonlySet<string> = new Set([
   'batch', 'quality', 'schema', 'catalog', 'cdc', 'dashboard', 'pipeline',
   // Sketch
   'step', 'label', 'box', 'circle', 'cloud',
+  // UML State (0.2.17)
+  'initial', 'state', 'final', 'choice', 'fork', 'join', 'composite', 'note',
 ]);
 
 /**
@@ -141,7 +143,7 @@ export function parseCoralDSL(text: string): ParseResult {
     // scene can display a sequence fragment or semantic lifeline port.
     if (projected.graph?.interaction)
       semanticInterpretations = resolveSuccessorGraphNodes028(projected.graph);
-    if (projected.graph?.profile.id === 'uml-state') {
+    if (projected.graph?.profile.id === 'uml-state' && !editionAdmits0217(installed.header.effectiveCoralVersion ?? '0.2.8')) {
       // The source edition and its U1 meaning remain available for source
       // editing/export even though this consumer cannot publish a canvas.
       sourceGraph = projected.graph;

@@ -2,7 +2,7 @@
   "catalogVersion": "1.0.0",
   "languageVersion": "1.3.0",
   "sourceEdition": "0.2.8",
-  "runtimeVersion": "0.2.15",
+  "runtimeVersion": "0.2.17",
   "entries": [
     {
       "id": "block",

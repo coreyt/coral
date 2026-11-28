@@ -1,6 +1,6 @@
 {
   "name": "coral",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "private": true,
   "description": "General-purpose graph visualization and diagram tooling",
   "workspaces": [

@@ -9,6 +9,7 @@ import { stencilFit028 } from './stencilAnchorGeometry028.js';
 import { svgPathContour028, type ContourSegment028 } from './svgPathContour028.js';
 import { bpmnEventFrame028, isBpmnEventSymbol028 } from './bpmnEventVisual028.js';
 import { bpmnGatewayFrame028, isBpmnGatewaySymbol028 } from './bpmnGatewayVisual028.js';
+import { isStateCircleSymbol0217, isStateSyncBarSymbol0217, stateCirclePath0217, stateCircleRadius0217 } from './stateVisual0217.js';
 import type { LayoutDirection, Point } from './layout/types.js';
 import { segmentIntersectsBox } from './layout/routeGeometry.js';
 
@@ -53,6 +54,27 @@ export function sceneNodeContour029(node: Pick<RenderSceneNode, 'id' | 'x' | 'y'
   | 'symbolId' | 'shapeParameters' | 'container'>, direction: LayoutDirection,
   visibleContour?: (shapeId: string, parameters?: Readonly<Record<string, number | string | boolean>>,
     containerFrame?: { width: number; height: number }) => string): readonly ContourSegment028[] {
+  if (isStateCircleSymbol0217(node.symbolId)) {
+    const r = stateCircleRadius0217(node.width, node.height);
+    const d = stateCirclePath0217(r, r, r);
+    const circleShape = { id: 'ellipse', name: 'State Circle', type: 'ellipse' as const,
+      viewBox: `0 0 ${r * 2} ${r * 2}`, path: d, defaultSize: { width: r * 2, height: r * 2 }, portAnchors: [] };
+    const ox = node.x + node.width / 2 - r;
+    const oy = node.y + node.height / 2 - r;
+    return svgPathContour028(circleShape).map(({ start, end }) => ({
+      start: { x: ox + start.x * r * 2, y: oy + start.y * r * 2 },
+      end: { x: ox + end.x * r * 2, y: oy + end.y * r * 2 },
+    }));
+  }
+  if (isStateSyncBarSymbol0217(node.symbolId)) {
+    const barShape = containerStencilShape028(sceneNodeShape029(node)!, node.width, node.height, true);
+    const rad = Math.min(4, node.width / 2, node.height / 2);
+    const path = resolveShapePath(barShape, { cornerRadius: rad });
+    return svgPathContour028({ ...barShape, path }).map(({ start, end }) => ({
+      start: { x: node.x + start.x * node.width, y: node.y + start.y * node.height },
+      end: { x: node.x + end.x * node.width, y: node.y + end.y * node.height },
+    }));
+  }
   const shape = containerStencilShape028(sceneNodeShape029(node)!, node.width, node.height, node.container);
   const event = isBpmnEventSymbol028(node.symbolId) ? bpmnEventFrame028(node.width, node.height, direction) : undefined;
   const frame = event ? { x: event.x + 4, y: event.y + 4, width: 48, height: 48 }

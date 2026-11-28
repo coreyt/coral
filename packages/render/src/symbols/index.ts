@@ -20,6 +20,7 @@ import { aimlSymbols } from './aiml.js';
 import { dataEngineeringSymbols } from './data-engineering.js';
 import { sketchSymbols } from './sketch.js';
 import { umlSequenceSymbols, umlSymbols } from './uml.js';
+import { umlStateSymbols } from './state.js';
 
 // Combine all symbol libraries
 const allLibraries: SymbolLibrary[] = [
@@ -35,6 +36,7 @@ const allLibraries: SymbolLibrary[] = [
   sketchSymbols,
   umlSymbols,
   umlSequenceSymbols,
+  umlStateSymbols,
 ];
 
 /** Build a registry with globally unique IDs and explicit library membership. */
@@ -182,3 +184,4 @@ export { aimlSymbols } from './aiml.js';
 export { dataEngineeringSymbols } from './data-engineering.js';
 export { sketchSymbols } from './sketch.js';
 export { umlSequenceSymbols, umlSymbols } from './uml.js';
+export { umlStateSymbols } from './state.js';

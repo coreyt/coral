@@ -1,6 +1,6 @@
 {
   "name": "@coral-viz/viz",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "description": "Coral visual diagram editor using React Flow",
   "homepage": "https://coreyt.github.io/coral/",
   "bugs": {
@@ -59,8 +59,8 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p type-tests/tsconfig.json"
   },
   "dependencies": {
-    "@coral-viz/language": "0.2.15",
-    "@coral-viz/render": "0.2.15",
+    "@coral-viz/language": "0.2.17",
+    "@coral-viz/render": "0.2.17",
     "@graph-ir/core": "0.2.4",
     "@xyflow/system": "0.0.82",
     "elkjs": "0.12.0",

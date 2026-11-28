@@ -5,8 +5,8 @@ import { validateRouteSections } from './layout/routeGeometry.js';
 import type { Classifier, EdgeLabelPlacement, EndpointMarker, GraphEdge, GraphNode, NotationProfile, Position, RelationshipEnd } from '@graph-ir/core';
 import type { LayoutDirection, LayoutSection } from './layout/types.js';
 import { glyphRegistry, type GlyphDefinition } from './glyphs/index.js';
-import { notationRegistry } from './notations/index.js';
-import { resolveNotationNode028 } from './notations/index.js';
+import { notationRegistry, installedCatalogSnapshotForEdition, resolveNotationNode028 } from './notations/index.js';
+import { editionAdmits0214 } from '@coral-viz/language';
 import { shapeRegistry } from './shapes/index.js';
 import { symbolRegistry } from './symbols/index.js';
 import type { NotationEdgeStyle, ShapeDefinition, SymbolDefinition } from './types.js';
@@ -18,6 +18,7 @@ import { stencilFit028, stencilFitPoint028, stencilRayPoint028 } from './stencil
 import { stencilCaptionHeight028 } from './stencilLabelGeometry028.js';
 import { bpmnEventFrame028, isBpmnEventSymbol028 } from './bpmnEventVisual028.js';
 import { bpmnGatewayFrame028, isBpmnGatewaySymbol028 } from './bpmnGatewayVisual028.js';
+import { isStateCircleSymbol0217, isStateSyncBarSymbol0217, stateCircleRadius0217 } from './stateVisual0217.js';
 import type { SourceEdgeDirection028 } from './sourceDirection028.js';
 import type { CatalogSnapshot028, NodeInterpretation028 } from './interpretation028.js';
 import { catalogShape029, catalogSymbol029, escapeOffsets029, sceneNodeShape029 } from './catalogLookup029.js';
@@ -113,7 +114,7 @@ export function assertRenderableInterpretation028(
   nodes: readonly GraphNode[], notationId?: string, profile?: NotationProfile, catalog?: CatalogSnapshot028,
 ): void {
   assertProfileNotationAgreement028(notationId, profile);
-  if (notationId === 'uml-state') throw new RenderCapabilityError([{
+  if (notationId === 'uml-state' && (!catalog || catalog.allowedSymbolIds.size === 0)) throw new RenderCapabilityError([{
     code: 'render.capability.character-only-edition',
     message: 'render.capability.character-only-edition: UML state supports source and character output; SVG and visual editor display are unavailable.',
   }]);
@@ -385,7 +386,9 @@ function catalogStyle(edge: GraphEdge, nodes: GraphNode[] | SymbolIndex, notatio
     // an untyped neutral/dashed/data connector stays visibly a draft.
     return relation === undefined ? undefined : styles[relation];
   }
-  if (edge.type && styles[edge.type]) return styles[edge.type];
+  if (edge.type && (styles[edge.type] ?? notation.edgeStyles0217?.[edge.type])) {
+    return styles[edge.type] ?? notation.edgeStyles0217?.[edge.type];
+  }
   const source = symbols.get(edge.source);
   const target = symbols.get(edge.target);
   const rule = notation.connectionRules.find((candidate) => candidate.from === source?.id
@@ -569,6 +572,22 @@ export function resolveContourContact028(
         subject: { kind: 'node', id: node.id },
         message: `render.capability.scene-bounds: node ${node.id} has non-finite contact geometry` }]);
     }
+    if (isStateCircleSymbol0217(node.symbolId)) {
+      const center = { x: node.x + node.width / 2, y: node.y + node.height / 2 };
+      const r = stateCircleRadius0217(node.width, node.height);
+      const dx = toward.x - center.x;
+      const dy = toward.y - center.y;
+      const length = Math.hypot(dx, dy);
+      return length > 1e-7 ? { x: center.x + dx / length * r, y: center.y + dy / length * r } : fallback;
+    }
+    if (isStateSyncBarSymbol0217(node.symbolId)) {
+      const barShape = containerStencilShape028(sceneNodeShape029(node)!, node.width, node.height, true);
+      const rad = Math.min(4, node.width / 2, node.height / 2);
+      const normalizedToward = { x: (toward.x - node.x) / node.width, y: (toward.y - node.y) / node.height };
+      if (Math.abs(normalizedToward.x - 0.5) + Math.abs(normalizedToward.y - 0.5) < 1e-7) return fallback;
+      const outline = stencilRayPoint028(barShape, normalizedToward, { cornerRadius: rad });
+      return { x: node.x + outline.x * node.width, y: node.y + outline.y * node.height };
+    }
     if (isBpmnEventSymbol028(node.symbolId)) {
       // Bare semantic-scene callers may not have run the production measured
       // sizing pass yet. The prepared scene validates the final hard size.
@@ -679,6 +698,20 @@ export function laneContourContact029(
   margin = 1e-6,
 ): Position | undefined {
   if (![node.x, node.y, node.width, node.height, next.x, next.y].every(Number.isFinite)) return undefined;
+  if (isStateCircleSymbol0217(node.symbolId)) {
+    const cx = node.x + node.width / 2, cy = node.y + node.height / 2;
+    const r = stateCircleRadius0217(node.width, node.height);
+    if (axis === 'y') {
+      const dy = next.y - cy;
+      if (Math.abs(dy) >= r - margin) return undefined;
+      const dx = Math.sqrt(Math.max(0, r * r - dy * dy));
+      return { x: next.x >= cx ? cx + dx : cx - dx, y: next.y };
+    }
+    const dx = next.x - cx;
+    if (Math.abs(dx) >= r - margin) return undefined;
+    const dy = Math.sqrt(Math.max(0, r * r - dx * dx));
+    return { x: next.x, y: next.y >= cy ? cy + dy : cy - dy };
+  }
   if (!options.visibleContour && isBpmnEventSymbol028(node.symbolId)) {
     if (node.width < 56 || node.height < ((options.layoutDirection === 'DOWN' || options.layoutDirection === 'UP') ? 64 : 68)) return undefined;
     const frame = bpmnEventFrame028(node.width, node.height, options.layoutDirection ?? 'RIGHT');
@@ -748,7 +781,10 @@ export function resolveRenderScene(
   } = {},
 ): RenderScene {
   const notationId = effectiveGraphNotationId028(graph);
-  const catalog = options.documentCatalog029;
+  const graphEdition = typeof (graph.metadata as { custom?: { coralEdition?: unknown } } | undefined)?.custom?.coralEdition === 'string'
+    ? (graph.metadata as { custom: { coralEdition: string } }).custom.coralEdition : undefined;
+  const catalog = options.documentCatalog029 ?? (notationId && graphEdition && editionAdmits0214(graphEdition)
+    ? installedCatalogSnapshotForEdition(notationId, graphEdition) : undefined);
   assertRenderableInterpretation028(graph.nodes, notationId, graph.profile, catalog);
   const theme = options.theme ?? { fill: '#f8fafc', stroke: '#334155', text: '#0f172a', edge: '#475569' };
   const sceneNodes: RenderSceneNode[] = [];

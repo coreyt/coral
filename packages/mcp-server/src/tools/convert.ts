@@ -2,7 +2,8 @@
  * coral_convert tool
  *
  * Convert supported diagram input to JSON, preserve valid Coral source, or
- * write bounded Mermaid sequence messages, pre-message notes, and flat fragments as Coral.
+ * transpile Top-5 Mermaid diagrams (flowchart/graph, sequenceDiagram,
+ * classDiagram, erDiagram, stateDiagram) to self-verified Coral source.
  */
 
 import { z } from "zod";
@@ -10,18 +11,24 @@ import { validateGraphIRSuccessorWithCatalog } from '@graph-ir/core';
 import { formatDiagnostics, parseAs } from './diagnostics.js';
 import {
   detectFormat as detectSharedFormat,
-  canonicalSimpleMermaidSequence028,
-  writeSupplementalMermaidSequence028,
   type GraphIR,
   type Diagnostic,
 } from "@coral-viz/language";
-import { graphIrExportRefusal029, printInstalledSource028, successorCoreValidationInput029,
-  verifyPortableSuccessorSource028, type SuccessorGraphIr029, type SuccessorSourceGraph028 } from '@coral-viz/render';
+import {
+  graphIrExportRefusal029,
+  projectInstalledSourceToSuccessor028,
+  successorCoreValidationInput029,
+  transpileAndVerifyMermaidToCoral,
+  verifyPortableSuccessorSource028,
+  type SuccessorGraphIr029,
+  type SuccessorSourceGraph028,
+  type SuccessorSourceNode028,
+} from '@coral-viz/render';
 
 export const convertTool = {
   name: "coral_convert",
   description:
-    "Convert Mermaid, Graphviz DOT, PlantUML, or Coral to JSON. Saved @diagram Coral emits a GraphIR 4 candidate; Coral identity conversion preserves source. Bounded Mermaid sequence messages, pre-message participant notes, and successive flat alt, loop, or opt fragments can be written as Coral.",
+    "Convert Mermaid, Graphviz DOT, PlantUML, or Coral to JSON, or deterministically transpile Top-5 Mermaid diagrams (flowchart/graph, sequenceDiagram, classDiagram, erDiagram, stateDiagram/stateDiagram-v2) to self-verified Coral saved source. Saved @diagram Coral emits a GraphIR 4 candidate; Coral identity conversion preserves source.",
   inputSchema: {
     type: "object" as const,
     properties: {
@@ -47,6 +54,27 @@ export const convertTool = {
           "Fail the conversion when anything is lost, rather than reporting it and continuing",
         default: false,
       },
+      flowchartTarget: {
+        type: "string",
+        enum: ["flowchart", "block", "architecture"],
+        description:
+          "Target Coral notation when transpiling Mermaid flowcharts to Coral (default: 'flowchart')",
+        default: "flowchart",
+      },
+      edgeStyleMode: {
+        type: "string",
+        enum: ["visual-safe", "portable"],
+        description:
+          "Edge style emission policy when transpiling Mermaid to Coral: 'visual-safe' guarantees visual renderability; 'portable' preserves portable Coral 0.2.14 edge styles (default: 'visual-safe')",
+        default: "visual-safe",
+      },
+      stateTargetEdition: {
+        type: "string",
+        enum: ["0.2.17", "0.2.8"],
+        description:
+          "Target Coral edition when transpiling Mermaid state diagrams: '0.2.17' (visual & hierarchical) or '0.2.8' (legacy flat character-compatible) (default: '0.2.17')",
+        default: "0.2.17",
+      },
     },
     required: ["content"],
   },
@@ -57,7 +85,19 @@ const ConvertArgsSchema = z.object({
   from: z.enum(["mermaid", "dot", "plantuml", "coral", "auto"]).default("auto"),
   to: z.enum(["coral", "json"]).default("coral"),
   strict: z.boolean().default(false),
+  flowchartTarget: z.enum(["flowchart", "block", "architecture"]).default("flowchart"),
+  edgeStyleMode: z.enum(["visual-safe", "portable"]).default("visual-safe"),
+  stateTargetEdition: z.enum(["0.2.17", "0.2.8"]).default("0.2.17"),
 });
+
+function countSuccessorNodes(nodes: readonly SuccessorSourceNode028[]): number {
+  let count = 0;
+  for (const node of nodes) {
+    count += 1;
+    if (node.children?.length) count += countSuccessorNodes(node.children);
+  }
+  return count;
+}
 
 
 /** Detect the source format with the detector the editor also uses (R-064 AC-1). */
@@ -105,7 +145,7 @@ export function verifySuccessorCandidateForConversion028(graph: SuccessorSourceG
 }
 
 export async function handleConvert(args: unknown) {
-  const { content, from, to, strict } = ConvertArgsSchema.parse(args);
+  const { content, from, to, strict, flowchartTarget, edgeStyleMode, stateTargetEdition } = ConvertArgsSchema.parse(args);
 
   const detected = from === "auto" ? detectSharedFormat(content) : null;
   if (detected && detected.format === null) {
@@ -174,6 +214,68 @@ export async function handleConvert(args: unknown) {
       edgeCount: graph.edges.length, diagnostics: [] as Diagnostic[], candidateVersion: '4.0.0',
       modelVerification: model.verification } };
   }
+  if (sourceFormat === 'mermaid' && to === 'coral') {
+    const transpiled = transpileAndVerifyMermaidToCoral(content, {
+      mode: strict ? 'strict' : 'best-effort',
+      flowchartTarget,
+      edgeStyleMode,
+      stateTargetEdition,
+    });
+    const diagnostics: Diagnostic[] = transpiled.diagnostics.map((item) => ({
+      severity: item.severity,
+      code: item.code,
+      message: item.message,
+      ...(item.range ? { range: item.range, position: item.range.start } : {}),
+    }));
+    const sharedStructured = {
+      from: sourceFormat,
+      to,
+      diagnostics,
+      candidateVersion: '4.0.0' as const,
+      detectedKind: transpiled.detectedKind,
+      targetNotation: transpiled.targetNotation,
+      targetEdition: transpiled.targetEdition,
+      visualRenderable: transpiled.visualRenderable,
+      ...(transpiled.characterRenderable !== undefined
+        ? { characterRenderable: transpiled.characterRenderable }
+        : {}),
+      lossSummary: transpiled.lossSummary,
+      idMap: transpiled.idMap,
+    };
+    if (!transpiled.ok || !transpiled.coral) {
+      return {
+        content: [{
+          type: 'text' as const,
+          text: `Could not convert from mermaid to coral: ${formatDiagnostics(diagnostics)}`,
+        }],
+        structuredContent: {
+          ...sharedStructured,
+          nodeCount: 0,
+          edgeCount: 0,
+        },
+        isError: true as const,
+      };
+    }
+    const projected = projectInstalledSourceToSuccessor028(transpiled.coral);
+    const nodeCount = projected.graph ? countSuccessorNodes(projected.graph.nodes) : 0;
+    const edgeCount = projected.graph?.edges.length ?? 0;
+    const noteCount = diagnostics.filter((d) => d.severity !== 'error').length;
+    const summary =
+      `Converted from mermaid to coral: ${nodeCount} nodes, ${edgeCount} edges` +
+      (noteCount > 0 ? `, ${noteCount} notes` : '');
+    return {
+      content: [{
+        type: 'text' as const,
+        text: `${summary}\n\n${transpiled.coral}${formatNotes({ diagnostics })}`,
+      }],
+      structuredContent: {
+        ...sharedStructured,
+        nodeCount,
+        edgeCount,
+      },
+      isError: false as const,
+    };
+  }
   const result = parseAs(sourceFormat, content);
 
   if (!result.graph || result.graph.nodes.length === 0 || !result.success) {
@@ -198,42 +300,6 @@ export async function handleConvert(args: unknown) {
 
   const graph: GraphIR = result.graph;
   if (to === "coral") {
-    if (sourceFormat === 'mermaid' && graph.metadata?.notation === 'uml-sequence') {
-      const canonical = result.diagnostics.length === 0 ? canonicalSimpleMermaidSequence028(graph) : undefined;
-      const supplemental = result.diagnostics.length === 0 ? writeSupplementalMermaidSequence028(graph) : undefined;
-      const written = canonical ? printInstalledSource028(canonical, 'uml-sequence') :
-        supplemental ? { text: supplemental, diagnostics: [] as Diagnostic[] } : undefined;
-      const verified = written?.text ? verifyPortableSuccessorSource028(written.text) : undefined;
-      const model = verified?.graph && verified.diagnostics.length === 0
-        ? (() => { const core = successorCoreValidationInput029(verified.graph!);
-          return validateGraphIRSuccessorWithCatalog(core.graph, core.snapshot, core.options); })()
-        : undefined;
-      if (written?.text && verified?.graph && verified.diagnostics.length === 0 && model?.valid &&
-          model.verification.complete && model.verification.scope === 'full') {
-        return { content: [{ type: 'text' as const,
-          text: `Converted from mermaid to coral: ${graph.nodes.length} nodes, ${graph.edges.length} edges\n\n${written.text}` }],
-        structuredContent: { from: sourceFormat, to, nodeCount: graph.nodes.length,
-          edgeCount: graph.edges.length, diagnostics: [] as Diagnostic[], candidateVersion: '4.0.0' },
-        isError: false as const };
-      }
-      const unverified = model && (!model.valid || !model.verification.complete || model.verification.scope !== 'full');
-      const diagnostic: Diagnostic = unverified
-        ? { severity: 'error', code: 'mcp.coral028.import.unverified',
-          message: [...model.errors, ...model.warnings, ...model.verification.obligations]
-            .map(({ code, path }) => `${code} at ${path}`).join('; ') ||
-            'The installed GraphIR successor did not verify the imported source.' }
-        : { severity: 'error', code: 'mcp.coral028.import.unsupported',
-          message: result.diagnostics.length
-            ? 'The Mermaid import has unclassified losses; no Coral source was written.'
-            : 'This Mermaid sequence is outside the verified message, pre-message note, or flat alt/loop/opt fragment subset.' };
-      const diagnostics = [...result.diagnostics, ...(written?.diagnostics ?? []),
-        ...(verified?.diagnostics ?? []).map((item): Diagnostic => ({ severity: 'error',
-          code: item.code, message: item.message })), diagnostic];
-      return { content: [{ type: 'text' as const,
-        text: `Could not convert to Coral: ${formatDiagnostics(diagnostics)}` }],
-      structuredContent: { from: sourceFormat, to, nodeCount: graph.nodes.length,
-        edgeCount: graph.edges.length, diagnostics }, isError: true as const };
-    }
     const diagnostic = {
       severity: "error" as const,
       code: "mcp.coral028.writer.unavailable",

@@ -1,8 +1,8 @@
 # @coral-viz/language
 
-## Coral 0.2.15
+## Coral 0.2.17
 
-Install verified 0.2.15 archives together with the matching published GraphIR
+Install verified 0.2.17 archives together with the matching published GraphIR
 Core 0.2.4 dependency. The commands below use exact local archive names.
 The root `parse` and `parseDocument028` read saved Coral source: default edition
 0.2.8 and explicitly pinned 0.2.9.
@@ -15,7 +15,7 @@ Portable Coral DSL parsing, deterministic printing, Mermaid/DOT/PlantUML
 imports, diagnostics, and conservative syntax repair.
 
 ```sh
-npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.15.tgz
+npm install ./graph-ir-core-0.2.4.tgz ./coral-viz-language-0.2.17.tgz
 ```
 
 Saved 0.2.8 source includes the diagram type and declares each ID first:
@@ -42,7 +42,7 @@ if (result.header.diagnostics.length || result.syntax.diagnostics.length)
 
 Language Specification **1.3.0** owns syntax, meaning and declared entry-point
 contracts. `CORAL_LANGUAGE_VERSION` exposes that identity independently of
-package 0.2.15 and source/header editions 0.2.8, 0.2.9, and 0.2.14.
+package 0.2.17 and source/header editions 0.2.8, 0.2.9, and 0.2.14.
 The TypeScript reader implements the saved contract; its optional GraphIR 3
 staging view is not a complete portable successor projection.
 `repairCoralDsl` byte-preserves parser-valid legacy input, reports every

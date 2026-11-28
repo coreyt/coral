@@ -1,6 +1,6 @@
 {
   "name": "@coral-viz/diagram-editor",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
@@ -17,9 +17,9 @@
     "clean": "node ../../scripts/clean.mjs dist"
   },
   "dependencies": {
-    "@coral-viz/language": "0.2.15",
-    "@coral-viz/render": "0.2.15",
-    "@coral-viz/viz": "0.2.15",
+    "@coral-viz/language": "0.2.17",
+    "@coral-viz/render": "0.2.17",
+    "@coral-viz/viz": "0.2.17",
     "@graph-ir/core": "0.2.4",
     "@huggingface/transformers": "4.3.2",
     "@resvg/resvg-wasm": "2.6.2",

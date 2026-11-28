@@ -1,6 +1,6 @@
 import { ON_DEVICE_MODEL_AVAILABLE } from './releaseFeatures029';
 
-export const EXPECTED_RELEASE_VERSION = '0.2.15';
+export const EXPECTED_RELEASE_VERSION = '0.2.17';
 
 /** The Use pages for the on-device editing model; the first owns its facts (R-066 AC-7). */
 export const ON_DEVICE_USE_PAGES = {

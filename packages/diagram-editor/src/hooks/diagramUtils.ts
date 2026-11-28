@@ -29,6 +29,9 @@ import {
   bpmnGatewayMinimumSize028,
   bpmnGatewayLabelLayout028,
   isBpmnGatewaySymbol028,
+  isStateMarkerSymbol0217,
+  isUnlabeledStateChoice0217,
+  stateMarkerSize0217,
   classifierMinimumSize,
   fitClassifierFrame028,
   fitPlainRectangleInk028,
@@ -40,6 +43,8 @@ import {
   visualStyle028,
   resolveNotationNode028,
   notationCatalogIdentity028,
+  notationCatalogIdentity0214,
+  notationCatalogIdentity0217,
   semanticLayoutPorts028,
   catalogForInterpretations029,
   catalogSymbol029,
@@ -187,12 +192,17 @@ function interpretationForNode(node: GraphNode, notation: NotationType,
   semanticInterpretations?: ReadonlyMap<string, NodeInterpretation028>): NodeInterpretation028 {
   if (!semanticInterpretations) return resolveNotationNode028(node, notation);
   const interpreted = semanticInterpretations.get(node.id);
-  const installedCatalog = notationCatalogIdentity028(notation);
+  const matchesInstalledCatalog = interpreted ? [
+    notationCatalogIdentity028(notation),
+    notationCatalogIdentity0214(notation),
+    notationCatalogIdentity0217(notation),
+  ].some((installed) => installed
+    && interpreted.catalogIdentity.id === installed.id
+    && interpreted.catalogIdentity.version === installed.version
+    && interpreted.catalogIdentity.digest === installed.digest) : false;
   if (!interpreted || interpreted.nodeId !== node.id || interpreted.authoredType !== node.type ||
     interpreted.authoredSymbol !== node.symbol || interpreted.authoredVariant !== node.variant ||
-    !installedCatalog || interpreted.catalogIdentity.id !== installedCatalog.id ||
-    interpreted.catalogIdentity.version !== installedCatalog.version ||
-    interpreted.catalogIdentity.digest !== installedCatalog.digest) {
+    !matchesInstalledCatalog) {
     throw new Error(`coral.editor.semantic-port-sidecar: ${node.id} has no matching interpretation`);
   }
   if (node.ports !== undefined) {
@@ -353,7 +363,11 @@ export function projectDiagramNodes(
       lineHeight: hifiFont.lineHeight,
     }) : classifierSize;
     const measure = (measuredFont: typeof font, minimum = classifierSize) =>
-      isBpmnEventSymbol028(symbolId)
+      isStateMarkerSymbol0217(symbolId)
+        ? stateMarkerSize0217(symbolId, layoutDirection)
+        : isUnlabeledStateChoice0217(node, symbolId)
+          ? { width: 38, height: 38 }
+          : isBpmnEventSymbol028(symbolId)
         ? bpmnEventMinimumSize028(node.label ?? node.id, measuredFont, layoutDirection)
         : isBpmnGatewaySymbol028(symbolId)
           ? bpmnGatewayMinimumSize028(node.label ?? node.id, measuredFont,
@@ -503,12 +517,23 @@ function layoutPortsForNode(node: GraphNode, notation: NotationType, direction: 
   return semanticLayoutPorts028(interpretation, symbol, node.variant, direction);
 }
 
-/** The document catalog carried by one parse's interpretations, when it has user symbols. */
+/** The document catalog carried by one parse's interpretations, when it has user symbols or edition-upgraded built-in symbols (e.g. 0.2.17 uml-state). */
 function documentCatalogFor029(notation: NotationType,
   semanticInterpretations?: ReadonlyMap<string, NodeInterpretation028>): DocumentCatalog029 | undefined {
   if (!semanticInterpretations) return undefined;
-  const catalog = catalogForInterpretations029(notation, semanticInterpretations);
-  return catalog.userSymbols.size ? catalog : undefined;
+  let edition: string | undefined;
+  for (const item of semanticInterpretations.values()) {
+    if (item.catalogIdentity.id === 'uml-state' && item.catalogIdentity.version === '1.1.0') {
+      edition = '0.2.17';
+      break;
+    }
+    if (item.catalogIdentity.version === '1.1.0' || item.catalogIdentity.id === 'infrastructure') {
+      edition = '0.2.14';
+    }
+  }
+  const catalog = catalogForInterpretations029(notation, semanticInterpretations, edition);
+  return catalog.userSymbols.size > 0 || (edition === '0.2.17' && catalog.allowedSymbolIds.size > 0)
+    ? catalog : undefined;
 }
 
 /**
@@ -686,6 +711,7 @@ export async function layoutNodes(
     fontSettings: fonts[spatialStyle028],
     layoutDirection: effective.direction,
     notation,
+    ...(documentCatalog029 ? { documentCatalog029 } : {}),
   };
   // The same rule as the SVG path reserves each user symbol's label side in
   // ELK's input (c4-design.md "Reservation in layout").

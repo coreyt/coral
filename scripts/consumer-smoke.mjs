@@ -160,7 +160,7 @@ const reactDocSource = await readFile(
 );
 const expectedGraphVersion = artifactGeneration.schema;
 const savedSource028 = '@diagram architecture\nconsumer service as "Consumer"\norders database as "Orders"\nconsumer -> orders\n';
-const source028 = ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'].includes(expectedArtifactVersion);
+const source028 = ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'].includes(expectedArtifactVersion);
 const languageRuntime = source028
   ? `import { HEADER_MANIFEST_028, parse } from '@coral-viz/language';
 const source = ${JSON.stringify(savedSource028)};
@@ -224,7 +224,38 @@ void [HEADER_MANIFEST_028, parse];`
     name: 'render',
     install: ['@coral-viz/render', '@coral-viz/language'],
     runtime: `import { renderHtml } from '@coral-viz/render';
-if (!renderHtml({nodes:[{id:'a',type:'service',label:'Consumer',position:{x:0,y:0}}],edges:[]}).includes('Consumer')) throw new Error('render failed');` + (['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'].includes(expectedArtifactVersion) ? userSymbolRuntime029 : ''),
+if (!renderHtml({nodes:[{id:'a',type:'service',label:'Consumer',position:{x:0,y:0}}],edges:[]}).includes('Consumer')) throw new Error('render failed');` + (['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'].includes(expectedArtifactVersion) ? userSymbolRuntime029 : '') + (expectedArtifactVersion === '0.2.17' ? `
+{
+  const { existsSync } = await import('node:fs');
+  const { spawnSync } = await import('node:child_process');
+  const { resolve } = await import('node:path');
+  const binName = process.platform === 'win32' ? 'coral.cmd' : 'coral';
+  const binPath = resolve('node_modules/.bin', binName);
+  if (!existsSync(binPath)) throw new Error('npm did not link coral bin at ' + binPath);
+  const runCoral = (args, input) => spawnSync(
+    process.platform === 'win32' ? 'cmd.exe' : binPath,
+    process.platform === 'win32' ? ['/d', '/s', '/c', binPath, ...args] : args,
+    { encoding: 'utf8', input },
+  );
+  const sample028 = '@diagram flowchart\\ns terminal [variant: "start"] as "Start"\\np process as "Step"\\ns -> p\\n';
+  const sample0217 = '@diagram uml-state\\n@coralVersion "0.2.17"\\ns initial\\nActive composite as "Active" {\\n  i initial\\n  Run state as "Run"\\n  i -> Run\\n}\\nf final\\ns -> Active\\nActive -> f\\n';
+  const vOk = runCoral(['validate'], sample0217);
+  if (vOk.status !== 0 || vOk.stdout !== '') throw new Error('coral validate failed: ' + vOk.stderr);
+  const vBad = runCoral(['validate'], 'api service\\n');
+  if (vBad.status !== 1 || vBad.stdout !== '' || !vBad.stderr.includes('header.diagram.required')) throw new Error('coral validate accepted invalid source');
+  const rSvg = runCoral(['render', '--format', 'svg', '--style', 'anemone'], sample0217);
+  if (rSvg.status !== 0 || !rSvg.stdout.includes('<svg')) throw new Error('coral render svg failed: ' + rSvg.stderr);
+  const rHtml = runCoral(['render', '--format', 'html'], sample028);
+  if (rHtml.status !== 0 || !rHtml.stdout.includes('<!doctype html>')) throw new Error('coral render html failed: ' + rHtml.stderr);
+  const rAscii = runCoral(['render', '--format', 'ascii'], sample028);
+  if (rAscii.status !== 0 || !rAscii.stdout.includes('Start')) throw new Error('coral render ascii failed: ' + rAscii.stderr);
+  const cFlow = runCoral(['convert', '--from', 'mermaid', '--to', 'coral'], 'flowchart LR\\n  A[Alpha] --> B[Beta]\\n');
+  if (cFlow.status !== 0 || !cFlow.stdout.includes('@diagram flowchart')) throw new Error('coral convert mermaid failed: ' + cFlow.stderr);
+  const cRefused = runCoral(['convert', '--from', 'dot', '--to', 'coral'], 'digraph G { a -> b; }\\n');
+  if (cRefused.status !== 1 || cRefused.stdout !== '') throw new Error('coral convert did not refuse DOT writer');
+  const usage = runCoral(['render']);
+  if (usage.status !== 2 || usage.stdout !== '') throw new Error('coral CLI usage error did not exit 2');
+}` : ''),
     types: `import type { SvgOptions, HtmlOptions } from '@coral-viz/render';
 // @ts-expect-error C10 cache controls must not enter the packed root declarations.
 import { resetFontResolutionCacheForTests, fontResolutionCacheSnapshotForTests } from '@coral-viz/render';
@@ -232,7 +263,7 @@ declare const values: [SvgOptions, HtmlOptions]; void values;`,
   },
   {
     name: 'library-docs-render',
-    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     requiresBrowser: true,
     install: ['@coral-viz/browser'],
     runtimeSourcePath: 'docs/embed/examples/render-diagram.mjs',
@@ -244,7 +275,7 @@ void result.then(({ svg, sourceGraph, diagnostics }) => [svg, sourceGraph, diagn
   },
   {
     name: 'library-docs-source-reader',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     install: ['@coral-viz/language'],
     runtimeSourcePath: 'docs/embed/examples/read-coral-source.mjs',
     types: `import { HEADER_MANIFEST_028, parse } from '@coral-viz/language';
@@ -252,7 +283,7 @@ void [HEADER_MANIFEST_028, parse];`,
   },
   {
     name: 'library-docs-interchange',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     install: ['@coral-viz/language'],
     runtimeSourcePath: 'docs/embed/examples/read-graph-interchange.mjs',
     types: `import { parse } from '@coral-viz/language/parser';
@@ -260,7 +291,7 @@ void parse('service "API"');`,
   },
   {
     name: 'library-docs-browser-esm',
-    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     requiresBrowser: true,
     install: ['@coral-viz/browser'],
     runtimeSourcePath: 'docs/embed/examples/browser-esm.mjs',
@@ -270,7 +301,7 @@ void [render, renderTo, options];`,
   },
   {
     name: 'viz',
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     runtime: `import { CORAL_EDGE_VIEW_METADATA, CORAL_NODE_VIEW_METADATA, DEFAULT_DIAGRAM_FONT_SETTINGS, DEFAULT_FONT_SETTINGS, DiagramFontFaces, FONT_FAMILY_PRESETS, FONT_SIZE_PRESETS, FontSettingsForm, convertGraphToFlow, getFontFamilyPreset, getFontSizePreset, normalizeDiagramFontSettings } from '@coral-viz/viz';
 if (convertGraphToFlow({version:'${expectedGraphVersion}',id:'g',nodes:[{id:'a',type:'service'}],edges:[]}).nodes.length !== 1) throw new Error('viz failed');
@@ -283,7 +314,7 @@ declare const values: [CoralEdgeViewMetadata, CoralEditorProps, CoralNodeViewMet
   },
   {
     name: 'viz-graphir-migration',
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     coreVersions: ['0.2.2', '0.2.3', '0.2.4'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     typescriptSourcePath: 'docs/embed/examples/graphir-migration.ts',
@@ -301,9 +332,9 @@ function legacyDiagnostic(code: LayoutDiagnosticCode): string {
 }
 function spatialDiagnostic(code: SpatialLayoutDiagnosticCode): string {
   switch (code) {
-    ${['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'].includes(expectedArtifactVersion) ? `case 'layout.geometry.invalid': return code;
+    ${['0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'].includes(expectedArtifactVersion) ? `case 'layout.geometry.invalid': return code;
     case 'layout.route.invalid': return code;` : ''}
-    ${['0.2.11', '0.2.12', '0.2.14', '0.2.15'].includes(expectedArtifactVersion) ? `case 'layout.route.degraded': return code;
+    ${['0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'].includes(expectedArtifactVersion) ? `case 'layout.route.degraded': return code;
     case 'layout.route.retried': return code;` : ''}
     case 'layout.capability.unsupported': return code;
     case 'layout.constraint.required-unsatisfied': return code;
@@ -333,7 +364,7 @@ void [resolved, legacyDiagnostic, spatialDiagnostic];`,
     },
   ].map(({ line, react, reactTypes, reactDomTypes }) => ({
     name: `viz-react-${line}`,
-    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.5', '0.2.6', '0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     coreVersions: ['0.2.2', '0.2.3', '0.2.4'],
     install: ['@coral-viz/viz', '@coral-viz/render', '@coral-viz/language'],
     extra: [
@@ -472,13 +503,90 @@ const generatedValidation = await client.callTool({ name: 'coral_validate', argu
 if (generatedValidation.isError) throw new Error('Packed MCP could not reparse generated source');
 const generatedRender = await client.callTool({ name: 'coral_render', arguments: { content: generatedSource } });
 if (generatedRender.isError || !generatedRender.content[0].text.includes('<svg')) throw new Error('Packed MCP could not render generated source');
-const unsupportedImport = await client.callTool({ name: 'coral_convert', arguments: { content: 'graph TD\\n A[Alpha] --> B[Beta]' } });
-if (!unsupportedImport.isError || !JSON.stringify(unsupportedImport).includes('mcp.coral028.writer.unavailable')) throw new Error('Packed MCP did not refuse unsupported import-to-Coral');` : `const source = 'service "API" as api\\ndatabase "Store" as store\\napi -> store';
+${expectedArtifactVersion === '0.2.17' ? `const convertedFlow = await client.callTool({ name: 'coral_convert', arguments: { content: 'graph TD\\n A[Alpha] --> B[Beta]' } });
+if (convertedFlow.isError || !convertedFlow.content[0].text.includes('@diagram flowchart')) throw new Error('Packed MCP 0.2.17 did not transpile Mermaid flowchart');
+const unsupportedMermaid = await client.callTool({ name: 'coral_convert', arguments: { content: 'gantt\\n  title Plan\\n  section A\\n  Task :a1, 2026-01-01, 5d' } });
+if (!unsupportedMermaid.isError || !JSON.stringify(unsupportedMermaid).includes('mermaid.diagram.unsupported')) throw new Error('Packed MCP 0.2.17 did not refuse unsupported Mermaid gantt');
+const unsupportedDot = await client.callTool({ name: 'coral_convert', arguments: { content: 'digraph G { A -> B; }', from: 'dot', to: 'coral' } });
+if (!unsupportedDot.isError || !JSON.stringify(unsupportedDot).includes('mcp.coral028.writer.unavailable')) throw new Error('Packed MCP 0.2.17 did not refuse DOT-to-Coral');` : `const unsupportedImport = await client.callTool({ name: 'coral_convert', arguments: { content: 'graph TD\\n A[Alpha] --> B[Beta]' } });
+if (!unsupportedImport.isError || !JSON.stringify(unsupportedImport).includes('mcp.coral028.writer.unavailable')) throw new Error('Packed MCP did not refuse unsupported import-to-Coral');`}` : `const source = 'service "API" as api\\ndatabase "Store" as store\\napi -> store';
 const valid = await client.callTool({ name: 'coral_validate', arguments: { content: source } });
 if (valid.isError || !JSON.stringify(valid).includes('2 nodes')) throw new Error('Packed historical MCP rejected its source generation');
 const rendered = await client.callTool({ name: 'coral_render', arguments: { content: source } });
 if (rendered.isError || !rendered.content[0].text.includes('<svg')) throw new Error('Packed historical MCP could not render its source generation');`}
-} finally { await client.close(); }`,
+} finally { await client.close(); }
+${expectedArtifactVersion === '0.2.17' ? `{
+  // Gate 2: exercise npm's resolved coral-mcp bin directly over stdio and parse
+  // every stdout line as a valid MCP JSON-RPC message while capturing stderr.
+  const { existsSync } = await import('node:fs');
+  const { spawn } = await import('node:child_process');
+  const mcpBinName = process.platform === 'win32' ? 'coral-mcp.cmd' : 'coral-mcp';
+  const mcpBinPath = resolve('node_modules/.bin', mcpBinName);
+  if (!existsSync(mcpBinPath)) throw new Error('npm did not link coral-mcp bin at ' + mcpBinPath);
+  const child = spawn(
+    process.platform === 'win32' ? 'cmd.exe' : mcpBinPath,
+    process.platform === 'win32' ? ['/d', '/s', '/c', mcpBinPath] : [],
+    { stdio: ['pipe', 'pipe', 'pipe'] },
+  );
+  let stdoutBuf = '';
+  let stderrBuf = '';
+  const frames = [];
+  child.stdout.setEncoding('utf8');
+  child.stderr.setEncoding('utf8');
+  child.stderr.on('data', (chunk) => { stderrBuf += chunk; });
+  const waitForId = (targetId) => new Promise((resolveFrame, rejectFrame) => {
+    const timer = setTimeout(() => rejectFrame(new Error('MCP bin timeout waiting for id ' + targetId + '; stderr=' + stderrBuf)), 10000);
+    const check = () => {
+      const found = frames.find((f) => f.id === targetId);
+      if (found) { clearTimeout(timer); resolveFrame(found); return true; }
+      return false;
+    };
+    if (check()) return;
+    const onData = (chunk) => {
+      stdoutBuf += chunk;
+      let nl;
+      while ((nl = stdoutBuf.indexOf('\\n')) >= 0) {
+        const line = stdoutBuf.slice(0, nl).trim();
+        stdoutBuf = stdoutBuf.slice(nl + 1);
+        if (!line) continue;
+        let parsed;
+        try { parsed = JSON.parse(line); } catch (err) {
+          clearTimeout(timer);
+          rejectFrame(new Error('Non-JSON-RPC stdout frame from coral-mcp bin: ' + line));
+          return;
+        }
+        if (parsed.jsonrpc !== '2.0') {
+          clearTimeout(timer);
+          rejectFrame(new Error('Stdout frame missing jsonrpc 2.0: ' + line));
+          return;
+        }
+        frames.push(parsed);
+        if (check()) { child.stdout.off('data', onData); return; }
+      }
+    };
+    child.stdout.on('data', onData);
+  });
+  try {
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2024-11-05', capabilities: {}, clientInfo: { name: 'gate2-bin-smoke', version: '1.0.0' } } }) + '\\n');
+    const initRes = await waitForId(1);
+    if (initRes.result?.serverInfo?.version !== '${expectedArtifactVersion}') throw new Error('coral-mcp bin version mismatch: ' + JSON.stringify(initRes));
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\\n');
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} }) + '\\n');
+    const listRes = await waitForId(2);
+    if (listRes.result?.tools?.length !== 7) throw new Error('coral-mcp bin did not list 7 tools: ' + JSON.stringify(listRes));
+    child.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'coral_validate', arguments: { content: '@diagram architecture\\napi service\\n' } } }) + '\\n');
+    const valRes = await waitForId(3);
+    if (valRes.result?.isError) throw new Error('coral-mcp bin rejected valid Coral: ' + JSON.stringify(valRes));
+    child.stdin.end();
+    await new Promise((done) => child.once('exit', done));
+    if (stdoutBuf.trim()) {
+      const tail = JSON.parse(stdoutBuf.trim());
+      if (tail.jsonrpc !== '2.0') throw new Error('Invalid trailing stdout frame');
+    }
+  } finally {
+    child.kill();
+  }
+}` : ''}`,
     types: `import '@coral-viz/mcp-server';
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 declare const client: Client; void client;`,
@@ -513,7 +621,7 @@ void [values, graph, renderTo, scan, defineCustomElement];`,
     // the MCP Mermaid chain, the source x style x theme matrix across browser,
     // MCP and public editor, then Chromium ESM/IIFE and the strict-CSP comparator.
     name: 'installed-renderer',
-    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15'],
+    artifactVersions: ['0.2.8', '0.2.9', '0.2.11', '0.2.12', '0.2.14', '0.2.15', '0.2.17'],
     requiresBrowser: true,
     install: ['@coral-viz/language', '@coral-viz/render', '@coral-viz/browser', '@coral-viz/viz', '@coral-viz/mcp-server'],
     extra: ['react@19.3.0', 'react-dom@19.3.0', '@xyflow/react@12.11.6'],

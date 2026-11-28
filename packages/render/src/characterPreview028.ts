@@ -190,12 +190,14 @@ function validateStateSource028(statements: ReturnType<typeof parseInstalledDocu
     const path = sourceConstructPath028(item);
     if (item.kind === 'node') {
       if (!['initial', 'state', 'final'].includes(item.nodeKind.value) || item.symbol || item.variant ||
+          item.description || item.style || item.technology || item.provider ||
           item.conformanceException || item.blockOpen || item.blockClose || item.parentGroup ||
           item.bracketClose && !item.label) {
         fail('character.state.source-construct', 'Only flat initial, simple state and final declarations are admitted.', path);
       }
     } else if (item.kind === 'edge') {
       if (item.operator.raw !== '->' || item.sourcePort || item.targetPort || item.firstEnd || item.secondEnd ||
+          item.description || item.technology || item.firstLabel || item.secondLabel ||
           item.style || item.styleIntent && Object.keys(item.styleIntent).length > 0 ||
           item.scope?.length || item.edgeType && item.edgeType.value !== 'transition' ||
           item.bracketClose && !item.label && !item.edgeType ||
@@ -388,12 +390,16 @@ export async function renderInstalledCharacterPreview028(
   }
   const graph = structuredClone(display);
   if (graph.metadata?.notation === 'uml-state') {
-    const chain = stateCharacterUsesChain028(graph);
+    const stateWork = structuredClone(graph);
+    if (stateWork.metadata?.custom && Object.keys(stateWork.metadata.custom).length === 1 && 'coralEdition' in stateWork.metadata.custom) {
+      delete stateWork.metadata.custom;
+    }
+    const chain = stateCharacterUsesChain028(stateWork);
     const requiredRoles = [...(chain ? [...ROUTE_ROLES.slice(0, 6), 'endpoint.arrow_open.w', 'stroke.single.tee_e', 'stroke.single.tee_w'] : ROUTE_ROLES),
       'mark.circle.filled'];
     const charset: CharacterCharset028 = options.monoTrue?.face === 'Regular' &&
       monoTrueReady028(options, requiredRoles) ? 'MonoTrue-v1' : 'ASCII';
-    return { ...await renderUmlStateCharacters028(graph, options.columns, charset), graph };
+    return { ...await renderUmlStateCharacters028(stateWork, options.columns, charset), graph };
   }
   if (graph.metadata?.notation === 'uml-class' || graph.metadata?.notation === 'uml-sequence') {
     if (graph.metadata.notation === 'uml-sequence' &&

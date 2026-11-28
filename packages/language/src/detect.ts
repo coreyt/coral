@@ -64,7 +64,9 @@ function skipPreamble(text: string): string {
   for (;;) {
     const next = rest.startsWith('/*') && rest.includes('*/')
       ? rest.slice(rest.indexOf('*/') + 2)
-      : /^(%%|\/\/|#)/.test(rest) ? rest.replace(/^[^\n]*/, '') : null;
+      : rest.startsWith('%%{') && rest.includes('}%%')
+        ? rest.slice(rest.indexOf('}%%') + 3)
+        : /^(%%|\/\/|#)/.test(rest) ? rest.replace(/^[^\n]*/, '') : null;
     if (next === null) return rest;
     rest = next.trimStart();
   }
@@ -84,8 +86,8 @@ export function detectFormat(text: string, options: { fileName?: string } = {}):
   if (/^@(graph|diagram)\b/.test(head)) return { format: 'coral', basis: 'content', candidates: [] };
   if (/^@start/i.test(head)) return { format: 'plantuml', basis: 'content', candidates: [] };
   // Mermaid is checked first: `graph TD` also matches a naive DOT pattern.
-  if (/^(flowchart|sequenceDiagram|classDiagram|stateDiagram|erDiagram|timeline|block-beta|packet-beta|kanban|architecture-beta|gantt|pie|journey|gitGraph|mindmap|quadrantChart|requirementDiagram|sankey-beta|xychart-beta|C4Context|C4Container|C4Component|C4Dynamic|C4Deployment)\b/i.test(head)
-    || /^graph\s+(TB|TD|BT|RL|LR)\b/i.test(head)) {
+  if (/^(flowchart|sequenceDiagram|classDiagram(?:-v2)?|stateDiagram(?:-v2)?|erDiagram|timeline|block(?:-beta)?|packet(?:-beta)?|kanban|architecture-beta|gantt|pie|journey|gitGraph|mindmap|quadrantChart|requirementDiagram|sankey(?:-beta)?|xychart(?:-beta)?|C4Context|C4Container|C4Component|C4Dynamic|C4Deployment|zenuml|radar-beta|treemap(?:-beta)?|venn-beta|ishikawa(?:-beta)?|usecase(?:-beta)?|eventmodeling|treeView-beta|cynefin-beta|wardley-beta)(?=[ \t;]|%%|\r?\n|$)/i.test(head)
+    || /^graph(?:[ \t]+(?:TB|TD|BT|RL|LR)\b|[ \t]*(?:;[ \t]*)?(?:%%[^\r\n]*)?(?:\r?\n|$))/i.test(head)) {
     return { format: 'mermaid', basis: 'content', candidates: [] };
   }
   if (/^(strict\s+)?(di)?graph\b[^{]*\{/i.test(head)) return { format: 'dot', basis: 'content', candidates: [] };

@@ -104,7 +104,9 @@ test('the chooser matches public package entries, requirements, and GraphIR 3', 
     assert.ok(source.includes('@graph-ir/core@0.2.4'), `${page} lacks exact Core pin`);
   }
   assert.ok((await read('docs/embed/reference/tree-sitter.md')).includes(`./tree-sitter-coral-${version}.tgz`));
-  assert.match(index, /verified 0\.2\.15 archives/);
+  assert.match(index, /verified 0\.2\.17 archives/);
+  assert.match(index, /npx -y --package=@coral-viz\/render -- coral/);
+  assert.match(index, /npx -y @coral-viz\/mcp-server/);
   assert.doesNotMatch(index, /until Coral 0\.2\.8 is published|published 0\.2\.6 identities/);
 
   for (const page of [
@@ -127,7 +129,7 @@ test('Current READMEs provide complete executable installs and durable Embed lin
     ...packages, ['packages/browser', '@coral-viz/browser', 'how-to/render-in-a-browser', []],
   ]) {
     const source = await read(`${directory}/README.md`);
-    assert.match(source, /## Coral 0\.2\.15/);
+    assert.match(source, /## Coral 0\.2\.17/);
     assert.doesNotMatch(source, /private candidate|not tagged or\s+published/);
     const block = source.match(/```sh\n(npm install [\s\S]*?)\n```/)?.[1];
     assert.ok(block, `${name}: install command missing`);
@@ -177,6 +179,8 @@ test('documented public subpaths and package files match manifests', async () =>
   }
   const mcp = await json('packages/mcp-server/package.json');
   assert.equal(mcp.bin?.['coral-mcp'], 'dist/index.js');
+  const renderPkg = JSON.parse(await read('packages/render/package.json'));
+  assert.equal(renderPkg.bin?.coral, 'dist/cli.js');
   const grammar = await json('packages/tree-sitter-coral/package.json');
   assert.equal(grammar.files.includes('prebuilds/**'), false, 'grammar promises absent prebuilds');
   const browser = await json('packages/browser/package.json');
@@ -202,27 +206,26 @@ test('the MCP reference describes all seven current bounded contracts', async ()
   for (const source of [guide, readme]) {
     assert.match(source, /[Ss]even/);
     assert.match(source, /full.*schema and catalog verification/);
-    assert.match(source, /bounded Mermaid sequence/i);
-    for (const code of ['mcp.coral028.import.unsupported', 'mcp.coral028.import.unverified',
-      'mcp.coral028.writer.unavailable']) {
-      assert.ok(converter.includes(code), `conversion producer lacks ${code}`);
-      assert.ok(source.includes(code), `conversion reference lacks ${code}`);
-    }
-    assert.match(source, /Unsupported Mermaid sequences[\s\S]*import\.unsupported/);
-    assert.match(source, /other Mermaid diagrams[\s\S]*writer\.unavailable/);
+    assert.match(source, /transpileAndVerifyMermaidToCoral/);
+    assert.match(source, /mermaid\.diagram\.unsupported/);
+    assert.ok(converter.includes('transpileAndVerifyMermaidToCoral'), 'conversion producer lacks transpileAndVerifyMermaidToCoral');
+    assert.ok(converter.includes('mcp.coral028.writer.unavailable'), 'conversion producer lacks mcp.coral028.writer.unavailable');
+    assert.ok(source.includes('mcp.coral028.writer.unavailable'), 'conversion reference lacks mcp.coral028.writer.unavailable');
+    assert.match(source, /DOT and PlantUML[\s\S]*writer\.unavailable/);
     assert.match(source, /Full external/);
   }
   assert.match(guide, /"command": "npx"/);
-  assert.match(guide, /"--no-install"/);
-  assert.match(guide, /"coral-mcp"/);
+  assert.match(guide, /"-y"/);
+  assert.match(guide, /"@coral-viz\/mcp-server"/);
+  assert.match(guide, /npx -y --package=@coral-viz\/render -- coral/);
   assert.match(guide, /content\[\]\.text/);
 });
 
 test('current archive install guidance stays explicit', async () => {
   const guide = await read('docs/embed/how-to/render-a-diagram.md');
-  assert.match(guide, /verified Coral 0\.2\.15 browser archive/);
-  assert.ok(guide.includes(`npm install @graph-ir/core@${(await readRegistryCoreIdentity()).version} ./coral-viz-browser-0.2.15.tgz`));
-  assert.match(guide, /coral-viz-browser-0\.2\.15\.tgz/);
+  assert.match(guide, /verified Coral 0\.2\.17 browser archive/);
+  assert.ok(guide.includes(`npm install @graph-ir/core@${(await readRegistryCoreIdentity()).version} ./coral-viz-browser-0.2.17.tgz`));
+  assert.match(guide, /coral-viz-browser-0\.2\.17\.tgz/);
   assert.match(guide, /Verify archive checksums before\s+installation/);
   assert.doesNotMatch(guide, /npm install @coral-viz\/language@0\.2\.6/);
 });

@@ -213,6 +213,24 @@ export const ANEMONE_MODEL_0214: ParrotfishModel = Object.freeze<ParrotfishModel
   light: ANEMONE_LIGHT_PALETTE_0214,
   dark: ANEMONE_DARK_PALETTE_0214,
   resolveNode(ctx: ParrotfishNodeContext) {
+    if (ctx.notationId === 'uml-state') {
+      const dark = ctx.theme === 'dark';
+      if (ctx.container) return { strokeDasharray: '', stroke: dark ? '#64748b' : '#94a3b8' };
+      if (ctx.symbolId === 'uml-state-initial') {
+        return { fill: dark ? '#34d399' : '#047857', stroke: dark ? '#34d399' : '#047857', accentPosition: 'none' };
+      }
+      if (ctx.symbolId === 'uml-state-final') {
+        return { stroke: dark ? '#fb7185' : '#be123c', accentPosition: 'none' };
+      }
+      if (ctx.symbolId === 'uml-state-fork' || ctx.symbolId === 'uml-state-join') {
+        return { fill: dark ? '#cbd5e1' : '#334155', stroke: dark ? '#cbd5e1' : '#334155', accentPosition: 'none' };
+      }
+      if (ctx.symbolId === 'uml-state-choice') {
+        return { ...TONE_STYLES[ctx.theme].amber, accentPosition: 'none' };
+      }
+      if (ctx.symbolId === 'uml-state-note') return TONE_STYLES[ctx.theme].amber;
+      return TONE_STYLES[ctx.theme].teal;
+    }
     if (ctx.container) return undefined;
     const tone = classifyAnemoneTone(ctx);
     return tone ? TONE_STYLES[ctx.theme][tone] : undefined;
@@ -220,6 +238,9 @@ export const ANEMONE_MODEL_0214: ParrotfishModel = Object.freeze<ParrotfishModel
   resolveEdge(ctx: ParrotfishEdgeContext) {
     const rel = (ctx.relationType ?? '').toLowerCase();
     const dark = ctx.theme === 'dark';
+    if (ctx.notationId === 'uml-state' && rel === 'annotation') {
+      return { stroke: dark ? '#64748b' : '#94a3b8', dash: '4 3' };
+    }
     if (rel === 'async' || rel === 'event' || rel === 'stream' || rel === 'stream-flow' || rel === 'streamflow') {
       return { stroke: dark ? '#a78bfa' : '#6d28d9', labelColor: dark ? '#ddd6fe' : '#5b21b6' };
     }
@@ -410,22 +431,26 @@ export function applyParrotfishToScene0214(
     const isContainer = Boolean(rn?.container);
 
     if (part.geometry.kind === 'stencil-path') {
+      const isFilledInner = part.role === 'inner-outline' && part.geometry.fill !== 'none';
       const fill = isContainer
         ? (ns?.fill ?? (placed && nodeNestingDepth(placed.node, rawNodeById) > 0 ? palette.containerNestedFill : palette.containerFill))
-        : (part.geometry.fill === 'none' ? 'none' : (ns?.fill ?? palette.paper));
+        : isFilledInner
+          ? (ns?.glyphFill ?? ns?.stroke ?? palette.ink)
+          : (part.geometry.fill === 'none' ? 'none' : (ns?.fill ?? palette.paper));
       const stroke = isContainer
         ? (ns?.stroke ?? palette.containerStroke)
-        : (ns?.stroke ?? palette.ink);
+        : (isFilledInner && part.geometry.stroke === 'none' ? 'none' : (ns?.stroke ?? palette.ink));
       const strokeDasharray = isContainer
         ? (ns?.strokeDasharray ?? part.geometry.strokeDasharray ?? palette.containerDasharray)
         : (ns?.strokeDasharray ?? part.geometry.strokeDasharray);
       const strokeWidth = ns?.strokeWidth !== undefined
         ? ns.strokeWidth / part.geometry.transform.scale
         : part.geometry.strokeWidth;
+      const { strokeDasharray: _prevDash, ...baseGeom } = part.geometry;
       styledParts.push({
         ...part,
         geometry: {
-          ...part.geometry,
+          ...baseGeom,
           fill,
           stroke,
           strokeWidth,

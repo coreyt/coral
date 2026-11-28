@@ -1,5 +1,5 @@
-import { approvedNotationTypeWords028, approvedNotationTypeWords0214,
-  notationCatalogIdentity028, notationCatalogIdentity0214, notationRegistry,
+import { approvedNotationTypeWords028, approvedNotationTypeWords0214, approvedNotationTypeWords0217,
+  notationCatalogIdentity028, notationCatalogIdentity0214, notationCatalogIdentity0217, notationRegistry,
   resolveNotationNode028 } from './notations/index.js';
 import { HEADER_MANIFEST_028 } from '@coral-viz/language';
 import type { NodeInterpretation028, NodeInterpretationInput028 } from './interpretation028.js';
@@ -105,15 +105,23 @@ export function successorCatalogSnapshot028(graph: SuccessorGraphView028): Succe
   const id = profileId028(profile);
   const notation = notationRegistry.get(id)!;
   const expected0214 = notationCatalogIdentity0214(id);
-  const use0214 = Boolean(expected0214 && graph.catalog?.version === expected0214.version &&
+  const expected0217 = notationCatalogIdentity0217(id);
+  const use0217 = Boolean(expected0217 && graph.catalog?.version === expected0217.version &&
+    graph.catalog?.digest === expected0217.digest &&
+    expected0217.version !== expected0214?.version);
+  const use0214 = !use0217 && Boolean(expected0214 && graph.catalog?.version === expected0214.version &&
     graph.catalog?.digest === expected0214.digest &&
     (id === 'infrastructure' || id === 'erd' || expected0214.version !== notationCatalogIdentity028(id)?.version));
-  const catalog0214 = use0214 ? documentCatalog029(id, [], '0.2.14') : undefined;
-  const allAllowedSymbols = use0214 ? [...notation.symbols, ...(notation.symbols0214 ?? [])] : [...notation.symbols];
+  const catalogForEdition = use0217 ? documentCatalog029(id, [], '0.2.17')
+    : use0214 ? documentCatalog029(id, [], '0.2.14') : undefined;
+  const allAllowedSymbols = use0217
+    ? [...notation.symbols, ...(notation.symbols0214 ?? []), ...(notation.symbols0217 ?? [])]
+    : use0214 ? [...notation.symbols, ...(notation.symbols0214 ?? [])] : [...notation.symbols];
   const typeSymbols: Record<string, string> = {};
   for (const symbolId of allAllowedSymbols) typeSymbols[symbolId] = symbolId;
-  for (const word of use0214 ? approvedNotationTypeWords0214(id) : approvedNotationTypeWords028(id)) {
-    const symbolId = resolveNotationNode028({ id: 'catalog-probe', type: word }, id, catalog0214).effectiveSymbolId;
+  for (const word of use0217 ? approvedNotationTypeWords0217(id)
+    : use0214 ? approvedNotationTypeWords0214(id) : approvedNotationTypeWords028(id)) {
+    const symbolId = resolveNotationNode028({ id: 'catalog-probe', type: word }, id, catalogForEdition).effectiveSymbolId;
     if (!symbolId) throw new Error(`Installed type word ${word} has no symbol`);
     typeSymbols[word] = symbolId;
   }
@@ -182,12 +190,20 @@ export function resolveSuccessorGraphNodes028(graph: SuccessorGraphView028): Rea
   const id = profileId028(graph.profile);
   const expected028 = notationCatalogIdentity028(id);
   const expected0214 = notationCatalogIdentity0214(id);
-  const matches0214 = Boolean(expected0214 &&
+  const expected0217 = notationCatalogIdentity0217(id);
+  const matches0217 = Boolean(expected0217 &&
+    graph.catalog.id === expected0217.id &&
+    graph.catalog.version === expected0217.version &&
+    graph.catalog.digest === expected0217.digest &&
+    expected0217.version !== expected0214?.version &&
+    HEADER_MANIFEST_028['0.2.17']?.[id]?.enabled !== false);
+  const matches0214 = !matches0217 && Boolean(expected0214 &&
     graph.catalog.id === expected0214.id &&
     graph.catalog.version === expected0214.version &&
     graph.catalog.digest === expected0214.digest &&
     HEADER_MANIFEST_028['0.2.14']?.[id]?.enabled !== false);
-  const edition = matches0214 ? HEADER_MANIFEST_028['0.2.14']?.[id] : HEADER_MANIFEST_028['0.2.8']?.[id];
+  const edition = matches0217 ? HEADER_MANIFEST_028['0.2.17']?.[id]
+    : matches0214 ? HEADER_MANIFEST_028['0.2.14']?.[id] : HEADER_MANIFEST_028['0.2.8']?.[id];
   if (edition?.enabled === false) throw new Error(`Coral notation ${id} is disabled in 0.2.8`);
   if (!edition?.profiles.some((profile) => profile.id === graph.profile!.id &&
     profile.kind === graph.profile!.kind && profile.version === graph.profile!.version)) {
@@ -197,14 +213,15 @@ export function resolveSuccessorGraphNodes028(graph: SuccessorGraphView028): Rea
     profileVersion === graph.profile!.version && catalogVersion === graph.catalog!.version)) {
     throw new Error(`Coral profile/catalog pair mismatch for ${id}`);
   }
-  const expected = matches0214 ? expected0214 : expected028;
+  const expected = matches0217 ? expected0217 : matches0214 ? expected0214 : expected028;
   if (!expected || !notationRegistry.has(id)) throw new Error(`Coral notation ${id} is not installed`);
   if (graph.catalog.id !== expected.id || graph.catalog.version !== expected.version ||
     graph.catalog.digest !== expected.digest) {
     throw new Error(`Coral catalog pin mismatch for ${id}`);
   }
   const results = new Map<string, NodeInterpretation028>();
-  const catalog = documentCatalog029(id, graph.userSymbols029 ?? [], matches0214 ? '0.2.14' : undefined);
+  const catalog = documentCatalog029(id, graph.userSymbols029 ?? [],
+    matches0217 ? '0.2.17' : matches0214 ? '0.2.14' : undefined);
   const visit = (nodes: readonly SuccessorNodeView028[]): void => {
     for (const node of nodes) {
       if (results.has(node.id)) throw new Error(`Duplicate successor node ${node.id}`);

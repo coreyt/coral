@@ -2,7 +2,7 @@ import type {SpatialConstraintSuccessor,LayoutOptionsSuccessor,RouteIntentSucces
 import {parseConstraint028, parseLayout028, rectangleToken028, spatialParameters028, resolveSpatial028, spatialIssue028, type CandidateConstraintSyntax028, type CandidateLayoutSyntax028, type SpatialParameters028} from './spatialSource028.js';
 import type { ClassifierAttribute, ClassifierCompartment, ClassifierOperation, GraphEdge, GraphIR, GraphNode, InteractionMessage } from '../types.js';
 import { parseDiagnostic, type DiagnosticRange, type ParseDiagnostic } from '../diagnostics.js';
-import { editionAdmits0214, editionAdmitsUserSymbols029 } from './header028.js';
+import { editionAdmits0214, editionAdmits0217, editionAdmitsUserSymbols029 } from './header028.js';
 import { classifierFor } from '../uml.js';
 import { SEQUENCE_PARTICIPANT_TYPES, sequenceMessageToken } from '../sequence.js';
 import { CONNECTOR_END_SPELLINGS_028, CROWS_FOOT_OPERATOR_PATTERN_0214,
@@ -1533,8 +1533,9 @@ const INFRA_CONTAINER_KINDS_0214 = new Set([
 const ERD_ENTITY_KINDS_0214 = new Set(['entity', 'weakEntity', 'table', 'view']);
 const CHEN_RETIRED_KINDS_0214 = new Set(['attribute', 'relationship', 'isa']);
 const CHEN_RETIRED_SYMBOLS_0214 = new Set(['erd-attribute', 'erd-relationship', 'erd-isa']);
-function isContainerKind(profile: string | undefined, nodeKind: string, admits0214: boolean): boolean {
+function isContainerKind(profile: string | undefined, nodeKind: string, admits0214: boolean, admits0217 = false): boolean {
   if (nodeKind === 'group') return true;
+  if (admits0217 && profile === 'uml-state' && nodeKind === 'composite') return true;
   if (!admits0214) return false;
   if (profile === 'architecture') return ARCH_CONTAINER_KINDS_0214.has(nodeKind);
   if (profile === 'infrastructure') return INFRA_CONTAINER_KINDS_0214.has(nodeKind);
@@ -1555,13 +1556,14 @@ const KNOWN_RELATIONS_0214: Readonly<Record<string, ReadonlySet<string>>> = {
   aiml: new Set(['data-flow', 'dataFlow', 'training', 'inference', 'embedding', 'tool-use', 'toolUse', 'annotation']),
   'data-engineering': new Set(['batch-flow', 'batchFlow', 'stream-flow', 'streamFlow', 'lineage', 'quality', 'annotation']),
   sketch: new Set(['flow', 'annotation']),
-  'uml-class': new Set(['association', 'aggregation', 'composition', 'generalization', 'realization', 'dependency', 'annotation']),
+  'uml-class': new Set(['association', 'aggregation', 'composition', 'generalization', 'inheritance', 'realization', 'dependency', 'annotation']),
   'uml-sequence': new Set(['sync', 'async', 'return', 'create', 'destroy', 'lost', 'found']),
   'uml-state': new Set(['transition', 'annotation']),
 };
 
 export function parseCandidate028(source: string, options: CandidateOptions = {}): CandidateResult {
   const admits0214 = options.edition !== undefined && editionAdmits0214(options.edition);
+  const admits0217 = options.edition !== undefined && editionAdmits0217(options.edition);
   const diagnostics: ParseDiagnostic[] = [];
   const statements: CandidateStatement[] = [];
   const sequenceItems: CandidateSequenceItemSyntax[] = [];
@@ -1912,7 +1914,7 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
               'A classifier body requires the UML class profile');
           } else if (admits0214 && options.profile === 'erd' && ERD_ENTITY_KINDS_0214.has(parsed.nodeKind.value)) {
             classifierScope = { node: parsed, open: parsed.blockOpen, line };
-          } else if (isContainerKind(options.profile, parsed.nodeKind.value, admits0214)) {
+          } else if (isContainerKind(options.profile, parsed.nodeKind.value, admits0214, admits0217)) {
             groups.push({ id: parsed.id, open: parsed.blockOpen, line, syntax: parsed });
           } else portOnlyScope = { node: parsed, open: parsed.blockOpen, line };
         }
@@ -2028,7 +2030,7 @@ export function parseCandidate028(source: string, options: CandidateOptions = {}
     if (item.parentGroup) {
       const parentId = node.parent!;
       const parent = nodes.get(parentId);
-      if (!parent || !isContainerKind(options.profile, parent.type, admits0214) || declared.get(parentId) !== item.parentGroup) {
+      if (!parent || !isContainerKind(options.profile, parent.type, admits0214, admits0217) || declared.get(parentId) !== item.parentGroup) {
         diagnostics.push(parseDiagnostic({ severity: 'error', code: 'coral.syntax.group.parent-invalid',
           message: `Group ${item.parentGroup.value} is not a valid parent`,
           position: item.parentGroup.range.start, range: item.parentGroup.range }));

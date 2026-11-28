@@ -79,15 +79,26 @@ describe('Coral 0.2.8 source over MCP', () => {
     });
   });
 
-  it('refuses unsupported Mermaid activation without emitting Coral source', async () => {
+  it('converts Mermaid activation over MCP and refuses unsupported Mermaid gantt without emitting Coral', async () => {
     await withClient('coral-import-test', async (client) => {
-      const unsupported = await client.callTool({ name: 'coral_convert', arguments: {
+      const converted = await client.callTool({ name: 'coral_convert', arguments: {
         content: 'sequenceDiagram\nparticipant A\nparticipant B\nA->>+B: hi\nB-->>-A: done',
         from: 'mermaid', to: 'coral', strict: true,
       } });
+      expect(converted.isError).toBe(false);
+      const written = (converted.content[0] as { text: string }).text;
+      const source = written.slice(written.indexOf('@diagram'));
+      expect(source).toContain('activation B {');
+      expect((await client.callTool({ name: 'coral_validate', arguments: { content: source } })).isError).toBeFalsy();
+      expect((await client.callTool({ name: 'coral_render', arguments: { content: source } })).isError).toBeFalsy();
+
+      const unsupported = await client.callTool({ name: 'coral_convert', arguments: {
+        content: 'gantt\n  title Roadmap\n  section Core\n  Task A :a1, 2026-01-01, 5d',
+        from: 'auto', to: 'coral', strict: true,
+      } });
       expect(unsupported.isError).toBe(true);
       expect(unsupported.structuredContent?.diagnostics).toContainEqual(expect.objectContaining({
-        code: 'mcp.coral028.import.unsupported',
+        code: 'mermaid.diagram.unsupported',
       }));
       expect(JSON.stringify(unsupported.content)).not.toContain('@diagram');
     });
@@ -438,12 +449,20 @@ describe('Coral 0.2.8 source over MCP', () => {
     });
   });
 
-  it('refuses unsupported Mermaid import without a writer contract', async () => {
+  it('refuses unsupported DOT import without a writer contract and converts Mermaid flowchart over MCP', async () => {
     await withClient('coral-source-test', async (client) => {
       const unsupportedImport = await client.callTool({ name: 'coral_convert',
-        arguments: { content: 'graph TD\n A[Alpha] --> B[Beta]' } });
+        arguments: { content: 'digraph G { a -> b }' } });
       expect(unsupportedImport.isError).toBe(true);
       expect(JSON.stringify(unsupportedImport)).toContain('mcp.coral028.writer.unavailable');
+
+      const convertedFlow = await client.callTool({ name: 'coral_convert',
+        arguments: { content: 'graph TD\n A[Alpha] --> B[Beta]' } });
+      expect(convertedFlow.isError).toBe(false);
+      const written = (convertedFlow.content[0] as { text: string }).text;
+      const source = written.slice(written.indexOf('@diagram'));
+      expect((await client.callTool({ name: 'coral_validate', arguments: { content: source } })).isError).toBeFalsy();
+      expect((await client.callTool({ name: 'coral_render', arguments: { content: source } })).isError).toBeFalsy();
     });
   });
 

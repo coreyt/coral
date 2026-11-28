@@ -287,7 +287,7 @@ describe('coral_convert', () => {
     });
 
     it('does not emit obsolete Coral when import-to-Coral writing is unavailable', async () => {
-      const r = await handleConvert({ content: 'graph TD\n A[Alpha] --> B[Beta]' });
+      const r = await handleConvert({ content: 'digraph G { a -> b }' });
       expect(r.isError).toBe(true);
       expect(JSON.stringify(r)).toContain('mcp.coral028.writer.unavailable');
       expect(textOf(r)).not.toContain('@graph');
@@ -323,7 +323,10 @@ describe('coral_convert', () => {
           delete unstyled.style;
           return unstyled;
         }),
-      }).toEqual(importedGraph);
+      }).toEqual({
+        ...importedGraph,
+        metadata: { ...importedGraph.metadata, custom: { coralEdition: '0.2.14' } },
+      });
       expect(verifyPortableSuccessorSource028(source).diagnostics).toEqual([]);
       const autodetected = await handleConvert({ content: imported, to: 'coral', strict: true });
       expect(autodetected.isError).toBe(false);
@@ -455,32 +458,44 @@ describe('coral_convert', () => {
         .toEqual(['alt', 'loop']);
     });
 
-    it.each([
-      ['activation', 'A->>+B: hi\nB-->>-A: done'],
-    ])('refuses an unspelled Mermaid %s without returning partial Coral', async (_name, body) => {
-      const imported = `sequenceDiagram\nparticipant A\nparticipant B\n${body}`;
-      const r = await handleConvert({ content: imported, from: 'mermaid', to: 'coral' });
-      expect(r.isError).toBe(true);
-      expect(JSON.stringify(r.structuredContent.diagnostics)).toContain('mcp.coral028.import.unsupported');
-      expect(textOf(r)).not.toContain('@diagram');
+    it('writes a Mermaid sequence activation into verified Coral 0.2.14 activation blocks', async () => {
+      const imported = 'sequenceDiagram\nparticipant A\nparticipant B\nA->>+B: hi\nB-->>-A: done';
+      const r = await handleConvert({ content: imported, from: 'mermaid', to: 'coral', strict: true });
+      expect(r.isError).toBe(false);
+      const source = textOf(r).slice(textOf(r).indexOf('@diagram'));
+      expect(source).toContain('@diagram uml-sequence');
+      expect(source).toContain('activation B {');
+      expect(source).toContain('msg_1 = A -#> B as "hi"');
+      expect(source).toContain('msg_2 = B -.-> A as "done"');
+      expect(verifyPortableSuccessorSource028(source).diagnostics).toEqual([]);
     });
 
-    it('refuses a Mermaid note after its first message without partial Coral', async () => {
-      const r = await handleConvert({ content: 'sequenceDiagram\nA->>B: hi\nNote over A,B: late',
-        from: 'mermaid', to: 'coral', strict: true });
+    it('writes a mid-timeline Mermaid note after messages into verified Coral 0.2.14', async () => {
+      const r = await handleConvert({
+        content: 'sequenceDiagram\nA->>B: hi\nNote over A,B: late',
+        from: 'mermaid',
+        to: 'coral',
+        strict: true,
+      });
+      expect(r.isError).toBe(false);
+      const source = textOf(r).slice(textOf(r).indexOf('@diagram'));
+      expect(source).toContain('msg_1 = A -#> B as "hi"\nnote "late" on A, B');
+      expect(verifyPortableSuccessorSource028(source).diagnostics).toEqual([]);
+    });
+
+    it('refuses an unguarded Mermaid opt in strict mode without fabricating a Coral guard', async () => {
+      const r = await handleConvert({
+        content: 'sequenceDiagram\nA->>B: before\nopt\nA->>B: try\nend',
+        from: 'mermaid',
+        to: 'coral',
+        strict: true,
+      });
       expect(r.isError).toBe(true);
       expect(r.structuredContent.diagnostics).toContainEqual(expect.objectContaining({
-        code: 'mermaid.sequence.note.placement',
+        code: 'coral.transpile.strict.refused',
       }));
-      expect(textOf(r)).not.toContain('@diagram');
-    });
-
-    it('refuses an unguarded Mermaid opt without fabricating a Coral guard', async () => {
-      const r = await handleConvert({ content: 'sequenceDiagram\nA->>B: before\nopt\nA->>B: try\nend',
-        from: 'mermaid', to: 'coral', strict: true });
-      expect(r.isError).toBe(true);
       expect(r.structuredContent.diagnostics).toContainEqual(expect.objectContaining({
-        code: 'mcp.coral028.import.unsupported',
+        code: 'mermaid.sequence.guard.defaulted',
       }));
       expect(textOf(r)).not.toContain('@diagram');
     });
@@ -495,8 +510,300 @@ describe('coral_convert', () => {
     });
   });
 
-  it('declares its schema', () => {
-    expect(convertTool.name).toBe('coral_convert');
-    expect(convertTool.inputSchema.properties.strict).toBeDefined();
+  describe('SPEC-17: Mermaid-to-Coral Top-5 transpiler contract', () => {
+    it('declares additive flowchartTarget, edgeStyleMode, and stateTargetEdition schema properties', () => {
+      expect(convertTool.name).toBe('coral_convert');
+      expect(convertTool.inputSchema.properties.strict).toBeDefined();
+      expect(convertTool.inputSchema.properties.flowchartTarget).toMatchObject({
+        type: 'string',
+        enum: ['flowchart', 'block', 'architecture'],
+        default: 'flowchart',
+      });
+      expect(convertTool.inputSchema.properties.edgeStyleMode).toMatchObject({
+        type: 'string',
+        enum: ['visual-safe', 'portable'],
+        default: 'visual-safe',
+      });
+      expect(convertTool.inputSchema.properties.stateTargetEdition).toMatchObject({
+        type: 'string',
+        enum: ['0.2.17', '0.2.8'],
+        default: '0.2.17',
+      });
+    });
+
+    it('converts Mermaid flowchart with subgraphs and returns backward-compatible + additive structuredContent', async () => {
+      const mermaid = [
+        'flowchart LR',
+        '  start([Start]) --> check{Valid?}',
+        '  subgraph backend [Backend]',
+        '    api[API Call] --> sub[[Auth Check]]',
+        '  end',
+        '  check -->|Yes| api',
+        '  check -.->|No| done([Done])',
+        '  sub --> done',
+      ].join('\n');
+      const r = await handleConvert({ content: mermaid, from: 'auto', to: 'coral', strict: true });
+      expect(r.isError).toBe(false);
+      expect(r.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        candidateVersion: '4.0.0',
+        detectedKind: 'flowchart',
+        targetNotation: 'flowchart',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        lossSummary: { lossy: false, errorCount: 0, warningCount: 0 },
+      });
+      expect(r.structuredContent.nodeCount).toBeGreaterThanOrEqual(5);
+      expect(r.structuredContent.edgeCount).toBe(5);
+      expect((r.structuredContent as Record<string, unknown>).idMap).toMatchObject({
+        'backend.api': 'api',
+        'backend.sub': 'sub',
+      });
+      expect(textOf(r)).toContain('@diagram flowchart');
+      expect(textOf(r)).toContain('@coralVersion "0.2.14"');
+      expect(textOf(r)).toContain('backend.api -> backend.sub');
+      expect(textOf(r)).not.toContain('## Conversion notes');
+    });
+
+    it('supports flowchartTarget: block and architecture for database cylinders', async () => {
+      const mermaid = 'flowchart TD\n  api[Orders API] --> db[(Orders DB)]';
+
+      const asDefault = await handleConvert({ content: mermaid, to: 'coral' });
+      expect(asDefault.isError).toBe(false);
+      expect(asDefault.structuredContent).toMatchObject({
+        targetNotation: 'flowchart',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        lossSummary: { lossy: true, warningCount: 1 },
+      });
+      expect(textOf(asDefault)).toContain('## Conversion notes');
+      expect(textOf(asDefault)).toContain('mermaid.flowchart.shape.degraded');
+
+      const asBlock = await handleConvert({ content: mermaid, to: 'coral', flowchartTarget: 'block', strict: true });
+      expect(asBlock.isError).toBe(false);
+      expect(asBlock.structuredContent).toMatchObject({
+        targetNotation: 'block',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        nodeCount: 2,
+        edgeCount: 1,
+        lossSummary: { lossy: false },
+      });
+      expect(textOf(asBlock)).toContain('@diagram block');
+      expect(textOf(asBlock)).toContain('layout [direction: DOWN]');
+      expect(textOf(asBlock)).toContain('db cylinder as "Orders DB"');
+
+      const asArch = await handleConvert({ content: mermaid, to: 'coral', flowchartTarget: 'architecture', strict: true });
+      expect(asArch.isError).toBe(false);
+      expect(asArch.structuredContent).toMatchObject({
+        targetNotation: 'architecture',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        nodeCount: 2,
+        edgeCount: 1,
+        lossSummary: { lossy: false },
+      });
+      expect(textOf(asArch)).toContain('@diagram architecture');
+      expect(textOf(asArch)).toContain('db database as "Orders DB"');
+    });
+
+    it('supports edgeStyleMode: visual-safe vs portable', async () => {
+      const mermaid = 'flowchart LR\n  A ==> B';
+
+      const safe = await handleConvert({ content: mermaid, to: 'coral', edgeStyleMode: 'visual-safe' });
+      expect(safe.isError).toBe(false);
+      expect(safe.structuredContent).toMatchObject({
+        visualRenderable: true,
+        lossSummary: { lossy: true },
+      });
+      expect(textOf(safe)).toContain('mermaid.flowchart.edge-weight.degraded');
+      expect(textOf(safe)).toContain('## Conversion notes');
+
+      const portable = await handleConvert({ content: mermaid, to: 'coral', edgeStyleMode: 'portable' });
+      expect(portable.isError).toBe(false);
+      expect(portable.structuredContent).toMatchObject({
+        visualRenderable: false,
+      });
+      expect(textOf(portable)).toContain('[style: "thick"]');
+      expect(textOf(portable)).toContain('coral.edge-style.visual-unavailable');
+    });
+
+    it('converts Mermaid classDiagram to verified @diagram uml-class 0.2.14', async () => {
+      const mermaid = [
+        'classDiagram',
+        '  namespace Banking {',
+        '    class Account["Bank Account"] {',
+        '      +String owner',
+        '      -Decimal balance',
+        '      +deposit(Decimal amount) Boolean',
+        '    }',
+        '    class SavingsAccount',
+        '  }',
+        '  Account <|-- SavingsAccount',
+        '  Customer "1" --> "0..*" Account : owns',
+      ].join('\n');
+      const r = await handleConvert({ content: mermaid, from: 'auto', to: 'coral', strict: true });
+      expect(r.isError).toBe(false);
+      expect(r.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        candidateVersion: '4.0.0',
+        detectedKind: 'class',
+        targetNotation: 'uml-class',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        lossSummary: { lossy: false },
+      });
+      expect(r.structuredContent.edgeCount).toBe(2);
+      expect(textOf(r)).toContain('@diagram uml-class');
+      expect(textOf(r)).toContain('Banking.SavingsAccount -|> Banking.Account [inheritance]');
+    });
+
+    it('converts Mermaid erDiagram to verified @diagram erd 0.2.14', async () => {
+      const mermaid = [
+        'erDiagram',
+        '  CUSTOMER {',
+        '    uuid id PK',
+        '    varchar(255) email UK',
+        '  }',
+        '  ORDER {',
+        '    uuid id PK',
+        '    uuid customer_id FK',
+        '  }',
+        '  CUSTOMER ||--o{ ORDER : places',
+        '  ORDER ||..|{ LINE-ITEM : contains',
+      ].join('\n');
+      const r = await handleConvert({ content: mermaid, from: 'auto', to: 'coral', strict: true });
+      expect(r.isError).toBe(false);
+      expect(r.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        candidateVersion: '4.0.0',
+        detectedKind: 'er',
+        targetNotation: 'erd',
+        targetEdition: '0.2.14',
+        visualRenderable: true,
+        nodeCount: 3,
+        edgeCount: 2,
+        lossSummary: { lossy: false },
+      });
+      expect((r.structuredContent as Record<string, unknown>).idMap).toMatchObject({
+        LINE_ITEM: 'LINE-ITEM',
+      });
+      expect(textOf(r)).toContain('@diagram erd');
+      expect(textOf(r)).toContain('CUSTOMER ||--o{ ORDER as "places"');
+      expect(textOf(r)).toContain('## Conversion notes');
+    });
+
+    it('converts Mermaid stateDiagram-v2 to visual 0.2.17 by default and supports legacy 0.2.8', async () => {
+      const mermaid = [
+        'stateDiagram-v2',
+        '  [*] --> Idle',
+        '  Idle --> Checking : submit',
+        '  state "Validating Order" as Checking',
+        '  Checking --> Done : valid',
+        '  Done --> [*]',
+      ].join('\n');
+
+      const v0217 = await handleConvert({ content: mermaid, from: 'auto', to: 'coral', strict: true });
+      expect(v0217.isError).toBe(false);
+      expect(v0217.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        candidateVersion: '4.0.0',
+        detectedKind: 'state',
+        targetNotation: 'uml-state',
+        targetEdition: '0.2.17',
+        visualRenderable: true,
+        nodeCount: 5,
+        edgeCount: 4,
+        lossSummary: { lossy: false },
+      });
+      expect(textOf(v0217)).toContain('@diagram uml-state');
+      expect(textOf(v0217)).toContain('@coralVersion "0.2.17"');
+
+      const v028 = await handleConvert({
+        content: mermaid,
+        from: 'auto',
+        to: 'coral',
+        strict: true,
+        stateTargetEdition: '0.2.8',
+      });
+      expect(v028.isError).toBe(false);
+      expect(v028.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        candidateVersion: '4.0.0',
+        detectedKind: 'state',
+        targetNotation: 'uml-state',
+        targetEdition: '0.2.8',
+        visualRenderable: false,
+        characterRenderable: true,
+        nodeCount: 5,
+        edgeCount: 4,
+        lossSummary: { lossy: false },
+      });
+      expect(textOf(v028)).toContain('@diagram uml-state');
+      expect(textOf(v028)).not.toContain('@coralVersion');
+      expect(textOf(v028)).toContain('coral.uml-state.visual-unavailable');
+    });
+
+    it('refuses lossy Mermaid conversion in strict mode and accepts info-only normalizations', async () => {
+      const lossy = await handleConvert({
+        content: 'flowchart TD\n  api[API] --> db[(DB)]',
+        to: 'coral',
+        strict: true,
+      });
+      expect(lossy.isError).toBe(true);
+      expect(lossy.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        nodeCount: 0,
+        edgeCount: 0,
+        candidateVersion: '4.0.0',
+        detectedKind: 'flowchart',
+        visualRenderable: false,
+      });
+      expect(lossy.structuredContent.diagnostics).toContainEqual(expect.objectContaining({
+        code: 'coral.transpile.strict.refused',
+        severity: 'error',
+      }));
+      expect(textOf(lossy)).not.toContain('@diagram');
+
+      const infoOnly = await handleConvert({
+        content: 'flowchart TD\n  accTitle: Billing\n  order-api[Orders API] --> checkout[Checkout]',
+        to: 'coral',
+        strict: true,
+      });
+      expect(infoOnly.isError).toBe(false);
+      expect(infoOnly.structuredContent).toMatchObject({
+        lossSummary: { lossy: false },
+      });
+    });
+
+    it.each([
+      ['gantt', 'gantt\n  title Roadmap\n  section Core\n  Task A :a1, 2026-01-01, 5d'],
+      ['radar-beta', 'radar-beta\n  axis A, B, C\n  curve c1{1, 2, 3}'],
+    ])('refuses unsupported Mermaid %s cleanly in auto mode', async (kind, content) => {
+      const r = await handleConvert({ content, from: 'auto', to: 'coral' });
+      expect(r.isError).toBe(true);
+      expect(r.structuredContent).toMatchObject({
+        from: 'mermaid',
+        to: 'coral',
+        nodeCount: 0,
+        edgeCount: 0,
+        candidateVersion: '4.0.0',
+        detectedKind: kind,
+        targetNotation: null,
+        targetEdition: null,
+        visualRenderable: false,
+      });
+      expect(r.structuredContent.diagnostics).toContainEqual(expect.objectContaining({
+        code: 'mermaid.diagram.unsupported',
+        severity: 'error',
+      }));
+      expect(textOf(r)).not.toContain('@diagram');
+    });
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "@coral-viz/render",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "description": "Shape, symbol and notation definitions plus deterministic text measurement and SVG serialization, with no browser or React dependency",
   "homepage": "https://coreyt.github.io/coral/",
   "bugs": {
@@ -27,6 +27,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "coral": "dist/cli.js"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -54,19 +57,19 @@
   ],
   "scripts": {
     "clean": "node ../../scripts/clean.mjs dist",
-    "build": "node ../../scripts/clean.mjs dist && tsc",
+    "build": "node ../../scripts/clean.mjs dist && tsc && tsc -p tsconfig.cli.json",
     "prepack": "npm run build",
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage --exclude test/layout-performance.test.ts",
     "lint": "eslint src test",
-    "typecheck": "tsc --noEmit && tsc --noEmit -p type-tests/tsconfig.json"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.cli.json && tsc --noEmit -p type-tests/tsconfig.json"
   },
   "engines": {
     "node": ">=24.19.0"
   },
   "dependencies": {
-    "@coral-viz/language": "0.2.15",
+    "@coral-viz/language": "0.2.17",
     "@graph-ir/core": "0.2.4",
     "elkjs": "0.12.0",
     "libavoided-js": "0.1.3",
@@ -75,6 +78,7 @@
     "svgo": "4.1.0"
   },
   "devDependencies": {
+    "@types/node": "24.13.5",
     "@vitest/coverage-v8": "5.0.5",
     "typescript": "6.0.3",
     "vitest": "5.0.5"

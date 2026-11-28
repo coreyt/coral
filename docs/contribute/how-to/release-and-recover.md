@@ -3,8 +3,8 @@
 Use immutable candidate inputs, publish the package prefix in order, and
 deploy the exact retained Pages artifact; final execution belongs to Slice 100.
 
-The active 0.2.15 release workspace uses public GraphIR Core 0.2.4 and prepares
-frozen 0.2.15 package/site artifacts. Publication requires the exact-source
+The active 0.2.17 release workspace uses public GraphIR Core 0.2.4 and prepares
+frozen 0.2.17 package/site artifacts. Publication requires the exact-source
 final matrix and explicit release execution authorization. Source edition 0.2.8
 and [Language Specification 1.3.0](../../embed/reference/language-specification-1.3.0.md)
 remain independent of the package version.
@@ -21,7 +21,7 @@ host/browser profile; shared hosted NOT MEASURED is not controlled acceptance.
 
 1. Run `npm run verify`, then choose one candidate `version` and one full
    40-character `commit`. Push it to
-   `release/0.2.15` and dispatch CI with `final_candidate=true`.
+   `release/0.2.17` and dispatch CI with `final_candidate=true`.
 
    The aggregate `final-candidate` job must prove every required result for
    that exact source, run and attempt. Its proof binds the six frozen package
@@ -116,7 +116,7 @@ host/browser profile; shared hosted NOT MEASURED is not controlled acceptance.
    If a re-run finds the job's own unpublished draft with the same
    `release-evidence.json`, it publishes the draft. A draft with other or
    missing evidence stops the job; after HITL approval, delete that
-   unpublished draft (`gh release delete v0.2.15 --yes` keeps the tag) and
+   unpublished draft (`gh release delete v0.2.17 --yes` keeps the tag) and
    re-run the `release` job.
 
    Read back the complete release and remove or explicitly retain the

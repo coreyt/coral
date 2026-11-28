@@ -7,10 +7,10 @@ import {
   type ConformanceReport, type ConformanceRequest, type RuleDefinition,
   type RuleFinding, type RulesetDefinition, type SymbolException,
 } from './conformance028.js';
-import { notationCatalogIdentity028, notationRegistry, resolveNotationNode028 } from './notations/index.js';
+import { installedCatalogSnapshotForEdition, notationCatalogIdentityForEdition, notationRegistry, resolveNotationNode028 } from './notations/index.js';
 import { uncertainDecisionFlows028 } from './rulesets/flowchart028.js';
 import { uncertainSequenceFlows028 } from './rulesets/bpmn028.js';
-import { profileRuleCard028 } from './rulesets/index028.js';
+import { profileRuleCardForEdition0217 } from './rulesets/index028.js';
 import { allGraphNodes028 } from './graphNodes028.js';
 import { assessGraphPortReferences028, type PortReferenceRanges028 } from './graphPortReferences028.js';
 import { effectiveGraphNotationId028 } from './graphNotation028.js';
@@ -79,6 +79,10 @@ export function checkGraphConformance028(
     return evaluateConformance028(request, portableIntegrity);
   }
 
+  const edition = typeof graph.metadata?.custom?.coralEdition === 'string'
+    ? graph.metadata.custom.coralEdition : undefined;
+  const editionCatalog = installedCatalogSnapshotForEdition(profileId, edition);
+  const catalogIdentity = notationCatalogIdentityForEdition(profileId, edition);
   let portReferences: ReturnType<typeof assessGraphPortReferences028>;
   try {
     portReferences = assessGraphPortReferences028(graph, profileId, portReferenceRanges,
@@ -89,7 +93,7 @@ export function checkGraphConformance028(
       id: 'CORAL.SEMANTIC_SIDECAR.MISMATCH', category: 'capability', severity: 'error',
       message: cause.message, subject: { kind: 'node', id: cause.nodeId },
     }]);
-    return { ...report, catalog: notationCatalogIdentity028(profileId) };
+    return { ...report, catalog: catalogIdentity };
   }
   const nodes = allGraphNodes028(graph.nodes);
   const nodeById = new Map<string, typeof nodes[number]>();
@@ -133,7 +137,7 @@ export function checkGraphConformance028(
     seenExceptions.add(key);
     const node = nodeById.get(exception.nodeId);
     const eligible = node?.symbol === exception.symbol && !ambiguousIds.has(exception.nodeId)
-      && (options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId))
+      && (options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId, editionCatalog))
         .diagnostics.some((diagnostic) =>
         diagnostic.code === 'coral.symbol.foreign-profile');
     if (!duplicate && eligible) validExceptions.push(exception);
@@ -152,18 +156,18 @@ export function checkGraphConformance028(
     remediation: 'Choose a symbol in this profile or declare a scoped strict exception.',
     check: (input) => allGraphNodes028(input.nodes).flatMap((node) => {
       if (!node.symbol) return [];
-      const interpreted = options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId);
+      const interpreted = options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId, editionCatalog);
       if (!interpreted.diagnostics.some((item) => item.code === 'coral.symbol.foreign-profile')) return [];
       return [{ message: `Symbol ${node.symbol} is outside notation ${profileId}`,
         subject: { kind: 'node' as const, id: node.id },
         causes: [{ kind: 'explicit-symbol' as const, nodeId: node.id, symbol: node.symbol }] }];
     }),
   };
-  const card = profileRuleCard028(profileId, options.sourceDirections);
+  const card = profileRuleCardForEdition0217(profileId, edition, options.sourceDirections);
   const ruleset: RulesetDefinition<GraphIR> = { ...card,
     rules: [symbolRule, ...card.rules] };
   const unsupported: RuleFinding[] = nodes.flatMap((node) => {
-    const interpreted = options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId);
+    const interpreted = options.semanticInterpretations?.get(node.id) ?? resolveNotationNode028(node, profileId, editionCatalog);
     return interpreted.diagnostics.filter((diagnostic) =>
       diagnostic.code === 'coral.symbol.unknown' || diagnostic.code === 'coral.variant.unknown' ||
       diagnostic.code === 'coral.port.duplicate' || diagnostic.code.startsWith('coral.port.anchor.'))
@@ -178,5 +182,5 @@ export function checkGraphConformance028(
     [...graphIntegrity, ...semanticPortFindings, ...unsupported, ...invalidExceptions],
     [...semanticPortObligations, ...flowchartDirectionObligations, ...bpmnDirectionObligations,
       ...(options.sourceDirectionObligations ?? [])]),
-    catalog: notationCatalogIdentity028(profileId) };
+    catalog: catalogIdentity };
 }

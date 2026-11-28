@@ -242,15 +242,16 @@ describe('Symbol Registry', () => {
   });
 
   describe('getAllLibraries', () => {
-    it('returns 12 symbol libraries', () => {
+    it('returns 13 symbol libraries', () => {
       const libraries = getAllLibraries();
-      expect(libraries.length).toBe(12);
+      expect(libraries.length).toBe(13);
       expect(libraries.map((l) => l.id)).toContain('block');
       expect(libraries.map((l) => l.id)).toContain('flowchart');
       expect(libraries.map((l) => l.id)).toContain('bpmn');
       expect(libraries.map((l) => l.id)).toContain('erd');
       expect(libraries.map((l) => l.id)).toContain('code');
       expect(libraries.map((l) => l.id)).toContain('architecture');
+      expect(libraries.map((l) => l.id)).toContain('uml-state');
       expect(libraries.map((l) => l.id)).toContain('aiml');
       expect(libraries.map((l) => l.id)).toContain('data-engineering');
       expect(libraries.map((l) => l.id)).toContain('sketch');
@@ -743,9 +744,9 @@ describe('Sketch Shapes', () => {
 });
 
 describe('Sketch Symbol Library', () => {
-  it('12 symbol libraries registered', () => {
+  it('13 symbol libraries registered', () => {
     const libraries = getAllLibraries();
-    expect(libraries.length).toBe(12);
+    expect(libraries.length).toBe(13);
     expect(libraries.map(l => l.id)).toContain('sketch');
   });
 

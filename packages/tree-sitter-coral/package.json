@@ -1,6 +1,6 @@
 {
   "name": "tree-sitter-coral",
-  "version": "0.2.15",
+  "version": "0.2.17",
   "description": "Tree-sitter grammar for Coral DSL",
   "homepage": "https://coreyt.github.io/coral/",
   "bugs": {

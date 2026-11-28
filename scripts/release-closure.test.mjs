@@ -520,9 +520,9 @@ test('publish workflow contains the guarded OIDC closure contract', async () => 
     assert.match(workflow, new RegExp(`start-index\\) <= ${index}`));
   }
   const tarballs = [
-    'coral-viz-language-0.2.15.tgz', 'coral-viz-render-0.2.15.tgz',
-    'coral-viz-browser-0.2.15.tgz', 'coral-viz-viz-0.2.15.tgz',
-    'coral-viz-mcp-server-0.2.15.tgz', 'tree-sitter-coral-0.2.15.tgz',
+    'coral-viz-language-0.2.17.tgz', 'coral-viz-render-0.2.17.tgz',
+    'coral-viz-browser-0.2.17.tgz', 'coral-viz-viz-0.2.17.tgz',
+    'coral-viz-mcp-server-0.2.17.tgz', 'tree-sitter-coral-0.2.17.tgz',
   ];
   const order = tarballs.map(name => workflow.indexOf(`npm publish ./candidate-artifacts/${name}`));
   assert.ok(order.every((position) => position >= 0));

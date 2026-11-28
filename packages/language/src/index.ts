@@ -12,7 +12,7 @@ export { isDashedOpenArrow028, parseCrowsFootConnector0214 } from './parser/conn
 export type { CandidateEdgeSyntax, CandidateErdColumnSyntax, CandidateFragmentSyntax, CandidateNodeSyntax,
   CandidateParticipantGroupSyntax,
   CandidatePortSyntax, CandidateSequenceItemSyntax, NodeStyleIntent0214 } from './parser/candidate028.js';
-export { editionAdmits0214, editionAdmitsUserSymbols029, parseHeader028, pinHeaderEdition029,
+export { editionAdmits0214, editionAdmits0217, editionAdmitsUserSymbols029, parseHeader028, pinHeaderEdition029,
   prepareHeaderForSave028 } from './parser/header028.js';
 export { parseSymbolDefinitions029 } from './parser/symbolDefinitions029.js';
 export type {
@@ -59,6 +59,24 @@ export { print, printWithDiagnostics, prettyPrint, type PrintOptions, type Print
 export { parseMermaid, type MermaidParseOptions } from './formats/mermaid.js';
 export { canonicalSimpleMermaidSequence028 } from './formats/mermaid-sequence-028.js';
 export { writeSupplementalMermaidSequence028 } from './formats/mermaid-sequence-supplemental-028.js';
+export {
+  transpileMermaidToCoral,
+  type CoralLayoutDirection,
+  type CoralSourceIr,
+  type CoralTargetEdition,
+  type CoralTargetNotation,
+  type EdgeStyleMode,
+  type FlowchartTargetNotation,
+  type MermaidTop5Kind,
+  type MermaidTranspileOptions,
+  type MermaidTranspileResult,
+  type StateTargetEdition,
+  type TranspileDiagnostic,
+  type TranspileLossSummary,
+  type TranspileMode,
+  type TranspileSourcePosition,
+  type TranspileSourceRange,
+} from './transpile/mermaid/index.js';
 export { parseDot, type DotParseOptions } from './formats/dot.js';
 export { parsePlantUml, type PlantUmlParseOptions } from './formats/plantuml.js';
 export { detectFormat, OPEN_FILE_ACCEPT, SOURCE_FORMATS, type SourceFormat, type FormatDetection } from './detect.js';
